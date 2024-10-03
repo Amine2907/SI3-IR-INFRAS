@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser'); 
 // Supabase setup 
 // const createClient = require ('@supabase/supabase-js'); 
-import { createClient } from "@supabase/supabase-js";  
+import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(process.env.REACT_APP_SUPABASE_URL,process.env.REACT_APP_SUPABSE_ANON_KEY); 
 const app = express()
 app.use(cors({
