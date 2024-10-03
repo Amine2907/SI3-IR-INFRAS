@@ -4,7 +4,7 @@ import Tables from "layouts/tables";
 import Billing from "layouts/billing";
 import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
-import Auth from "layouts/authentification_A/Auth";
+import Auth from "layouts/authentification/Auth";
 // @mui icons
 import Icon from "@mui/material/Icon";
 
@@ -43,14 +43,6 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Contacts",
-    key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
-  },
-  {
-    type: "collapse",
     name: "Profile",
     key: "profile",
     icon: <Icon fontSize="small">person</Icon>,
@@ -59,12 +51,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Profile",
-    key: "profile",
+    name: "Auth",
+    key: "Auth",
     icon: <Icon fontSize="small">person</Icon>,
     route: "/Authentification",
     component: <Auth />,
   },
 ];
-
 export default routes;

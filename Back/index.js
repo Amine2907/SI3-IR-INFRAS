@@ -1,11 +1,13 @@
 // Node setup  
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser'); 
+import express from "express" ; 
+import cors from "cors"; 
+import bodyParser from "body-parser";
 // Supabase setup 
-// const createClient = require ('@supabase/supabase-js'); 
 import { createClient } from "@supabase/supabase-js";
-const supabase = createClient(process.env.REACT_APP_SUPABASE_URL,process.env.REACT_APP_SUPABSE_ANON_KEY); 
+// Need to hide those credentiels
+const supabaseUrl = 'https://zdejdubavwwcovzowzkr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkZWpkdWJhdnd3Y292em93emtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc2ODIyMjYsImV4cCI6MjA0MzI1ODIyNn0.toFkiFtw0Ejz1eSbFO5Ht3cUutbU0wLgP67XH3M_QHc';
+const supabase = createClient(supabaseUrl,supabaseKey); 
 const app = express()
 app.use(cors({
     origin: 'http://localhost:3000',}));
