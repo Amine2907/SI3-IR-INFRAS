@@ -1,30 +1,34 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api';
 
-// Sign Up User
-export const signUp = async (email, password) => {
-  try {
-    const response = await axios.post(`${API_URL}/signup`, { email, password });
-    return response.data;
-  } catch (error) {
-    throw error.response.data;
-  }
+const API_URL = 'http://localhost:5000/api/auth';
+
+const signIn = (email, password) => {
+  return axios
+    .post(`${API_URL}/signin`, { email, password })
+    .then(response => {
+      if (response.data.token) {
+        localStorage.setItem('user', JSON.stringify(response.data));
+      }
+      return response.data;
+    })
+    .catch(error => {
+      console.error('Sign-in error:', error);
+      return { success: false };
+    });
 };
-// Sign In User
-export const signIn = async (email, password) => {
-  try {
-    const response = await axios.post(`${API_URL}/signin`, { email, password });
-    return response.data;
-  } catch (error) {
-    throw error.response.data;
-  }
+const signUp = (email, password) => {
+  return axios
+    .post(`${API_URL}/signup`, { email, password })
+    .then(response => response.data) // Remove parentheses around `response`
+    .catch(error => {
+      console.error('Sign-up error:', error);
+      return { success: false };
+    });
 };
-// Sign Out User
-export const signOut = async () => {
-  try {
-    const response = await axios.post(`${API_URL}/signout`);
-    return response.data;
-  } catch (error) {
-    throw error.response.data;
-  }
+
+const AuthService = {
+  signIn,
+  signUp,
 };
+
+export default AuthService;
