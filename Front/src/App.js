@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 // react-router components
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
@@ -30,6 +29,7 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from 'co
 // Images
 import brandWhite from 'assets/images/logo-ct.png';
 import brandDark from 'assets/images/logo-ct-dark.png';
+import AuthPage from 'layouts/authentification/AuthPage';
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -134,6 +134,7 @@ export default function App() {
       <Routes>
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="/Auth" element={<AuthPage />} />
       </Routes>
     </ThemeProvider>
   );
