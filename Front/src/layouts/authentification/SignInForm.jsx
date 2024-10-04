@@ -7,10 +7,10 @@ import {
   MDBCard,
   MDBCardBody,
   MDBInput,
-  MDBIcon
-} from 'mdb-react-ui-kit'; 
+  MDBIcon,
+} from 'mdb-react-ui-kit';
 import axios from 'axios';
-import {  signIn  } from './services/authService';
+
 function SignInForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,7 +24,7 @@ function SignInForm() {
         password,
       });
       setSuccessMessage(response.data.message);
-      setErrorMessage(''); 
+      setErrorMessage('');
       localStorage.setItem('user', JSON.stringify(response.data.user));
     } catch (error) {
       setErrorMessage(error.response.data.error);
@@ -33,22 +33,36 @@ function SignInForm() {
   };
 
   return (
-    <MDBContainer fluid className='p-4'>
+    <MDBContainer fluid className="p-4">
       <MDBRow>
-        <MDBCol md='6' className='text-center text-md-start d-flex flex-column justify-content-center'>
+        <MDBCol
+          md="6"
+          className="text-center text-md-start d-flex flex-column justify-content-center"
+        >
           <h1 className="my-5 display-3 fw-bold ls-tight px-3">
             Welcome Back <br />
             <span className="text-primary">Sign in to your account</span>
           </h1>
         </MDBCol>
 
-        <MDBCol md='6'>
-          <MDBCard className='my-5'>
-            <MDBCardBody className='p-5'>
-              <MDBInput wrapperClass='mb-4' label='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
-              <MDBInput wrapperClass='mb-4' label='Password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+        <MDBCol md="6">
+          <MDBCard className="my-5">
+            <MDBCardBody className="p-5">
+              <MDBInput
+                wrapperClass="mb-4"
+                label="Email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+              />
+              <MDBInput
+                wrapperClass="mb-4"
+                label="Password"
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
 
-              <MDBBtn className='w-100 mb-4' size='md' onClick={handleSignIn}>
+              <MDBBtn className="w-100 mb-4" size="md" onClick={handleSignIn}>
                 Sign In
               </MDBBtn>
 
@@ -57,21 +71,21 @@ function SignInForm() {
 
               <div className="text-center">
                 <p>or sign in with:</p>
-                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
-                  <MDBIcon fab icon='facebook-f' size="sm"/>
+                <MDBBtn tag="a" color="none" className="mx-3" style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon="facebook-f" size="sm" />
                 </MDBBtn>
 
-                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
-                  <MDBIcon fab icon='twitter' size="sm"/>
+                <MDBBtn tag="a" color="none" className="mx-3" style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon="twitter" size="sm" />
                 </MDBBtn>
 
-                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
-                  <MDBIcon fab icon='google' size="sm"/>
+                <MDBBtn tag="a" color="none" className="mx-3" style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon="google" size="sm" />
                 </MDBBtn>
 
-                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
-                  <MDBIcon fab icon='github' size="sm"/>
-                </MDBBtn> 
+                <MDBBtn tag="a" color="none" className="mx-3" style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon="github" size="sm" />
+                </MDBBtn>
               </div>
             </MDBCardBody>
           </MDBCard>
@@ -79,5 +93,6 @@ function SignInForm() {
       </MDBRow>
     </MDBContainer>
   );
-} 
+}
+
 export default SignInForm;

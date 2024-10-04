@@ -1,7 +1,7 @@
 // Material Dashboard 2 React Base Styles
-import colors from "assets/theme/base/colors";
-import typography from "assets/theme/base/typography";
-import borders from "assets/theme/base/borders";
+import colors from 'assets/theme/base/colors';
+import typography from 'assets/theme/base/typography';
+import borders from 'assets/theme/base/borders';
 
 const { info, inputBorderColor, dark } = colors;
 const { size } = typography;
@@ -13,15 +13,15 @@ const input = {
       fontSize: size.sm,
       color: dark.main,
 
-      "&:hover:not(.Mui-disabled):before": {
+      '&:hover:not(.Mui-disabled):before': {
         borderBottom: `${borderWidth[1]} solid ${inputBorderColor}`,
       },
 
-      "&:before": {
+      '&:before': {
         borderColor: inputBorderColor,
       },
 
-      "&:after": {
+      '&:after': {
         borderColor: info.main,
       },
     },
