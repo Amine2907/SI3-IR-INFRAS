@@ -53,7 +53,6 @@ function SignInForm() {
             <span className="text-primary">Sign in to your account</span>
           </h1>
         </MDBCol>
-
         <MDBCol md="6">
           <MDBCard className="my-5">
             <MDBCardBody className="p-5">
