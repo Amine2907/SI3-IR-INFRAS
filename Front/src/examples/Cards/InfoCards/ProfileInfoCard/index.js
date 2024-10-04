@@ -1,22 +1,22 @@
 // react-routers components
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 // prop-types is library for typechecking of props
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 // @mui material components
-import Card from "@mui/material/Card";
-import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
-import Icon from "@mui/material/Icon";
+import Card from '@mui/material/Card';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import Icon from '@mui/material/Icon';
 
 // Material Dashboard 2 React components
-import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
+import MDBox from 'components/MDBox';
+import MDTypography from 'components/MDTypography';
 
 // Material Dashboard 2 React base styles
-import colors from "assets/theme/base/colors";
-import typography from "assets/theme/base/typography";
+import colors from 'assets/theme/base/colors';
+import typography from 'assets/theme/base/typography';
 
 function ProfileInfoCard({ title, description, info, social, action, shadow }) {
   const labels = [];
@@ -25,9 +25,9 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
   const { size } = typography;
 
   // Convert this form `objectKey` of the object key in to this `object key`
-  Object.keys(info).forEach((el) => {
+  Object.keys(info).forEach(el => {
     if (el.match(/[A-Z\s]+/)) {
-      const uppercaseLetter = Array.from(el).find((i) => i.match(/[A-Z]+/));
+      const uppercaseLetter = Array.from(el).find(i => i.match(/[A-Z]+/));
       const newElement = el.replace(uppercaseLetter, ` ${uppercaseLetter.toLowerCase()}`);
 
       labels.push(newElement);
@@ -37,7 +37,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
   });
 
   // Push the object values into the values array
-  Object.values(info).forEach((el) => values.push(el));
+  Object.values(info).forEach(el => values.push(el));
 
   // Render the card info items
   const renderItems = labels.map((label, key) => (
@@ -70,7 +70,7 @@ function ProfileInfoCard({ title, description, info, social, action, shadow }) {
   ));
 
   return (
-    <Card sx={{ height: "100%", boxShadow: !shadow && "none" }}>
+    <Card sx={{ height: '100%', boxShadow: !shadow && 'none' }}>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" pt={2} px={2}>
         <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize">
           {title}

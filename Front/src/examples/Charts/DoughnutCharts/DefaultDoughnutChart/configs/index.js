@@ -1,6 +1,6 @@
 /* eslint-disable no-dupe-keys */
 // Material Dashboard 2 React base styles
-import colors from "assets/theme/base/colors";
+import colors from 'assets/theme/base/colors';
 
 const { gradients, dark } = colors;
 
@@ -8,9 +8,9 @@ function configs(labels, datasets, cutout = 60) {
   const backgroundColors = [];
 
   if (datasets.backgroundColors) {
-    datasets.backgroundColors.forEach((color) => {
+    datasets.backgroundColors.forEach(color => {
       if (gradients[color]) {
-        if (color === "info") {
+        if (color === 'info') {
           backgroundColors.push(gradients.info.main);
         } else {
           backgroundColors.push(gradients[color].state);
@@ -50,7 +50,7 @@ function configs(labels, datasets, cutout = 60) {
       },
       interaction: {
         intersect: false,
-        mode: "index",
+        mode: 'index',
       },
     },
   };
