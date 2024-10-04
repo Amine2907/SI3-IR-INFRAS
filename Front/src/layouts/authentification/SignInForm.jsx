@@ -12,41 +12,32 @@ import {
   MDBIcon,
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function SignInForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  // const handleSubmit = async e => {
-  //   e.preventDefault();
-
-  //   try {
-  //     // Example of sign-in logic
-  //     const response = await AuthService.signIn(email, password);
-
-  //     if (response.success) {
-  //       onLogin(); // Update authentication status
-  //       navigate('/dashboard'); // Redirect to the dashboard
-  //     } else {
-  //       alert('Sign-in failed');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error signing in', error);
-  //   }
-  // };
+  const navigate = useNavigate();
   const handleSignIn = async () => {
     try {
       const response = await axios.post('http://localhost:5000/api/signin', {
         email,
         password,
       });
+
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      // Display success message
       setSuccessMessage(response.data.message);
       setErrorMessage('');
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      // Redirect to the dashboard if sign-in is successful
+      navigate('/dashboard');
     } catch (error) {
-      setErrorMessage(error.response.data.error);
+      setErrorMessage(error.response?.data?.error || 'Sign-in failed');
       setSuccessMessage('');
     }
   };
