@@ -33,6 +33,7 @@ import AuthPage from 'layouts/authentification/AuthPage';
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const {
     miniSidenav,
     direction,
@@ -45,7 +46,10 @@ export default function App() {
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
-
+  // Handling Login
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {
@@ -116,25 +120,38 @@ export default function App() {
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-      {layout === 'dashboard' && (
-        <>
-          <Sidenav
-            color={sidenavColor}
-            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="Material Dashboard 2"
-            routes={routes}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          />
-          <Configurator />
-          {configsButton}
-        </>
+
+      {/* Conditionally render components based on authentication */}
+      {isAuthenticated ? (
+        layout === 'dashboard' && (
+          <>
+            <Sidenav
+              color={sidenavColor}
+              brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+              brandName="Material Dashboard 2"
+              routes={routes}
+              onMouseEnter={handleOnMouseEnter}
+              onMouseLeave={handleOnMouseLeave}
+            />
+            <Configurator />
+            {configsButton}
+          </>
+        )
+      ) : (
+        <Routes>
+          <Route path="*" element={<Navigate to="/auth" />} />
+          <Route path="/auth" element={<AuthPage onLogin={handleLogin} />} />
+        </Routes>
       )}
-      {layout === 'vr' && <Configurator />}
+
+      {/* Render Routes */}
       <Routes>
-        {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
-        <Route path="/Auth" element={<AuthPage />} />
+        {isAuthenticated ? getRoutes(routes) : null}
+        {isAuthenticated ? (
+          <Route path="*" element={<Navigate to="/dashboard" />} />
+        ) : (
+          <Route path="*" element={<Navigate to="/auth" />} />
+        )}
       </Routes>
     </ThemeProvider>
   );

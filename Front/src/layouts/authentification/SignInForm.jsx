@@ -12,13 +12,30 @@ import {
   MDBIcon,
 } from 'mdb-react-ui-kit';
 import axios from 'axios';
+// import { useNavigate } from 'react-router-dom';
 
 function SignInForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  // const handleSubmit = async e => {
+  //   e.preventDefault();
 
+  //   try {
+  //     // Example of sign-in logic
+  //     const response = await AuthService.signIn(email, password);
+
+  //     if (response.success) {
+  //       onLogin(); // Update authentication status
+  //       navigate('/dashboard'); // Redirect to the dashboard
+  //     } else {
+  //       alert('Sign-in failed');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error signing in', error);
+  //   }
+  // };
   const handleSignIn = async () => {
     try {
       const response = await axios.post('http://localhost:5000/api/signin', {

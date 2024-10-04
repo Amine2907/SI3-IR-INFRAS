@@ -46,12 +46,32 @@ function SignUpForm() {
           className="text-center text-md-start d-flex flex-column justify-content-center"
         >
           <h1 className="my-5 display-3 fw-bold ls-tight px-3">
-            The best offer <br />
-            <span className="text-primary">for your business</span>
+            Bienvenue au <span className="text-primary">SI3</span>
+            <br />
+            {/* <span className="text-primary">for your business</span> */}
           </h1>
-          <p className="px-3" style={{ color: 'hsl(217, 10%, 50.8%)' }}></p>
+          <p className="px-3" style={{ color: 'hsl(217, 10%, 50.8%)' }}>
+            SI3 aide à stocker, organiser et sécuriser les données tout au long du cycle de vie de
+            la construction des pylônes. Avec SI3, contrôlez le projet et collaborez en toute
+            simplicité.
+            <br />
+            Répertoires des parties prenantes
+            <br />
+            Stockage des information des sites
+            <br />
+            Gestion des tâches
+            <br />
+            Suivre les activities de chaque site
+            <br />
+            Suivre le statut de réglement des devis
+            <br />
+            Notifications automatisées
+            <br />
+            Sassurer que le projet est sur les rails
+            <br />
+            Rapports et analyses avancés pour prendre les bonnes decisions
+          </p>
         </MDBCol>
-
         <MDBCol md="6">
           <MDBCard className="my-5">
             <MDBCardBody className="p-5">

@@ -1,8 +1,6 @@
 import express from "express"; 
 import cors from "cors"; 
 import bodyParser from "body-parser";
-import dotenv from 'dotenv';
-dotenv.config(); 
 // Routes
 import authRoutes from './routes/auth.js'; // Import auth routes
 
