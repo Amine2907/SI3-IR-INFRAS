@@ -17,12 +17,11 @@ import ProtectedRoute from 'PrivateRoute';
 import Dashboard from 'layouts/dashboard';
 import { AuthProvider, useAuth } from 'context/Auth/AuthContext';
 import PropTypes from 'prop-types';
-
+import { useNavigate } from 'react-router-dom';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
   const { pathname } = useLocation();
-
   return (
     <AuthProvider>
       <InnerApp
@@ -39,7 +38,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   // Receive darkMode as a prop
   const { isAuthenticated } = useAuth();
   const [onMouseEnter, setOnMouseEnter] = useState(false);
-
+  const navigate = useNavigate();
   const handleOnMouseEnter = () => {
     if (controller.miniSidenav && !onMouseEnter) {
       setMiniSidenav(dispatch, false);
@@ -62,6 +61,23 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
+  useEffect(() => {
+    // If the user is not authenticated, redirect to the auth page
+    if (!isAuthenticated) {
+      navigate('/auth', { replace: true });
+    }
+    // Listen for the popstate event to prevent going back to the auth page
+    const handlePopState = () => {
+      if (!isAuthenticated) {
+        navigate('/dashboard', { replace: true });
+      }
+    };
+    window.history.pushState(null, null, window.location.href);
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isAuthenticated, navigate]);
 
   const getRoutes = allRoutes =>
     allRoutes.map(route => {
