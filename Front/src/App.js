@@ -35,7 +35,6 @@ export default function App() {
     </AuthProvider>
   );
 }
-
 function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   // Receive darkMode as a prop
   const { isAuthenticated } = useAuth();
@@ -69,14 +68,11 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
       if (route.collapse) {
         return getRoutes(route.collapse);
       }
-
       if (route.route) {
         return <Route exact path={route.route} element={route.component} key={route.key} />;
       }
-
       return null;
     });
-
   const configsButton = (
     <MDBox
       display="flex"
