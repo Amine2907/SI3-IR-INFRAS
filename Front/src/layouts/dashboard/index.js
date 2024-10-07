@@ -6,6 +6,7 @@
 
 // Material Dashboard 2 React example components
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
+import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 // import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 // import Footer from 'examples/Footer';
 // import ReportsBarChart from 'examples/Charts/BarCharts/ReportsBarChart';
@@ -25,6 +26,7 @@ function Dashboard() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar />
       {/* <DashboardNavbar />
       <MDBox py={3}>
         <Grid container spacing={3}>

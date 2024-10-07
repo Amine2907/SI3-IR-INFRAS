@@ -25,10 +25,15 @@ const signUp = (email, password) => {
       return { success: false };
     });
 };
-
+// Check if the user is authenticated
+const isAuthenticated = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  // You can also implement further checks here, such as token expiration
+  return user && user.token ? true : false;
+};
 const AuthService = {
   signIn,
   signUp,
+  isAuthenticated,
 };
-
 export default AuthService;

@@ -30,8 +30,9 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from 'co
 // Images
 import brandWhite from 'assets/images/logo-ct.png';
 import brandDark from 'assets/images/logo-ct-dark.png';
+import AuthService from 'layouts/authentification/services/authService';
 import AuthPage from 'layouts/authentification/AuthPage';
-import PrivateRoute from './PrivateRoute';
+import ProtectedRoute from 'PrivateRoute';
 import Dashboard from 'layouts/dashboard';
 
 export default function App() {
@@ -39,7 +40,6 @@ export default function App() {
   const {
     miniSidenav,
     direction,
-    layout,
     openConfigurator,
     sidenavColor,
     transparentSidenav,
@@ -48,7 +48,8 @@ export default function App() {
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
-
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [layout, setLayout] = useState('auth');
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {
@@ -78,19 +79,31 @@ export default function App() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
+  //
+  useEffect(() => {
+    document.body.setAttribute('dir', direction);
 
-  const getRoutes = allRoutes =>
-    allRoutes.map(route => {
-      if (route.collapse) {
-        return getRoutes(route.collapse);
-      }
+    // Check if the user is authenticated when the app loads
+    const checkAuthStatus = async () => {
+      const authStatus = await AuthService.isAuthenticated();
+      setIsAuthenticated(authStatus);
+      setLayout(authStatus ? 'dashboard' : 'auth');
+    };
 
-      if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
-      }
+    checkAuthStatus();
+  }, [direction]);
+  // const getRoutes = allRoutes =>
+  //   allRoutes.map(route => {
+  //     if (route.collapse) {
+  //       return getRoutes(route.collapse);
+  //     }
 
-      return null;
-    });
+  //     if (route.route) {
+  //       return <Route exact path={route.route} element={route.component} key={route.key} />;
+  //     }
+
+  //     return null;
+  //   });
 
   const configsButton = (
     <MDBox
@@ -118,12 +131,13 @@ export default function App() {
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-      {layout === 'dashboard' && (
+
+      {layout === 'dashboard' && isAuthenticated && (
         <>
           <Sidenav
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-            brandName="SI3 DASHBOARD"
+            brandName="SI3 Dashboard"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
@@ -132,19 +146,23 @@ export default function App() {
           {configsButton}
         </>
       )}
-      {layout === 'vr' && <Configurator />}
+
       <Routes>
-        {getRoutes(routes)}
+        {/* Public Route for Authentication */}
         <Route path="/auth" element={<AuthPage />} />
+
+        {/* Private Route for Dashboard */}
         <Route
           path="/dashboard"
           element={
-            <PrivateRoute>
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
               <Dashboard />
-            </PrivateRoute>
+            </ProtectedRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/auth" />} />
+
+        {/* Redirect all other routes to /auth if not authenticated */}
+        <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/auth'} />} />
       </Routes>
     </ThemeProvider>
   );
