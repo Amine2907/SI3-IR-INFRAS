@@ -12,7 +12,7 @@ import {
   MDBCheckbox,
   MDBIcon,
 } from 'mdb-react-ui-kit';
-import axios from 'axios';
+import AuthService from 'authservice';
 
 function SignUpForm() {
   const [firstName, setFirstName] = useState('');
@@ -24,20 +24,21 @@ function SignUpForm() {
 
   const handleSignUp = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signup', {
-        firstName,
-        lastName,
-        email,
-        password,
-      });
-      setSuccessMessage(response.data.message);
-      setErrorMessage('');
+      const response = await AuthService.signUp(firstName, lastName, email, password);
+      if (response.success) {
+        setSuccessMessage(response.data.message);
+        setErrorMessage(''); // Clear any previous error messages
+      } else {
+        setErrorMessage('Sign-up failed. Please try again.'); // Generic error message
+        setSuccessMessage(''); // Clear any previous success messages
+      }
     } catch (error) {
-      setErrorMessage(error.response.data.error);
+      setErrorMessage('An error occurred while signing up. Please try again.'); // Generic error message
       setSuccessMessage('');
+      // setErrorMessage(error.data.response.error);
+      console.error('Sign up error:', error); // Log the error for debugging purposes
     }
   };
-
   return (
     <MDBContainer fluid className="p-4">
       <MDBRow>
