@@ -30,16 +30,14 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from 'co
 // Images
 import brandWhite from 'assets/images/logo-ct.png';
 import brandDark from 'assets/images/logo-ct-dark.png';
-import AuthService from 'layouts/authentification/services/authService';
 import AuthPage from 'layouts/authentification/AuthPage';
-import ProtectedRoute from 'PrivateRoute';
-import Dashboard from 'layouts/dashboard';
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
     direction,
+    layout,
     openConfigurator,
     sidenavColor,
     transparentSidenav,
@@ -48,8 +46,7 @@ export default function App() {
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [layout, setLayout] = useState('auth');
+
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {
@@ -79,31 +76,19 @@ export default function App() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
-  //
-  useEffect(() => {
-    document.body.setAttribute('dir', direction);
 
-    // Check if the user is authenticated when the app loads
-    const checkAuthStatus = async () => {
-      const authStatus = await AuthService.isAuthenticated();
-      setIsAuthenticated(authStatus);
-      setLayout(authStatus ? 'dashboard' : 'auth');
-    };
+  const getRoutes = allRoutes =>
+    allRoutes.map(route => {
+      if (route.collapse) {
+        return getRoutes(route.collapse);
+      }
 
-    checkAuthStatus();
-  }, [direction]);
-  // const getRoutes = allRoutes =>
-  //   allRoutes.map(route => {
-  //     if (route.collapse) {
-  //       return getRoutes(route.collapse);
-  //     }
+      if (route.route) {
+        return <Route exact path={route.route} element={route.component} key={route.key} />;
+      }
 
-  //     if (route.route) {
-  //       return <Route exact path={route.route} element={route.component} key={route.key} />;
-  //     }
-
-  //     return null;
-  //   });
+      return null;
+    });
 
   const configsButton = (
     <MDBox
@@ -131,8 +116,7 @@ export default function App() {
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-
-      {layout === 'dashboard' && isAuthenticated && (
+      {layout === 'dashboard' && (
         <>
           <Sidenav
             color={sidenavColor}
@@ -146,23 +130,11 @@ export default function App() {
           {configsButton}
         </>
       )}
-
+      {layout === 'vr' && <Configurator />}
       <Routes>
-        {/* Public Route for Authentication */}
+        {getRoutes(routes)}
+        <Route path="*" element={<Navigate to="/dashboard" />} />
         <Route path="/auth" element={<AuthPage />} />
-
-        {/* Private Route for Dashboard */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Redirect all other routes to /auth if not authenticated */}
-        <Route path="*" element={<Navigate to={isAuthenticated ? '/dashboard' : '/auth'} />} />
       </Routes>
     </ThemeProvider>
   );

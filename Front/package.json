@@ -24,6 +24,7 @@
     "@supabase/supabase-js": "^2.45.4",
     "chart.js": "4.3.0",
     "chroma-js": "2.4.2",
+    "jwt-decode": "^4.0.0",
     "mdb-react-ui-kit": "^9.0.0",
     "prop-types": "^15.8.1",
     "react": "18.2.0",

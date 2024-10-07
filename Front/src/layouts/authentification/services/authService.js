@@ -1,6 +1,6 @@
 import axios from 'axios';
-
 const API_URL = 'http://localhost:5000/api/auth';
+
 
 const signIn = (email, password) => {
   return axios
@@ -16,6 +16,7 @@ const signIn = (email, password) => {
       return { success: false };
     });
 };
+
 const signUp = (email, password) => {
   return axios
     .post(`${API_URL}/signup`, { email, password })
@@ -28,9 +29,9 @@ const signUp = (email, password) => {
 // Check if the user is authenticated
 const isAuthenticated = () => {
   const user = JSON.parse(localStorage.getItem('user'));
-  // You can also implement further checks here, such as token expiration
   return user && user.token ? true : false;
 };
+
 const AuthService = {
   signIn,
   signUp,

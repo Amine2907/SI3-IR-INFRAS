@@ -26,21 +26,21 @@ function SignInForm() {
         email,
         password,
       });
-
       // Store user data in localStorage
       localStorage.setItem('user', JSON.stringify(response.data.user));
 
       // Display success message
-      setSuccessMessage('response.data.message');
+      setSuccessMessage(response.data.message); // Fixed here
       setErrorMessage('');
+
       // Redirect to the dashboard if sign-in is successful
+      console.log('Navigating to /dashboard');
       navigate('/dashboard');
     } catch (error) {
       setErrorMessage(error.response?.data?.error || 'Sign-in failed');
       setSuccessMessage('');
     }
   };
-
   return (
     <MDBContainer fluid className="p-4">
       <MDBRow>
@@ -56,7 +56,7 @@ function SignInForm() {
         <MDBCol md="6">
           <MDBCard className="my-5">
             <MDBCardBody className="p-5">
-              <form onSubmit={handleSignIn}>
+              <form>
                 <MDBInput
                   wrapperClass="mb-4"
                   label="Email"
@@ -70,7 +70,7 @@ function SignInForm() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                 />
-                <MDBBtn className="w-100 mb-4" size="md">
+                <MDBBtn className="w-100 mb-4" size="md" onClick={handleSignIn}>
                   Sign In
                 </MDBBtn>
                 {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
