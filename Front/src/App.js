@@ -1,61 +1,53 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
-// react-router components
-import { Navigate, useLocation } from 'react-router-dom';
-
-// @mui material components
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Icon from '@mui/material/Icon';
-
-// Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
-
-// Material Dashboard 2 React example components
 import Sidenav from 'examples/Sidenav';
 import Configurator from 'examples/Configurator';
-
-// Material Dashboard 2 React themes
 import theme from 'assets/theme';
-
-// Material Dashboard 2 React Dark Mode themes
 import themeDark from 'assets/theme-dark';
-
-// Material Dashboard 2 React routes
 import routes from 'routes';
-
-// Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from 'context';
-
-// Images
 import brandWhite from 'assets/images/logo-ct.png';
 import brandDark from 'assets/images/logo-ct-dark.png';
 import AuthPage from 'layouts/authentification/AuthPage';
+import ProtectedRoute from 'PrivateRoute';
+import Dashboard from 'layouts/dashboard';
+import { AuthProvider, useAuth } from 'context/Auth/AuthContext';
+import PropTypes from 'prop-types';
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
-  const {
-    miniSidenav,
-    direction,
-    layout,
-    openConfigurator,
-    sidenavColor,
-    transparentSidenav,
-    whiteSidenav,
-    darkMode,
-  } = controller;
-  const [onMouseEnter, setOnMouseEnter] = useState(false);
+  const { darkMode } = controller;
   const { pathname } = useLocation();
 
-  // Open sidenav when mouse enter on mini sidenav
+  return (
+    <AuthProvider>
+      <InnerApp
+        controller={controller}
+        dispatch={dispatch}
+        pathname={pathname}
+        theme={darkMode ? themeDark : theme}
+        darkMode={darkMode}
+      />
+    </AuthProvider>
+  );
+}
+
+function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
+  // Receive darkMode as a prop
+  const { isAuthenticated } = useAuth();
+  const [onMouseEnter, setOnMouseEnter] = useState(false);
+
   const handleOnMouseEnter = () => {
-    if (miniSidenav && !onMouseEnter) {
+    if (controller.miniSidenav && !onMouseEnter) {
       setMiniSidenav(dispatch, false);
       setOnMouseEnter(true);
     }
   };
 
-  // Close sidenav when mouse leave mini sidenav
   const handleOnMouseLeave = () => {
     if (onMouseEnter) {
       setMiniSidenav(dispatch, true);
@@ -63,15 +55,10 @@ export default function App() {
     }
   };
 
-  // Change the openConfigurator state
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
+  const handleConfiguratorOpen = () => {
+    setOpenConfigurator(dispatch, !controller.openConfigurator);
+  };
 
-  // Setting the dir attribute for the body element
-  useEffect(() => {
-    document.body.setAttribute('dir', direction);
-  }, [direction]);
-
-  // Setting page scroll to 0 when changing the route
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -113,14 +100,19 @@ export default function App() {
       </Icon>
     </MDBox>
   );
+
   return (
-    <ThemeProvider theme={darkMode ? themeDark : theme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
-      {layout === 'dashboard' && (
+      {controller.layout === 'dashboard' && pathname !== '/auth' && (
         <>
           <Sidenav
-            color={sidenavColor}
-            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+            color={controller.sidenavColor}
+            brand={
+              (controller.transparentSidenav && !darkMode) || controller.whiteSidenav
+                ? brandDark
+                : brandWhite
+            }
             brandName="SI3 Dashboard"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
@@ -130,12 +122,33 @@ export default function App() {
           {configsButton}
         </>
       )}
-      {layout === 'vr' && <Configurator />}
       <Routes>
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="*" element={<Navigate to="/auth" />} />
         <Route path="/auth" element={<AuthPage />} />
       </Routes>
     </ThemeProvider>
   );
 }
+InnerApp.propTypes = {
+  controller: PropTypes.shape({
+    miniSidenav: PropTypes.bool,
+    layout: PropTypes.string,
+    openConfigurator: PropTypes.bool,
+    sidenavColor: PropTypes.string,
+    transparentSidenav: PropTypes.bool,
+    whiteSidenav: PropTypes.bool,
+  }).isRequired,
+  dispatch: PropTypes.func.isRequired,
+  pathname: PropTypes.string.isRequired,
+  theme: PropTypes.object.isRequired,
+  darkMode: PropTypes.bool.isRequired,
+};

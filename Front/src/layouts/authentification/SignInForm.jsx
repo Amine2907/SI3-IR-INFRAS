@@ -11,6 +11,7 @@ import {
   MDBInput,
   MDBIcon,
 } from 'mdb-react-ui-kit';
+import { useAuth } from 'context/Auth/AuthContext';
 import AuthService from 'authService';
 import { useNavigate } from 'react-router-dom';
 function SignInForm() {
@@ -19,6 +20,7 @@ function SignInForm() {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
   const handleSignIn = async e => {
     e.preventDefault(); // Prevent the default form submission
 
@@ -29,6 +31,7 @@ function SignInForm() {
       setErrorMessage('Invalid credentials, please try again.');
     } else {
       console.log('Sign-in successful:', response);
+      login();
       navigate('/dashboard');
     }
   };
