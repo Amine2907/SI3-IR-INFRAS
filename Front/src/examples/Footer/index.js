@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 // @mui material components
 import Link from '@mui/material/Link';
-import Icon from '@mui/material/Icon';
+// import Icon from '@mui/material/Icon';
 
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
@@ -12,8 +12,8 @@ import MDTypography from 'components/MDTypography';
 // Material Dashboard 2 React base styles
 import typography from 'assets/theme/base/typography';
 
-function Footer({ company, links }) {
-  const { href, name } = company;
+function Footer({ links }) {
+  // const { href, name } = company;
   const { size } = typography;
 
   const renderLinks = () =>
@@ -46,18 +46,18 @@ function Footer({ company, links }) {
         px={1.5}
       >
         &copy; {new Date().getFullYear()}, made with
-        <MDBox fontSize={size.md} color="text" mb={-0.5} mx={0.25}>
+        {/* <MDBox fontSize={size.md} color="text" mb={-0.5} mx={0.25}>
           <Icon color="inherit" fontSize="inherit">
             favorite
           </Icon>
-        </MDBox>
-        by
+        </MDBox> */}
+        {/* by
         <Link href={href} target="_blank">
           <MDTypography variant="button" fontWeight="medium">
             &nbsp;{name}&nbsp;
           </MDTypography>
         </Link>
-        for a better web.
+        for a better web. */}
       </MDBox>
       <MDBox
         component="ul"
@@ -84,12 +84,12 @@ function Footer({ company, links }) {
 
 // Setting default values for the props of Footer
 Footer.defaultProps = {
-  company: { href: 'https://www.creative-tim.com/', name: 'Creative Tim' },
+  company: { href: '', name: 'IR INFRAS' },
   links: [
-    { href: 'https://www.creative-tim.com/', name: 'Creative Tim' },
-    { href: 'https://www.creative-tim.com/presentation', name: 'About Us' },
-    { href: 'https://www.creative-tim.com/blog', name: 'Blog' },
-    { href: 'https://www.creative-tim.com/license', name: 'License' },
+    { href: '', name: 'IR INFARS' },
+    { href: '', name: 'About Us' },
+    { href: '', name: 'Blog' },
+    { href: '', name: 'License' },
   ],
 };
 

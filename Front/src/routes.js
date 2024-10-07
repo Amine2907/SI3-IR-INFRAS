@@ -11,7 +11,7 @@ const routes = [
   {
     type: 'collapse',
     name: 'Tableau de Bord',
-    key: 'dashboard',
+    key: 'Tableau de Bord',
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: '/dashboard',
     component: <Dashboard />,
@@ -42,19 +42,19 @@ const routes = [
   },
   {
     type: 'collapse',
-    name: 'Profile',
-    key: 'profile',
+    name: 'Entités',
+    key: 'Entités',
     icon: <Icon fontSize="small">person</Icon>,
     route: '/profile',
     component: <Profile />,
   },
-  // {
-  //   type: 'collapse',
-  //   name: 'Auth',
-  //   key: 'Auth',
-  //   icon: <Icon fontSize="small">person</Icon>,
-  //   route: '/SignOut',
-  //   component: <SignOutPage/>,
-  // },
+  {
+    type: 'collapse',
+    name: 'Paramètres',
+    key: 'Paramètres',
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: '/dashboard',
+    component: <Dashboard />,
+  },
 ];
 export default routes;

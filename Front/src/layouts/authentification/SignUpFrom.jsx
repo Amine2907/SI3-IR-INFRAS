@@ -127,7 +127,6 @@ function SignUpForm() {
               <MDBBtn className="w-100 mb-4" size="md" onClick={handleSignUp}>
                 Sign Up
               </MDBBtn>
-
               {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
               {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
 

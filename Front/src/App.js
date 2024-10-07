@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 // react-router components
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 // @mui material components
 import { ThemeProvider } from '@mui/material/styles';
@@ -30,10 +31,11 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from 'co
 import brandWhite from 'assets/images/logo-ct.png';
 import brandDark from 'assets/images/logo-ct-dark.png';
 import AuthPage from 'layouts/authentification/AuthPage';
+import PrivateRoute from './PrivateRoute';
+import Dashboard from 'layouts/dashboard';
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const {
     miniSidenav,
     direction,
@@ -46,10 +48,7 @@ export default function App() {
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
-  // Handling Login
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-  };
+
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {
@@ -116,42 +115,36 @@ export default function App() {
       </Icon>
     </MDBox>
   );
-
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
-
-      {/* Conditionally render components based on authentication */}
-      {isAuthenticated ? (
-        layout === 'dashboard' && (
-          <>
-            <Sidenav
-              color={sidenavColor}
-              brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="Material Dashboard 2"
-              routes={routes}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-            />
-            <Configurator />
-            {configsButton}
-          </>
-        )
-      ) : (
-        <Routes>
-          <Route path="*" element={<Navigate to="/auth" />} />
-          <Route path="/auth" element={<AuthPage onLogin={handleLogin} />} />
-        </Routes>
+      {layout === 'dashboard' && (
+        <>
+          <Sidenav
+            color={sidenavColor}
+            brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+            brandName="SI3 DASHBOARD"
+            routes={routes}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
+          />
+          <Configurator />
+          {configsButton}
+        </>
       )}
-
-      {/* Render Routes */}
+      {layout === 'vr' && <Configurator />}
       <Routes>
-        {isAuthenticated ? getRoutes(routes) : null}
-        {isAuthenticated ? (
-          <Route path="*" element={<Navigate to="/dashboard" />} />
-        ) : (
-          <Route path="*" element={<Navigate to="/auth" />} />
-        )}
+        {getRoutes(routes)}
+        <Route path="/auth" element={<AuthPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/auth" />} />
       </Routes>
     </ThemeProvider>
   );

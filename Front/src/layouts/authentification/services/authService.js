@@ -19,7 +19,7 @@ const signIn = (email, password) => {
 const signUp = (email, password) => {
   return axios
     .post(`${API_URL}/signup`, { email, password })
-    .then(response => response.data) // Remove parentheses around `response`
+    .then(response => response.data)
     .catch(error => {
       console.error('Sign-up error:', error);
       return { success: false };

@@ -31,7 +31,7 @@ function SignInForm() {
       localStorage.setItem('user', JSON.stringify(response.data.user));
 
       // Display success message
-      setSuccessMessage(response.data.message);
+      setSuccessMessage('response.data.message');
       setErrorMessage('');
       // Redirect to the dashboard if sign-in is successful
       navigate('/dashboard');
@@ -56,27 +56,26 @@ function SignInForm() {
         <MDBCol md="6">
           <MDBCard className="my-5">
             <MDBCardBody className="p-5">
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-              />
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Password"
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-              />
-
-              <MDBBtn className="w-100 mb-4" size="md" onClick={handleSignIn}>
-                Sign In
-              </MDBBtn>
-
-              {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-              {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-
+              <form onSubmit={handleSignIn}>
+                <MDBInput
+                  wrapperClass="mb-4"
+                  label="Email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                />
+                <MDBInput
+                  wrapperClass="mb-4"
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                />
+                <MDBBtn className="w-100 mb-4" size="md">
+                  Sign In
+                </MDBBtn>
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+              </form>
               <div className="text-center">
                 <p>or sign in with:</p>
                 <MDBBtn tag="a" color="none" className="mx-3" style={{ color: '#1266f1' }}>
