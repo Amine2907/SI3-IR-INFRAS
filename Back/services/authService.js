@@ -4,14 +4,14 @@ const signIn = (email, password) => {
   return axios
     .post(`${API_URL}/signin`, { email, password })
     .then(response => {
-      if (response.data.token) {
-        localStorage.setItem('user', JSON.stringify(response.data));
+      if (response.data.user) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
       }
       return response.data;
     })
     .catch(error => {
-      console.error('Sign-in error:', error);
-      return { success: false };
+      console.error('Sign-in error:', error.response.data.error || error.message);
+      return { success: false, message: error.response.data.error || 'Unknown error' };
     });
 };
 

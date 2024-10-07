@@ -11,30 +11,25 @@ import {
   MDBInput,
   MDBIcon,
 } from 'mdb-react-ui-kit';
-// import axios from 'axios';
+import AuthService from 'authService';
 import { useNavigate } from 'react-router-dom';
-import AuthService from './services/authService';
-
 function SignInForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [successMessage] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
   const handleSignIn = async e => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the default form submission
 
-    try {
-      const response = await AuthService.signIn(email, password);
+    const response = await AuthService.signIn(email, password);
 
-      if (response.success) {
-        navigate('/dashboard'); // Redirect to the dashboard upon successful sign-in
-      } else {
-        setError('Invalid credentials');
-      }
-    } catch (error) {
-      setError('An error occurred. Please try again.');
+    // Check the response
+    if (response.success === false) {
+      setErrorMessage('Invalid credentials, please try again.');
+    } else {
+      console.log('Sign-in successful:', response);
+      navigate('/dashboard');
     }
   };
   return (
@@ -66,7 +61,6 @@ function SignInForm() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                 />
-                {error && <p>{error}</p>}
                 <MDBBtn className="w-100 mb-4" size="md" onClick={handleSignIn}>
                   Sign In
                 </MDBBtn>
