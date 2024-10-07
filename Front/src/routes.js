@@ -6,6 +6,7 @@ import Notifications from 'layouts/notifications';
 import Profile from 'layouts/profile';
 // @mui icons
 import Icon from '@mui/material/Icon';
+import AuthPage from 'layouts/authentification/AuthPage';
 
 const routes = [
   {
@@ -55,6 +56,14 @@ const routes = [
     icon: <Icon fontSize="small">dashboard</Icon>,
     route: '/dashboard',
     component: <Dashboard />,
+  },
+  {
+    type: 'collapse',
+    name: 'Auth',
+    key: 'AUTH',
+    icon: <Icon fontSize="small">dashboard</Icon>,
+    route: '/auth',
+    component: <AuthPage />,
   },
 ];
 export default routes;

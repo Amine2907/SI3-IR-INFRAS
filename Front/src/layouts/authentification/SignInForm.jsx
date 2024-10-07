@@ -11,34 +11,30 @@ import {
   MDBInput,
   MDBIcon,
 } from 'mdb-react-ui-kit';
-import axios from 'axios';
+// import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import AuthService from './services/authService';
 
 function SignInForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage] = useState('');
+  const [successMessage] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
-  const handleSignIn = async () => {
+  const handleSignIn = async e => {
+    e.preventDefault();
+
     try {
-      const response = await axios.post('http://localhost:5000/api/signin', {
-        email,
-        password,
-      });
-      // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      const response = await AuthService.signIn(email, password);
 
-      // Display success message
-      setSuccessMessage(response.data.message); // Fixed here
-      setErrorMessage('');
-
-      // Redirect to the dashboard if sign-in is successful
-      console.log('Navigating to /dashboard');
-      navigate('/dashboard');
+      if (response.success) {
+        navigate('/dashboard'); // Redirect to the dashboard upon successful sign-in
+      } else {
+        setError('Invalid credentials');
+      }
     } catch (error) {
-      setErrorMessage(error.response?.data?.error || 'Sign-in failed');
-      setSuccessMessage('');
+      setError('An error occurred. Please try again.');
     }
   };
   return (
@@ -70,6 +66,7 @@ function SignInForm() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                 />
+                {error && <p>{error}</p>}
                 <MDBBtn className="w-100 mb-4" size="md" onClick={handleSignIn}>
                   Sign In
                 </MDBBtn>

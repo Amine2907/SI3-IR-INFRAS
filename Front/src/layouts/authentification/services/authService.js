@@ -1,7 +1,5 @@
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/auth';
-
-
 const signIn = (email, password) => {
   return axios
     .post(`${API_URL}/signin`, { email, password })
