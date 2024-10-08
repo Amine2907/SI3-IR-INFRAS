@@ -40,16 +40,13 @@ function SignInForm() {
   const handleResetPassword = async e => {
     e.preventDefault();
     const response = await AuthService.resetPassword(resetEmail);
-    // Ensure response is defined and contains a success property
     if (response && response.success) {
       reset();
-      // Check if response.data is defined and has the message property
       setSuccessMessage(response.message || 'Password reset email sent successfully.');
       setErrorMessage('');
       navigate('/auth');
     } else {
       setSuccessMessage('');
-      // Make sure to handle error correctly
       setErrorMessage(response?.error || 'An unexpected error occurred.');
     }
   };
