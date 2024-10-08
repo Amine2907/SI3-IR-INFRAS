@@ -18,6 +18,7 @@ import Dashboard from 'layouts/dashboard';
 import { AuthProvider, useAuth } from 'context/Auth/AuthContext';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import ResetPasswordForm from 'layouts/authentification/ResetPasswordForm';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
@@ -145,6 +146,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/auth" />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/confirm-reset-password" element={<ResetPasswordForm />} />
       </Routes>
     </ThemeProvider>
   );

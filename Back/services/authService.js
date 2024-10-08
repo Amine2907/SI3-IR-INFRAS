@@ -33,18 +33,18 @@ const isAuthenticated = () => {
 // Password reset for the user
 const resetPassword = async (email) => {
   return axios
-  .post(`${API_URL}/reset-password`,{email})
-  .then(response => response.data)
-  .catch(error => {
-    console.error('Reseting password failed !', error);
-    return {success : false};
-  });
+    .post(`${API_URL}/reset-password`, { email })
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Reseting password failed !', error.response?.data || error);
+      return { success: false, error: error.response?.data?.error || 'Unknown error' };
+    });
 };
 // Confirm reseting password for the user 
-const confirmResetPassword = async (newPassword , token ) => {
+const confirmResetPassword = async (newPassword,token) => {
   return axios 
-  .post(`${API_URL}/confirm-reset-password`, {token,newPassword})
-  .then(response => response.data )
+  .post(`${API_URL}/confirm-reset-password`, {access_token:token,newPassword:newPassword})
+  .then(response => response.data)
   .catch(error => {
     console.error('Réinitialisation du mot de passe échouée !', error);
     return { success: false, error: error.response?.data?.error || 'Erreur inconnue' };
