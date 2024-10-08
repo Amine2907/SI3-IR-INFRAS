@@ -144,7 +144,7 @@ function Sidenav({ brand, brandName, routes, ...rest }) {
             <Icon sx={{ fontWeight: 'bold' }}>close</Icon>
           </MDTypography>
         </MDBox>
-        <MDBox component={NavLink} to="/" display="flex" alignItems="center">
+        <MDBox component={NavLink} to="/dashboard" display="flex" alignItems="center">
           {brand && <MDBox component="img" src={brand} alt="Brand" width="2rem" />}
           <MDBox
             width={!brandName && '100%'}
@@ -166,7 +166,6 @@ function Sidenav({ brand, brandName, routes, ...rest }) {
     </SidenavRoot>
   );
 }
-
 // Setting default values for the props of Sidenav
 Sidenav.defaultProps = {
   color: 'info',
