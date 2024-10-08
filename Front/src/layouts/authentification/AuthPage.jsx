@@ -8,19 +8,18 @@ const AuthPage = () => {
   const toggleAuthForm = () => {
     setIsSignUp(!isSignUp); // Toggle between Sign Up and Sign In
   };
-
   return (
     <div>
       {isSignUp ? (
         <>
           <SignUpForm />
           <p>
-            Already have an account?{' '}
+            Vous avez déjà un compte ?{' '}
             <button
               onClick={toggleAuthForm}
               style={{ cursor: 'pointer', color: 'blue', border: 'none', background: 'none' }}
             >
-              Sign In
+              Se connecter
             </button>
           </p>
         </>
@@ -28,12 +27,12 @@ const AuthPage = () => {
         <>
           <SignInForm />
           <p>
-            Dont have an account?{' '}
+            Vous n&apos;avez pas de compte ?{' '}
             <button
               onClick={toggleAuthForm}
               style={{ cursor: 'pointer', color: 'blue', border: 'none', background: 'none' }}
             >
-              Sign Up
+              Sinscrire
             </button>
           </p>
         </>

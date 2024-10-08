@@ -112,7 +112,6 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
       </Icon>
     </MDBox>
   );
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

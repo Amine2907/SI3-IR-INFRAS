@@ -1,5 +1,6 @@
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/auth';
+// Sign in the user 
 const signIn = (email, password) => {
   return axios
     .post(`${API_URL}/signin`, { email, password })
@@ -14,7 +15,7 @@ const signIn = (email, password) => {
       return { success: false, message: error.response.data.error || 'Unknown error' };
     });
 };
-
+// Sign Up the user 
 const signUp = (email, password) => {
   return axios
     .post(`${API_URL}/signup`, { email, password })
@@ -29,10 +30,32 @@ const isAuthenticated = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   return user && user.token ? true : false;
 };
-
+// Password reset for the user
+const resetPassword = async (email) => {
+  return axios
+  .post(`${API_URL}/reset-password`,{email})
+  .then(response => response.data)
+  .catch(error => {
+    console.error('Reseting password failed !', error)
+    return {success : false}
+  });
+};
+// Confirm reseting password for the user 
+const confirmResetPassword = async (newPassword , token ) => {
+  return axios 
+  .post(`${API_URL}/confirm-reset-password`, {token,newPassword})
+  .then(response => response.data )
+  .catch(error => {
+    console.error('Réinitialisation du mot de passe échouée !', error);
+    return { success: false, error: error.response?.data?.error || 'Erreur inconnue' };
+  });
+};
+// Exporting functions (for call AuthService.func)
 const AuthService = {
   signIn,
   signUp,
   isAuthenticated,
+  resetPassword,
+  confirmResetPassword,
 };
 export default AuthService;

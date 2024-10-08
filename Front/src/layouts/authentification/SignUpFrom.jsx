@@ -21,21 +21,21 @@ function SignUpForm() {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  const handleSignUp = async () => {
+  const handleSignUp = async e => {
+    e.preventDefault();
     try {
       const response = await AuthService.signUp(firstName, lastName, email, password);
       if (response.success) {
         setSuccessMessage(response.data.message);
-        setErrorMessage(''); // Clear any previous error messages
+        setErrorMessage('');
       } else {
-        setErrorMessage('Sign-up failed. Please try again.'); // Generic error message
-        setSuccessMessage(''); // Clear any previous success messages
+        setErrorMessage('Sign-up failed. Please try again.');
+        setSuccessMessage('');
       }
     } catch (error) {
-      setErrorMessage('An error occurred while signing up. Please try again.'); // Generic error message
+      setErrorMessage('An error occurred while signing up. Please try again.');
       setSuccessMessage('');
-      // setErrorMessage(error.data.response.error);
-      console.error('Sign up error:', error); // Log the error for debugging purposes
+      console.error('Sign up error:', error);
     }
   };
   return (
@@ -115,13 +115,13 @@ function SignUpForm() {
                 onChange={e => setPassword(e.target.value)}
               />
               <MDBBtn className="w-100 mb-4" size="md" onClick={handleSignUp}>
-                Sign Up
+                S&apos;inscrire
               </MDBBtn>
               {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
               {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
 
               <div className="text-center">
-                <p>or sign up with:</p>
+                <p>Ou inscrivez-vous avec :</p>
                 <MDBBtn tag="a" color="none" className="mx-3" style={{ color: '#1266f1' }}>
                   <MDBIcon fab icon="facebook-f" size="sm" />
                 </MDBBtn>

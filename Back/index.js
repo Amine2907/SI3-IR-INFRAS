@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors"; 
 import bodyParser from "body-parser";
 // Routes
-import authRoutes from './routes/auth.js'; // Import auth routes
+import authRoutes from './Routes/auth.js'; // Import auth routes
 
 // Express Setup
 const app = express();
