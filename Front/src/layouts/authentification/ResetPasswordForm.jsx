@@ -24,7 +24,7 @@ function ResetPasswordForm() {
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const tokenFromUrl = queryParams.get('access_token');
-    setToken(tokenFromUrl); // Store the token in the state
+    setToken(tokenFromUrl);
   }, [location]);
 
   const handleResetPassword = async e => {
@@ -52,31 +52,27 @@ function ResetPasswordForm() {
           <MDBCard className="my-5">
             <MDBCardBody className="p-5">
               <h1 className="mb-4">Réinitialiser le mot de passe</h1>
-              {token ? ( // Check if the token is present
-                <form onSubmit={handleResetPassword}>
-                  <MDBInput
-                    wrapperClass="mb-4"
-                    label="Nouveau mot de passe"
-                    type="password"
-                    value={newPassword}
-                    onChange={e => setNewPassword(e.target.value)}
-                  />
-                  <MDBInput
-                    wrapperClass="mb-4"
-                    label="Confirmer le mot de passe"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                  />
-                  <MDBBtn className="w-100 mb-4" size="md" type="submit">
-                    Réinitialiser le mot de passe
-                  </MDBBtn>
-                  {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                  {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-                </form>
-              ) : (
-                <p style={{ color: 'red' }}>Token de réinitialisation invalide.</p>
-              )}
+              <form onSubmit={handleResetPassword}>
+                <MDBInput
+                  wrapperClass="mb-4"
+                  label="Nouveau mot de passe"
+                  type="password"
+                  value={newPassword}
+                  onChange={e => setNewPassword(e.target.value)}
+                />
+                <MDBInput
+                  wrapperClass="mb-4"
+                  label="Confirmer le mot de passe"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                />
+                <MDBBtn className="w-100 mb-4" size="md" type="submit">
+                  Réinitialiser le mot de passe
+                </MDBBtn>
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+              </form>
             </MDBCardBody>
           </MDBCard>
         </MDBCol>
