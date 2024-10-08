@@ -1,5 +1,5 @@
 import { supabase } from "../Config/supabaseClient.js";
-const FRONT_URL = 'http://localhost:5000/api/auth';
+const FRONT_URL = 'http://localhost:3000/api/auth';
 // Sign up Controller
 export const signUp = async (req, res) => {
     const { email, password } = req.body; 
@@ -27,9 +27,10 @@ export const signOut = async (req, res) => {
 };
 // Reset Pwd Controller 
 export const resetPassword = async(req,res) => {
-  const{email} = req.body ; 
+  const{email} = req.body ;
+  const redirectToUrl = `${FRONT_URL}/confirm-reset-password`;
   try {
-    const {data,error} = await supabase.auth.resetPasswordForEmail(email,{redirectTo :`${FRONT_URL}/confirm-reset-password?token=YOUR_GENERATED_TOKEN`});
+    const {data,error} = await supabase.auth.resetPasswordForEmail(email,{redirectTo: redirectToUrl,});
     if(error) {
     return res.status(400).json({success: false, error: error.message});
     }
@@ -37,7 +38,7 @@ export const resetPassword = async(req,res) => {
   } catch(error) {
     return res.status(500).json({ success: false, error: 'Server error' });
   }
-};
+}
 // Confirm Reset Password for the user 
 export const confirmResetPassword = async(req,res) => {
   const {token, newPassword} = req.body ; 

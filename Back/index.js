@@ -3,7 +3,6 @@ import cors from "cors";
 import bodyParser from "body-parser";
 // Routes
 import authRoutes from './Routes/auth.js'; // Import auth routes
-
 // Express Setup
 const app = express();
 app.use(cors({
@@ -15,9 +14,6 @@ app.use(express.json());
 app.use('/api/auth', authRoutes); 
 app.get('/', (req, res) => {
     res.send('Hello World!');
-  });
-app.get('/api/auth/signin', (req, res) => {
-    res.send('Hello BESBES!');
   });
 // Start Server
 app.listen(5000, () => {

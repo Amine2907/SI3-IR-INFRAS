@@ -36,8 +36,8 @@ const resetPassword = async (email) => {
   .post(`${API_URL}/reset-password`,{email})
   .then(response => response.data)
   .catch(error => {
-    console.error('Reseting password failed !', error)
-    return {success : false}
+    console.error('Reseting password failed !', error);
+    return {success : false};
   });
 };
 // Confirm reseting password for the user 

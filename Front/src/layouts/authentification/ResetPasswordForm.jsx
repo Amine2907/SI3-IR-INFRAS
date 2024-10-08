@@ -23,7 +23,7 @@ function ResetPasswordForm() {
   const [token, setToken] = useState('');
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const tokenFromUrl = queryParams.get('token');
+    const tokenFromUrl = queryParams.get('access_token');
     setToken(tokenFromUrl); // Store the token in the state
   }, [location]);
 
@@ -45,7 +45,6 @@ function ResetPasswordForm() {
       setSuccessMessage('');
     }
   };
-
   return (
     <MDBContainer fluid className="p-4">
       <MDBRow>
