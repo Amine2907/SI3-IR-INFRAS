@@ -2,10 +2,21 @@ import { supabase } from "../Config/supabaseClient.js";
 const FRONT_URL = 'http://localhost:3000';
 // Sign up Controller
 export const signUp = async (req, res) => {
-    const { email, password } = req.body; 
-    const { data, error } = await supabase.auth.signUp({ email, password }); 
-    if (error) return res.status(400).json({ error: error.message });
-    return res.status(200).json({ message: 'Sign up successful, please check your email!' });
+  const { firstName, lastName, email, password } = req.body;
+  if (!firstName || !lastName || !email || !password) {
+    return res.status(400).json({ success: false, error: 'All fields are required: firstName, lastName, email, and password.' });
+  }
+  try {
+    const { user, error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+      return res.status(400).json({ success: false, error: error.message });
+    }
+    // Optionally, you can store firstName and lastName in a users table if it's separate from auth
+    // Example: const result = await db.query('INSERT INTO users (id, firstName, lastName) VALUES ($1, $2, $3)', [user.id, firstName, lastName]);
+    return res.status(200).json({ success: true, message: 'User signed up successfully!', user });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: 'Server error' });
+  }
 };
 //Sign in Controller
 export const signIn = async (req, res) => {

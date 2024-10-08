@@ -16,13 +16,13 @@ const signIn = (email, password) => {
     });
 };
 // Sign Up the user 
-const signUp = (email, password) => {
+const signUp = (firstName, lastName, email, password) => {
   return axios
-    .post(`${API_URL}/signup`, { email, password })
+    .post(`${API_URL}/signup`, { firstName, lastName, email, password })
     .then(response => response.data)
     .catch(error => {
-      console.error('Sign-up error:', error);
-      return { success: false };
+      console.error('Sign-up error:', error.response?.data.error || error.message);
+      return { success: false, error: error.response?.data.error || 'Unknown error' };
     });
 };
 // Check if the user is authenticated
