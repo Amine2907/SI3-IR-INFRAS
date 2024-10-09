@@ -1,8 +1,7 @@
 import { supabase } from "../Config/supabaseClient.js";
-// import dotenv from 'dotenv'; 
-// dotenv.config();
-// const FRONT_URL= process.env.FrontUrl;
-const FRONT_URL = "http://localhost:3000";
+import { configDotenv } from "dotenv";
+configDotenv();
+const FRONT_URL= process.env.FrontUrl;
 // Sign up Controller
 // export const signUp = async (req, res) => {
 //   const { email, password } = req.body;

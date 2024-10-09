@@ -12,7 +12,6 @@ import {
 } from 'mdb-react-ui-kit';
 import AuthService from 'authService';
 import { useNavigate, useLocation } from 'react-router-dom';
-
 function ResetPasswordForm() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');

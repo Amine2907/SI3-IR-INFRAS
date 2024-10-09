@@ -11,7 +11,7 @@ import {
   MDBInput,
   MDBIcon,
 } from 'mdb-react-ui-kit';
-import AuthService from 'authservice';
+import AuthService from 'authService';
 
 function SignUpForm() {
   const [firstName, setFirstName] = useState('');

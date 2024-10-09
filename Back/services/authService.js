@@ -1,8 +1,7 @@
 import axios from 'axios';
-// import dotenv from 'dotenv'; 
-// dotenv.config();
-// const API_URL=process.env.ApiUrl;
-const API_URL = "http://localhost:5000/api/auth ";
+import { configDotenv } from "dotenv";
+configDotenv();
+const API_URL= process.env.ApiUrl;
 // Sign in the user 
 const signIn = (email, password) => {
   return axios
