@@ -12,8 +12,8 @@ import {
   MDBIcon,
 } from 'mdb-react-ui-kit';
 import { useAuth } from 'context/Auth/AuthContext';
-import AuthService from 'authService';
 import { useNavigate } from 'react-router-dom';
+import AuthService from 'my-backend/services/AuthService';
 function SignInForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

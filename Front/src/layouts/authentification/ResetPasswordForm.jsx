@@ -10,8 +10,8 @@ import {
   MDBCardBody,
   MDBInput,
 } from 'mdb-react-ui-kit';
-import AuthService from 'authService';
 import { useNavigate, useLocation } from 'react-router-dom';
+import AuthService from 'my-backend/services/AuthService';
 function ResetPasswordForm() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
