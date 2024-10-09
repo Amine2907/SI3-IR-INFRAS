@@ -1,20 +1,39 @@
 import { supabase } from "../Config/supabaseClient.js";
-const FRONT_URL = 'http://localhost:3000';
+import dotenv from 'dotenv'; 
+dotenv.config();
+const FRONT_URL  = process.env.FrontUrl || 'your-FRONT-url';
 // Sign up Controller
+// export const signUp = async (req, res) => {
+//   const { email, password } = req.body;
+//   // if (!firstName || !lastName || !email || !password) {
+//   //   return res.status(400).json({ success: false, error: 'All fields are required: firstName, lastName, email, and password.' });
+//   // }
+//   try {
+//     const { user, error } = await supabase.auth.signUp({ email, password });
+//     if (error) {
+//       return res.status(400).json({ success: false, error: error.message });
+//     }
+//     // Optionally, you can store firstName and lastName in a users table if it's separate from auth
+//     // Example: const result = await db.query('INSERT INTO users (id, firstName, lastName) VALUES ($1, $2, $3)', [user.id, firstName, lastName]);
+//     return res.status(200).json({ success: true, message: 'User signed up successfully!', user });
+//   } catch (error) {
+//     return res.status(500).json({ success: false, error: 'Server error' });
+//   }
+// };
 export const signUp = async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
-  if (!firstName || !lastName || !email || !password) {
-    return res.status(400).json({ success: false, error: 'All fields are required: firstName, lastName, email, and password.' });
-  }
+  const { email, password } = req.body;
   try {
+    // Try to sign up the user with Supabase
     const { user, error } = await supabase.auth.signUp({ email, password });
+    
     if (error) {
+      console.error('Error during sign-up:', error.message);  // Log the error message
       return res.status(400).json({ success: false, error: error.message });
     }
-    // Optionally, you can store firstName and lastName in a users table if it's separate from auth
-    // Example: const result = await db.query('INSERT INTO users (id, firstName, lastName) VALUES ($1, $2, $3)', [user.id, firstName, lastName]);
+    // If no error, respond with success
     return res.status(200).json({ success: true, message: 'User signed up successfully!', user });
-  } catch (error) {
+  } catch (err) {
+    console.error('Server error:', err);  // Catch unexpected errors
     return res.status(500).json({ success: false, error: 'Server error' });
   }
 };
