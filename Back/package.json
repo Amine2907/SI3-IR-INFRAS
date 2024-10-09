@@ -1,8 +1,5 @@
 {
   "type": "module",
-  "name": "my-backend",
-  "version": "1.0.0",
-  "main": "services/AuthService.js",
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
     "body-parser": "^1.20.3",
@@ -15,8 +12,8 @@
     "require": "^2.4.20"
   },
   "browser": {
-    "path": "path-browserify",
-    "os": "os-browserify/browser",
-    "crypto": "crypto-browserify"
-  }
+  "path": "path-browserify",
+  "os": "os-browserify/browser",
+  "crypto": "crypto-browserify"
+}
 }
