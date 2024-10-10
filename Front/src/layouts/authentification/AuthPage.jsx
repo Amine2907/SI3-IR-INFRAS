@@ -32,7 +32,7 @@ const AuthPage = () => {
               onClick={toggleAuthForm}
               style={{ cursor: 'pointer', color: 'blue', border: 'none', background: 'none' }}
             >
-              Sinscrire
+              S&apos;inscrire
             </button>
           </p>
         </>
