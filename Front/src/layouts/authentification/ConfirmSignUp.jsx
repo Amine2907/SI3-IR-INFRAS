@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody } from 'mdb-react-ui-kit';
 const ConfirmSignup = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,16 +22,27 @@ const ConfirmSignup = () => {
   }, [token, navigate]);
 
   return (
-    <div style={{ textAlign: 'center', padding: '50px' }}>
-      <h1>Account Confirmation</h1>
-      {token ? (
-        <p>Your account has been confirmed! You will be redirected to the login page shortly.</p>
-      ) : (
-        <p>
-          Your account could not be confirmed. Please check your email for the confirmation link.
-        </p>
-      )}
-    </div>
+    <MDBContainer fluid className="p-4">
+      <MDBRow>
+        <MDBCol md="6" className="offset-md-3">
+          <MDBCard className="my-5">
+            <MDBCardBody className="p-5">
+              <h1 className="mb-4">Account Confirmation</h1>
+              {token ? (
+                <p>
+                  Your account has been confirmed! You will be redirected to the login page shortly.
+                </p>
+              ) : (
+                <p>
+                  Your account could not be confirmed. Please check your email for the confirmation
+                  link.
+                </p>
+              )}
+            </MDBCardBody>
+          </MDBCard>
+        </MDBCol>
+      </MDBRow>
+    </MDBContainer>
   );
 };
 export default ConfirmSignup;

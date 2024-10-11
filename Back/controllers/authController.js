@@ -130,11 +130,9 @@ export const confirmResetPassword = async (req, res) => {
   try {
     // Call the Supabase API directly to reset the password
     const { data, error } = await supabase.auth.api.updateUser(token, { password: newPassword });
-
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }
-
     return res.status(200).json({ success: true, message: 'Password reset successfully.' });
   } catch (error) {
     return res.status(500).json({ success: false, error: 'Server error' });
