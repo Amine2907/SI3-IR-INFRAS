@@ -47,7 +47,10 @@ const confirmResetPassword = async (newPassword, token) => {
     .then(response => response.data)
     .catch(error => {
       console.error('Password reset failed!', error);
-      return { success: false, error: error.response?.data?.error || 'Unknown error' };
+      return { 
+        success: false, 
+        error: error.response?.data?.error || 'Unknown error' 
+      };
     });
 };
 // Exporting functions (for call AuthService.func)

@@ -98,21 +98,45 @@ export const resetPassword = async (req, res) => {
   }
 };
 // Confirm Reset Password for the user
+// export const confirmResetPassword = async (req, res) => {
+//   const { token, newPassword } = req.body;
+//   // Validate input
+//   if (!token || !newPassword) {
+//     return res.status(400).json({ success: false, error: 'Token and new password are required.' });
+//   }
+//   // Set the access token
+//   supabase.auth.setAuth(token); // This sets the session for Supabase with the provided token
+//   try {
+//     // Update the user's password
+//     const { data, error } = await supabase.auth.updateUser({ password: newPassword });
+
+//     if (error) {
+//       return res.status(400).json({ success: false, error: error.message });
+//     }
+
+//     return res.status(200).json({ success: true, message: 'Password reset successfully.' });
+//   } catch (error) {
+//     return res.status(500).json({ success: false, error: 'Server error' });
+//   }
+// };
+//////////////////////////////////////////////////////////////////////////////////////////////////
 export const confirmResetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
+
   // Validate input
   if (!token || !newPassword) {
     return res.status(400).json({ success: false, error: 'Token and new password are required.' });
   }
   try {
-    // Pass the access token when updating the password
+    // Call the Supabase API directly to reset the password
     const { data, error } = await supabase.auth.api.updateUser(token, { password: newPassword });
 
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }
+
     return res.status(200).json({ success: true, message: 'Password reset successfully.' });
   } catch (error) {
     return res.status(500).json({ success: false, error: 'Server error' });
   }
-}; 
+};

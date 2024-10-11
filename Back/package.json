@@ -12,8 +12,8 @@
     "require": "^2.4.20"
   },
   "browser": {
-  "path": "path-browserify",
-  "os": "os-browserify/browser",
-  "crypto": "crypto-browserify"
-}
+    "path": "path-browserify",
+    "os": "os-browserify/browser",
+    "crypto": "crypto-browserify"
+  }
 }
