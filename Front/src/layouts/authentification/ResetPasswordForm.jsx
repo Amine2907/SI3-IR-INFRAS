@@ -79,5 +79,4 @@ function ResetPasswordForm() {
     </MDBContainer>
   );
 }
-
 export default ResetPasswordForm;

@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // Protected Route Component
 const ProtectedRoute = ({ children, isAuthenticated }) => {
-  return isAuthenticated ? children : <Navigate to="/auth/signup" />;
+  return isAuthenticated ? children : <Navigate to="/auth" />;
 };
 ProtectedRoute.propTypes = {
   children: PropTypes.node.isRequired,

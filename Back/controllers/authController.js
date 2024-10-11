@@ -2,30 +2,10 @@ import { supabase } from "../Config/supabaseClient.js";
 import { configDotenv } from "dotenv";
 configDotenv();
 const FRONT_URL= process.env.FrontUrl;
-// Sign up Controller
-// export const signUp = async (req, res) => {
-//   const { email, password } = req.body;
-//   // if (!firstName || !lastName || !email || !password) {
-//   //   return res.status(400).json({ success: false, error: 'All fields are required: firstName, lastName, email, and password.' });
-//   // }
-//   try {
-//     const { user, error } = await supabase.auth.signUp({ email, password });
-//     if (error) {
-//       return res.status(400).json({ success: false, error: error.message });
-//     }
-//     // Optionally, you can store firstName and lastName in a users table if it's separate from auth
-//     // Example: const result = await db.query('INSERT INTO users (id, firstName, lastName) VALUES ($1, $2, $3)', [user.id, firstName, lastName]);
-//     return res.status(200).json({ success: true, message: 'User signed up successfully!', user });
-//   } catch (error) {
-//     return res.status(500).json({ success: false, error: 'Server error' });
-//   }
-// };
 export const signUp = async (req, res) => {
-  const { email, password } = req.body;
+  const {email, password } = req.body;
   try {
-    // Try to sign up the user with Supabase
     const { user, error } = await supabase.auth.signUp({ email, password });
-    
     if (error) {
       console.error('Error during sign-up:', error.message);  // Log the error message
       return res.status(400).json({ success: false, error: error.message });
@@ -41,12 +21,10 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
   const { email, password } = req.body; 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
   if (error) {
     console.error('Supabase Sign-in Error:', error.message); // Log the error message
     return res.status(400).json({ error: error.message });
   }
-
   return res.status(200).json({ message: 'Sign in successful', user: data.user });
 };
 // Sign out Controller
@@ -88,7 +66,7 @@ export const resetPassword = async (req, res) => {
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
     return res.status(400).json({ success: false, error: 'Invalid email address.' });
   }
-  const redirectToUrl = `${FRONT_URL}/confirm-reset-password`;
+  const redirectToUrl = `${FRONT_URL}/auth/confirm-reset-password`;
   try {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: redirectToUrl });
     if (error) {

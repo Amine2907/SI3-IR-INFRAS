@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import SignUpForm from './SignUpFrom';
 import SignInForm from './SignInForm';
+// import { useNavigate } from 'react-router-dom';
 
 const AuthPage = () => {
   const [isSignUp, setIsSignUp] = useState(true); // Controls form toggle
-
+  // const navigate = useNavigate;
   const toggleAuthForm = () => {
     setIsSignUp(!isSignUp); // Toggle between Sign Up and Sign In
   };
+  // const handleNavigation = () => {
+  //   if(isSignUp) {
+  //     navigate('/auth/signup')
+  //   } else {
+  //     navigate
+  //   }
+  // }
   return (
     <div>
       {isSignUp ? (
