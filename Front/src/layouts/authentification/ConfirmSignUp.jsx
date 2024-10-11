@@ -1,24 +1,34 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const ConfirmSignup = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+  const urlParams = new URLSearchParams(location.search);
+  const token = urlParams.get('token');
 
   useEffect(() => {
-    // Redirect to /auth after 3 seconds
+    if (token) {
+      console.log('Token received:', token);
+    } else {
+      console.error('No token found in URL.');
+    }
     const timer = setTimeout(() => {
       navigate('/auth');
-    }, 10000);
-    // Cleanup the timer on unmount
+    }, 3000);
     return () => clearTimeout(timer);
-  }, [navigate]);
+  }, [token, navigate]);
+
   return (
     <div style={{ textAlign: 'center', padding: '50px' }}>
       <h1>Account Confirmation</h1>
-      <p>Your account has been confirmed! You will be redirected to the login page shortly.</p>
-      {/* <p>
+      {token ? (
+        <p>Your account has been confirmed! You will be redirected to the login page shortly.</p>
+      ) : (
+        <p>
           Your account could not be confirmed. Please check your email for the confirmation link.
-        </p> */}
+        </p>
+      )}
     </div>
   );
 };

@@ -66,13 +66,14 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
   useEffect(() => {
+    const publicPaths = ['/auth/confirm-sign-up', '/auth/confirm-reset-password'];
     // If the user is not authenticated, redirect to the auth page
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !publicPaths.includes(pathname)) {
       navigate('/auth', { replace: true });
     }
     // Listen for the popstate event to prevent going back to the auth page
     const handlePopState = () => {
-      if (!isAuthenticated) {
+      if (!isAuthenticated && !publicPaths.includes(pathname)) {
         navigate('/dashboard', { replace: true });
       }
     };
@@ -81,7 +82,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, pathname, navigate]);
 
   const getRoutes = allRoutes =>
     allRoutes.map(route => {
