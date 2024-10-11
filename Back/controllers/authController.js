@@ -122,8 +122,6 @@ export const resetPassword = async (req, res) => {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 export const confirmResetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
-
-  // Validate input
   if (!token || !newPassword) {
     return res.status(400).json({ success: false, error: 'Token and new password are required.' });
   }
