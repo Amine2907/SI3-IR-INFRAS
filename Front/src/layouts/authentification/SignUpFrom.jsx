@@ -25,17 +25,23 @@ function SignUpForm() {
     e.preventDefault();
     try {
       const response = await AuthService.signUp(firstName, lastName, email, password);
-      if (response.success) {
-        setSuccessMessage(response.data.message);
+      if (response && response.success) {
+        if (response.data && response.data.message) {
+          setSuccessMessage(response.data.message);
+        } else {
+          setSuccessMessage('Sign-up successful! Please check your email.');
+        }
         setErrorMessage('');
       } else {
-        setErrorMessage('Sign-up failed. Please try again.');
+        setErrorMessage(response?.data?.message || 'Sign-up failed. Please try again.');
         setSuccessMessage('');
       }
     } catch (error) {
-      setErrorMessage('An error occurred while signing up. Please try again.');
-      setSuccessMessage('');
       console.error('Sign up error:', error);
+      setErrorMessage(
+        error?.response?.data?.message || 'An error occurred while signing up. Please try again.'
+      );
+      setSuccessMessage('');
     }
   };
   return (
