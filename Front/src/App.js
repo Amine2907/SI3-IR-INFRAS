@@ -19,6 +19,7 @@ import { AuthProvider, useAuth } from 'context/Auth/AuthContext';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import ResetPasswordForm from 'layouts/authentification/ResetPasswordForm';
+import SignInForm from 'layouts/authentification/SignInForm';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
@@ -116,7 +117,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {controller.layout === 'dashboard' && pathname !== '/auth' && (
+      {controller.layout === 'dashboard' && pathname !== '/auth/signup' && (
         <>
           <Sidenav
             color={controller.sidenavColor}
@@ -144,8 +145,9 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
           }
         />
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/auth" />} />
-        <Route path="/auth" element={<AuthPage />} />
+        <Route path="*" element={<Navigate to="/auth/signup" />} />
+        <Route path="/auth/signup" element={<AuthPage />} />
+        <Route path="/auth/signin" element={<SignInForm />} />
         <Route path="/confirm-reset-password" element={<ResetPasswordForm />} />
       </Routes>
     </ThemeProvider>

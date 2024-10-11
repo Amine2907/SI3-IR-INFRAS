@@ -12,6 +12,7 @@ import {
   MDBIcon,
 } from 'mdb-react-ui-kit';
 import AuthService from './authService';
+import { useNavigate } from 'react-router-dom';
 
 function SignUpForm() {
   const [firstName, setFirstName] = useState('');
@@ -20,7 +21,7 @@ function SignUpForm() {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
+  const navigate = useNavigate();
   const handleSignUp = async e => {
     e.preventDefault();
     try {
@@ -30,6 +31,7 @@ function SignUpForm() {
           setSuccessMessage(response.data.message);
         } else {
           setSuccessMessage('Sign-up successful! Please check your email.');
+          navigate('/auth/signin');
         }
         setErrorMessage('');
       } else {
