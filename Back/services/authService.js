@@ -41,14 +41,14 @@ const resetPassword = async (email) => {
     });
 };
 // Confirm reseting password for the user 
-const confirmResetPassword = async (newPassword) => {
-  return axios 
-  .post(`${API_URL}/confirm-reset-password`, {newPassword:newPassword})
-  .then(response => response.data)
-  .catch(error => {
-    console.error('Réinitialisation du mot de passe échouée !', error);
-    return { success: false, error: error.response?.data?.error || 'Erreur inconnue' };
-  });
+const confirmResetPassword = async (newPassword, token) => {
+  return axios
+    .post(`${API_URL}/confirm-reset-password`, { newPassword, token })
+    .then(response => response.data)
+    .catch(error => {
+      console.error('Password reset failed!', error);
+      return { success: false, error: error.response?.data?.error || 'Unknown error' };
+    });
 };
 // Exporting functions (for call AuthService.func)
 const AuthService = {

@@ -106,9 +106,7 @@ export const confirmResetPassword = async (req, res) => {
   }
   try {
     // Pass the access token when updating the password
-    const { data, error } = await supabase.auth.updateUser({
-      password: newPassword,
-    }, { access_token: token });
+    const { data, error } = await supabase.auth.api.updateUser(token, { password: newPassword });
 
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
@@ -117,4 +115,4 @@ export const confirmResetPassword = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ success: false, error: 'Server error' });
   }
-};
+}; 
