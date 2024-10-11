@@ -119,7 +119,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {controller.layout === 'dashboard' && pathname !== '/auth' && (
+      {controller.layout === 'dashboard' && !pathname.startsWith('/auth') && (
         <>
           <Sidenav
             color={controller.sidenavColor}

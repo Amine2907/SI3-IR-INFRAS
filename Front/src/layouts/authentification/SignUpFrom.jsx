@@ -103,7 +103,6 @@ function SignUpForm() {
                   />
                 </MDBCol>
               </MDBRow>
-
               <MDBInput
                 wrapperClass="mb-4"
                 label="Email"
