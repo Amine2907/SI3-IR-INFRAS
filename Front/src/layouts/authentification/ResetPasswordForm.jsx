@@ -21,12 +21,13 @@ function ResetPasswordForm() {
   const [token, setToken] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const tokenFromUrl = queryParams.get('access_token');
+    const tokenFromUrl = queryParams.get('token');
     if (!tokenFromUrl) {
       setErrorMessage('Invalid or expired token.');
-      navigate('/auth'); // Redirect to auth if no token
+      navigate('/auth');
     } else {
       setToken(tokenFromUrl);
     }

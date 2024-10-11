@@ -67,11 +67,9 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   }, [pathname]);
   useEffect(() => {
     const publicPaths = ['/auth/confirm-sign-up', '/auth/confirm-reset-password'];
-    // If the user is not authenticated, redirect to the auth page
     if (!isAuthenticated && !publicPaths.includes(pathname)) {
       navigate('/auth', { replace: true });
     }
-    // Listen for the popstate event to prevent going back to the auth page
     const handlePopState = () => {
       if (!isAuthenticated && !publicPaths.includes(pathname)) {
         navigate('/dashboard', { replace: true });

@@ -40,7 +40,6 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
   const { email, password } = req.body; 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
   if (error) {
     console.error('Supabase Sign-in Error:', error.message); // Log the error message
     return res.status(400).json({ error: error.message });
@@ -106,7 +105,11 @@ export const confirmResetPassword = async (req, res) => {
     return res.status(400).json({ success: false, error: 'Token and new password are required.' });
   }
   try {
-    const { data, error } = await supabase.auth.updateUser({ password: newPassword }, { access_token: token });
+    // Pass the access token when updating the password
+    const { data, error } = await supabase.auth.updateUser({
+      password: newPassword,
+    }, { access_token: token });
+
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }

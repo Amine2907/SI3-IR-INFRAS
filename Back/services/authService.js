@@ -41,9 +41,9 @@ const resetPassword = async (email) => {
     });
 };
 // Confirm reseting password for the user 
-const confirmResetPassword = async (newPassword,token) => {
+const confirmResetPassword = async (newPassword) => {
   return axios 
-  .post(`${API_URL}/confirm-reset-password`, {access_token:token,newPassword:newPassword})
+  .post(`${API_URL}/confirm-reset-password`, {newPassword:newPassword})
   .then(response => response.data)
   .catch(error => {
     console.error('Réinitialisation du mot de passe échouée !', error);
