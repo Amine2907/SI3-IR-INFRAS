@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import AuthService from './authService'; // Adjust the import path as needed
+import AuthService from './authService';
 import {
   MDBContainer,
   MDBRow,
@@ -10,7 +10,6 @@ import {
   MDBInput,
   MDBBtn,
 } from 'mdb-react-ui-kit';
-
 const ResetPasswordForm = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -18,12 +17,11 @@ const ResetPasswordForm = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
-  const token = urlParams.get('token'); // Get the token from the URL
+  const token = urlParams.get('token');
   const handleResetPassword = async e => {
     e.preventDefault();
-    // Check if new password and confirm password match
     if (newPassword !== confirmPassword) {
-      setErrorMessage('Les mots de passe ne correspondent pas.'); // French for "Passwords do not match."
+      setErrorMessage('Les mots de passe ne correspondent pas.');
       return;
     }
     const result = await AuthService.confirmResetPassword(newPassword, token);

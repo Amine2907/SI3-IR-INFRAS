@@ -81,17 +81,3 @@ export const confirmResetPassword = async (req, res) => {
     return res.status(500).json({ success: false, error: 'Erreur du serveur.' });
   }
 };
-// export const confirmUser = async (req, res) => {
-//   const { token_hash, type, next } = req.body;
-//   if (token_hash && type) {
-//     const supabase = createClient({ req, res });
-//     const { error } = await supabase.auth.verifyOtp({
-//       type,
-//       token_hash,
-//     });
-//     if (!error) {
-//       return res.redirect(303, `/${next.slice(1)}`);
-//     }
-//   }
-//   res.redirect(303, '/auth/auth-code-error');
-// };
