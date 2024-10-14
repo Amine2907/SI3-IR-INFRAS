@@ -18,13 +18,13 @@ function ResetPasswordForm() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [token, setToken] = useState('');
+  const [setToken] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const tokenFromUrl = queryParams.get('token');
+    const tokenFromUrl = queryParams.get('access_token');
     if (!tokenFromUrl) {
       setErrorMessage('Invalid or expired token.');
       navigate('/auth');
@@ -40,7 +40,7 @@ function ResetPasswordForm() {
       return;
     }
     try {
-      const response = await AuthService.confirmResetPassword(newPassword, token);
+      const response = await AuthService.confirmResetPassword(newPassword);
       if (response.success) {
         setSuccessMessage('Votre mot de passe a été réinitialisé avec succès.');
         setErrorMessage('');

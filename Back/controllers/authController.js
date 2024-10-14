@@ -2,29 +2,20 @@ import { supabase } from "../Config/supabaseClient.js";
 import { configDotenv } from "dotenv";
 configDotenv();
 const FRONT_URL= process.env.FrontUrl;
-// Sign up Controller
-// export const signUp = async (req, res) => {
-//   const { email, password } = req.body;
-//   // if (!firstName || !lastName || !email || !password) {
-//   //   return res.status(400).json({ success: false, error: 'All fields are required: firstName, lastName, email, and password.' });
-//   // }
-//   try {
-//     const { user, error } = await supabase.auth.signUp({ email, password });
-//     if (error) {
-//       return res.status(400).json({ success: false, error: error.message });
-//     }
-//     // Optionally, you can store firstName and lastName in a users table if it's separate from auth
-//     // Example: const result = await db.query('INSERT INTO users (id, firstName, lastName) VALUES ($1, $2, $3)', [user.id, firstName, lastName]);
-//     return res.status(200).json({ success: true, message: 'User signed up successfully!', user });
-//   } catch (error) {
-//     return res.status(500).json({ success: false, error: 'Server error' });
-//   }
-// };
 export const signUp = async (req, res) => {
-  const { email, password } = req.body;
-  // const redirectToUrl = `${FRONT_URL}/auth/confirm-signup`;
+  const { email, password,firstName , lastName } = req.body;
+  const EmailConfirmURL = `${FRONT_URL}/auth/confirm-sign-up`
+    if (!firstName || !lastName || !email || !password) {
+    return res.status(400).json({ success: false, error: 'Tous les champs sont obligatoires.' });
+  }
   try {
-    const { user, error } = await supabase.auth.signUp({ email, password  });
+    const { user, error } = await supabase.auth.signUp({ email, password , options: {
+      data: {
+        firstName,
+        lastName,  
+        emailRedirectTo: EmailConfirmURL,
+      },
+    },});
     if (error) {
       console.error('Error during sign-up:', error.message);  // Log the error message
       return res.status(400).json({ success: false, error: error.message });
@@ -44,7 +35,6 @@ export const signIn = async (req, res) => {
     console.error('Supabase Sign-in Error:', error.message); // Log the error message
     return res.status(400).json({ error: error.message });
   }
-
   return res.status(200).json({ message: 'Sign in successful', user: data.user });
 };
 // Sign out Controller
@@ -121,18 +111,32 @@ export const resetPassword = async (req, res) => {
 // };
 //////////////////////////////////////////////////////////////////////////////////////////////////
 export const confirmResetPassword = async (req, res) => {
-  const { token, newPassword } = req.body;
-  if (!token || !newPassword) {
-    return res.status(400).json({ success: false, error: 'Token and new password are required.' });
+  const {newPassword } = req.body;
+  if (!newPassword) {
+    return res.status(400).json({ success: false, error: 'Un nouveau mot de passe est requis.' });
   }
   try {
     // Call the Supabase API directly to reset the password
-    const { data, error } = await supabase.auth.api.updateUser(token, { password: newPassword });
+    const { data, error } = await supabase.auth.api.updateUser( {password: newPassword });
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }
-    return res.status(200).json({ success: true, message: 'Password reset successfully.' });
+    return res.status(200).json({ success: true, message: 'Réinitialisation du mot de passe réussie.' });
   } catch (error) {
-    return res.status(500).json({ success: false, error: 'Server error' });
+    return res.status(500).json({ success: false, error: 'Erreur du serveur.' });
   }
 };
+// export const confirmUser = async (req, res) => {
+//   const { token_hash, type, next } = req.body;
+//   if (token_hash && type) {
+//     const supabase = createClient({ req, res });
+//     const { error } = await supabase.auth.verifyOtp({
+//       type,
+//       token_hash,
+//     });
+//     if (!error) {
+//       return res.redirect(303, `/${next.slice(1)}`);
+//     }
+//   }
+//   res.redirect(303, '/auth/auth-code-error');
+// };

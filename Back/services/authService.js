@@ -1,4 +1,6 @@
+import { createClient } from '@supabase/supabase-js';
 import axios from 'axios';
+import express from 'express';
 const API_URL = 'http://localhost:5000/api/auth';
 // Sign in the user 
 const signIn = (email, password) => {
@@ -53,6 +55,15 @@ const confirmResetPassword = async (newPassword, token) => {
       };
     });
 };
+// export const confirmUser = async (tokenHash, type, next) => {
+//   try {
+//     const response = await axios.post(`${API_URL}/confirm`, { token_hash: tokenHash, type, next });
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error confirming user:', error);
+//     throw error;
+//   };
+// };
 // Exporting functions (for call AuthService.func)
 const AuthService = {
   signIn,
@@ -60,5 +71,6 @@ const AuthService = {
   isAuthenticated,
   resetPassword,
   confirmResetPassword,
+  // confirmUser,
 };
 export default AuthService;

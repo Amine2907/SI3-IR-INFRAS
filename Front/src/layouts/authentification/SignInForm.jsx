@@ -29,9 +29,9 @@ function SignInForm() {
     const response = await AuthService.signIn(email, password);
     // Check the response
     if (response.success === false) {
-      setErrorMessage('Invalid credentials, please try again.');
+      setErrorMessage('Identifiants invalides, veuillez réessayer.');
     } else {
-      console.log('Sign-in successful:', response);
+      console.log('Connexion réussie :', response);
       login();
       navigate('/dashboard');
     }
@@ -42,12 +42,16 @@ function SignInForm() {
     const response = await AuthService.resetPassword(resetEmail);
     if (response && response.success) {
       reset();
-      setSuccessMessage(response.message || 'Password reset email sent successfully.');
+      setSuccessMessage(
+        response.message || 'Email de réinitialisation du mot de passe envoyé avec succès.'
+      );
+      setEmail('');
+      setPassword('');
       setErrorMessage('');
       navigate('/auth');
     } else {
       setSuccessMessage('');
-      setErrorMessage(response?.error || 'An unexpected error occurred.');
+      setErrorMessage(response?.error || "Une erreur inattendue s'est produite.");
     }
   };
   return (
@@ -76,7 +80,7 @@ function SignInForm() {
                   />
                   <MDBInput
                     wrapperClass="mb-4"
-                    label="Password"
+                    label="Mot de passe"
                     type="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
@@ -91,13 +95,13 @@ function SignInForm() {
                 <form>
                   <MDBInput
                     wrapperClass="mb-4"
-                    label="Enter your email"
+                    label="Entrez votre adresse e-mail"
                     type="email"
                     value={resetEmail}
                     onChange={e => setResetEmail(e.target.value)}
                   />
                   <MDBBtn className="w-100 mb-4" size="md" onClick={handleResetPassword}>
-                    Send Reset Link
+                    Envoyer le lien de réinitialisation
                   </MDBBtn>
                   {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                   {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}

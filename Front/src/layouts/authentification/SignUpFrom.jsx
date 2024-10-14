@@ -28,18 +28,23 @@ function SignUpForm() {
       if (response && response.success) {
         if (response.data && response.data.message) {
           setSuccessMessage(response.data.message);
+          setEmail('');
+          setPassword('');
+          setFirstName('');
+          setLastName('');
         } else {
-          setSuccessMessage('Sign-up successful! Please check your email.');
+          setSuccessMessage('Inscription réussie ! Veuillez vérifier votre e-mail.');
         }
         setErrorMessage('');
       } else {
-        setErrorMessage(response?.data?.message || 'Sign-up failed. Please try again.');
+        setErrorMessage(response?.data?.message || "L'inscription a échoué. Veuillez réessayer.");
         setSuccessMessage('');
       }
     } catch (error) {
-      console.error('Sign up error:', error);
+      console.error("Erreur d'inscription", error);
       setErrorMessage(
-        error?.response?.data?.message || 'An error occurred while signing up. Please try again.'
+        error?.response?.data?.message ||
+          "Une erreur s'est produite lors de l'inscription. Veuillez réessayer."
       );
       setSuccessMessage('');
     }
@@ -85,7 +90,7 @@ function SignUpForm() {
                 <MDBCol col="6">
                   <MDBInput
                     wrapperClass="mb-4"
-                    label="First name"
+                    label="Prénom"
                     id="firstName"
                     type="text"
                     value={firstName}
@@ -95,7 +100,7 @@ function SignUpForm() {
                 <MDBCol col="6">
                   <MDBInput
                     wrapperClass="mb-4"
-                    label="Last name"
+                    label="Nom"
                     id="lastName"
                     type="text"
                     value={lastName}
@@ -113,7 +118,7 @@ function SignUpForm() {
               />
               <MDBInput
                 wrapperClass="mb-4"
-                label="Password"
+                label="Mot de passe"
                 id="password"
                 type="password"
                 value={password}

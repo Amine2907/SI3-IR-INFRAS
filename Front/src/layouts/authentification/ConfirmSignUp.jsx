@@ -27,15 +27,13 @@ const ConfirmSignup = () => {
         <MDBCol md="6" className="offset-md-3">
           <MDBCard className="my-5">
             <MDBCardBody className="p-5">
-              <h1 className="mb-4">Account Confirmation</h1>
+              <h1 className="mb-4">Confirmation de compte</h1>
               {token ? (
-                <p>
-                  Your account has been confirmed! You will be redirected to the login page shortly.
-                </p>
+                <p>Votre compte a été confirmé ! Vous serez redirigé vers la page de connexion.</p>
               ) : (
                 <p>
-                  Your account could not be confirmed. Please check your email for the confirmation
-                  link.
+                  Votre compte n&apos;a pas pu être confirmé. Veuillez vérifier votre email pour le
+                  lien de confirmation.
                 </p>
               )}
             </MDBCardBody>

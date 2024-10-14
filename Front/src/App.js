@@ -111,7 +111,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
       onClick={handleConfiguratorOpen}
     >
       <Icon fontSize="small" color="inherit">
-        settings
+        Paramètres
       </Icon>
     </MDBox>
   );
