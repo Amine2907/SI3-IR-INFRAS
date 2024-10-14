@@ -64,14 +64,14 @@ export const resetPassword = async (req, res) => {
 // Confirm Reset Password for the user
 export const confirmResetPassword = async (req, res) => {
   const { newPassword } = req.body; // New password from the request body
-  const { token } = req.query; // Token from the query string
+  const { access_token } = req.query; // Token from the query string
   // Validate that both token and new password are provided
-  if (!newPassword || !token) {
+  if (!newPassword || !access_token) {
     return res.status(400).json({ success: false, error: 'New password and token are required.' });
   }
   try {
     // Step 1: Authenticate the user using the token
-    const { error: sessionError } = await supabase.auth.setSession(token);
+    const { error: sessionError } = await supabase.auth.setSession(access_token);
     if (sessionError) {
       return res.status(400).json({ success: false, error: 'Invalid or expired token.' });
     }

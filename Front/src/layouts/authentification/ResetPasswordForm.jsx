@@ -17,14 +17,14 @@ const ResetPasswordForm = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
-  const token = urlParams.get('token');
+  const access_token = urlParams.get('access_token');
   const handleResetPassword = async e => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       setErrorMessage('Les mots de passe ne correspondent pas.');
       return;
     }
-    const result = await AuthService.confirmResetPassword(newPassword, token);
+    const result = await AuthService.confirmResetPassword(newPassword, access_token);
     if (result.success) {
       setSuccessMessage('Votre mot de passe a été réinitialisé avec succès !');
       setErrorMessage(''); // Clear error message on success

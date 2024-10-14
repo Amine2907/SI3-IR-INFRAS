@@ -7,7 +7,7 @@ const ConfirmSignup = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(location.search);
-  const token = urlParams.get('token');
+  const token = urlParams.get('access_token');
 
   useEffect(() => {
     if (token) {
