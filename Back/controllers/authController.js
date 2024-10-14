@@ -63,21 +63,27 @@ export const resetPassword = async (req, res) => {
 };
 // Confirm Reset Password for the user
 export const confirmResetPassword = async (req, res) => {
-  const { newPassword } = req.body;
-  const { token } = req.query; // Get the token from the query parameters
-  // Validate input
+  const { newPassword } = req.body; // New password from the request body
+  const { token } = req.query; // Token from the query string
+  // Validate that both token and new password are provided
   if (!newPassword || !token) {
-    return res.status(400).json({ success: false, error: 'Un nouveau mot de passe et un token sont requis.' });
+    return res.status(400).json({ success: false, error: 'New password and token are required.' });
   }
   try {
-    // Update the user's password using the token
+    // Step 1: Authenticate the user using the token
+    const { error: sessionError } = await supabase.auth.setSession(token);
+    if (sessionError) {
+      return res.status(400).json({ success: false, error: 'Invalid or expired token.' });
+    }
+    // Step 2: Update the user's password after successful authentication
     const { data, error } = await supabase.auth.updateUser({ password: newPassword });
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }
-    return res.status(200).json({ success: true, message: 'Réinitialisation du mot de passe réussie.' });
+    // Respond with success if password update is successful
+    return res.status(200).json({ success: true, message: 'Password reset successfully.' });
   } catch (error) {
-    console.error('Server error during password confirmation:', error);
-    return res.status(500).json({ success: false, error: 'Erreur du serveur.' });
+    console.error('Server Error:', error);
+    return res.status(500).json({ success: false, error: 'Server error.' });
   }
 };

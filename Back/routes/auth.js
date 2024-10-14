@@ -9,5 +9,4 @@ router.post('/signin', signIn);  // Sign in Route
 router.post('/signout', signOut); // Sign out Route
 router.post('/reset-password',resetPassword); //Reset Password Route
 router.post('/confirm-reset-password', confirmResetPassword); //Confirm Reset Password Route
-// router.post('/confirm-user', confirmUser);
 export default router;

@@ -45,7 +45,7 @@ const resetPassword = async (email) => {
 // Confirm reseting password for the user 
 const confirmResetPassword = async (newPassword, token) => {
   return axios
-    .post(`${API_URL}/confirm-reset-password?token=${token}`, { newPassword, token })
+    .post(`${API_URL}/confirm-reset-password?token=${token}`, { newPassword})
     .then(response => response.data)
     .catch(error => {
       console.error('Password reset failed!', error);
@@ -55,15 +55,6 @@ const confirmResetPassword = async (newPassword, token) => {
       };
     });
 };
-// export const confirmUser = async (tokenHash, type, next) => {
-//   try {
-//     const response = await axios.post(`${API_URL}/confirm`, { token_hash: tokenHash, type, next });
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error confirming user:', error);
-//     throw error;
-//   };
-// };
 // Exporting functions (for call AuthService.func)
 const AuthService = {
   signIn,
