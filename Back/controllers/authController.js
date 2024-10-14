@@ -72,7 +72,6 @@ export const signOut = async (req, res) => {
 // };
 export const resetPassword = async (req, res) => {
   const { email } = req.body;
-  // Validate email format (basic check)
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
     return res.status(400).json({ success: false, error: 'Invalid email address.' });
   }
@@ -82,8 +81,9 @@ export const resetPassword = async (req, res) => {
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }
-    return res.status(200).json({ success: true, message: 'Password reset email sent successfully.' });
+    return res.status(200).json({ success: true, message: 'Password reset email sent successfully.' }); 
   } catch (error) {
+    console.error('Server error during password reset:', error);
     return res.status(500).json({ success: false, error: 'Server error' });
   }
 };
@@ -111,18 +111,22 @@ export const resetPassword = async (req, res) => {
 // };
 //////////////////////////////////////////////////////////////////////////////////////////////////
 export const confirmResetPassword = async (req, res) => {
-  const {newPassword } = req.body;
-  if (!newPassword) {
-    return res.status(400).json({ success: false, error: 'Un nouveau mot de passe est requis.' });
+  const { newPassword } = req.body;
+  const { token } = req.query; // Get the token from the query parameters
+  // Validate input
+  if (!newPassword || !token) {
+    return res.status(400).json({ success: false, error: 'Un nouveau mot de passe et un token sont requis.' });
   }
   try {
-    // Call the Supabase API directly to reset the password
-    const { data, error } = await supabase.auth.api.updateUser( {password: newPassword });
+    // Update the user's password using the token
+    const { data, error } = await supabase.auth.updateUser({ password: newPassword }, token);
+
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }
     return res.status(200).json({ success: true, message: 'Réinitialisation du mot de passe réussie.' });
   } catch (error) {
+    console.error('Server error during password confirmation:', error);
     return res.status(500).json({ success: false, error: 'Erreur du serveur.' });
   }
 };

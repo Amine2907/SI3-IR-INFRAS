@@ -1,58 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import AuthService from './authService'; // Adjust the import path as needed
 import {
-  MDBBtn,
   MDBContainer,
   MDBRow,
   MDBCol,
   MDBCard,
   MDBCardBody,
   MDBInput,
+  MDBBtn,
 } from 'mdb-react-ui-kit';
-import AuthService from './authService';
-import { useNavigate, useLocation } from 'react-router-dom';
 
-function ResetPasswordForm() {
+const ResetPasswordForm = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [setToken] = useState('');
-  const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const tokenFromUrl = queryParams.get('access_token');
-    if (!tokenFromUrl) {
-      setErrorMessage('Invalid or expired token.');
-      navigate('/auth');
-    } else {
-      setToken(tokenFromUrl);
-    }
-  }, [location, navigate]);
-
+  const urlParams = new URLSearchParams(location.search);
+  const token = urlParams.get('token'); // Get the token from the URL
   const handleResetPassword = async e => {
     e.preventDefault();
+    // Check if new password and confirm password match
     if (newPassword !== confirmPassword) {
-      setErrorMessage('Les mots de passe ne correspondent pas.');
+      setErrorMessage('Les mots de passe ne correspondent pas.'); // French for "Passwords do not match."
       return;
     }
-    try {
-      const response = await AuthService.confirmResetPassword(newPassword);
-      if (response.success) {
-        setSuccessMessage('Votre mot de passe a été réinitialisé avec succès.');
-        setErrorMessage('');
-        setTimeout(() => {
-          navigate('/auth');
-        }, 5000);
-      } else {
-        throw new Error(response.error || 'Erreur lors de la réinitialisation du mot de passe.');
-      }
-    } catch (error) {
-      setErrorMessage(error.message);
-      setSuccessMessage('');
+    const result = await AuthService.confirmResetPassword(newPassword, token);
+    if (result.success) {
+      setSuccessMessage('Votre mot de passe a été réinitialisé avec succès !');
+      setErrorMessage(''); // Clear error message on success
+    } else {
+      setErrorMessage(result.error);
+      setSuccessMessage(''); // Clear success message on error
     }
   };
   return (
@@ -89,5 +69,5 @@ function ResetPasswordForm() {
       </MDBRow>
     </MDBContainer>
   );
-}
+};
 export default ResetPasswordForm;
