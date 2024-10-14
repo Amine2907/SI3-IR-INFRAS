@@ -7,8 +7,7 @@ const ConfirmSignup = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(location.search);
-  const token = urlParams.get('token');
-
+  const token = urlParams.get('access_token');
   useEffect(() => {
     if (token) {
       console.log('Token received:', token);
@@ -20,7 +19,6 @@ const ConfirmSignup = () => {
     }, 3000);
     return () => clearTimeout(timer);
   }, [token, navigate]);
-
   return (
     <MDBContainer fluid className="p-4">
       <MDBRow>
@@ -28,14 +26,14 @@ const ConfirmSignup = () => {
           <MDBCard className="my-5">
             <MDBCardBody className="p-5">
               <h1 className="mb-4">Confirmation de compte</h1>
-              {token ? (
-                <p>Votre compte a été confirmé ! Vous serez redirigé vers la page de connexion.</p>
-              ) : (
-                <p>
-                  Votre compte n&apos;a pas pu être confirmé. Veuillez vérifier votre email pour le
-                  lien de confirmation.
-                </p>
-              )}
+              {/* {token ? ( */}
+              <p>Votre compte a été confirmé ! Vous serez redirigé vers la page de connexion.</p>
+              {/* //   ) : ( */}
+              {/* //     <p>
+            //       Votre compte n&apos;a pas pu être confirmé. Veuillez vérifier votre email pour le
+            //       lien de confirmation.
+            //     </p> */}
+              {/* //   )} */}
             </MDBCardBody>
           </MDBCard>
         </MDBCol>
