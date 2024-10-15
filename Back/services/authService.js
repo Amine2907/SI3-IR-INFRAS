@@ -62,6 +62,5 @@ const AuthService = {
   isAuthenticated,
   resetPassword,
   confirmResetPassword,
-  // confirmUser,
 };
 export default AuthService;
