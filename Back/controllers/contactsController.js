@@ -1,3 +1,4 @@
+// import { supabase } from "../Config/supabaseClient.js";
 import contactsModel from "../models/contactsModel.js";
 
 //Create contact controlller 

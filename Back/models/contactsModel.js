@@ -1,18 +1,22 @@
 import { supabase } from "../Config/supabaseClient.js";
-
 //Create Contact 
-const createContact = async(data) => {
-try {
-    const {data:result , error } = await supabase
-    .from('Contacts')
-    .insert([data]);
-    if(error){
-        throw error;
+const createContact = async (data) => {
+    try {
+        const user = supabase.auth.user(); 
+        if (!user) {
+            throw new Error('User is not logged in');
+        }
+        const contactData = { ...data, user_id: user.id };
+        const { data: result, error } = await supabase
+            .from('Contacts')
+            .insert([contactData]);
+        if (error) {
+            throw error;
+        }
+        return { success: true, result };
+    } catch (error) {
+        return { success: false, error: error.message };
     }
-    return {success: true , result};
-}catch(error){
-    return {success:false , error:error.messsage};
-}
 };
 //GetAllContacts 
 const getAllContacts = async() => {

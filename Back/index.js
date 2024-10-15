@@ -14,12 +14,12 @@ app.use(bodyParser.json());
 app.use(express.json());
 // Use Routes
 app.use('/api/auth', authRoutes); 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-  });
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/entites',entitesRoutes);
 app.use('/api/contacts',contactsRoutes);
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+  });
 // Start Server
 app.listen(5000, () => {
     console.log('Backend running on http://localhost:5000');
