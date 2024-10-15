@@ -2,7 +2,8 @@ import entityModel from "../models/entiteModel";
 
 // Create entity controller 
 const createEntite = async(req,res) => {
-    const result = await entityModel.createEntite(req.body);
+    const newEntite = {...req.body , is_active:true};
+    const result = await entityModel.createEntite(newEntite);
     if(!result.success){
         return res.status(400).json({error: result.error});
     }
