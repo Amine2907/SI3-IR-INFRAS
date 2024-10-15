@@ -2,8 +2,8 @@ import express from "express";
 import cors from "cors"; 
 import bodyParser from "body-parser";
 // Routes
-import authRoutes from './Routes/auth.js'; // Import auth routes
-const dashboardRoutes = require('./Routes/dashboard.js'); // import dashboard routes
+import authRoutes from './Routes/auth.js';
+import dashboardRoutes from './Routes/dashboard.js'; // Import auth routes
 // Express Setup
 const app = express();
 app.use(cors({
