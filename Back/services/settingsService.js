@@ -12,7 +12,6 @@ const getAccountInfo = async () => {
         return { success: false, error: error.response?.data || error.message };
     }
 };
-
 // 2. Update Password
 const updatePassword = async (currentPassword, newPassword) => {
     try {
