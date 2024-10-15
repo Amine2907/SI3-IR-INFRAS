@@ -18,8 +18,8 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
   });
 app.use('/api/dashboard', dashboardRoutes);
-app.user('/api/entites',entitesRoutes);
-app.user('/api/contacts',contactsRoutes);
+app.use('/api/entites',entitesRoutes);
+app.use('/api/contacts',contactsRoutes);
 // Start Server
 app.listen(5000, () => {
     console.log('Backend running on http://localhost:5000');

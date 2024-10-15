@@ -1,4 +1,4 @@
-import contactsModel from "../models/contactsModel";
+import contactsModel from "../models/contactsModel.js";
 
 //Create contact controlller 
 const createContact = async(req,res) =>{

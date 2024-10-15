@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import entityController from "../controllers/entiteController";
+import entityController from "../controllers/entiteController.js";
 
 router.post('/',entityController.createEntite);
 router.get('/',entityController.getAllEntites);

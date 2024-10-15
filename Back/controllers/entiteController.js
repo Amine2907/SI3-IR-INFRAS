@@ -1,4 +1,4 @@
-import entityModel from "../models/entiteModel";
+import entityModel from "../models/entiteModel.js";
 
 // Create entity controller 
 const createEntite = async(req,res) => {

@@ -1,4 +1,4 @@
-import { supabase } from "../Config/supabaseClient";
+import { supabase } from "../Config/supabaseClient.js";
 
 //Create Contact 
 const createContact = async(data) => {
