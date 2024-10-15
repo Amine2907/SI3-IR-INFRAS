@@ -3,7 +3,8 @@ import cors from "cors";
 import bodyParser from "body-parser";
 // Routes
 import authRoutes from './Routes/auth.js';
-import dashboardRoutes from './Routes/dashboard.js'; // Import auth routes
+import dashboardRoutes from './Routes/dashboard.js';
+import entitesRoutes from './Routes/entites.js'
 // Express Setup
 const app = express();
 app.use(cors({
@@ -16,6 +17,7 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
   });
 app.use('/api/dashboard', dashboardRoutes);
+app.user('/api/entites',entitesRoutes);
 // Start Server
 app.listen(5000, () => {
     console.log('Backend running on http://localhost:5000');
