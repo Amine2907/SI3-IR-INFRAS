@@ -1,6 +1,6 @@
 export default function(allowedRoles) {
     return (req, res, next) => {
-      const userAccess = req.user?.user_access;  // Ensure req.user and user_access exist
+      const userAccess = req.user?.user_access;
       if (!userAccess) {
         return res.status(401).json({ message: 'User access information is missing' });
       }
