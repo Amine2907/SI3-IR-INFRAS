@@ -1,6 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
 import axios from 'axios';
-import express from 'express';
 const API_URL = 'http://localhost:5000/api/auth';
 // Error handling helper
 const handleError = (error) => {

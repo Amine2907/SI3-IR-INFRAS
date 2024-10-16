@@ -8,10 +8,10 @@ import dashboardRoutes from './Routes/dashboard.js';
 import entitesRoutes from './Routes/entites.js';
 import contactsRoutes from './Routes/contacts.js';
 // Exports here 
-export { default as contactService } from './services/contactsService';
-export { default as AuthService } from './services/authService';
-export { default as entityService } from './services/entityService';
-export { default as settingsService } from './services/settingsService';
+export { default as contactService } from './services/contactsService.js';
+export { default as AuthService } from './services/authService.js';
+export { default as entityService } from './services/entityService.js';
+export { default as settingsService } from './services/settingsService.js';
 // Express Setup
 const app = express();
 app.use(cors({
