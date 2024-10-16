@@ -3,6 +3,7 @@
   "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
+    "axios": "^1.7.7",
     "body-parser": "^1.20.3",
     "browserify-zlib": "^0.2.0",
     "cors": "^2.8.5",
