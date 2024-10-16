@@ -22,20 +22,23 @@ import ResetPasswordForm from 'layouts/authentification/ResetPasswordForm';
 import SignInForm from 'layouts/authentification/SignInForm';
 import SignUpForm from 'layouts/authentification/SignUpFrom';
 import ConfirmSignup from 'layouts/authentification/ConfirmSignUp';
+import { MaterialUIControllerProvider } from '../context/MaterialUIContext';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
   const { pathname } = useLocation();
   return (
-    <AuthProvider>
-      <InnerApp
-        controller={controller}
-        dispatch={dispatch}
-        pathname={pathname}
-        theme={darkMode ? themeDark : theme}
-        darkMode={darkMode}
-      />
-    </AuthProvider>
+    <MaterialUIControllerProvider>
+      <AuthProvider>
+        <InnerApp
+          controller={controller}
+          dispatch={dispatch}
+          pathname={pathname}
+          theme={darkMode ? themeDark : theme}
+          darkMode={darkMode}
+        />
+      </AuthProvider>
+    </MaterialUIControllerProvider>
   );
 }
 function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {

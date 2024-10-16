@@ -105,7 +105,7 @@ const setDirection = (dispatch, value) => dispatch({ type: 'DIRECTION', value })
 const setLayout = (dispatch, value) => dispatch({ type: 'LAYOUT', value });
 const setDarkMode = (dispatch, value) => dispatch({ type: 'DARKMODE', value });
 
-export {
+export{
   MaterialUIControllerProvider,
   useMaterialUIController,
   setMiniSidenav,

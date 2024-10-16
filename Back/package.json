@@ -1,5 +1,5 @@
 {
-  "name": "si3-back",
+  "name": "back",
   "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
