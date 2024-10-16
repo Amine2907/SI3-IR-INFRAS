@@ -1,10 +1,10 @@
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/auth';
 // Error handling helper
-const handleError = (error) => {
-  return { success: false, error: error.response ? error.response.data.error : error.message };
-};
-// Sign in the user 
+// const handleError = error => {
+//   return { success: false, error: error.response ? error.response.data.error : error.message };
+// };
+// Sign in the user
 const signIn = (email, password) => {
   return axios
     .post(`${API_URL}/signin`, { email, password })
@@ -19,7 +19,7 @@ const signIn = (email, password) => {
       return { success: false, message: error.response.data.error || 'Unknown error' };
     });
 };
-// Sign Up the user 
+// Sign Up the user
 const signUp = (firstName, lastName, email, password) => {
   return axios
     .post(`${API_URL}/signup`, { firstName, lastName, email, password })
@@ -35,7 +35,7 @@ const isAuthenticated = () => {
   return user && user.token ? true : false;
 };
 // Password reset for the user
-const resetPassword = async (email) => {
+const resetPassword = async (email, access_token) => {
   return axios
     .post(`${API_URL}/reset-password#access_token=${access_token}`, { email })
     .then(response => response.data)
@@ -44,16 +44,16 @@ const resetPassword = async (email) => {
       return { success: false, error: error.response?.data?.error || 'Unknown error' };
     });
 };
-// Confirm reseting password for the user 
+// Confirm reseting password for the user
 const confirmResetPassword = async (newPassword, access_token) => {
   return axios
-    .post(`${API_URL}/confirm-reset-password#access_token=${access_token}`, { newPassword})
+    .post(`${API_URL}/confirm-reset-password#access_token=${access_token}`, { newPassword })
     .then(response => response.data)
     .catch(error => {
       console.error('Password reset failed!', error);
-      return { 
-        success: false, 
-        error: error.response?.data?.error || 'Unknown error' 
+      return {
+        success: false,
+        error: error.response?.data?.error || 'Unknown error',
       };
     });
 };

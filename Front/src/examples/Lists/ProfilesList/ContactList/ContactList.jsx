@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ContactCard from '../../../Cards/ConatctCards/ContactCard';
 import ContactModal from '../../../popup/ContactPopUp/ContactPopUpl';
 import './ContactList.module.css';
-import { contactService } from 'back';
+import contactService from 'services/contactsService';
 const ContactList = () => {
   const [contacts, setContacts] = useState([]);
   const [showModal, setShowModal] = useState(false);
