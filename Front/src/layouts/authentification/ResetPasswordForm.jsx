@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { AuthService } from 'back';
+import AuthService from 'services/authService';
 import {
   MDBContainer,
   MDBRow,
