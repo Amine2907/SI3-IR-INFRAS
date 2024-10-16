@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ContactPopUp.module.css';
-
+import PropTypes from 'prop-types';
 const ContactModal = ({ contact, onSave, onClose }) => {
   const [formData, setFormData] = useState(contact || {});
 
@@ -40,5 +40,15 @@ const ContactModal = ({ contact, onSave, onClose }) => {
       </div>
     </div>
   );
+};
+ContactModal.propTypes = {
+  contact: PropTypes.shape({
+    name: PropTypes.string,
+    email: PropTypes.string,
+    phone: PropTypes.string,
+    position: PropTypes.string,
+  }),
+  onSave: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 export default ContactModal;
