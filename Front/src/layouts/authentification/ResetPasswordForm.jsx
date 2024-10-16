@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import AuthService from './authService';
+import { AuthService } from 'si3-back';
 import {
   MDBContainer,
   MDBRow,

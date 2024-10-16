@@ -1,6 +1,10 @@
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/entite';
 
+// Error handling helper
+const handleError = (error) => {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+};
 // Create entity
 const createEntity = async (data) => {
     try {

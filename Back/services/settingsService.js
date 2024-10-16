@@ -1,6 +1,10 @@
 import axios from 'axios';
 const API_BASE_URL = 'http://localhost:5000/api/settings';
 
+// Error handling helper
+const handleError = (error) => {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+};
 // 1. Get Account Information
 const getAccountInfo = async () => {
     try {

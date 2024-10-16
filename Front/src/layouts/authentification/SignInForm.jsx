@@ -12,7 +12,7 @@ import {
   MDBIcon,
 } from 'mdb-react-ui-kit';
 import { useAuth } from 'context/Auth/AuthContext';
-import AuthService from './authService';
+import { AuthService } from 'si3-back';
 import { useNavigate } from 'react-router-dom';
 function SignInForm() {
   const [email, setEmail] = useState('');

@@ -21,8 +21,8 @@ export const signUp = async (req, res) => {
       return res.status(400).json({ success: false, error: error.message });
     }
     // If no error, respond with success
-    const userId = user.id; // Extract the user ID
-    console.log('User ID:', userId);
+    // const userId = user.id; // Extract the user ID
+    // console.log('User ID:', userId);
     return res.status(200).json({ success: true, message: 'User signed up successfully!', user }); 
   } catch (err) {
     console.error('Server error:', err);  // Catch unexpected errors
@@ -37,8 +37,8 @@ export const signIn = async (req, res) => {
     console.error('Supabase Sign-in Error:', error.message); // Log the error message
     return res.status(400).json({ error: error.message });
   }
-  const userId = user.id; // Extract the user ID
-  console.log('User ID:', userId);
+  // const userId = user.id; // Extract the user ID
+  // console.log('User ID:', userId);
   return res.status(200).json({ message: 'Sign in successful', user: data.user });
 };
 // Sign out Controller

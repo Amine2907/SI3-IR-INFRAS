@@ -1,3 +1,4 @@
+// Imports here 
 import express from "express"; 
 import cors from "cors"; 
 import bodyParser from "body-parser";
@@ -6,6 +7,11 @@ import authRoutes from './Routes/auth.js';
 import dashboardRoutes from './Routes/dashboard.js';
 import entitesRoutes from './Routes/entites.js';
 import contactsRoutes from './Routes/contacts.js';
+// Exports here 
+export { default as contactService } from './services/contactsService';
+export { default as AuthService } from './services/authService';
+export { default as entityService } from './services/entityService';
+export { default as settingsService } from './services/settingsService';
 // Express Setup
 const app = express();
 app.use(cors({
