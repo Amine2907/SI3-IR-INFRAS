@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import MDTypographyRoot from 'components/MDTypography/MDTypographyRoot';
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController } from 'context';
+import { useMaterialUIController } from '../../context/index';
 
 const MDTypography = forwardRef(
   (

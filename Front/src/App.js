@@ -9,7 +9,7 @@ import Configurator from 'examples/Configurator';
 import theme from 'assets/theme';
 import themeDark from 'assets/theme-dark';
 import routes from 'routes';
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from 'context';
+import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from './context/index';
 import brandWhite from 'assets/images/logo-ct.png';
 import brandDark from 'assets/images/logo-ct-dark.png';
 import AuthPage from 'layouts/authentification/AuthPage';
@@ -22,23 +22,20 @@ import ResetPasswordForm from 'layouts/authentification/ResetPasswordForm';
 import SignInForm from 'layouts/authentification/SignInForm';
 import SignUpForm from 'layouts/authentification/SignUpFrom';
 import ConfirmSignup from 'layouts/authentification/ConfirmSignUp';
-import { MaterialUIControllerProvider } from '../context/MaterialUIContext';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
   const { pathname } = useLocation();
   return (
-    <MaterialUIControllerProvider>
-      <AuthProvider>
-        <InnerApp
-          controller={controller}
-          dispatch={dispatch}
-          pathname={pathname}
-          theme={darkMode ? themeDark : theme}
-          darkMode={darkMode}
-        />
-      </AuthProvider>
-    </MaterialUIControllerProvider>
+    <AuthProvider>
+      <InnerApp
+        controller={controller}
+        dispatch={dispatch}
+        pathname={pathname}
+        theme={darkMode ? themeDark : theme}
+        darkMode={darkMode}
+      />
+    </AuthProvider>
   );
 }
 function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {

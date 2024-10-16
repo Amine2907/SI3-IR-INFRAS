@@ -29,7 +29,7 @@ import {
   setMiniSidenav,
   setTransparentSidenav,
   setWhiteSidenav,
-} from 'context';
+} from '../../context/index';
 
 function Sidenav({ brand, brandName, routes, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
