@@ -1,5 +1,7 @@
 // CRU ENTITE AND ACTIVATING / DESACTIVATING INSTEAD OF DELETING 
-import { supabase } from "../Config/supabaseClient.js";
+
+import { supabase } from "../config/supabaseClient.js";
+
 // Create Entite 
 const createEntite = async(data) => {
     try {

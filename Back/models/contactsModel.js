@@ -1,12 +1,8 @@
-import { supabase } from "../Config/supabaseClient.js";
+import { supabase } from "../config/supabaseClient.js";
 //Create Contact 
 const createContact = async (data) => {
     try {
-        const user = supabase.auth.user(); 
-        if (!user) {
-            throw new Error('User is not logged in');
-        }
-        const contactData = { ...data, user_id: user.id };
+        const contactData = {data};
         const { data: result, error } = await supabase
             .from('Contacts')
             .insert([contactData]);
