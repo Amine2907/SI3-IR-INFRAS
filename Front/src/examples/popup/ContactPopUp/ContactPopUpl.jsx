@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styles from './ContactPopUp.module.css'; // Ensure styles are applied correctly
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
+import MDButton from 'components/MDButton';
+import MDInput from 'components/MDInput';
 const ContactModal = ({ contact, onSave, onClose }) => {
   const [formData, setFormData] = useState(contact || {});
   const [isActive, setIsActive] = useState(contact ? contact.is_active : true);
@@ -16,52 +18,65 @@ const ContactModal = ({ contact, onSave, onClose }) => {
   const handleToggleActive = () => {
     setIsActive(!isActive);
   };
-
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <MDTypography variant="h3" fontWeight="medium">
           {contact ? 'Edit Contact' : 'Add Contact'}
         </MDTypography>
-        <input name="nom" value={formData.nom || ''} onChange={handleChange} placeholder="Nom" />
-        <input
+        <MDInput
+          name="nom"
+          value={formData.nom || ''}
+          onChange={handleChange}
+          placeholder="Nom"
+        ></MDInput>
+        <MDInput
           name="prenom"
           value={formData.prenom || ''}
           onChange={handleChange}
           placeholder="Prenom"
-        />
-        <input
+        ></MDInput>
+        <MDInput
           name="mission"
           value={formData.mission || ''}
           onChange={handleChange}
           placeholder="Mission"
-        />
-        <input
+        ></MDInput>
+        <MDInput
           name="email"
           value={formData.email || ''}
           onChange={handleChange}
           placeholder="Email"
-        />
-        <input
+        ></MDInput>
+        <MDInput
           name="tel"
           value={formData.tel || ''}
           onChange={handleChange}
           placeholder="Téléphone"
-        />
-        <input
+        ></MDInput>
+        <MDInput
           name="mobile"
           value={formData.mobile || ''}
           onChange={handleChange}
           placeholder="mboile"
-        />
+        ></MDInput>
         <div>
           <label>
             <input type="checkbox" checked={isActive} onChange={handleToggleActive} />
             Active
           </label>
         </div>
-        <button onClick={handleSubmit}>Save</button>
-        <button onClick={onClose}>Close</button>
+        <MDButton
+          onClick={handleSubmit}
+          variant="gradient"
+          color="dark"
+          style={{ marginLeft: '10px' }}
+        >
+          Save
+        </MDButton>
+        <MDButton onClick={onClose} variant="gradient" color="dark" style={{ marginLeft: '170px' }}>
+          Close
+        </MDButton>
       </div>
     </div>
   );
@@ -79,5 +94,4 @@ ContactModal.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-
 export default ContactModal;

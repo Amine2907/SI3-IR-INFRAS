@@ -28,13 +28,26 @@ const getContactsById = async(req,res) => {
     return res.status(200).json(result.data);
 }
 //Update contact controller 
-const updateContact = async(req,res) =>{
+const updateContact = async (req, res) => {
+    // Extract contact ID from URL parameters
     const contactId = req.params.id;
-    const updates = req.body ;
-    const result = await contactsModel.updateContact(contactId,updates);
-    if(!result.success){
-        return res.status(400).json({error:result.error});
+    // Extract update fields from request body
+    const updates = req.body;
+    // Ensure the contact ID is valid
+    if (!contactId) {
+        return res.status(400).json({ error: 'Contact ID is required.' });
     }
+    // Ensure updates contain necessary fields (optional validation)
+    if (!updates || Object.keys(updates).length === 0) {
+        return res.status(400).json({ error: 'No update fields provided.' });
+    }
+    // Call the model to update the contact
+    const result = await contactsModel.updateContact(contactId, updates);
+    // Handle the result from the model
+    if (!result.success) {
+        return res.status(400).json({ error: result.error });
+    }
+    // Return the updated contact data
     return res.status(200).json(result.data);
 };
 // Desactivate contact controller 
