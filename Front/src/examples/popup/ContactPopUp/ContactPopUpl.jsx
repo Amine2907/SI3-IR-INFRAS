@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 const ContactModal = ({ contact, onSave, onClose }) => {
   const [formData, setFormData] = useState(contact || {});
+  const [isActive, setIsActive] = useState(contact ? contact.is_active : true);
 
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -11,6 +12,9 @@ const ContactModal = ({ contact, onSave, onClose }) => {
 
   const handleSubmit = () => {
     onSave(formData);
+  };
+  const handleToggleActive = () => {
+    setIsActive(!isActive);
   };
 
   return (
@@ -39,7 +43,7 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           placeholder="Email"
         />
         <input
-          name="telephone"
+          name="tel"
           value={formData.tel || ''}
           onChange={handleChange}
           placeholder="Téléphone"
@@ -50,6 +54,12 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           onChange={handleChange}
           placeholder="mboile"
         />
+        <div>
+          <label>
+            <input type="checkbox" checked={isActive} onChange={handleToggleActive} />
+            Active
+          </label>
+        </div>
         <button onClick={handleSubmit}>Save</button>
         <button onClick={onClose}>Close</button>
       </div>
@@ -69,4 +79,5 @@ ContactModal.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
+
 export default ContactModal;
