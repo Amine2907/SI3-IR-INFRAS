@@ -62,7 +62,6 @@ const updateContact = async (id, updates) => {
       return { success: false, error: err.message }; // Return the caught error message
     }
   };
-  
 // .eq('is_active',true);
 // Activate Contacts 
 const activateContact = async(id) => {
