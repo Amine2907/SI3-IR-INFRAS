@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import styles from './ContactPopUp.module.css';
+import styles from './ContactPopUp.module.css'; // Ensure styles are applied correctly
 import PropTypes from 'prop-types';
+import MDTypography from 'components/MDTypography';
 const ContactModal = ({ contact, onSave, onClose }) => {
   const [formData, setFormData] = useState(contact || {});
 
@@ -15,13 +16,21 @@ const ContactModal = ({ contact, onSave, onClose }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h3>{contact ? 'Edit Contact' : 'Add Contact'}</h3>
+        <MDTypography variant="h3" fontWeight="medium">
+          {contact ? 'Edit Contact' : 'Add Contact'}
+        </MDTypography>
         <input name="nom" value={formData.nom || ''} onChange={handleChange} placeholder="Nom" />
         <input
           name="prenom"
           value={formData.prenom || ''}
           onChange={handleChange}
           placeholder="Prenom"
+        />
+        <input
+          name="mission"
+          value={formData.mission || ''}
+          onChange={handleChange}
+          placeholder="Mission"
         />
         <input
           name="email"
@@ -31,9 +40,15 @@ const ContactModal = ({ contact, onSave, onClose }) => {
         />
         <input
           name="telephone"
-          value={formData.telephone || ''}
+          value={formData.tel || ''}
           onChange={handleChange}
           placeholder="Téléphone"
+        />
+        <input
+          name="mobile"
+          value={formData.mobile || ''}
+          onChange={handleChange}
+          placeholder="mboile"
         />
         <button onClick={handleSubmit}>Save</button>
         <button onClick={onClose}>Close</button>
@@ -43,10 +58,13 @@ const ContactModal = ({ contact, onSave, onClose }) => {
 };
 ContactModal.propTypes = {
   contact: PropTypes.shape({
-    name: PropTypes.string,
+    nom: PropTypes.string,
+    prenom: PropTypes.string,
     email: PropTypes.string,
-    phone: PropTypes.string,
-    position: PropTypes.string,
+    tel: PropTypes.string,
+    mobile: PropTypes.string,
+    mission: PropTypes.string,
+    is_active: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

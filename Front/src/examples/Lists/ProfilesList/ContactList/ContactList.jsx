@@ -13,7 +13,7 @@ import MDButton from 'components/MDButton';
 import { Grid } from '@mui/material';
 
 const ContactList = () => {
-  const [contacts, setContacts] = useState([]); // Updated to store the contacts list
+  const [contacts, setContacts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
 
@@ -24,22 +24,19 @@ const ContactList = () => {
   const fetchContacts = async () => {
     const result = await contactService.getAllContacts();
     if (result.success) {
-      setContacts(result.data); // Set the fetched contacts from the backend
+      setContacts(result.data);
     } else {
       console.error(result.error);
     }
   };
-
   const handleAddContact = () => {
     setSelectedContact(null); // Clear selected contact for new entry
     setShowModal(true); // Show modal for adding a new contact
   };
-
   const handleModalClose = () => {
     setShowModal(false); // Hide modal
     fetchContacts(); // Refresh contact list after adding/editing
   };
-
   const handleSave = async data => {
     if (selectedContact) {
       // Update contact
@@ -64,11 +61,15 @@ const ContactList = () => {
         </MDBox>
         <MDBox p={2}>
           <Grid container spacing={3}>
-            {' '}
             {contacts.map(contact => (
               <Grid item xs={12} sm={8} md={4} key={contact.id}>
-                {' '}
-                <ContactCard contact={contact} onEdit={() => setSelectedContact(contact)} />
+                <ContactCard
+                  contact={contact}
+                  onEdit={() => {
+                    setSelectedContact(contact); // Set selected contact
+                    setShowModal(true); // Show modal for editing
+                  }}
+                />
               </Grid>
             ))}
           </Grid>
