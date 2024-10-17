@@ -2,7 +2,7 @@
 import Dashboard from 'layouts/dashboard';
 import Tables from 'layouts/tables';
 import Billing from 'layouts/billing';
-import Notifications from 'layouts/notifications';
+import Contacts from 'layouts/contacts';
 import Profile from 'layouts/profile';
 // @mui icons
 import Icon from '@mui/material/Icon';
@@ -37,8 +37,8 @@ const routes = [
     name: 'Contacts',
     key: 'notifications',
     icon: <Icon fontSize="small">notifications</Icon>,
-    route: '/notifications',
-    component: <Notifications />,
+    route: '/contacts',
+    component: <Contacts />,
   },
   {
     type: 'collapse',

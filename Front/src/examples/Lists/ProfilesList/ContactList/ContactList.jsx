@@ -10,13 +10,10 @@ import Icon from '@mui/material/Icon';
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
+import { Grid } from '@mui/material';
 
-// Material Dashboard 2 React context
-// import { useMaterialUIController } from '../../../../context/index';
 const ContactList = () => {
-  // const [controller] = useMaterialUIController();
-  // const { darkMode } = controller;
-  const [setContacts] = useState([]);
+  const [contacts, setContacts] = useState([]); // Updated to store the contacts list
   const [showModal, setShowModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
 
@@ -27,19 +24,16 @@ const ContactList = () => {
   const fetchContacts = async () => {
     const result = await contactService.getAllContacts();
     if (result.success) {
-      setContacts(result.data);
+      setContacts(result.data); // Set the fetched contacts from the backend
     } else {
       console.error(result.error);
     }
   };
+
   const handleAddContact = () => {
     setSelectedContact(null); // Clear selected contact for new entry
     setShowModal(true); // Show modal for adding a new contact
   };
-  // const handleEditContact = contact => {
-  //   setSelectedContact(contact); // Set the selected contact for editing
-  //   setShowModal(true); // Show modal for editing
-  // };
 
   const handleModalClose = () => {
     setShowModal(false); // Hide modal
@@ -68,7 +62,17 @@ const ContactList = () => {
             &nbsp;Ajouter Contact
           </MDButton>
         </MDBox>
-        <ContactCard />
+        <MDBox p={2}>
+          <Grid container spacing={3}>
+            {' '}
+            {contacts.map(contact => (
+              <Grid item xs={12} sm={8} md={4} key={contact.id}>
+                {' '}
+                <ContactCard contact={contact} onEdit={() => setSelectedContact(contact)} />
+              </Grid>
+            ))}
+          </Grid>
+        </MDBox>
       </Card>
       {showModal && (
         <ContactModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />

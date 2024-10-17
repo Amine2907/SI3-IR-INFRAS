@@ -1,9 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/contact';
-// Error handling helper
-// const handleError = error => {
-//   return { success: false, error: error.response ? error.response.data.error : error.message };
-// };
+const API_URL = 'http://localhost:5000/api/contacts';
 // Create contact
 const createContact = async data => {
   try {
