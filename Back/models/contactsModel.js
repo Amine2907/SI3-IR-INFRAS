@@ -2,10 +2,9 @@ import { supabase } from "../config/supabaseClient.js";
 //Create Contact 
 const createContact = async (data) => {
     try {
-        const contactData = {data};
         const { data: result, error } = await supabase
             .from('Contacts')
-            .insert([contactData]);
+            .insert([data]);
         if (error) {
             throw error;
         }
