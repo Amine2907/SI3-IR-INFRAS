@@ -51,8 +51,8 @@ const updateContact = async(id,updates) => {
         const {data,error} = await supabase
         .from('Conatcts')
         .update(updates)
-        .eq('Cid',id)
-        .eq('is_active',true);
+        .eq('Cid',id);
+        // .eq('is_active',true);
         if(error){
             throw error ; 
         }

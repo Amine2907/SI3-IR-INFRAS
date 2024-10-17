@@ -33,6 +33,8 @@ const updateContact = async (req, res) => {
     const contactId = req.params.id;
     // Extract update fields from request body
     const updates = req.body;
+    console.log('Contact ID:', contactId); 
+    console.log('Request Body:', updates);
     // Ensure the contact ID is valid
     if (!contactId) {
         return res.status(400).json({ error: 'Contact ID is required.' });
