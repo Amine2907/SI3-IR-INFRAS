@@ -29,29 +29,44 @@ const getContactsById = async(req,res) => {
 }
 //Update contact controller 
 const updateContact = async (req, res) => {
-    // Extract contact ID from URL parameters
-    const contactId = req.params.id;
-    // Extract update fields from request body
-    const updates = req.body;
-    console.log('Contact ID:', contactId); 
-    console.log('Request Body:', updates);
-    // Ensure the contact ID is valid
-    if (!contactId) {
+    try {
+      // Extract contact ID from URL parameters
+      const contactId = req.params.id;
+      // Extract update fields from request body
+      const updates = req.body;
+      console.log('--- Update Contact Request ---');
+      console.log('Contact ID:', contactId); 
+      console.log('Request Body:', updates);
+      // Ensure the contact ID is provided
+      if (!contactId) {
+        console.error('Error: Contact ID not provided');
         return res.status(400).json({ error: 'Contact ID is required.' });
-    }
-    // Ensure updates contain necessary fields (optional validation)
-    if (!updates || Object.keys(updates).length === 0) {
+      }
+      // Ensure updates contain necessary fields (optional validation)
+      if (!updates || Object.keys(updates).length === 0) {
+        console.error('Error: No update fields provided');
         return res.status(400).json({ error: 'No update fields provided.' });
-    }
-    // Call the model to update the contact
-    const result = await contactsModel.updateContact(contactId, updates);
-    // Handle the result from the model
-    if (!result.success) {
+      }
+      // Call the model to update the contact
+      const result = await contactsModel.updateContact(contactId, updates);
+      console.log('--- Model Response ---');
+      console.log('Result:', result);
+  
+      // Handle the result from the model
+      if (!result.success) {
+        console.error('Error from Model:', result.error);
         return res.status(400).json({ error: result.error });
+      }
+      // Return the updated contact data
+      console.log('Update Successful. Returning updated data:', result.data);
+      return res.status(200).json(result.data);
+    } catch (error) {
+      // Catch unexpected errors
+      console.error('Unexpected Error:', error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
-    // Return the updated contact data
-    return res.status(200).json(result.data);
-};
+  };
+  
 // Desactivate contact controller 
 const desactivateContact = async(req,res) =>{
     const contactId = req.params.id ; 

@@ -46,21 +46,24 @@ const GetContactsById = async(id) => {
     }
 };
 //Update Contacts 
-const updateContact = async(id,updates) => {
+const updateContact = async (id, updates) => {
     try {
-        const {data,error} = await supabase
-        .from('Conatcts')
+      const { data, error } = await supabase
+        .from('Contacts') // Make sure the table name is correct
         .update(updates)
-        .eq('Cid',id);
-        // .eq('is_active',true);
-        if(error){
-            throw error ; 
-        }
-        return {success:true , data };
-    }catch(error){
-        return {success:false , error:error.messsage};
+        .eq('Cid', id);
+      if (error) {
+        console.error('Supabase Error:', error); // Log the error
+        return { success: false, error: error.message }; // Pass the actual error message
+      }
+      return { success: true, data }; // Return success with data
+    } catch (err) {
+      console.error('Catch Block Error:', err); // Log any unexpected errors
+      return { success: false, error: err.message }; // Return the caught error message
     }
-};
+  };
+  
+// .eq('is_active',true);
 // Activate Contacts 
 const activateContact = async(id) => {
     try {
