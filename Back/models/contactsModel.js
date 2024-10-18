@@ -93,8 +93,7 @@ const searchContacts = async(filters) => {
     try {
         let query = supabase
             .from('Contacts')
-            .select('*')
-            .eq('is_active', true);
+            .select('*');
 
         if (filters.nom) {
             query = query.ilike('Nom', `%${filters.nom}%`);

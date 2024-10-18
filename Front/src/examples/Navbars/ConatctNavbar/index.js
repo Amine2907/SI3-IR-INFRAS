@@ -19,7 +19,6 @@ import MDInput from 'components/MDInput';
 
 // Material Dashboard 2 React example components
 import Breadcrumbs from 'examples/Breadcrumbs';
-import NotificationItem from 'examples/Items/NotificationItem';
 
 // Custom styles for DashboardNavbar
 import {
@@ -59,7 +58,6 @@ function ContactNavBar({ absolute, light, isMini }) {
       }, delay);
     };
   };
-
   const debouncedSearchContacts = useCallback(
     debounce(async filters => {
       const result = await contactService.searchContacts(filters); // Call your search function
@@ -71,7 +69,6 @@ function ContactNavBar({ absolute, light, isMini }) {
     }, 500), // Adjust delay as needed (500 ms in this example)
     [] // Dependencies for useCallback
   );
-
   const handleSearchChange = e => {
     const { name, value } = e.target;
     setSearchQuery(prev => ({
@@ -83,7 +80,6 @@ function ContactNavBar({ absolute, light, isMini }) {
       prenom: searchQuery.prenom,
       email: searchQuery.email,
       mission: searchQuery.mission,
-      // Add additional filters here if needed
     });
   };
 
@@ -94,7 +90,6 @@ function ContactNavBar({ absolute, light, isMini }) {
     } else {
       setNavbarType('static');
     }
-
     // A function that sets the transparent state of the navbar.
     function handleTransparentNavbar() {
       setTransparentNavbar(dispatch, (fixedNavbar && window.scrollY === 0) || !fixedNavbar);
@@ -104,14 +99,11 @@ function ContactNavBar({ absolute, light, isMini }) {
      scrolling the window.
     */
     window.addEventListener('scroll', handleTransparentNavbar);
-
     // Call the handleTransparentNavbar function to set the state with the initial value.
     handleTransparentNavbar();
-
     // Remove event listener on cleanup
     return () => window.removeEventListener('scroll', handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
-
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = event => setOpenMenu(event.currentTarget);
@@ -129,11 +121,7 @@ function ContactNavBar({ absolute, light, isMini }) {
       open={Boolean(openMenu)}
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
-    >
-      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
-      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
-    </Menu>
+    ></Menu>
   );
 
   // Styles for the navbar icons
@@ -148,7 +136,6 @@ function ContactNavBar({ absolute, light, isMini }) {
       return colorValue;
     },
   });
-
   return (
     <AppBar
       position={absolute ? 'absolute' : navbarType}
@@ -196,7 +183,7 @@ function ContactNavBar({ absolute, light, isMini }) {
               </div>
             </MDBox>
             <MDBox color={light ? 'white' : 'inherit'}>
-              <Link to="/authentication/sign-in/basic">
+              <Link to="/settings">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
                   <Icon sx={iconsStyle}>account_circle</Icon>
                 </IconButton>
@@ -230,9 +217,7 @@ function ContactNavBar({ absolute, light, isMini }) {
                 aria-haspopup="true"
                 variant="contained"
                 onClick={handleOpenMenu}
-              >
-                <Icon sx={iconsStyle}>notifications</Icon>
-              </IconButton>
+              ></IconButton>
               {renderMenu()}
             </MDBox>
           </MDBox>
