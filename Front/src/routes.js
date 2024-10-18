@@ -5,6 +5,7 @@ import Contacts from 'layouts/contacts';
 import Profile from 'layouts/profile';
 // @mui icons
 import Icon from '@mui/material/Icon';
+import Entites from 'layouts/entites';
 
 const routes = [
   {
@@ -37,7 +38,7 @@ const routes = [
     key: 'Entités',
     icon: <Icon fontSize="small">person</Icon>,
     route: '/profile',
-    component: <Profile />,
+    component: <Entites />,
   },
   {
     type: 'collapse',
