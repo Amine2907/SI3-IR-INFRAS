@@ -11,11 +11,13 @@ import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import { Grid } from '@mui/material';
+import MDAlert from 'components/MDAlert';
 
 const ContactList = () => {
   const [contacts, setContacts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
+  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
 
   useEffect(() => {
     fetchContacts();
@@ -38,14 +40,29 @@ const ContactList = () => {
     fetchContacts(); // Refresh contact list after adding/editing
   };
   const handleSave = async data => {
+    let result;
+    let successMessage = '';
     if (selectedContact) {
       // Update contact
-      await contactService.updateContact(selectedContact.id, data);
+      console.log('Updating Contact:', selectedContact.id);
+      result = await contactService.updateContact(selectedContact.Cid, data);
+      successMessage = 'Contact updated successfully!';
     } else {
       // Create new contact
-      await contactService.createContact(data);
+      result = await contactService.createContact(data);
+      successMessage = 'Contact saved successfully!';
+    }
+    // Handle the result with alert feedback
+    if (result.success) {
+      setAlert({ show: true, message: successMessage, type: 'success' });
+    } else {
+      setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
     }
     handleModalClose(); // Close modal after operation
+  };
+  // Function to close the alert
+  const handleCloseAlert = () => {
+    setAlert({ show: false, message: '', type: '' });
   };
   return (
     <div className="contact-list">
@@ -77,6 +94,16 @@ const ContactList = () => {
       </Card>
       {showModal && (
         <ContactModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />
+      )}
+      {alert.show && (
+        <MDAlert
+          color={alert.type}
+          dismissible
+          onClose={handleCloseAlert}
+          style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
+        >
+          {alert.message}
+        </MDAlert>
       )}
     </div>
   );

@@ -18,8 +18,7 @@ const getAllContacts = async() => {
     try {
         const {data,error} = await supabase
         .from('Contacts')
-        .select('*')
-        .eq('is_active',true);
+        .select('*');
 
         if(error){
             throw error;
@@ -30,13 +29,12 @@ const getAllContacts = async() => {
     }
 };
 //GetContactsById 
-const GetContactsById = async(id) => {
+const GetContactsById = async(Cid) => {
     try {
         const {data,error} = await supabase
         .from('Contacts')
         .select('*')
-        .eq('Cid',id)
-        .eq('is_active',true);
+        .eq('Cid',Cid);
         if(error){
             throw error ;
         }
@@ -46,12 +44,12 @@ const GetContactsById = async(id) => {
     }
 };
 //Update Contacts 
-const updateContact = async (id, updates) => {
+const updateContact = async (Cid, updates) => {
     try {
       const { data, error } = await supabase
         .from('Contacts') // Make sure the table name is correct
         .update(updates)
-        .eq('Cid', id);
+        .eq('Cid', Cid);
       if (error) {
         console.error('Supabase Error:', error); // Log the error
         return { success: false, error: error.message }; // Pass the actual error message
@@ -62,7 +60,6 @@ const updateContact = async (id, updates) => {
       return { success: false, error: err.message }; // Return the caught error message
     }
   };
-// .eq('is_active',true);
 // Activate Contacts 
 const activateContact = async(id) => {
     try {

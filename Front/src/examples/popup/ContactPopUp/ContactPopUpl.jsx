@@ -14,10 +14,12 @@ const ContactModal = ({ contact, onSave, onClose }) => {
   };
 
   const handleSubmit = () => {
-    onSave(formData);
+    onSave({ ...formData, is_active: isActive });
   };
   const handleToggleActive = () => {
-    setIsActive(!isActive);
+    if (contact) {
+      setIsActive(!isActive);
+    }
   };
   return (
     <div className={styles.modal}>
