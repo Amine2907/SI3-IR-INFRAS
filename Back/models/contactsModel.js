@@ -108,6 +108,9 @@ const searchContacts = async(filters) => {
         if (filters.mission) {
             query = query.ilike('Email', `%${filters.mission}%`);
         }
+        if (filters.is_active) {
+            query = query.ilike('Status', `%${filters.is_active}%`);
+        }
         const { data, error } = await query;
         if (error) {
             throw error;

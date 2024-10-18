@@ -66,7 +66,6 @@ const updateContact = async (req, res) => {
       return res.status(500).json({ error: 'Internal server error' });
     }
   };
-  
 // Desactivate contact controller 
 const desactivateContact = async(req,res) =>{
     const contactId = req.params.id ; 
