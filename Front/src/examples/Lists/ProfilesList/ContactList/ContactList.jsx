@@ -58,7 +58,7 @@ const ContactList = () => {
     } else {
       setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
     }
-    handleModalClose(); // Close modal after operation
+    handleModalClose();
   };
   // Function to close the alert
   const handleCloseAlert = () => {
