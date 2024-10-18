@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import ContactModal from '../../../popup/ContactPopUp/ContactPopUpl';
 import contactService from 'services/contactsService';
 // @mui material components
 import Card from '@mui/material/Card';
@@ -12,6 +11,7 @@ import MDButton from 'components/MDButton';
 import { Grid, Switch } from '@mui/material';
 import MDAlert from 'components/MDAlert';
 import EntiteCard from 'examples/Cards/EntiteCard/EntiteCard';
+import EntiteModal from 'examples/popup/EntitePopUp/EntitePopUp';
 
 const EntiteList = () => {
   const [contacts, setContacts] = useState([]);
@@ -137,7 +137,7 @@ const EntiteList = () => {
         </MDBox>
       </Card>
       {showModal && (
-        <ContactModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />
+        <EntiteModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />
       )}
       {alert.show && (
         <MDAlert
