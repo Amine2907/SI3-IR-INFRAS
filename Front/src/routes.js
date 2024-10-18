@@ -1,6 +1,5 @@
 // Material Dashboard 2 React layouts
 import Dashboard from 'layouts/dashboard';
-import Tables from 'layouts/tables';
 import Billing from 'layouts/billing';
 import Contacts from 'layouts/contacts';
 import Profile from 'layouts/profile';
@@ -19,14 +18,6 @@ const routes = [
   {
     type: 'collapse',
     name: 'Site',
-    key: 'tables',
-    icon: <Icon fontSize="small">table_view</Icon>,
-    route: '/tables',
-    component: <Tables />,
-  },
-  {
-    type: 'collapse',
-    name: 'Site Info',
     key: 'billing',
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: '/billing',
@@ -53,8 +44,8 @@ const routes = [
     name: 'Paramètres',
     key: 'Paramètres',
     icon: <Icon fontSize="small">dashboard</Icon>,
-    route: '/dashboard',
-    component: <Dashboard />,
+    route: '/profile',
+    component: <Profile />,
   },
 ];
 export default routes;
