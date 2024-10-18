@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import styles from './ContactPopUp.module.css'; // Ensure styles are applied correctly
+import styles from './ContactPopUp.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
+import { Switch } from '@mui/material';
 const ContactModal = ({ contact, onSave, onClose }) => {
   const [formData, setFormData] = useState(contact || {});
   const [isActive, setIsActive] = useState(contact ? contact.is_active : true);
@@ -21,7 +22,7 @@ const ContactModal = ({ contact, onSave, onClose }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <MDTypography variant="h3" fontWeight="medium">
+        <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           {contact ? 'Edit Contact' : 'Add Contact'}
         </MDTypography>
         <MDInput
@@ -29,48 +30,55 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           value={formData.nom || ''}
           onChange={handleChange}
           placeholder="Nom"
+          style={{ marginBottom: '5px', width: '320px', marginTop: '10px' }}
         ></MDInput>
         <MDInput
           name="prenom"
           value={formData.prenom || ''}
           onChange={handleChange}
           placeholder="Prenom"
+          style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <MDInput
           name="mission"
           value={formData.mission || ''}
           onChange={handleChange}
           placeholder="Mission"
+          style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <MDInput
           name="email"
           value={formData.email || ''}
           onChange={handleChange}
           placeholder="Email"
+          style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <MDInput
           name="tel"
           value={formData.tel || ''}
           onChange={handleChange}
           placeholder="Téléphone"
+          style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <MDInput
           name="mobile"
           value={formData.mobile || ''}
           onChange={handleChange}
           placeholder="mboile"
+          style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <div>
-          <label>
-            <input type="checkbox" checked={isActive} onChange={handleToggleActive} />
-            Active
-          </label>
+          <label>{isActive ? 'Active' : 'Inactive'}</label>
+          <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
+            {' '}
+            {isActive ? 'Active' : 'Inactive'}
+          </Switch>
         </div>
         <MDButton
           onClick={handleSubmit}
           variant="gradient"
           color="dark"
-          style={{ marginLeft: '10px' }}
+          style={{ marginLeft: '10px', marginTop: '10px' }}
         >
           Save
         </MDButton>
