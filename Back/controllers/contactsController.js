@@ -84,6 +84,20 @@ const activateContact = async(req,res)=> {
     }
     return res.status(200).json(result.data);
 };
+const getActiveContacts = async(req,res) => {
+    const result = await contactsModel.getAllActiveContacts();
+    if(!result.success){
+        return res.status(400).json({error:result.error});
+    }
+    return res.status(200).json(result.data);
+};
+const getInactiveContacts = async(req,res) => {
+    const result = await contactsModel.getAllInactiveContacts();
+    if(!result.success){
+        return res.status(400).json({error:result.error});
+    }
+    return res.status(200).json(result.data);
+}
 // Search contacts controller 
 const searchContacts = async(req,res) => {
     const filters = req.query ;
@@ -101,5 +115,7 @@ const contactController = {
     desactivateContact,
     activateContact,
     searchContacts,
+    getActiveContacts,
+    getInactiveContacts,
 }
 export default contactController ; 

@@ -22,6 +22,24 @@ const getAllContacts = async () => {
         return { success: false, error: error.response ? error.response.data.error : error.message };
     }
 };
+// Get all active contacts 
+const getActiveContacts = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/active`);
+        return { success: true, data: response.data };
+    } catch (error) {
+        return { success: false, error: error.response ? error.response.data.error : error.message };
+    }
+};
+// Get all inactive contacts
+const getInactiveContacts = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/inactive`);
+        return { success: true, data: response.data };
+    } catch (error) {
+        return { success: false, error: error.response ? error.response.data.error : error.message };
+    }
+};
 // Get contact by ID
 const getContactById = async (id) => {
     try {
@@ -76,5 +94,7 @@ const contactService = {
     deactivateContact,
     activateContact,
     searchContacts,
+    getActiveContacts,
+    getInactiveContacts,
 };
 export default contactService;

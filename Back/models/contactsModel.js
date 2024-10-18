@@ -28,6 +28,36 @@ const getAllContacts = async() => {
         return {success:false , error:error.messsage};
     }
 };
+const getAllActiveContacts = async() => {
+    try {
+        const {data,error} = await supabase
+        .from('Contacts')
+        .select('*')
+        .eq('is_active',true);
+
+        if(error){
+            throw error;
+        }
+        return {success:true , data};
+    }catch(error){
+        return {success:false , error:error.messsage};
+    }
+};
+const getAllInactiveContacts = async() => {
+    try {
+        const {data,error} = await supabase
+        .from('Contacts')
+        .select('*')
+        .eq('is_active',false);
+
+        if(error){
+            throw error;
+        }
+        return {success:true , data};
+    }catch(error){
+        return {success:false , error:error.messsage};
+    }
+};
 //GetContactsById 
 const GetContactsById = async(Cid) => {
     try {
@@ -127,5 +157,7 @@ const contactsModel = {
     activateContact,
     desactivateContact,
     searchContacts,
+    getAllActiveContacts,
+    getAllInactiveContacts,
 }
 export default contactsModel ; 

@@ -4,6 +4,8 @@ import contactController from "../controllers/contactsController.js";
 
 router.post('/',contactController.createContact);
 router.get('/',contactController.getAllContacts);
+router.get('/active',contactController.getActiveContacts);
+router.get('/inactive',contactController.getInactiveContacts);
 router.get('/search',contactController.searchContacts);
 router.get('/:id',contactController.getContactsById);
 router.put('/:id',contactController.updateContact);
