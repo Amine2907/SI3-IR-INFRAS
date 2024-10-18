@@ -48,7 +48,7 @@ function ContactNavBar({ absolute, light, isMini }) {
   const route = useLocation().pathname.split('/').slice(1);
   const [searchQuery, setSearchQuery] = useState({ nom: '', prenom: '', email: '', mission: '' });
   const [isActive, setIsActive] = useState(true); // Assuming you want to start with 'Active' by default
-  const [contacts, setContacts] = useState([]);
+  const [setContacts] = useState(() => () => {});
 
   const debounce = (func, delay) => {
     let timeoutId;
@@ -75,17 +75,17 @@ function ContactNavBar({ absolute, light, isMini }) {
   const fetchActiveContacts = async () => {
     const result = await contactService.getActiveContacts();
     if (result.success) {
-      setContacts(result.data); // Set the fetched active contacts
+      setContacts(result.data); // Update your contacts state here
     } else {
-      console.error(result.error); // Handle errors
+      console.error(result.error);
     }
   };
   const fetchInactiveContacts = async () => {
     const result = await contactService.getInactiveContacts();
     if (result.success) {
-      setContacts(result.data); // Set the fetched inactive contacts
+      setContacts(result.data); // Update your contacts state here
     } else {
-      console.error(result.error); // Handle errors
+      console.error(result.error);
     }
   };
   // GetActive and Inactive contacts
@@ -116,7 +116,6 @@ function ContactNavBar({ absolute, light, isMini }) {
       mission: searchQuery.mission,
     });
   };
-
   useEffect(() => {
     fetchActiveContacts();
     // Setting the navbar type
@@ -214,13 +213,16 @@ function ContactNavBar({ absolute, light, isMini }) {
                   onChange={handleSearchChange}
                   style={{ marginBottom: '10px' }} // Adjust styles as needed
                 />
-                <div>
-                  <label>{isActive ? 'Active' : 'Inactive'}</label>
-                  <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
-                    {' '}
-                    {isActive ? 'Active' : 'Inactive'}
-                  </Switch>
-                </div>
+                <label>{isActive ? 'Active' : 'Inactive'}</label>
+                <Switch
+                  type="checkbox"
+                  checked={isActive}
+                  onChange={handleToggleActive}
+                  style={{ marginRight: '10px' }}
+                >
+                  {' '}
+                  {isActive ? 'Active' : 'Inactive'}
+                </Switch>
                 {/* Add your contacts display here */}
               </div>
             </MDBox>
@@ -268,7 +270,6 @@ function ContactNavBar({ absolute, light, isMini }) {
     </AppBar>
   );
 }
-
 // Setting default values for the props of DashboardNavbar
 ContactNavBar.defaultProps = {
   absolute: false,
