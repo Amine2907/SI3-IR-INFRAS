@@ -103,7 +103,15 @@ const ContactList = () => {
           <MDTypography variant="h6" fontWeight="medium">
             Contacts
           </MDTypography>
-          <label>{isActive ? 'Active' : 'Inactive'}</label>
+          <MDButton onClick={handleAddContact} variant="gradient" color="dark">
+            <Icon sx={{ fontWeight: 'bold' }}>add</Icon>
+            &nbsp;Ajouter Contact
+          </MDButton>
+        </MDBox>
+        <MDBox p={2}>
+          <MDTypography variant="h6" fontWeight="medium">
+            {isActive ? 'Active' : 'Inactive'}
+          </MDTypography>
           <Switch
             type="checkbox"
             checked={isActive}
@@ -113,12 +121,6 @@ const ContactList = () => {
             {' '}
             {isActive ? 'Active' : 'Inactive'}
           </Switch>
-          <MDButton onClick={handleAddContact} variant="gradient" color="dark">
-            <Icon sx={{ fontWeight: 'bold' }}>add</Icon>
-            &nbsp;Ajouter Contact
-          </MDButton>
-        </MDBox>
-        <MDBox p={2}>
           <Grid container spacing={3}>
             {contacts.map(contact => (
               <Grid item xs={12} sm={8} md={4} key={contact.id}>
