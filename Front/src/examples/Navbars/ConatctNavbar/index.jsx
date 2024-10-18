@@ -37,7 +37,7 @@ import {
   setOpenConfigurator,
 } from '../../../context/index';
 import contactService from 'services/contactsService';
-import { Switch } from '@mui/material';
+// import { Switch } from '@mui/material';
 
 function ContactNavBar({ absolute, light, isMini }) {
   //   const [isActive, setIsActive] = useState(contact ? contact.is_active : true);
@@ -47,7 +47,6 @@ function ContactNavBar({ absolute, light, isMini }) {
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split('/').slice(1);
   const [searchQuery, setSearchQuery] = useState({ nom: '', prenom: '', email: '', mission: '' });
-  const [isActive, setIsActive] = useState(true); // Assuming you want to start with 'Active' by default
   const [setContacts] = useState(() => () => {});
 
   const debounce = (func, delay) => {
@@ -72,37 +71,6 @@ function ContactNavBar({ absolute, light, isMini }) {
     }, 500), // Adjust delay as needed (500 ms in this example)
     [] // Dependencies for useCallback
   );
-  const fetchActiveContacts = async () => {
-    const result = await contactService.getActiveContacts();
-    if (result.success) {
-      setContacts(result.data); // Update your contacts state here
-    } else {
-      console.error(result.error);
-    }
-  };
-  const fetchInactiveContacts = async () => {
-    const result = await contactService.getInactiveContacts();
-    if (result.success) {
-      setContacts(result.data); // Update your contacts state here
-    } else {
-      console.error(result.error);
-    }
-  };
-  // GetActive and Inactive contacts
-  const handleToggleActive = async () => {
-    setIsActive(prevIsActive => {
-      const newIsActive = !prevIsActive; // Toggle the active state
-
-      // Fetch contacts based on the new state
-      if (newIsActive) {
-        fetchActiveContacts();
-      } else {
-        fetchInactiveContacts();
-      }
-
-      return newIsActive; // Update the state
-    });
-  };
   const handleSearchChange = e => {
     const { name, value } = e.target;
     setSearchQuery(prev => ({
@@ -117,7 +85,6 @@ function ContactNavBar({ absolute, light, isMini }) {
     });
   };
   useEffect(() => {
-    fetchActiveContacts();
     // Setting the navbar type
     if (fixedNavbar) {
       setNavbarType('sticky');
@@ -213,17 +180,6 @@ function ContactNavBar({ absolute, light, isMini }) {
                   onChange={handleSearchChange}
                   style={{ marginBottom: '10px' }} // Adjust styles as needed
                 />
-                <label>{isActive ? 'Active' : 'Inactive'}</label>
-                <Switch
-                  type="checkbox"
-                  checked={isActive}
-                  onChange={handleToggleActive}
-                  style={{ marginRight: '10px' }}
-                >
-                  {' '}
-                  {isActive ? 'Active' : 'Inactive'}
-                </Switch>
-                {/* Add your contacts display here */}
               </div>
             </MDBox>
             <MDBox color={light ? 'white' : 'inherit'}>

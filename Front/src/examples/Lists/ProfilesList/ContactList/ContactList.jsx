@@ -10,7 +10,7 @@ import Icon from '@mui/material/Icon';
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
-import { Grid } from '@mui/material';
+import { Grid, Switch } from '@mui/material';
 import MDAlert from 'components/MDAlert';
 
 const ContactList = () => {
@@ -18,9 +18,10 @@ const ContactList = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+  const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
-    fetchContacts();
+    fetchActiveContacts();
   }, []);
 
   const fetchContacts = async () => {
@@ -64,6 +65,37 @@ const ContactList = () => {
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
   };
+  ///////////////////////////////////////////////////////////////////////// TOGGLE ACTIVE / Inactive
+  const fetchActiveContacts = async () => {
+    const result = await contactService.getActiveContacts();
+    if (result.success) {
+      setContacts(result.data); // Update your contacts state here
+    } else {
+      console.error(result.error);
+    }
+  };
+  const fetchInactiveContacts = async () => {
+    const result = await contactService.getInactiveContacts();
+    if (result.success) {
+      setContacts(result.data); // Update your contacts state here
+    } else {
+      console.error(result.error);
+    }
+  };
+  // GetActive and Inactive contacts
+  const handleToggleActiveInactive = async () => {
+    setIsActive(prevIsActive => {
+      const newIsActive = !prevIsActive; // Toggle the active state
+      // Fetch contacts based on the new state
+      if (newIsActive) {
+        fetchActiveContacts();
+      } else {
+        fetchInactiveContacts();
+      }
+      return newIsActive; // Update the state
+    });
+  };
+  ////////////////////////////////////////////////////////////////////////
   return (
     <div className="contact-list">
       <Card id="delete-account">
@@ -71,6 +103,16 @@ const ContactList = () => {
           <MDTypography variant="h6" fontWeight="medium">
             Contacts
           </MDTypography>
+          <label>{isActive ? 'Active' : 'Inactive'}</label>
+          <Switch
+            type="checkbox"
+            checked={isActive}
+            onChange={handleToggleActiveInactive}
+            style={{ marginRight: '10px' }}
+          >
+            {' '}
+            {isActive ? 'Active' : 'Inactive'}
+          </Switch>
           <MDButton onClick={handleAddContact} variant="gradient" color="dark">
             <Icon sx={{ fontWeight: 'bold' }}>add</Icon>
             &nbsp;Ajouter Contact
