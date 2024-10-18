@@ -17,6 +17,20 @@ const getAllEntites = async(req,res) => {
     }
     res.status(200).json(result.data);
 };
+const getActiveEntites = async(req,res) => {
+    const result = await entityModel.getAllActiveEntites();
+    if(!result.success){
+        return res.status(400).json({error:result.error});
+    }
+    return res.status(200).json(result.data);
+};
+const getInactiveEntites = async(req,res) => {
+    const result = await entityModel.getAllInactiveEntites();
+    if(!result.success){
+        return res.status(400).json({error:result.error});
+    }
+    return res.status(200).json(result.data);
+}
 // GetEntityById controller 
 const getEntityById = async(req,res) => {
     const result = await entityModel.getEntityById(req.params.id);
@@ -67,5 +81,8 @@ const entityController = {
     activateEntity,
     desactivateEntity,
     searchEntites,
+    getActiveEntites,
+    getInactiveEntites,
+
 }
 export default entityController ; 

@@ -31,6 +31,36 @@ try {
     return {success:false , error : error.message};
 }
 };
+const getAllActiveEntites = async() => {
+    try {
+        const {data,error} = await supabase
+        .from('Entites')
+        .select('*')
+        .eq('is_active',true);
+
+        if(error){
+            throw error;
+        }
+        return {success:true , data};
+    }catch(error){
+        return {success:false , error:error.messsage};
+    }
+};
+const getAllInactiveEntites = async() => {
+    try {
+        const {data,error} = await supabase
+        .from('Entites')
+        .select('*')
+        .eq('is_active',false);
+
+        if(error){
+            throw error;
+        }
+        return {success:true , data};
+    }catch(error){
+        return {success:false , error:error.messsage};
+    }
+};
 // Get an entity by its EID 
 const getEntityById = async(id) => {
     try {
@@ -135,5 +165,8 @@ const entityModel = {
     desactivateEntity,
     activateEntity,
     searchEntites,
+    getAllActiveEntites,
+    getAllInactiveEntites,
+
 }
 export default entityModel ; 

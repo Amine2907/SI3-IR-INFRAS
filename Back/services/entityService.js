@@ -23,6 +23,24 @@ const getAllEntities = async () => {
         return { success: false, error: error.response ? error.response.data.error : error.message };
     }
 };
+// Get all active contacts 
+const getActiveEntites = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/active`);
+        return { success: true, data: response.data };
+    } catch (error) {
+        return { success: false, error: error.response ? error.response.data.error : error.message };
+    }
+};
+// Get all inactive contacts
+const getInactiveEntites = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/inactive`);
+        return { success: true, data: response.data };
+    } catch (error) {
+        return { success: false, error: error.response ? error.response.data.error : error.message };
+    }
+};
 // Get entity by ID
 const getEntityById = async (id) => {
     try {
@@ -77,6 +95,8 @@ const entityService = {
     deactivateEntity,
     activateEntity,
     searchEntities,
+    getActiveEntites,
+    getInactiveEntites,
 };
 
 export default entityService;

@@ -37,7 +37,7 @@ const routes = [
     name: 'Entités',
     key: 'Entités',
     icon: <Icon fontSize="small">person</Icon>,
-    route: '/profile',
+    route: '/entites',
     component: <Entites />,
   },
   {

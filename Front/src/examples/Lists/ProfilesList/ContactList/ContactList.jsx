@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import ContactModal from '../../../popup/ContactPopUp/ContactPopUpl';
 import contactService from 'services/contactsService';
 import ContactCard from 'examples/Cards/ConatctCards/ContactCard';
 // @mui material components
@@ -12,6 +11,7 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import { Grid, Switch } from '@mui/material';
 import MDAlert from 'components/MDAlert';
+import EntiteModal from 'examples/popup/EntitePopUp/EntitePopUp';
 
 const ContactList = () => {
   const [contacts, setContacts] = useState([]);
@@ -137,7 +137,7 @@ const ContactList = () => {
         </MDBox>
       </Card>
       {showModal && (
-        <ContactModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />
+        <EntiteModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />
       )}
       {alert.show && (
         <MDAlert
