@@ -34,7 +34,7 @@ try {
 const getAllActiveEntites = async() => {
     try {
         const {data,error} = await supabase
-        .from('Entites')
+        .from('Entite')
         .select('*')
         .eq('is_active',true);
 
@@ -49,7 +49,7 @@ const getAllActiveEntites = async() => {
 const getAllInactiveEntites = async() => {
     try {
         const {data,error} = await supabase
-        .from('Entites')
+        .from('Entite')
         .select('*')
         .eq('is_active',false);
 
