@@ -70,12 +70,9 @@ function EntiteNavBr({ absolute, light, isMini }) {
     []
   );
   const handleSearchChange = e => {
-    const { name, value } = e.target;
-    setSearchQuery(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-    debouncedSearchEntities({ ...searchQuery, [name]: value });
+    const value = e.target.value;
+    setSearchQuery(prev => ({ ...prev, nom: value }));
+    debouncedSearchEntities(value);
   };
 
   useEffect(() => {
@@ -191,11 +188,11 @@ function EntiteNavBr({ absolute, light, isMini }) {
       {/* Render the search results below the navbar */}
       <MDBox>
         {entities.length > 0 ? (
-          entities.map(entity => (
-            <div key={entity.id}>
+          entities.map(entite => (
+            <div key={entite.id}>
               <p>
-                {entity.nom} - {entity.Role} - {entity.email} - {entity.ville} - {entity.region} -{' '}
-                {entity.code_postal}
+                {entite.nom} - {entite.Role} - {entite.email} - {entite.ville} - {entite.region} -{' '}
+                {entite.code_postal}
               </p>
             </div>
           ))
