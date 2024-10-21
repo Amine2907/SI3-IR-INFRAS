@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 const EntiteModal = ({ entite, onSave, onClose }) => {
   const [formData, setFormData] = useState(entite || {});
   const [isActive, setIsActive] = useState(entite ? entite.is_active : true);
@@ -34,13 +34,27 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
           placeholder="Nom"
           style={{ marginBottom: '5px', width: '320px', marginTop: '10px' }}
         ></MDInput>
-        <MDInput
-          name="role"
-          value={formData.role || ''}
-          onChange={handleChange}
-          placeholder="Role"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
+        <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+          <Select
+            name="role"
+            value={formData.role || ''}
+            onChange={handleChange}
+            displayEmpty
+            style={{ padding: '10px', fontSize: '14px' }}
+          >
+            <MenuItem value="" disabled>
+              -- Select a Role --
+            </MenuItem>
+            <MenuItem value="Fournisseur">Fournisseur</MenuItem>
+            <MenuItem value="CSPS">CSPS</MenuItem>
+            <MenuItem value="Syndicat">Syndicat</MenuItem>
+            <MenuItem value="Pyloniste">Pyloniste</MenuItem>
+            <MenuItem value="Génie Civiliste">Génie Civiliste</MenuItem>
+            <MenuItem value="Géotechnicien">Géotechnicien</MenuItem>
+            <MenuItem value="Dronist">Dronist</MenuItem>
+            <MenuItem value="Mairie">Mairie</MenuItem>
+          </Select>
+        </FormControl>
         <MDInput
           name="adresse"
           value={formData.adresse || ''}

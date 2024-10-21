@@ -1,5 +1,4 @@
 // CRU ENTITE AND ACTIVATING / DESACTIVATING INSTEAD OF DELETING 
-
 import { supabase } from "../config/supabaseClient.js";
 
 // Create Entite 
