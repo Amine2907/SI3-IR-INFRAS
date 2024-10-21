@@ -1,10 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/entite';
-
-// Error handling helper
-// const handleError = error => {
-//   return { success: false, error: error.response ? error.response.data.error : error.message };
-// };
+const API_URL = 'http://localhost:5000/api/entites';
 // Create entity
 const createEntity = async data => {
   try {
@@ -23,22 +18,22 @@ const getAllEntities = async () => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
-// Get all active contacts 
+// Get all active contacts
 const getActiveEntites = async () => {
   try {
-      const response = await axios.get(`${API_URL}/active`);
-      return { success: true, data: response.data };
+    const response = await axios.get(`${API_URL}/active`);
+    return { success: true, data: response.data };
   } catch (error) {
-      return { success: false, error: error.response ? error.response.data.error : error.message };
+    return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
 // Get all inactive contacts
 const getInactiveEntites = async () => {
   try {
-      const response = await axios.get(`${API_URL}/inactive`);
-      return { success: true, data: response.data };
+    const response = await axios.get(`${API_URL}/inactive`);
+    return { success: true, data: response.data };
   } catch (error) {
-      return { success: false, error: error.response ? error.response.data.error : error.message };
+    return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
 // Get entity by ID
@@ -98,5 +93,4 @@ const entityService = {
   getActiveEntites,
   getInactiveEntites,
 };
-
 export default entityService;

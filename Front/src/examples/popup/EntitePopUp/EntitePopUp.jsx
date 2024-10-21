@@ -5,9 +5,9 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch } from '@mui/material';
-const EntiteModal = ({ contact, onSave, onClose }) => {
-  const [formData, setFormData] = useState(contact || {});
-  const [isActive, setIsActive] = useState(contact ? contact.is_active : true);
+const EntiteModal = ({ entite, onSave, onClose }) => {
+  const [formData, setFormData] = useState(entite || {});
+  const [isActive, setIsActive] = useState(entite ? entite.is_active : true);
 
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,7 +17,7 @@ const EntiteModal = ({ contact, onSave, onClose }) => {
     onSave({ ...formData, is_active: isActive });
   };
   const handleToggleActive = () => {
-    if (contact) {
+    if (entite) {
       setIsActive(!isActive);
     }
   };
@@ -25,7 +25,7 @@ const EntiteModal = ({ contact, onSave, onClose }) => {
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
-          {contact ? 'Edit Contact' : 'Add Contact'}
+          {entite ? 'Edit entite' : 'Add entite'}
         </MDTypography>
         <MDInput
           name="nom"
@@ -35,17 +35,45 @@ const EntiteModal = ({ contact, onSave, onClose }) => {
           style={{ marginBottom: '5px', width: '320px', marginTop: '10px' }}
         ></MDInput>
         <MDInput
-          name="prenom"
-          value={formData.prenom || ''}
+          name="role"
+          value={formData.role || ''}
           onChange={handleChange}
-          placeholder="Prenom"
+          placeholder="Role"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <MDInput
-          name="mission"
-          value={formData.mission || ''}
+          name="adresse"
+          value={formData.adresse || ''}
           onChange={handleChange}
-          placeholder="Mission"
+          placeholder="Adresse"
+          style={{ marginBottom: '5px', width: '320px' }}
+        ></MDInput>
+        <MDInput
+          name="ville"
+          value={formData.ville || ''}
+          onChange={handleChange}
+          placeholder="Ville"
+          style={{ marginBottom: '5px', width: '320px' }}
+        ></MDInput>
+        <MDInput
+          name="code_postal"
+          value={formData.code_postal || ''}
+          onChange={handleChange}
+          placeholder="Code Postal"
+          style={{ marginBottom: '5px', width: '320px' }}
+        ></MDInput>
+        <MDInput
+          name="region"
+          value={formData.region || ''}
+          onChange={handleChange}
+          placeholder="Region"
+          style={{ marginBottom: '5px', width: '320px' }}
+        ></MDInput>
+        <MDInput
+          name="contact"
+          value={formData.contact || ''}
+          onChange={handleChange}
+          placeholder="Conatct"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <MDInput
@@ -56,17 +84,31 @@ const EntiteModal = ({ contact, onSave, onClose }) => {
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <MDInput
-          name="tel"
-          value={formData.tel || ''}
+          name="telephone"
+          value={formData.telephone || ''}
           onChange={handleChange}
-          placeholder="Téléphone"
+          placeholder="Telephone"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <MDInput
-          name="mobile"
-          value={formData.mobile || ''}
+          name="site_web"
+          value={formData.site_web || ''}
           onChange={handleChange}
-          placeholder="mboile"
+          placeholder="Site Web"
+          style={{ marginBottom: '5px', width: '320px' }}
+        ></MDInput>
+        <MDInput
+          name="IBAN"
+          value={formData.IBAN || ''}
+          onChange={handleChange}
+          placeholder="IBAN"
+          style={{ marginBottom: '5px', width: '320px' }}
+        ></MDInput>
+        <MDInput
+          name="BIC"
+          value={formData.BIC || ''}
+          onChange={handleChange}
+          placeholder="BIC"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <div>
@@ -92,13 +134,18 @@ const EntiteModal = ({ contact, onSave, onClose }) => {
   );
 };
 EntiteModal.propTypes = {
-  contact: PropTypes.shape({
+  entite: PropTypes.shape({
     nom: PropTypes.string,
-    prenom: PropTypes.string,
+    role: PropTypes.string,
+    adresse: PropTypes.string,
+    ville: PropTypes.string,
+    code_postal: PropTypes.string,
+    region: PropTypes.string,
+    contact: PropTypes.string,
     email: PropTypes.string,
-    tel: PropTypes.string,
-    mobile: PropTypes.string,
-    mission: PropTypes.string,
+    site_web: PropTypes.string,
+    IBAN: PropTypes.string,
+    BIC: PropTypes.string,
     is_active: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,

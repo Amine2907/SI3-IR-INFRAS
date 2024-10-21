@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import contactService from 'services/contactsService';
+import entityService from 'services/entityService';
 // @mui material components
 import Card from '@mui/material/Card';
 import Icon from '@mui/material/Icon';
@@ -14,44 +14,44 @@ import EntiteCard from 'examples/Cards/EntiteCard/EntiteCard';
 import EntiteModal from 'examples/popup/EntitePopUp/EntitePopUp';
 
 const EntiteList = () => {
-  const [contacts, setContacts] = useState([]);
+  const [entites, setentites] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedContact, setSelectedContact] = useState(null);
+  const [selectedEntity, setSelectedEntity] = useState(null);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
-    fetchActiveContacts();
+    fetchActiveentites();
   }, []);
 
-  const fetchContacts = async () => {
-    const result = await contactService.getAllContacts();
+  const fetchentites = async () => {
+    const result = await entityService.getAllEntities();
     if (result.success) {
-      setContacts(result.data);
+      setentites(result.data);
     } else {
       console.error(result.error);
     }
   };
   const handleAddContact = () => {
-    setSelectedContact(null); // Clear selected contact for new entry
+    setSelectedEntity(null); // Clear selected contact for new entry
     setShowModal(true); // Show modal for adding a new contact
   };
   const handleModalClose = () => {
     setShowModal(false); // Hide modal
-    fetchContacts(); // Refresh contact list after adding/editing
+    fetchentites(); // Refresh contact list after adding/editing
   };
   const handleSave = async data => {
     let result;
     let successMessage = '';
-    if (selectedContact) {
+    if (selectedEntity) {
       // Update contact
-      console.log('Updating Contact:', selectedContact.id);
-      result = await contactService.updateContact(selectedContact.Cid, data);
-      successMessage = 'Contact updated successfully!';
+      console.log('Updating entity:', selectedEntity.id);
+      result = await entityService.updateEntity(selectedEntity.Eid, data);
+      successMessage = 'entite updated successfully!';
     } else {
       // Create new contact
-      result = await contactService.createContact(data);
-      successMessage = 'Contact saved successfully!';
+      result = await entityService.createEntity(data);
+      successMessage = 'entite saved successfully!';
     }
     // Handle the result with alert feedback
     if (result.success) {
@@ -66,31 +66,31 @@ const EntiteList = () => {
     setAlert({ show: false, message: '', type: '' });
   };
   ///////////////////////////////////////////////////////////////////////// TOGGLE ACTIVE / Inactive
-  const fetchActiveContacts = async () => {
-    const result = await contactService.getActiveContacts();
+  const fetchActiveentites = async () => {
+    const result = await entityService.getActiveEntites();
     if (result.success) {
-      setContacts(result.data); // Update your contacts state here
+      setentites(result.data); // Update your entites state here
     } else {
       console.error(result.error);
     }
   };
-  const fetchInactiveContacts = async () => {
-    const result = await contactService.getInactiveContacts();
+  const fetchInactiveentites = async () => {
+    const result = await entityService.getInactiveEntites();
     if (result.success) {
-      setContacts(result.data); // Update your contacts state here
+      setentites(result.data); // Update your entites state here
     } else {
       console.error(result.error);
     }
   };
-  // GetActive and Inactive contacts
+  // GetActive and Inactive entites
   const handleToggleActiveInactive = async () => {
     setIsActive(prevIsActive => {
       const newIsActive = !prevIsActive; // Toggle the active state
-      // Fetch contacts based on the new state
+      // Fetch entites based on the new state
       if (newIsActive) {
-        fetchActiveContacts();
+        fetchActiveentites();
       } else {
-        fetchInactiveContacts();
+        fetchInactiveentites();
       }
       return newIsActive; // Update the state
     });
@@ -101,11 +101,11 @@ const EntiteList = () => {
       <Card id="delete-account">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
-            Contacts
+            Entites
           </MDTypography>
           <MDButton onClick={handleAddContact} variant="gradient" color="dark">
             <Icon sx={{ fontWeight: 'bold' }}>add</Icon>
-            &nbsp;Ajouter Contact
+            &nbsp;Ajouter Entite
           </MDButton>
         </MDBox>
         <MDBox p={2}>
@@ -122,12 +122,12 @@ const EntiteList = () => {
             {isActive ? 'Active' : 'Inactive'}
           </Switch>
           <Grid container spacing={3}>
-            {contacts.map(contact => (
-              <Grid item xs={12} sm={8} md={4} key={contact.id}>
+            {entites.map(entite => (
+              <Grid item xs={12} sm={8} md={4} key={entite.id}>
                 <EntiteCard
-                  contact={contact}
+                  entite={entite}
                   onEdit={() => {
-                    setSelectedContact(contact); // Set selected contact
+                    setSelectedEntity(entite); // Set selected contact
                     setShowModal(true); // Show modal for editing
                   }}
                 />
@@ -137,7 +137,7 @@ const EntiteList = () => {
         </MDBox>
       </Card>
       {showModal && (
-        <EntiteModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />
+        <EntiteModal entite={selectedEntity} onSave={handleSave} onClose={handleModalClose} />
       )}
       {alert.show && (
         <MDAlert

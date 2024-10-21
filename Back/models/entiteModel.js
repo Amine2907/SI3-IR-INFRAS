@@ -79,12 +79,12 @@ const getEntityById = async(id) => {
     }
 };
 // Update Entity 
-const updateEntity = async(id,updates) => {
+const updateEntity = async(Eid,updates) => {
     try {
         const {data,error} = await supabase
         .from('Entite')
         .update(updates)
-        .eq('Eid',id)
+        .eq('Eid',Eid)
         .eq('is_active',true);
 
         if(error){
@@ -167,6 +167,5 @@ const entityModel = {
     searchEntites,
     getAllActiveEntites,
     getAllInactiveEntites,
-
 }
 export default entityModel ; 

@@ -8,7 +8,7 @@ import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import { useMaterialUIController } from '../../../context/index';
 import Card from '@mui/material/Card';
-const EntiteCard = ({ contact, onEdit }) => {
+const EntiteCard = ({ entite, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   return (
@@ -29,51 +29,99 @@ const EntiteCard = ({ contact, onEdit }) => {
                     `${borderWidth[1]} solid ${borderColor}`,
                 }}
               >
-                {/* Full Name */}
+                {/* Name */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>person</Icon> {/* Full Name Icon */}
                   <MDTypography variant="h6" fontWeight="medium">
-                    {contact.nom}&nbsp;
-                    {contact.prenom}
+                    {entite.nom}
                   </MDTypography>
                 </MDBox>
-                {/* Email */}
+                {/* Role */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>email</Icon> {/* Email Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Email: {contact.email}
+                    Role: {entite.role}
                   </MDTypography>
                 </MDBox>
-                {/* Position */}
+                {/* Adresse */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>work</Icon> {/* Position Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Position: {contact.mission}
+                    Adresse: {entite.adresse}
                   </MDTypography>
                 </MDBox>
-                {/* Phone */}
+                {/* Ville */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
+                  <Icon sx={{ mr: 1 }}>work</Icon> {/* Position Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Tel: {contact.tel}
+                    Ville: {entite.ville}
                   </MDTypography>
                 </MDBox>
-                {/* Mobile */}
+                {/* Code Postal  */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
+                  <Icon sx={{ mr: 1 }}>work</Icon> {/* Position Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Tel: {contact.mobile}
+                    Code Postal : {entite.code_postal}
+                  </MDTypography>
+                </MDBox>
+                {/* Region */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>work</Icon> {/* Position Icon */}
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    Region: {entite.region}
                   </MDTypography>
                 </MDBox>
                 {/* Active Status */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>check_circle</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Status: {contact.is_active ? 'Active' : 'Inactive'}
+                    Status: {entite.is_active ? 'Active' : 'Inactive'}
+                  </MDTypography>
+                </MDBox>
+                {/* Contact */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>work</Icon> {/* Position Icon */}
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    Personne de conatct : {entite.contact}
+                  </MDTypography>
+                </MDBox>
+                {/* Email */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>email</Icon> {/* Email Icon */}
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    Email: {entite.email}
+                  </MDTypography>
+                </MDBox>
+                {/* Phone */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    Tel: {entite.telephone}
+                  </MDTypography>
+                </MDBox>
+                {/* Site web  */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    Site web: {entite.site_web}
+                  </MDTypography>
+                </MDBox>
+                {/* IBAN  */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    IBAN: {entite.IBAN}
+                  </MDTypography>
+                </MDBox>
+                {/* BIC */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    BIC: {entite.BIC}
                   </MDTypography>
                 </MDBox>
                 <MDBox ml="auto" lineHeight={0} color={darkMode ? 'white' : 'dark'}>
-                  <Tooltip title="Edit Contact" placement="top">
+                  <Tooltip title="Edit entite" placement="top">
                     <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={onEdit}>
                       edit
                     </Icon>
@@ -88,13 +136,19 @@ const EntiteCard = ({ contact, onEdit }) => {
   );
 };
 EntiteCard.propTypes = {
-  contact: PropTypes.shape({
+  entite: PropTypes.shape({
     nom: PropTypes.string.isRequired,
-    prenom: PropTypes.string.isRequired,
+    role: PropTypes.string.isRequired,
+    adresse: PropTypes.string.isRequired,
+    ville: PropTypes.string.isRequired,
+    code_postal: PropTypes.string.isRequired,
+    region: PropTypes.string.isRequired,
+    contact: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    tel: PropTypes.string.isRequired,
-    mobile: PropTypes.string.isRequired,
-    mission: PropTypes.string.isRequired,
+    site_web: PropTypes.string.isRequired,
+    IBAN: PropTypes.string.isRequired,
+    BIC: PropTypes.string.isRequired,
+    telephone: PropTypes.string.isRequired,
     is_active: PropTypes.bool.isRequired,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
