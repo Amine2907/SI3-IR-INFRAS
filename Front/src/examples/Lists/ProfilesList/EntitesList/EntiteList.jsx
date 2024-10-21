@@ -24,21 +24,21 @@ const EntiteList = () => {
     fetchActiveentites();
   }, []);
 
-  const fetchentites = async () => {
-    const result = await entityService.getAllEntities();
-    if (result.success) {
-      setentites(result.data);
-    } else {
-      console.error(result.error);
-    }
-  };
+  // const fetchentites = async () => {
+  //   const result = await entityService.getAllEntities();
+  //   if (result.success) {
+  //     setentites(result.data);
+  //   } else {
+  //     console.error(result.error);
+  //   }
+  // };
   const handleAddContact = () => {
     setSelectedEntity(null); // Clear selected contact for new entry
     setShowModal(true); // Show modal for adding a new contact
   };
   const handleModalClose = () => {
     setShowModal(false); // Hide modal
-    fetchentites(); // Refresh contact list after adding/editing
+    fetchActiveentites; // Refresh contact list after adding/editing
   };
   const handleSave = async data => {
     let result;

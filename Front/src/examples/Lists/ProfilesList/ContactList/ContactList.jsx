@@ -24,21 +24,21 @@ const ContactList = () => {
     fetchActiveContacts();
   }, []);
 
-  const fetchContacts = async () => {
-    const result = await contactService.getAllContacts();
-    if (result.success) {
-      setContacts(result.data);
-    } else {
-      console.error(result.error);
-    }
-  };
+  // const fetchContacts = async () => {
+  //   const result = await contactService.getAllContacts();
+  //   if (result.success) {
+  //     setContacts(result.data);
+  //   } else {
+  //     console.error(result.error);
+  //   }
+  // };
   const handleAddContact = () => {
     setSelectedContact(null); // Clear selected contact for new entry
     setShowModal(true); // Show modal for adding a new contact
   };
   const handleModalClose = () => {
     setShowModal(false); // Hide modal
-    fetchContacts(); // Refresh contact list after adding/editing
+    fetchActiveContacts(); // Refresh contact list after adding/editing
   };
   const handleSave = async data => {
     let result;
