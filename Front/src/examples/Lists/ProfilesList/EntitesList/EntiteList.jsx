@@ -31,13 +31,13 @@ const EntiteList = () => {
   //     console.error(result.error);
   //   }
   // };
-  const handleAddContact = () => {
+  const handleAddEntite = () => {
     setSelectedEntity(null); // Clear selected contact for new entry
     setShowModal(true); // Show modal for adding a new contact
   };
   const handleModalClose = () => {
     setShowModal(false); // Hide modal
-    fetchActiveentites; // Refresh contact list after adding/editing
+    fetchActiveentites(); // Refresh contact list after adding/editing
   };
   const handleSave = async data => {
     let result;
@@ -102,7 +102,7 @@ const EntiteList = () => {
           <MDTypography variant="h6" fontWeight="medium">
             Entites
           </MDTypography>
-          <MDButton onClick={handleAddContact} variant="gradient" color="dark">
+          <MDButton onClick={handleAddEntite} variant="gradient" color="dark">
             <Icon sx={{ fontWeight: 'bold' }}>add</Icon>
             &nbsp;Ajouter Entite
           </MDButton>
