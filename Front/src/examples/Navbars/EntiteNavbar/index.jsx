@@ -23,7 +23,8 @@ import {
   setOpenConfigurator,
 } from '../../../context/index';
 import entityService from 'services/entityService';
-
+import EntiteCard from 'examples/Cards/EntiteCard/EntiteCard';
+import { Grid } from '@mui/material';
 function EntiteNavBr({ absolute, light, isMini }) {
   const [entities, setEntities] = useState([]);
   const [navbarType, setNavbarType] = useState();
@@ -186,20 +187,23 @@ function EntiteNavBr({ absolute, light, isMini }) {
         )}
       </Toolbar>
       {/* Render the search results below the navbar */}
-      <MDBox>
+      <Grid container spacing={3}>
         {entities.length > 0 ? (
           entities.map(entite => (
-            <div key={entite.id}>
-              <p>
-                {entite.nom} - {entite.Role} - {entite.email} - {entite.ville} - {entite.region} -{' '}
-                {entite.code_postal}
-              </p>
-            </div>
+            <Grid item xs={12} sm={8} md={4} key={entite.id}>
+              <EntiteCard
+                entite={entite}
+                // onEdit={() => {
+                //   setSelectedEntity(entite); // Set selected contact
+                //   setShowModal(true); // Show modal for editing
+                // }}
+              />
+            </Grid>
           ))
         ) : (
           <p>No results found</p>
         )}
-      </MDBox>
+      </Grid>
     </AppBar>
   );
 }
