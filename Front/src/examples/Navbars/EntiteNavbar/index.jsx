@@ -1,26 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
-
-// react-router components
 import { useLocation, Link } from 'react-router-dom';
-
-// prop-types is a library for typechecking of props.
 import PropTypes from 'prop-types';
-
-// @material-ui core components
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import Icon from '@mui/material/Icon';
-
-// Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDInput from 'components/MDInput';
-
-// Material Dashboard 2 React example components
 import Breadcrumbs from 'examples/Breadcrumbs';
-
-// Custom styles for DashboardNavbar
 import {
   navbar,
   navbarContainer,
@@ -28,27 +16,29 @@ import {
   navbarIconButton,
   navbarMobileMenu,
 } from 'examples/Navbars/DashboardNavbar/styles';
-
-// Material Dashboard 2 React context
 import {
   useMaterialUIController,
   setTransparentNavbar,
   setMiniSidenav,
   setOpenConfigurator,
 } from '../../../context/index';
-import contactService from 'services/contactsService';
-// import { Switch } from '@mui/material';
+import entityService from 'services/entityService';
 
 function EntiteNavBr({ absolute, light, isMini }) {
-  //   const [isActive, setIsActive] = useState(contact ? contact.is_active : true);
+  const [entities, setEntities] = useState([]);
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split('/').slice(1);
-  const [searchQuery, setSearchQuery] = useState({ nom: '', prenom: '', email: '', mission: '' });
-  const [setContacts] = useState(() => () => {});
-
+  const [searchQuery, setSearchQuery] = useState({
+    nom: '',
+    Role: '',
+    email: '',
+    ville: '',
+    region: '',
+    code_postal: '',
+  });
   const debounce = (func, delay) => {
     let timeoutId;
     return (...args) => {
@@ -60,16 +50,24 @@ function EntiteNavBr({ absolute, light, isMini }) {
       }, delay);
     };
   };
-  const debouncedSearchContacts = useCallback(
-    debounce(async filters => {
-      const result = await contactService.searchContacts(filters); // Call your search function
+  const debouncedSearchEntities = useCallback(
+    debounce(async query => {
+      const filters = {
+        nom: query.nom,
+        Role: query.Role,
+        email: query.email,
+        ville: query.ville,
+        region: query.region,
+        code_postal: query.code_postal,
+      };
+      const result = await entityService.searchEntities(filters);
       if (result.success) {
-        setContacts(result.data); // Update your contacts state
+        setEntities(result.data);
       } else {
-        console.error(result.error); // Handle errors
+        console.error(result.error);
       }
-    }, 500), // Adjust delay as needed (500 ms in this example)
-    [] // Dependencies for useCallback
+    }, 500),
+    []
   );
   const handleSearchChange = e => {
     const { name, value } = e.target;
@@ -77,40 +75,30 @@ function EntiteNavBr({ absolute, light, isMini }) {
       ...prev,
       [name]: value,
     }));
-    debouncedSearchContacts({
-      nom: searchQuery.nom,
-      prenom: searchQuery.prenom,
-      email: searchQuery.email,
-      mission: searchQuery.mission,
-    });
+    debouncedSearchEntities({ ...searchQuery, [name]: value });
   };
+
   useEffect(() => {
-    // Setting the navbar type
     if (fixedNavbar) {
       setNavbarType('sticky');
     } else {
       setNavbarType('static');
     }
-    // A function that sets the transparent state of the navbar.
-    function handleTransparentNavbar() {
+
+    const handleTransparentNavbar = () => {
       setTransparentNavbar(dispatch, (fixedNavbar && window.scrollY === 0) || !fixedNavbar);
-    }
-    /** 
-     The event listener that's calling the handleTransparentNavbar function when 
-     scrolling the window.
-    */
+    };
+
     window.addEventListener('scroll', handleTransparentNavbar);
-    // Call the handleTransparentNavbar function to set the state with the initial value.
     handleTransparentNavbar();
-    // Remove event listener on cleanup
     return () => window.removeEventListener('scroll', handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
+
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = event => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
 
-  // Render the notifications menu
   const renderMenu = () => (
     <Menu
       anchorEl={openMenu}
@@ -124,8 +112,6 @@ function EntiteNavBr({ absolute, light, isMini }) {
       sx={{ mt: 2 }}
     ></Menu>
   );
-
-  // Styles for the navbar icons
   const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
     color: () => {
       let colorValue = light || darkMode ? white.main : dark.main;
@@ -137,6 +123,7 @@ function EntiteNavBr({ absolute, light, isMini }) {
       return colorValue;
     },
   });
+
   return (
     <AppBar
       position={absolute ? 'absolute' : navbarType}
@@ -150,35 +137,13 @@ function EntiteNavBr({ absolute, light, isMini }) {
         {isMini ? null : (
           <MDBox sx={theme => navbarRow(theme, { isMini })}>
             <MDBox pr={1}>
-              {/* <MDInput label="Search here" /> */}
               <div className="contact-list">
                 <MDInput
-                  label="Search by Nom"
+                  label="Search by Name"
                   name="nom"
                   value={searchQuery.nom}
                   onChange={handleSearchChange}
-                  style={{ marginBottom: '10px' }} // Adjust styles as needed
-                />
-                <MDInput
-                  label="Search by Prenom"
-                  name="prenom"
-                  value={searchQuery.prenom}
-                  onChange={handleSearchChange}
-                  style={{ marginBottom: '10px' }} // Adjust styles as needed
-                />
-                <MDInput
-                  label="Search by Email"
-                  name="email"
-                  value={searchQuery.email}
-                  onChange={handleSearchChange}
-                  style={{ marginBottom: '10px' }} // Adjust styles as needed
-                />
-                <MDInput
-                  label="Search by Mission"
-                  name="mission"
-                  value={searchQuery.mission}
-                  onChange={handleSearchChange}
-                  style={{ marginBottom: '10px' }} // Adjust styles as needed
+                  style={{ marginBottom: '10px' }}
                 />
               </div>
             </MDBox>
@@ -223,30 +188,34 @@ function EntiteNavBr({ absolute, light, isMini }) {
           </MDBox>
         )}
       </Toolbar>
+      {/* Render the search results below the navbar */}
+      <MDBox>
+        {entities.length > 0 ? (
+          entities.map(entity => (
+            <div key={entity.id}>
+              <p>
+                {entity.nom} - {entity.Role} - {entity.email} - {entity.ville} - {entity.region} -{' '}
+                {entity.code_postal}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p>No results found</p>
+        )}
+      </MDBox>
     </AppBar>
   );
 }
-// Setting default values for the props of DashboardNavbar
+// Setting default values for the props of EntiteNavBr
 EntiteNavBr.defaultProps = {
   absolute: false,
   light: false,
   isMini: false,
 };
-
-// Typechecking props for the DashboardNavbar
+// Typechecking props for the EntiteNavBr
 EntiteNavBr.propTypes = {
-  contact: PropTypes.shape({
-    nom: PropTypes.string,
-    prenom: PropTypes.string,
-    email: PropTypes.string,
-    tel: PropTypes.string,
-    mobile: PropTypes.string,
-    mission: PropTypes.string,
-    is_active: PropTypes.bool,
-  }),
   absolute: PropTypes.bool,
   light: PropTypes.bool,
   isMini: PropTypes.bool,
 };
-
 export default EntiteNavBr;

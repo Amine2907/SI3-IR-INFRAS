@@ -132,6 +132,7 @@ const searchEntites = async (filters) => {
             .from('Entite')
             .select('*')
             .eq('is_active', true);      
+
         if (filters.nom) {
             query = query.ilike('nom', `%${filters.nom}%`);
         }
@@ -147,6 +148,7 @@ const searchEntites = async (filters) => {
         if (filters.role) {
             query = query.eq('role', filters.role);
         }
+        
         const { data, error } = await query;
         if (error) {
             throw error;
