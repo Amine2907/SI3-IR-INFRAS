@@ -11,7 +11,7 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import { Grid, Switch } from '@mui/material';
 import MDAlert from 'components/MDAlert';
-import EntiteModal from 'examples/popup/EntitePopUp/EntitePopUp';
+import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
 
 const ContactList = () => {
   const [contacts, setContacts] = useState([]);
@@ -137,7 +137,7 @@ const ContactList = () => {
         </MDBox>
       </Card>
       {showModal && (
-        <EntiteModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />
+        <ContactModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />
       )}
       {alert.show && (
         <MDAlert

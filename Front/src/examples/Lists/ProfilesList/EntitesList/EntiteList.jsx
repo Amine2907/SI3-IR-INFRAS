@@ -45,7 +45,7 @@ const EntiteList = () => {
     let successMessage = '';
     if (selectedEntity) {
       // Update contact
-      console.log('Updating entity:', selectedEntity.id);
+      console.log('Updating entity:', selectedEntity.Eid);
       result = await entityService.updateEntity(selectedEntity.Eid, data);
       successMessage = 'entite updated successfully!';
     } else {

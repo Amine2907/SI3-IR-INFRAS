@@ -12,7 +12,6 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   const handleSubmit = () => {
     onSave({ ...formData, is_active: isActive });
   };
@@ -25,16 +24,21 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
-          {entite ? 'Edit entite' : 'Add entite'}
+          {entite ? 'Modifier entite' : 'Ajouter entite'}
         </MDTypography>
         <MDInput
           name="nom"
           value={formData.nom || ''}
           onChange={handleChange}
           placeholder="Nom"
+          required
           style={{ marginBottom: '5px', width: '320px', marginTop: '10px' }}
         ></MDInput>
-        <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+        <FormControl
+          fullWidth
+          style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+          required
+        >
           <Select
             name="role"
             value={formData.role || ''}
