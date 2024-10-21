@@ -130,8 +130,7 @@ const searchEntites = async (filters) => {
     try {
         let query = supabase
             .from('Entite')
-            .select('*')
-            .eq('is_active', true);      
+            .select('*');   
 
         if (filters.nom) {
             query = query.ilike('nom', `%${filters.nom}%`);

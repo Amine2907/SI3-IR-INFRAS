@@ -34,7 +34,7 @@ function EntiteNavBr({ absolute, light, isMini }) {
   const route = useLocation().pathname.split('/').slice(1);
   const [searchQuery, setSearchQuery] = useState({
     nom: '',
-    Role: '',
+    role: '',
     email: '',
     ville: '',
     region: '',
@@ -55,7 +55,7 @@ function EntiteNavBr({ absolute, light, isMini }) {
     debounce(async query => {
       const filters = {
         nom: query.nom,
-        Role: query.Role,
+        role: query.role,
         email: query.email,
         ville: query.ville,
         region: query.region,
@@ -71,11 +71,16 @@ function EntiteNavBr({ absolute, light, isMini }) {
     []
   );
   const handleSearchChange = e => {
-    const value = e.target.value;
-    setSearchQuery(prev => ({ ...prev, nom: value }));
-    debouncedSearchEntities(value);
-  };
+    const { name, value } = e.target;
 
+    setSearchQuery(prev => ({ ...prev, [name]: value }));
+
+    if (value.trim() === '') {
+      setEntities([]); // Clear entities if search is cleared
+    } else {
+      debouncedSearchEntities({ ...searchQuery, [name]: value });
+    }
+  };
   useEffect(() => {
     if (fixedNavbar) {
       setNavbarType('sticky');
@@ -121,7 +126,6 @@ function EntiteNavBr({ absolute, light, isMini }) {
       return colorValue;
     },
   });
-
   return (
     <AppBar
       position={absolute ? 'absolute' : navbarType}
@@ -137,7 +141,7 @@ function EntiteNavBr({ absolute, light, isMini }) {
             <MDBox pr={1}>
               <div className="contact-list">
                 <MDInput
-                  label="Search by Name"
+                  label="Search"
                   name="nom"
                   value={searchQuery.nom}
                   onChange={handleSearchChange}
@@ -191,16 +195,15 @@ function EntiteNavBr({ absolute, light, isMini }) {
         {entities.length > 0 ? (
           entities.map(entite => (
             <Grid item xs={12} sm={8} md={4} key={entite.id}>
-              <EntiteCard
-                entite={entite}
-                // onEdit={() => {
-                //   setSelectedEntity(entite); // Set selected contact
-                //   setShowModal(true); // Show modal for editing
-                // }}
-              />
+              <EntiteCard entite={entite} />
             </Grid>
           ))
-        ) : (
+        ) : searchQuery.nom.trim() === '' &&
+          searchQuery.role.trim() === '' &&
+          searchQuery.email.trim() === '' &&
+          searchQuery.ville.trim() === '' &&
+          searchQuery.region.trim() === '' &&
+          searchQuery.code_postal.trim() === '' ? null : ( // Don't show "No results found" when no search is made
           <p>No results found</p>
         )}
       </Grid>
