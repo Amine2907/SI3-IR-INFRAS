@@ -1,5 +1,5 @@
 /**
- * @author: Arous Azzouzi
+ * @author: Mohamed Amine EL BAH 
  * @description: this file contains all the controller functions for the contacts feature.
  * @functions:
  * - createContact: creates a contact in the database
