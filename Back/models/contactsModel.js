@@ -131,14 +131,8 @@ const searchContacts = async(filters) => {
         if (filters.prenom) {
             query = query.ilike('Prenom', `%${filters.prenom}%`);
         }
-        if (filters.email) {
-            query = query.ilike('Email', `%${filters.email}%`);
-        }
         if (filters.mission) {
-            query = query.ilike('Email', `%${filters.mission}%`);
-        }
-        if (filters.is_active) {
-            query = query.ilike('Status', `%${filters.is_active}%`);
+            query = query.ilike('Mission', `%${filters.mission}%`);
         }
         const { data, error } = await query;
         if (error) {

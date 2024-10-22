@@ -8,6 +8,7 @@ import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import { Grid, Switch } from '@mui/material';
+import MDInput from 'components/MDInput';
 import MDAlert from 'components/MDAlert';
 import EntiteCard from 'examples/Cards/EntiteCard/EntiteCard';
 import EntiteModal from 'examples/popup/EntitePopUp/EntitePopUp';
@@ -17,11 +18,16 @@ const EntiteList = () => {
   const [selectedEntity, setSelectedEntity] = useState(null);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [isActive, setIsActive] = useState(true);
-
+  const [searchQuery, setSearchQuery] = useState({
+    nom: '',
+    ville: '',
+    region: '',
+    code_postal: '',
+    role: '',
+  });
   useEffect(() => {
     fetchActiveentites();
   }, []);
-
   // const fetchentites = async () => {
   //   const result = await entityService.getAllEntities();
   //   if (result.success) {
@@ -69,6 +75,25 @@ const EntiteList = () => {
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
   };
+  /////////////////////////////////////////////////////////////////////////////////SEARCH
+  const handleSearchChange = e => {
+    const { name, value } = e.target;
+    setSearchQuery(prev => ({ ...prev, [name]: value }));
+
+    if (value === '') {
+      fetchActiveentites(); // If search input is cleared, fetch active entities
+    } else {
+      handleSearchEntities(); // If there's input, fetch filtered entities
+    }
+  };
+  const handleSearchEntities = async () => {
+    const result = await entityService.searchEntities(searchQuery); // You need to implement this on the backend
+    if (result.success) {
+      setentites(result.data);
+    } else {
+      console.error(result.error);
+    }
+  };
   ///////////////////////////////////////////////////////////////////////// TOGGLE ACTIVE / Inactive
   const fetchActiveentites = async () => {
     const result = await entityService.getActiveEntites();
@@ -101,12 +126,33 @@ const EntiteList = () => {
   };
   ////////////////////////////////////////////////////////////////////////
   return (
-    <div className="contact-list">
+    <div className="entite-list">
       <Card id="delete-account">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
             Entites
           </MDTypography>
+          <MDBox pr={1}>
+            <div className="entite-list">
+              <MDInput
+                label="Search"
+                name="nom"
+                value={searchQuery.nom}
+                onChange={handleSearchChange}
+                style={{ marginBottom: '10px', marginRight: '10px' }}
+              />
+              <MDButton
+                onClick={() => {
+                  setSearchQuery({ nom: '', ville: '', region: '', code_postal: '', role: '' });
+                  fetchActiveentites(); // Reset to active entities
+                }}
+                variant="gradient"
+                color="dark"
+              >
+                Clear Search
+              </MDButton>
+            </div>
+          </MDBox>
           <MDButton onClick={handleAddEntite} variant="gradient" color="dark">
             <Icon sx={{ fontWeight: 'bold' }}>add</Icon>
             &nbsp;Ajouter Entite

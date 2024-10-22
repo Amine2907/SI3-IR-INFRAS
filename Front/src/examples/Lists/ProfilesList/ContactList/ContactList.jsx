@@ -4,7 +4,7 @@ import ContactCard from 'examples/Cards/ConatctCards/ContactCard';
 // @mui material components
 import Card from '@mui/material/Card';
 import Icon from '@mui/material/Icon';
-
+import MDInput from 'components/MDInput';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
@@ -19,6 +19,11 @@ const ContactList = () => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [isActive, setIsActive] = useState(true);
+  const [searchQuery, setSearchQuery] = useState({
+    nom: '',
+    prenom: '',
+    mission: '',
+  });
 
   useEffect(() => {
     fetchActiveContacts();
@@ -71,6 +76,25 @@ const ContactList = () => {
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
   };
+  ///////////////////////////////////////////////////////////////////////// SEARCH
+  const handleSearchChange = e => {
+    const { name, value } = e.target;
+    setSearchQuery(prev => ({ ...prev, [name]: value }));
+
+    if (value === '') {
+      fetchActiveContacts(); // If search input is cleared, fetch active entities
+    } else {
+      handleSearchEntities(); // If there's input, fetch filtered entities
+    }
+  };
+  const handleSearchEntities = async () => {
+    const result = await contactService.searchContacts(searchQuery); // You need to implement this on the backend
+    if (result.success) {
+      setContacts(result.data);
+    } else {
+      console.error(result.error);
+    }
+  };
   ///////////////////////////////////////////////////////////////////////// TOGGLE ACTIVE / Inactive
   const fetchActiveContacts = async () => {
     const result = await contactService.getActiveContacts();
@@ -109,6 +133,27 @@ const ContactList = () => {
           <MDTypography variant="h6" fontWeight="medium">
             Contacts
           </MDTypography>
+          <MDBox pr={1}>
+            <div className="contact-list">
+              <MDInput
+                label="Search"
+                name="nom"
+                value={searchQuery.nom}
+                onChange={handleSearchChange}
+                style={{ marginBottom: '10px', marginRight: '10px' }}
+              />
+              <MDButton
+                onClick={() => {
+                  setSearchQuery({ nom: '', prenom: '', mission: '' });
+                  fetchActiveContacts(); // Reset to active entities
+                }}
+                variant="gradient"
+                color="dark"
+              >
+                Clear Search
+              </MDButton>
+            </div>
+          </MDBox>
           <MDButton onClick={handleAddContact} variant="gradient" color="dark">
             <Icon sx={{ fontWeight: 'bold' }}>add</Icon>
             &nbsp;Ajouter Contact
