@@ -12,7 +12,7 @@ import MDTypography from 'components/MDTypography';
 
 function ComplexStatisticsCard({ color, title, count, percentage, icon }) {
   return (
-    <Card>
+    <Card style={{ width: '20rem' }}>
       <MDBox display="flex" justifyContent="space-between" pt={1} px={2}>
         <MDBox
           variant="gradient"
@@ -23,8 +23,8 @@ function ComplexStatisticsCard({ color, title, count, percentage, icon }) {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          width="4rem"
-          height="4rem"
+          width="3rem"
+          height="3rem"
           mt={-3}
         >
           <Icon fontSize="medium" color="inherit">
@@ -55,7 +55,6 @@ function ComplexStatisticsCard({ color, title, count, percentage, icon }) {
     </Card>
   );
 }
-
 // Setting default values for the props of ComplexStatisticsCard
 ComplexStatisticsCard.defaultProps = {
   color: 'info',

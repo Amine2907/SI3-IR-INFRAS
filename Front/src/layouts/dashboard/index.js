@@ -22,7 +22,6 @@ import reportsLineChartData from 'layouts/dashboard/data/reportsLineChartData';
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
