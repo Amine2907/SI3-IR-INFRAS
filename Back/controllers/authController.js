@@ -1,3 +1,13 @@
+/**
+ * @author: Mohamed Amine EL BAH 
+ * This file contains functions for user authentication
+ * - `signUp`: signs up the user and returns the user if successful
+ * - `signIn`: signs in the user and returns the user if successful
+ * - `resetPassword`: resets the user's password and returns a success message if successful
+ * - `confirmResetPassword`: confirms a user's password reset and returns a success message if successful
+ * - `signOut`: signs out the user and removes the user from the session
+ * @module authController
+ */
 import { supabase } from "../Config/supabaseClient.js";
 import { configDotenv } from "dotenv";
 configDotenv();

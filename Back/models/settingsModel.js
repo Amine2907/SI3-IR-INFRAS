@@ -1,3 +1,11 @@
+/**
+ * This file contains functions for the settings feature
+ * - `getAccountInfo`: gets the information of the current user
+ * - `updatePassword`: updates the password of the current user
+ * - `listUsers`: lists all the users in the database
+ * - `listCompanies`: lists all the companies in the database
+ * @module settingsModel
+ */
 import { supabase } from "../config/supabaseClient.js";
 
 //Get Account informations 

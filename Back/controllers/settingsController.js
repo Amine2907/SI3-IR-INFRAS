@@ -1,3 +1,14 @@
+/**
+ ** @author: Mohamed Amine EL BAH 
+ * This file contains the controller for the settings feature.
+ * It provides functions to interact with the model for settings.
+ * The functions include:
+ * - getAccountInfo: gets the information of the current user
+ * - updatePassword: updates the password of the current user
+ * - listUsers: lists all the users in the database
+ * - listCompanies: lists all the companies in the database
+ * @module settingsController
+ */
 import settingsModel from "../models/settingsModel.js";
 
 // 1. Get Account Information

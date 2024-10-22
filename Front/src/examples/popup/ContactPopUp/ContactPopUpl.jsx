@@ -1,3 +1,18 @@
+/**
+ * This component renders a modal to edit or add a contact.
+ *
+ * It contains a form with the contact's name, email, phone, and mobile.
+ * When the form is submitted, it sends the data to the backend and then
+ * calls the onSave callback with the result.
+ *
+ * It also renders a toggle to activate or desactivate the contact.
+ *
+ * If the contact is in the state, it renders a close button.
+ *
+ * @param {Object} contact the contact to edit, if any
+ * @param {Function} onSave the callback when the form is submitted
+ * @param {Function} onClose the callback when the close button is clicked
+ */
 import React, { useState } from 'react';
 import styles from './ContactPopUp.module.css';
 import PropTypes from 'prop-types';

@@ -1,3 +1,13 @@
+/**
+ * @module Routes/auth
+ * This module contains the routes for authentication
+ * It exports a router with the following routes:
+ * - POST /signup: Signs up a user
+ * - POST /signin: Signs in a user
+ * - POST /signout: Signs out a user
+ * - POST /reset-password: Resets a user's password
+ * - POST /confirm-reset-password: Confirms a password reset
+ */
 import express from 'express';
 import { signUp, signIn, signOut , resetPassword , confirmResetPassword } from '../Controllers/authController.js';
 

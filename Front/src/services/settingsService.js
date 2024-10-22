@@ -1,3 +1,11 @@
+/**
+ * This file contains functions for the settings feature
+ * - `getAccountInfo`: gets the information of the current user
+ * - `updatePassword`: updates the password of the current user
+ * - `listUsers`: lists all the users in the database
+ * - `listCompanies`: lists all the companies in the database
+ * @module settingsService
+ */
 import axios from 'axios';
 const API_BASE_URL = 'http://localhost:5000/api/settings';
 

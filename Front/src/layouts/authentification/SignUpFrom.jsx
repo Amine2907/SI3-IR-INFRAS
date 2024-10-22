@@ -1,3 +1,14 @@
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * This page is responsible for signing up a user.
+ *
+ * It renders a form with an email, first name, and last name field. When the
+ * user submits the form, it will send a POST request to the backend to sign
+ * the user up.
+ *
+ * @return {React.ReactElement} The sign up page.
+ */
+/******  2b93c012-220e-4df8-9642-e02a8e4ff607  *******/
 import React, { useState } from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';

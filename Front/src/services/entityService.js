@@ -1,3 +1,17 @@
+/**
+ * This file contains the service for the entities feature.
+ * It provides functions to interact with the backend API.
+ * The functions are:
+ * - createEntity: creates a contact in the database
+ * - getAllEntities: gets all the contacts in the database
+ * - getActiveEntites: gets all the active contacts in the database
+ * - getInactiveEntites: gets all the inactive contacts in the database
+ * - getEntityById: gets a contact by its ID
+ * - updateEntity: updates a contact in the database
+ * - deactivateEntity: deactivates a contact in the database
+ * - activateEntity: activates a contact in the database
+ * - searchEntities: searches contacts in the database
+ */
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/entites';
 // Create entity

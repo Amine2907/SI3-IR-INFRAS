@@ -1,3 +1,8 @@
+/**
+ * This module defines routes based on user roles
+ * Routes are protected by the roleMiddleware function which verifies the user's role
+ * before allowing access to the route
+ */
 import express from 'express';
 import roleMiddleware from '../middleware/roleMiddleware.js';
 const router = express.Router();

@@ -1,3 +1,10 @@
+/**
+ * This file contains functions for user authentication
+ * - `signIn`: signs in the user and returns the user if successful
+ * - `signUp`: signs up the user and returns the user if successful
+ * - `isAuthenticated`: checks if the user is authenticated
+ * @module authService
+ */
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/auth';
 // import dotenv from 'dotenv';

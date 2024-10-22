@@ -1,3 +1,13 @@
+/**
+ * This page is responsible for resetting a user's password.
+ *
+ * It takes a reset password token from the URL, and uses it to verify the
+ * user's identity. If the user is verified, it will render a form to reset
+ * the user's password. If the user is not verified, it will render an error
+ * message.
+ *
+ * @return {React.ReactElement} The reset password page.
+ */
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import AuthService from 'services/authService';

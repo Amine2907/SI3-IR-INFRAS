@@ -1,3 +1,22 @@
+/**
+ * EntiteModal component
+ *
+ * This component renders a modal with a form to create or edit an entity.
+ * It uses Material Design components for styling and layout.
+ *
+ * Props:
+ * - entite (object): The entity to edit, or null if creating a new entity.
+ * - onSave (function): Called when the form is submitted with valid data.
+ *   - The function receives an object with the form data.
+ * - onClose (function): Called when the modal is closed.
+ *
+ * The component manages its own state for the form data and errors.
+ *
+ * Dependencies:
+ * - React
+ * - PropTypes for prop type validation
+ * - Material Design components: MDTypography, MDButton, MDInput, Switch, Select, MenuItem, FormControl
+ */
 import React, { useState } from 'react';
 import styles from './EntitePopUp.module.css';
 import PropTypes from 'prop-types';

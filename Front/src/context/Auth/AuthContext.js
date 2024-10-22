@@ -1,3 +1,7 @@
+/**
+ * This file contains the AuthContext, which provides authentication functionality.
+ * It includes the AuthProvider component for managing authentication state.
+ */
 import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 

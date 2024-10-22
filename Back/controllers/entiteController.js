@@ -1,3 +1,18 @@
+/**
+ ** @author: Mohamed Amine EL BAH 
+ * This file contains the controller for the entities feature.
+ * It provides functions to interact with the model for entities.
+ * The functions include:
+ * - createEntite: creates a new entity in the database
+ * - getAllEntites: gets all the entities from the database
+ * - getEntityById: gets an entity by its ID
+ * - updateEntity: updates an entity in the database
+ * - desactivateEntity: desactivates an entity in the database
+ * - activateEntity: activates an entity in the database
+ * - searchEntites: searches for entities in the database
+ * - getActiveEntites: gets all the active entities from the database
+ * - getInactiveEntites: gets all the inactive entities from the database
+ */
 import entityModel from "../models/entiteModel.js";
 
 // Create entity controller 

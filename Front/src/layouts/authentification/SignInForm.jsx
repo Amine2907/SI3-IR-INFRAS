@@ -1,3 +1,11 @@
+/**
+ * This page is responsible for signing in a user.
+ *
+ * It renders a form with an email and password field. When the user submits the
+ * form, it will send a POST request to the backend to sign the user in.
+ *
+ * @return {React.ReactElement} The sign in page.
+ */
 import React, { useState } from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';

@@ -1,3 +1,15 @@
+/**
+ * This component renders a list of contacts.
+ *
+ * It fetches the list of contacts from the backend when it mounts.
+ * It renders a card for each contact, with a button to edit the contact.
+ * It also renders a button to add a new contact, and a modal to edit or add a contact.
+ *
+ * The modal is used to edit or add a contact. It contains a form with the contact's name, email, and phone.
+ * When the form is submitted, it sends the data to the backend and then fetches the new list of contacts.
+ *
+ * If there is an error, it renders an alert with the error message.
+ */
 import React, { useEffect, useState } from 'react';
 import contactService from 'services/contactsService';
 import ContactCard from 'examples/Cards/ConatctCards/ContactCard';
@@ -24,7 +36,6 @@ const ContactList = () => {
     prenom: '',
     mission: '',
   });
-
   useEffect(() => {
     fetchActiveContacts();
   }, []);

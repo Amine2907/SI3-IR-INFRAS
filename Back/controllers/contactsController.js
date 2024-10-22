@@ -1,3 +1,17 @@
+/**
+ * @author: Arous Azzouzi
+ * @description: this file contains all the controller functions for the contacts feature.
+ * @functions:
+ * - createContact: creates a contact in the database
+ * - getAllContacts: gets all the contacts in the database with is_active = true
+ * - getContactsById: gets a contact by its id
+ * - updateContact: updates a contact in the database
+ * - desactivateContact: deactivates a contact in the database
+ * - activateContact: activates a contact in the database
+ * - searchContacts: searches contacts in the database
+ * - getActiveContacts: gets all the active contacts in the database
+ * - getInactiveContacts: gets all the inactive contacts in the database
+ */
 // import { supabase } from "../Config/supabaseClient.js";
 import contactsModel from "../models/contactsModel.js";
 

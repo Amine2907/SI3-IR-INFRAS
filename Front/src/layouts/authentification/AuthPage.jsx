@@ -1,3 +1,12 @@
+/**
+ * Page where users can sign up or sign in
+ *
+ * This page is accessed by people who are not logged in. It displays a form
+ * that allows them to either sign up or sign in. The form is toggled by a
+ * button that they can click.
+ *
+ * @returns {React.ReactElement} The rendered component
+ */
 import React, { useState } from 'react';
 import SignUpForm from './SignUpFrom';
 import SignInForm from './SignInForm';

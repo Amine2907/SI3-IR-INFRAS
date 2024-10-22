@@ -1,3 +1,26 @@
+/**
+ * EntiteCard Component
+ *
+ * This component renders a card displaying information about an entity.
+ * It uses Material Dashboard 2 React components for styling and layout.
+ *
+ * Props:
+ * - entite: An object containing the entity's information.
+ *   - nom (string): The name of the entity (required).
+ *   - role (string): The role of the entity (required).
+ *   - adresse (string): The address of the entity (required).
+ * - onEdit: A function to handle editing of the entity.
+ *
+ * The component retrieves the `darkMode` state from the Material UI controller context
+ * to adjust styling based on the current theme mode.
+ *
+ * Dependencies:
+ * - React
+ * - PropTypes for prop type validation
+ * - Material UI components: Grid, Tooltip, Icon, Card
+ * - Material Dashboard 2 React components: MDBox, MDTypography
+ * - useMaterialUIController for accessing the UI controller context
+ */
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';

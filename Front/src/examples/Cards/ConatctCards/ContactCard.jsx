@@ -1,3 +1,25 @@
+/**
+ * ContactCard component
+ *
+ * This component renders a card displaying contact information of an entity.
+ * It uses Material Dashboard 2 React components for styling and layout.
+ *
+ * Props:
+ * - contact: An object containing the contact's information.
+ *   - name (string): The name of the contact (required).
+ *   - role (string): The role of the contact (required).
+ *   - email (string): The address of the contact (required).
+ *
+ * The component retrieves the `darkMode` state from the Material UI controller context
+ * to adjust styling based on the current theme mode.
+ *
+ * Dependencies:
+ * - React
+ * - PropTypes for prop type validation
+ * - Material UI components: Grid, Tooltip, Icon, Card
+ * - Material Dashboard 2 React components: MDBox, MDTypography
+ * - useMaterialUIController for accessing the UI controller context
+ */
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';

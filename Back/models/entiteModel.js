@@ -1,3 +1,9 @@
+/**
+ * This file contains the model for the entites feature.
+ * It provides functions to interact with the database for entities.
+ * The functions include:
+ * - createEntite: creates a new entity in the database
+ */
 // CRU ENTITE AND ACTIVATING / DESACTIVATING INSTEAD OF DELETING 
 import { supabase } from "../config/supabaseClient.js";
 

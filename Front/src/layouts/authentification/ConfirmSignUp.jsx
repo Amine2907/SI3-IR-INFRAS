@@ -1,3 +1,11 @@
+/**
+ * This page is responsible for confirming a user's email address after signing up.
+ *
+ * On mount, it will check the URL for an access token. If one is present, it will
+ * log the user in. If not, it will display an error message.
+ *
+ * @return {React.ReactElement} The confirmation sign up page.
+ */
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
