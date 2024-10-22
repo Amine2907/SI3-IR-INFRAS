@@ -131,7 +131,6 @@ const searchEntites = async (filters) => {
         let query = supabase
             .from('Entite')
             .select('*');   
-
         if (filters.nom) {
             query = query.ilike('nom', `%${filters.nom}%`);
         }

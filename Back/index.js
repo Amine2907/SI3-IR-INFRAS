@@ -24,7 +24,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/entites',entitesRoutes);
 app.use('/api/contacts',contactsRoutes);
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.send('SI3 BACKEND WORKING !');
   });
 // Start Server
 app.listen(5000, () => {

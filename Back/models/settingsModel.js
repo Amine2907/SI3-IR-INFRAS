@@ -1,4 +1,4 @@
-import { supabase } from "../Config/supabaseClient.js";
+import { supabase } from "../config/supabaseClient.js";
 
 //Get Account informations 
 const getAccountInfo = async(userId) => {

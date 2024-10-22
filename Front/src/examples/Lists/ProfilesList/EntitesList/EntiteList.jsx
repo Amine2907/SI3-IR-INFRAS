@@ -11,7 +11,6 @@ import { Grid, Switch } from '@mui/material';
 import MDAlert from 'components/MDAlert';
 import EntiteCard from 'examples/Cards/EntiteCard/EntiteCard';
 import EntiteModal from 'examples/popup/EntitePopUp/EntitePopUp';
-
 const EntiteList = () => {
   const [entites, setentites] = useState([]);
   const [showModal, setShowModal] = useState(false);
