@@ -8,11 +8,19 @@ import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 const EntiteModal = ({ entite, onSave, onClose }) => {
   const [formData, setFormData] = useState(entite || {});
   const [isActive, setIsActive] = useState(entite ? entite.is_active : true);
+  const [errors, setErrors] = useState({});
 
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = () => {
+    const newErrors = {};
+    if (!formData.nom) newErrors.nom = true;
+    if (!formData.role) newErrors.role = true;
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
     onSave({ ...formData, is_active: isActive });
   };
   const handleToggleActive = () => {
@@ -30,10 +38,15 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
           name="nom"
           value={formData.nom || ''}
           onChange={handleChange}
-          placeholder="Nom"
+          placeholder="Nom*"
+          style={{
+            marginBottom: '5px',
+            width: '320px',
+            marginTop: '10px',
+            borderColor: errors.nom ? 'red' : '',
+          }}
           required
-          style={{ marginBottom: '5px', width: '320px', marginTop: '10px' }}
-        ></MDInput>
+        />
         <FormControl
           fullWidth
           style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
@@ -44,10 +57,11 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
             value={formData.role || ''}
             onChange={handleChange}
             displayEmpty
-            style={{ padding: '10px', fontSize: '14px' }}
+            style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+            required
           >
             <MenuItem value="" disabled>
-              -- Select a Role --
+              -- Select a Role* --
             </MenuItem>
             <MenuItem value="Fournisseur">Fournisseur</MenuItem>
             <MenuItem value="CSPS">CSPS</MenuItem>

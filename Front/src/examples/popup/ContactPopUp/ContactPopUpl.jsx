@@ -8,12 +8,19 @@ import { Switch } from '@mui/material';
 const ContactModal = ({ contact, onSave, onClose }) => {
   const [formData, setFormData] = useState(contact || {});
   const [isActive, setIsActive] = useState(contact ? contact.is_active : true);
-
+  const [errors, setErrors] = useState({});
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = () => {
+    const newErrors = {};
+    if (!formData.nom) newErrors.nom = true;
+    if (!formData.prenom) newErrors.prenom = true;
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
     onSave({ ...formData, is_active: isActive });
   };
   const handleToggleActive = () => {
@@ -31,16 +38,27 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           name="nom"
           value={formData.nom || ''}
           onChange={handleChange}
-          placeholder="Nom"
-          style={{ marginBottom: '5px', width: '320px', marginTop: '10px' }}
-        ></MDInput>
+          placeholder="Nom*"
+          style={{
+            marginBottom: '5px',
+            width: '320px',
+            marginTop: '10px',
+            borderColor: errors.nom ? 'red' : '',
+          }}
+          required
+        />
         <MDInput
           name="prenom"
           value={formData.prenom || ''}
           onChange={handleChange}
-          placeholder="Prenom"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
+          placeholder="Prenom*"
+          style={{
+            marginBottom: '5px',
+            width: '320px',
+            borderColor: errors.prenom ? 'red' : '',
+          }}
+          required
+        />
         <MDInput
           name="mission"
           value={formData.mission || ''}
