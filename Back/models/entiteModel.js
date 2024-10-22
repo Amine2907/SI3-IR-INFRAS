@@ -84,7 +84,6 @@ const updateEntity = async(Eid,updates) => {
         .from('Entite')
         .update(updates)
         .eq('Eid',Eid);
-        // .eq('is_active',true);
         if(error){
             throw error ; 
         }

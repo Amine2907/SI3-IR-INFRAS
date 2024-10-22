@@ -60,6 +60,12 @@ const ContactList = () => {
       setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
     }
     handleModalClose();
+    if (isActive) {
+      fetchActiveContacts(); // If isActive is true, fetch active entities
+    } else {
+      fetchInactiveContacts(); // If isActive is false, fetch inactive entities
+    }
+    setIsActive(true); // Set the switch state to Active after modifying an entity
   };
   // Function to close the alert
   const handleCloseAlert = () => {
