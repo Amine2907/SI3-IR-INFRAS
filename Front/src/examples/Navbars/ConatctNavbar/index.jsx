@@ -1,3 +1,13 @@
+/**
+ * ConatctNavbar is a customized Material-UI AppBar component
+ * that is used in the Material Dashboard 2 React.
+ *
+ * The below component uses @mui (Material-UI) core components
+ * and Material Dashboard 2 React components.
+ *
+ * @see https://mui.com/core/
+ * @see https://github.com/creativetim/material-dashboard/blob/main/README.md
+ */
 import { useState, useEffect } from 'react';
 
 // react-router components
