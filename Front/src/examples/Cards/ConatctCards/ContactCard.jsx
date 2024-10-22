@@ -60,9 +60,9 @@ const ContactCard = ({ contact, onEdit }) => {
                 </MDBox>
                 {/* Mobile */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
+                  <Icon sx={{ mr: 1 }}>phone_iphone</Icon> {/* Phone Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Tel: {contact.mobile}
+                    Mobile: {contact.mobile}
                   </MDTypography>
                 </MDBox>
                 {/* Active Status */}

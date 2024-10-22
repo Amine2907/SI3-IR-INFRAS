@@ -32,7 +32,7 @@ const ContactModal = ({ contact, onSave, onClose }) => {
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
-          {contact ? 'Edit Contact' : 'Add Contact'}
+          {contact ? 'Modifier Contact' : 'Ajouter Contact'}
         </MDTypography>
         <MDInput
           name="nom"
