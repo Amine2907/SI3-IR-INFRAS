@@ -9,7 +9,7 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/auth';
 // import dotenv from 'dotenv';
 // dotenv.config();
-// const API_URL = process.env.BACK_AUTH_URL;
+// const API_URL = process.env.AUTH_URL;
 // Error handling helper
 // const handleError = error => {
 //   return { success: false, error: error.response ? error.response.data.error : error.message };

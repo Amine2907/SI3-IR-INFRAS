@@ -14,6 +14,9 @@
  */
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/contacts';
+// import dotenv from 'dotenv';
+// dotenv.config();
+// const API_URL = process.env.CONTACTS_API_URL;
 // Create contact
 const createContact = async data => {
   try {

@@ -8,7 +8,9 @@
  */
 import axios from 'axios';
 const API_BASE_URL = 'http://localhost:5000/api/settings';
-
+// import dotenv from 'dotenv'; 
+// dotenv.config();
+// const API_URL = process.env.SETTINGS_API_URL;
 // Error handling helper
 // const handleError = error => {
 //   return { success: false, error: error.response ? error.response.data.error : error.message };

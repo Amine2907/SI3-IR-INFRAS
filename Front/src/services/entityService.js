@@ -14,6 +14,9 @@
  */
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/entites';
+// import dotenv from 'dotenv';
+// dotenv.config();
+// const API_URL = process.env.ENTITES_API_URL;
 // Create entity
 const createEntity = async data => {
   try {
