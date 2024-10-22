@@ -83,9 +83,8 @@ const updateEntity = async(Eid,updates) => {
         const {data,error} = await supabase
         .from('Entite')
         .update(updates)
-        .eq('Eid',Eid)
-        .eq('is_active',true);
-
+        .eq('Eid',Eid);
+        // .eq('is_active',true);
         if(error){
             throw error ; 
         }
