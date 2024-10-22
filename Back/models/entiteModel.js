@@ -5,8 +5,7 @@
  * - createEntite: creates a new entity in the database
  */
 // CRU ENTITE AND ACTIVATING / DESACTIVATING INSTEAD OF DELETING 
-import { supabase } from "../config/supabaseClient.js";
-
+import { supabase } from "../Config/supabaseClient.js";
 // Create Entite 
 const createEntite = async(data) => {
     try {
