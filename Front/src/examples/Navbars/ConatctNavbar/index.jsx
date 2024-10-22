@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 // react-router components
 import { useLocation, Link } from 'react-router-dom';
@@ -10,12 +10,10 @@ import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
 import Icon from '@mui/material/Icon';
 
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
-import MDInput from 'components/MDInput';
 
 // Material Dashboard 2 React example components
 import Breadcrumbs from 'examples/Breadcrumbs';
@@ -36,7 +34,6 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from '../../../context/index';
-import contactService from 'services/contactsService';
 // import { Switch } from '@mui/material';
 
 function ContactNavBar({ absolute, light, isMini }) {
@@ -44,46 +41,8 @@ function ContactNavBar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
-  const [openMenu, setOpenMenu] = useState(false);
+  const [setOpenMenu] = useState(false);
   const route = useLocation().pathname.split('/').slice(1);
-  const [searchQuery, setSearchQuery] = useState({ nom: '', prenom: '', email: '', mission: '' });
-  const [setContacts] = useState(() => () => {});
-
-  const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-      timeoutId = setTimeout(() => {
-        func(...args);
-      }, delay);
-    };
-  };
-  const debouncedSearchContacts = useCallback(
-    debounce(async filters => {
-      const result = await contactService.searchContacts(filters); // Call your search function
-      if (result.success) {
-        setContacts(result.data); // Update your contacts state
-      } else {
-        console.error(result.error); // Handle errors
-      }
-    }, 500), // Adjust delay as needed (500 ms in this example)
-    [] // Dependencies for useCallback
-  );
-  const handleSearchChange = e => {
-    const { name, value } = e.target;
-    setSearchQuery(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-    debouncedSearchContacts({
-      nom: searchQuery.nom,
-      prenom: searchQuery.prenom,
-      email: searchQuery.email,
-      mission: searchQuery.mission,
-    });
-  };
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -108,22 +67,22 @@ function ContactNavBar({ absolute, light, isMini }) {
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = event => setOpenMenu(event.currentTarget);
-  const handleCloseMenu = () => setOpenMenu(false);
+  // const handleCloseMenu = () => setOpenMenu(false);
 
   // Render the notifications menu
-  const renderMenu = () => (
-    <Menu
-      anchorEl={openMenu}
-      anchorReference={null}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
-      }}
-      open={Boolean(openMenu)}
-      onClose={handleCloseMenu}
-      sx={{ mt: 2 }}
-    ></Menu>
-  );
+  // const renderMenu = () => (
+  //   <Menu
+  //     anchorEl={openMenu}
+  //     anchorReference={null}
+  //     anchorOrigin={{
+  //       vertical: 'bottom',
+  //       horizontal: 'left',
+  //     }}
+  //     open={Boolean(openMenu)}
+  //     onClose={handleCloseMenu}
+  //     sx={{ mt: 2 }}
+  //   ></Menu>
+  // );
 
   // Styles for the navbar icons
   const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
@@ -149,39 +108,6 @@ function ContactNavBar({ absolute, light, isMini }) {
         </MDBox>
         {isMini ? null : (
           <MDBox sx={theme => navbarRow(theme, { isMini })}>
-            <MDBox pr={1}>
-              {/* <MDInput label="Search here" /> */}
-              <div className="contact-list">
-                <MDInput
-                  label="Search by Nom"
-                  name="nom"
-                  value={searchQuery.nom}
-                  onChange={handleSearchChange}
-                  style={{ marginBottom: '10px' }} // Adjust styles as needed
-                />
-                <MDInput
-                  label="Search by Prenom"
-                  name="prenom"
-                  value={searchQuery.prenom}
-                  onChange={handleSearchChange}
-                  style={{ marginBottom: '10px' }} // Adjust styles as needed
-                />
-                <MDInput
-                  label="Search by Email"
-                  name="email"
-                  value={searchQuery.email}
-                  onChange={handleSearchChange}
-                  style={{ marginBottom: '10px' }} // Adjust styles as needed
-                />
-                <MDInput
-                  label="Search by Mission"
-                  name="mission"
-                  value={searchQuery.mission}
-                  onChange={handleSearchChange}
-                  style={{ marginBottom: '10px' }} // Adjust styles as needed
-                />
-              </div>
-            </MDBox>
             <MDBox color={light ? 'white' : 'inherit'}>
               <Link to="/settings">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
@@ -218,7 +144,7 @@ function ContactNavBar({ absolute, light, isMini }) {
                 variant="contained"
                 onClick={handleOpenMenu}
               ></IconButton>
-              {renderMenu()}
+              {/* {renderMenu()} */}
             </MDBox>
           </MDBox>
         )}
@@ -232,7 +158,6 @@ ContactNavBar.defaultProps = {
   light: false,
   isMini: false,
 };
-
 // Typechecking props for the DashboardNavbar
 ContactNavBar.propTypes = {
   contact: PropTypes.shape({
@@ -248,5 +173,4 @@ ContactNavBar.propTypes = {
   light: PropTypes.bool,
   isMini: PropTypes.bool,
 };
-
 export default ContactNavBar;

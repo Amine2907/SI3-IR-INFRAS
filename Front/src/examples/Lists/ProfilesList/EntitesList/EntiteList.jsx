@@ -76,18 +76,18 @@ const EntiteList = () => {
     setAlert({ show: false, message: '', type: '' });
   };
   /////////////////////////////////////////////////////////////////////////////////SEARCH
-  const handleSearchChange = e => {
-    const { name, value } = e.target;
-    setSearchQuery(prev => ({ ...prev, [name]: value }));
+  // const handleSearchChange = e => {
+  //   const { name, value } = e.target;
+  //   setSearchQuery(prev => ({ ...prev, [name]: value }));
 
-    if (value === '') {
-      fetchActiveentites(); // If search input is cleared, fetch active entities
-    } else {
-      handleSearchEntities(); // If there's input, fetch filtered entities
-    }
-  };
+  //   if (value === '') {
+  //     fetchActiveentites(); // If search input is cleared, fetch active entities
+  //   } else {
+  //     handleSearchEntities(); // If there's input, fetch filtered entities
+  //   }
+  // };
   const handleSearchEntities = async () => {
-    const result = await entityService.searchEntities(searchQuery); // You need to implement this on the backend
+    const result = await entityService.searchEntities(searchQuery);
     if (result.success) {
       setentites(result.data);
     } else {
@@ -138,7 +138,10 @@ const EntiteList = () => {
                 label="Search"
                 name="nom"
                 value={searchQuery.nom}
-                onChange={handleSearchChange}
+                onChange={e => {
+                  setSearchQuery({ ...searchQuery, nom: e.target.value });
+                  handleSearchEntities();
+                }}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />
               <MDButton
