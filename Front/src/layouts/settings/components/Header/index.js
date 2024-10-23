@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-
+import { Link } from 'react-router-dom';
 // prop-types is a library for typechecking of props.
 import PropTypes from 'prop-types';
 
@@ -10,19 +10,14 @@ import AppBar from '@mui/material/AppBar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Icon from '@mui/material/Icon';
-
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDAvatar from 'components/MDAvatar';
-
 // Material Dashboard 2 React base styles
 import breakpoints from 'assets/theme/base/breakpoints';
-
-// Import external pages (components)
-// import Account from '../Account';
-// import User from '../Users';
-// import Company from '../Companies';
+// import { Divider } from '@mui/material';
+// import ProfileInfoCard from 'examples/Cards/InfoCards/ProfileInfoCard';
 function Header() {
   const [tabsOrientation, setTabsOrientation] = useState('horizontal');
   const [tabValue, setTabValue] = useState(0);
@@ -41,21 +36,6 @@ function Header() {
   }, [tabsOrientation]);
 
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
-
-  // Render the external component based on the selected tab
-  // const renderComponent = () => {
-  //   switch (tabValue) {
-  //     case 0:
-  //       return <Account />;
-  //     case 1:
-  //       return <User />;
-  //     case 2:
-  //       return <Company />;
-  //     default:
-  //       return null;
-  //   }
-  // };
-
   return (
     <MDBox position="relative" mb={5}>
       <MDBox
@@ -99,6 +79,8 @@ function Header() {
             <AppBar position="static">
               <Tabs orientation={tabsOrientation} value={tabValue} onChange={handleSetTabValue}>
                 <Tab
+                  component={Link}
+                  to="/settings/compte"
                   label="Compte"
                   icon={
                     <Icon fontSize="small" sx={{ mt: -0.25 }}>
@@ -107,6 +89,8 @@ function Header() {
                   }
                 />
                 <Tab
+                  component={Link}
+                  to="/settings/users"
                   label="Utilisateur"
                   icon={
                     <Icon fontSize="small" sx={{ mt: -0.25 }}>
@@ -115,6 +99,8 @@ function Header() {
                   }
                 />
                 <Tab
+                  component={Link}
+                  to="/settings/entreprise"
                   label="Entreprise"
                   icon={
                     <Icon fontSize="small" sx={{ mt: -0.25 }}>
@@ -126,14 +112,10 @@ function Header() {
             </AppBar>
           </Grid>
         </Grid>
-        {/* Render the external component based on the selected tab
-        <MDBox mt={3}>{renderComponent()}</MDBox>
-        {children} */}
       </Card>
     </MDBox>
   );
 }
-
 // Setting default props for the Header
 Header.defaultProps = {
   children: '',
@@ -143,5 +125,4 @@ Header.defaultProps = {
 Header.propTypes = {
   children: PropTypes.node,
 };
-
 export default Header;

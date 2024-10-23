@@ -1,4 +1,3 @@
-/*************  ✨ Codeium Command ⭐  *************/
 /**
  * This page is responsible for signing up a user.
  *
@@ -8,7 +7,6 @@
  *
  * @return {React.ReactElement} The sign up page.
  */
-/******  2b93c012-220e-4df8-9642-e02a8e4ff607  *******/
 import React, { useState } from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';

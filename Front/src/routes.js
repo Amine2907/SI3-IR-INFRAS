@@ -49,7 +49,7 @@ const routes = [
     name: 'Paramètres',
     key: 'Paramètres',
     icon: <Icon fontSize="small">settings</Icon>,
-    route: '/profile',
+    route: '/settings',
     component: <Profile />,
   },
 ];
