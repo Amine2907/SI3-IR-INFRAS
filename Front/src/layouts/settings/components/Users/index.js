@@ -1,7 +1,7 @@
 import React from 'react';
 
-function Utilisateur() {
+function User() {
   return <div>Utilisateur Component</div>;
 }
 
-export default Utilisateur;
+export default User;
