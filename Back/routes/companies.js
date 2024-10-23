@@ -1,14 +1,14 @@
 import express from "express";
 const router = express.Router();
-import CompanyController from "../controllers/companyController";
+import companyController from "../controllers/companyController.js";
 
-router.post('/',CompanyController.createCompany);
-router.get('/',CompanyController.getAllCompanys);
-router.get('/active',CompanyController.getActiveCompanys);
-router.get('/inactive',CompanyController.getInactiveCompanys);
-router.get('/:id',CompanyController.getCompanysById);
-router.put('/:id',CompanyController.updateCompany);
-router.patch('/:id/desactivate',CompanyController.desactivateCompany);
-router.patch('/:id/activate',CompanyController.activateCompany);
+router.post('/',companyController.createCompany);
+router.get('/',companyController.getAllCompanys);
+router.get('/active',companyController.getActiveCompanys);
+router.get('/inactive',companyController.getInactiveCompanys);
+router.get('/:id',companyController.getCompanysById);
+router.put('/:id',companyController.updateCompany);
+router.patch('/:id/desactivate',companyController.desactivateCompany);
+router.patch('/:id/activate',companyController.activateCompany);
 
 export default router ; 

@@ -31,7 +31,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/entites',entitesRoutes);
 app.use('/api/contacts',contactsRoutes);
-app.use('/api/comapnies',companiesRoutes);
+app.use('/api/companies',companiesRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });

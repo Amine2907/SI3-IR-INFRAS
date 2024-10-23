@@ -12,7 +12,7 @@
  * - getActiveCompanys: gets all the active Companys in the database
  * - getInactiveCompanys: gets all the inactive Companys in the database
  */
-import companiesModel from "../models/companyModel";
+import companiesModel from "../models/companyModel.js";
 
 //Create Company controlller 
 const createCompany = async(req,res) =>{
@@ -111,7 +111,7 @@ const getInactiveCompanys = async(req,res) => {
     }
     return res.status(200).json(result.data);
 }
-const CompanyController = {
+const companyController = {
     createCompany,
     getAllCompanys,
     getCompanysById,
@@ -121,4 +121,4 @@ const CompanyController = {
     getActiveCompanys,
     getInactiveCompanys,
 }
-export default CompanyController ; 
+export default companyController ; 
