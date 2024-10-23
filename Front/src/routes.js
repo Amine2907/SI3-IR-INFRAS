@@ -6,7 +6,7 @@
 import Dashboard from 'layouts/dashboard';
 import Billing from 'layouts/billing';
 import Contacts from 'layouts/contacts';
-import Profile from 'layouts/profile';
+import Profile from 'layouts/settings';
 // @mui icons
 import Icon from '@mui/material/Icon';
 import Entites from 'layouts/entites';
@@ -24,7 +24,7 @@ const routes = [
     type: 'collapse',
     name: 'Site',
     key: 'billing',
-    icon: <Icon fontSize="small">receipt_long</Icon>,
+    icon: <Icon fontSize="small">construction</Icon>,
     route: '/billing',
     component: <Billing />,
   },
@@ -32,7 +32,7 @@ const routes = [
     type: 'collapse',
     name: 'Contacts',
     key: 'notifications',
-    icon: <Icon fontSize="small">notifications</Icon>,
+    icon: <Icon fontSize="small">contacts</Icon>,
     route: '/contacts',
     component: <Contacts />,
   },
@@ -48,7 +48,7 @@ const routes = [
     type: 'collapse',
     name: 'Paramètres',
     key: 'Paramètres',
-    icon: <Icon fontSize="small">dashboard</Icon>,
+    icon: <Icon fontSize="small">settings</Icon>,
     route: '/profile',
     component: <Profile />,
   },

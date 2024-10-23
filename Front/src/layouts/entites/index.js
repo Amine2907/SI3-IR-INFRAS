@@ -10,8 +10,7 @@
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
 import Footer from 'examples/Footer';
 import EntiteNavBr from 'examples/Navbars/EntiteNavbar';
-// import EntiteListView from 'examples/Lists/ProfilesList/EntitesList/EntiteListView';
-import EntiteList from 'examples/Lists/ProfilesList/EntitesList/EntiteList';
+import EntiteList from 'examples/Lists/EntitesList/EntiteList';
 function Entites() {
   return (
     <DashboardLayout>
