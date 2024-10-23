@@ -14,6 +14,7 @@ import authRoutes from './Routes/auth.js';
 import dashboardRoutes from './Routes/dashboard.js';
 import entitesRoutes from './Routes/entites.js';
 import contactsRoutes from './Routes/contacts.js';
+import companiesRoutes from './Routes/companies.js';
 // Exports here 
 export { default as contactService } from './services/contactsService.js';
 export { default as AuthService } from './services/authService.js';
@@ -30,6 +31,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/entites',entitesRoutes);
 app.use('/api/contacts',contactsRoutes);
+app.use('/api/comapnies',companiesRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });
