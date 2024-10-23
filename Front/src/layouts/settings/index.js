@@ -8,15 +8,15 @@ import MDBox from 'components/MDBox';
 
 // Material Dashboard 2 React example components
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
-import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 import Footer from 'examples/Footer';
+import SettingsNavbar from 'examples/Navbars/SettingsNavbar';
 
 // Overview page components
 import Header from 'layouts/settings/components/Header';
 function Overview() {
   return (
     <DashboardLayout>
-      <DashboardNavbar />
+      <SettingsNavbar />
       <MDBox mb={2} />
       <Header></Header>
       <Footer />
