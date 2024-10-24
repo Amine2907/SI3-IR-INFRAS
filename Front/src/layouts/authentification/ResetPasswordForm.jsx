@@ -1,7 +1,7 @@
 /**
  * This page is responsible for resetting a user's password.
  *
- * It takes a reset password token from the URL, and uses it to verify the
+ * It takes a reset password token from the URL and uses it to verify the
  * user's identity. If the user is verified, it will render a form to reset
  * the user's password. If the user is not verified, it will render an error
  * message.
@@ -11,15 +11,11 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import AuthService from 'services/authService';
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBCard,
-  MDBCardBody,
-  MDBInput,
-  MDBBtn,
-} from 'mdb-react-ui-kit';
+import { Card, CardContent } from 'components/ui/card';
+import { Button } from 'components/ui/button';
+import { Input } from 'components/ui/input';
+import { Label } from 'components/ui/label';
+
 const ResetPasswordForm = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,12 +24,14 @@ const ResetPasswordForm = () => {
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   const access_token = urlParams.get('access_token');
+
   const handleResetPassword = async e => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       setErrorMessage('Les mots de passe ne correspondent pas.');
       return;
     }
+
     const result = await AuthService.confirmResetPassword(newPassword, access_token);
     if (result.success) {
       setSuccessMessage('Votre mot de passe a été réinitialisé avec succès !');
@@ -43,39 +41,44 @@ const ResetPasswordForm = () => {
       setSuccessMessage(''); // Clear success message on error
     }
   };
+
   return (
-    <MDBContainer fluid className="p-4">
-      <MDBRow>
-        <MDBCol md="6" className="offset-md-3">
-          <MDBCard className="my-5">
-            <MDBCardBody className="p-5">
-              <h1 className="mb-4">Réinitialiser le mot de passe</h1>
-              <form onSubmit={handleResetPassword}>
-                <MDBInput
-                  wrapperClass="mb-4"
-                  label="Nouveau mot de passe"
+    <div className="flex justify-center items-center h-screen">
+      <div className="w-96">
+        <Card>
+          <CardContent>
+            <h2 className="text-2xl font-bold text-center">Réinitialiser le mot de passe</h2>
+            <form onSubmit={handleResetPassword} className="space-y-4">
+              <div>
+                <Label htmlFor="newPassword">Nouveau mot de passe</Label>
+                <Input
+                  id="newPassword"
                   type="password"
                   value={newPassword}
                   onChange={e => setNewPassword(e.target.value)}
+                  required
                 />
-                <MDBInput
-                  wrapperClass="mb-4"
-                  label="Confirmer le mot de passe"
+              </div>
+              <div>
+                <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+                <Input
+                  id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={e => setConfirmPassword(e.target.value)}
+                  required
                 />
-                <MDBBtn className="w-100 mb-4" size="md" type="submit">
-                  Réinitialiser le mot de passe
-                </MDBBtn>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-              </form>
-            </MDBCardBody>
-          </MDBCard>
-        </MDBCol>
-      </MDBRow>
-    </MDBContainer>
+              </div>
+              <Button className="w-full mb-4" type="submit">
+                Réinitialiser le mot de passe
+              </Button>
+              {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+              {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
 export default ResetPasswordForm;

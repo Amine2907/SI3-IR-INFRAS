@@ -1,15 +1,5 @@
-// /**
-//  * Page where users can sign up or sign in
-//  *
-//  * This page is accessed by people who are not logged in. It displays a form
-//  * that allows them to either sign up or sign in. The form is toggled by a
-//  * button that they can click.
-//  *
-//  * @returns {React.ReactElement} The rendered component
-//  */
-// NEW DESIGN I NEED TO IMPLEMNT FUNCTIONS FOR SIGNIN AND SIGNUP AND RESET PASSWORD AND CONFIRM RESET
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
 import { Label } from 'components/ui/label';
@@ -25,19 +15,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from 'components/ui/tabs';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import AuthService from 'services/authService';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { useAuth } from 'context/Auth/AuthContext';
+
 export default function AuthPage() {
   const [FullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [resetEmail, setResetEmail] = useState('');
+  const [resetEmail, setResetEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  // const [showResetForm, setShowResetForm] = useState(false);
+  const [showResetForm, setShowResetForm] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
+
   useEffect(() => {
     // Clear messages after 10 seconds
     const timer = setTimeout(() => {
@@ -51,6 +42,7 @@ export default function AuthPage() {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  // HANDLE SIGN IN HERE
   const handleSignIn = async e => {
     e.preventDefault(); // Prevent the default form submission
     const response = await AuthService.signIn(email, password);
@@ -63,6 +55,7 @@ export default function AuthPage() {
       navigate('/dashboard');
     }
   };
+  // HANDLE SIGN UP HERE
   const handleSignUp = async e => {
     e.preventDefault();
     try {
@@ -90,6 +83,28 @@ export default function AuthPage() {
       setSuccessMessage('');
     }
   };
+  // HANDLE RESET PASSWORD HERE
+  const handleResetPassword = async e => {
+    e.preventDefault();
+    try {
+      const response = await AuthService.resetPassword(resetEmail);
+      if (response && response.success) {
+        setSuccessMessage('Un e-mail de réinitialisation a été envoyé.');
+        setResetEmail('');
+      } else {
+        setErrorMessage(
+          response?.data?.message ||
+            'La réinitialisation du mot de passe a échoué. Veuillez réessayer.'
+        );
+      }
+    } catch (error) {
+      console.error('Erreur de réinitialisation du mot de passe', error);
+      setErrorMessage(
+        error?.response?.data?.message ||
+          "Une erreur s'est produite lors de la réinitialisation du mot de passe. Veuillez réessayer."
+      );
+    }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-7xl flex flex-col lg:flex-row gap-8">
@@ -111,7 +126,7 @@ export default function AuthPage() {
                 <li>Suivre les activities de chaque site</li>
                 <li>Suivre le statut de réglement des devis</li>
                 <li>Notifications automatisées</li>
-                <li>S&aposassurer que le projet est sur les rails</li>
+                <li>S&apos;assurer que le projet est sur les rails</li>
                 <li>Rapports et analyses avancés pour prendre les bonnes decisions</li>
               </ul>
             </div>
@@ -194,7 +209,8 @@ export default function AuthPage() {
                         id="signup-email"
                         placeholder="m@example.com"
                         type="email"
-                        requiredvalue={email}
+                        required
+                        value={email}
                         onChange={e => setEmail(e.target.value)}
                       />
                     </div>
@@ -230,6 +246,30 @@ export default function AuthPage() {
                 </form>
               </TabsContent>
             </Tabs>
+            <div className="mt-4 text-center">
+              <Button onClick={() => setShowResetForm(!showResetForm)} variant="link">
+                Forgot Password?
+              </Button>
+            </div>
+            {showResetForm && (
+              <form onSubmit={handleResetPassword} className="mt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email">Enter your email</Label>
+                  <Input
+                    id="reset-email"
+                    type="email"
+                    value={resetEmail}
+                    onChange={e => setResetEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <Button className="w-full mt-4" type="submit">
+                  Reset Password
+                </Button>
+                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+              </form>
+            )}
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-sm text-gray-500">
