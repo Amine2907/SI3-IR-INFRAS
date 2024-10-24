@@ -53,28 +53,28 @@ const CompanyCard = ({ company, onEdit }) => {
               >
                 {/* Name */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>person</Icon> {/* Full Name Icon */}
+                  <Icon sx={{ mr: 1 }}>business</Icon> {/* Full Name Icon */}
                   <MDTypography variant="h6" fontWeight="medium">
                     {company.nom}
                   </MDTypography>
                 </MDBox>
                 {/* Site Web */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>email</Icon> {/* Email Icon */}
+                  <Icon sx={{ mr: 1 }}>language</Icon> {/* Website Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
                     Site Web: {company.site_web}
                   </MDTypography>
                 </MDBox>
                 {/* SIRET */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>work</Icon> {/* Position Icon */}
+                  <Icon sx={{ mr: 1 }}>corporate_fare</Icon> {/* Siret Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
                     SIRET: {company.siret}
                   </MDTypography>
                 </MDBox>
                 {/* Départements */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
+                  <Icon sx={{ mr: 1 }}>apartment</Icon> {/* Department Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
                     Départements: {company.department}
                   </MDTypography>
