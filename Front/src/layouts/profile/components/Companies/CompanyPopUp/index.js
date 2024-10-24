@@ -1,11 +1,9 @@
 /**
  * This component renders a modal to edit or add a company.
  *
- * It contains a form with the company's name, email, phone, and mobile.
+ * It contains a form with the company's name, department, siret, and a toggle to activate or desactivate the company.
  * When the form is submitted, it sends the data to the backend and then
  * calls the onSave callback with the result.
- *
- * It also renders a toggle to activate or desactivate the company.
  *
  * If the company is in the state, it renders a close button.
  *
