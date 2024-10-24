@@ -186,9 +186,34 @@ export default function AuthPage() {
                   <Button className="w-full mt-6" type="submit" onClick={handleSignIn}>
                     Sign In
                   </Button>
+
                   {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                   {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                 </form>
+                <div className="mt-4 text-center">
+                  <Button onClick={() => setShowResetForm(!showResetForm)} variant="link">
+                    Forgot Password?
+                  </Button>
+                </div>
+                {showResetForm && (
+                  <form onSubmit={handleResetPassword} className="mt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="reset-email">Enter your email</Label>
+                      <Input
+                        id="reset-email"
+                        type="email"
+                        value={resetEmail}
+                        onChange={e => setResetEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <Button className="w-full mt-4" type="submit">
+                      Reset Password
+                    </Button>
+                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                    {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+                  </form>
+                )}
               </TabsContent>
               <TabsContent value="signup">
                 <form>
@@ -246,30 +271,6 @@ export default function AuthPage() {
                 </form>
               </TabsContent>
             </Tabs>
-            <div className="mt-4 text-center">
-              <Button onClick={() => setShowResetForm(!showResetForm)} variant="link">
-                Forgot Password?
-              </Button>
-            </div>
-            {showResetForm && (
-              <form onSubmit={handleResetPassword} className="mt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="reset-email">Enter your email</Label>
-                  <Input
-                    id="reset-email"
-                    type="email"
-                    value={resetEmail}
-                    onChange={e => setResetEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <Button className="w-full mt-4" type="submit">
-                  Reset Password
-                </Button>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
-              </form>
-            )}
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-sm text-gray-500">
