@@ -6,7 +6,7 @@
 import Dashboard from 'layouts/dashboard';
 import Billing from 'layouts/billing';
 import Contacts from 'layouts/contacts';
-import Profile from 'layouts/settings';
+import Profile from 'layouts/profile';
 // @mui icons
 import Icon from '@mui/material/Icon';
 import Entites from 'layouts/entites';
@@ -49,7 +49,7 @@ const routes = [
     name: 'Paramètres',
     key: 'Paramètres',
     icon: <Icon fontSize="small">settings</Icon>,
-    route: '/settings',
+    route: '/profile',
     component: <Profile />,
   },
 ];
