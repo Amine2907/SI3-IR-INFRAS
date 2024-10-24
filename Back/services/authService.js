@@ -27,9 +27,9 @@ const signIn = (email, password) => {
     });
 };
 // Sign Up the user 
-const signUp = (firstName, lastName, email, password) => {
+const signUp = (FullName, email, password) => {
   return axios
-    .post(`${API_URL}/signup`, { firstName, lastName, email, password })
+    .post(`${API_URL}/signup`, { FullName, email, password })
     .then(response => response.data)
     .catch(error => {
       console.error('Sign-up error:', error.response?.data.error || error.message);

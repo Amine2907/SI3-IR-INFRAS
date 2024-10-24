@@ -19,8 +19,6 @@ import { AuthProvider, useAuth } from 'context/Auth/AuthContext';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import ResetPasswordForm from 'layouts/authentification/ResetPasswordForm';
-import SignInForm from 'layouts/authentification/SignInForm';
-import SignUpForm from 'layouts/authentification/SignUpFrom';
 import ConfirmSignup from 'layouts/authentification/ConfirmSignUp';
 import Account from 'layouts/settings/components/Account';
 import User from 'layouts/settings/components/Users';
@@ -151,8 +149,6 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/auth" />} />
         <Route path="/auth" element={<AuthPage />} />
-        <Route path="/auth/signup" element={<SignUpForm />} />
-        <Route path="/auth/signin" element={<SignInForm />} />
         <Route path="/auth/confirm-reset-password" element={<ResetPasswordForm />} />
         <Route path="/auth/confirm-sign-up" element={<ConfirmSignup />} />
         <Route
