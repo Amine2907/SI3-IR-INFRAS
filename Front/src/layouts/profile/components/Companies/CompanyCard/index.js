@@ -1,0 +1,114 @@
+/**
+ * CompanyCard component
+ *
+ * This component renders a card displaying company information of an entity.
+ * It uses Material Dashboard 2 React components for styling and layout.
+ *
+ * Props:
+ * - company: An object containing the company's information.
+ *   - name (string): The name of the company (required).
+ *   - role (string): The role of the company (required).
+ *   - email (string): The address of the company (required).
+ *
+ * The component retrieves the `darkMode` state from the Material UI controller context
+ * to adjust styling based on the current theme mode.
+ *
+ * Dependencies:
+ * - React
+ * - PropTypes for prop type validation
+ * - Material UI components: Grid, Tooltip, Icon, Card
+ * - Material Dashboard 2 React components: MDBox, MDTypography
+ * - useMaterialUIController for accessing the UI controller context
+ */
+import React from 'react';
+import PropTypes from 'prop-types';
+import Grid from '@mui/material/Grid';
+import Tooltip from '@mui/material/Tooltip';
+import Icon from '@mui/material/Icon';
+// Material Dashboard 2 React components
+import MDBox from 'components/MDBox';
+import MDTypography from 'components/MDTypography';
+import { useMaterialUIController } from '../../../../../context/index';
+import Card from '@mui/material/Card';
+const CompanyCard = ({ company, onEdit }) => {
+  const [controller] = useMaterialUIController();
+  const { darkMode } = controller;
+  return (
+    <Grid item xs={12}>
+      <Card id="company_card">
+        <MDBox p={2}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} md={12}>
+              <MDBox
+                borderRadius="lg"
+                display="flex"
+                flexDirection="column"
+                justifyContent="space-between"
+                alignItems="flex-start"
+                p={3}
+                sx={{
+                  border: ({ borders: { borderWidth, borderColor } }) =>
+                    `${borderWidth[1]} solid ${borderColor}`,
+                }}
+              >
+                {/* Name */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>person</Icon> {/* Full Name Icon */}
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {company.nom}
+                  </MDTypography>
+                </MDBox>
+                {/* Site Web */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>email</Icon> {/* Email Icon */}
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    Site Web: {company.site_web}
+                  </MDTypography>
+                </MDBox>
+                {/* SIRET */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>work</Icon> {/* Position Icon */}
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    SIRET: {company.siret}
+                  </MDTypography>
+                </MDBox>
+                {/* Départements */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    Départements: {company.department}
+                  </MDTypography>
+                </MDBox>
+                {/* Active Status */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>check_circle</Icon>
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    Status: {company.is_active ? 'Active' : 'Inactive'}
+                  </MDTypography>
+                </MDBox>
+                <MDBox ml="auto" lineHeight={0} color={darkMode ? 'white' : 'dark'}>
+                  <Tooltip title="Edit company" placement="top">
+                    <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={onEdit}>
+                      edit
+                    </Icon>
+                  </Tooltip>
+                </MDBox>
+              </MDBox>
+            </Grid>
+          </Grid>
+        </MDBox>
+      </Card>
+    </Grid>
+  );
+};
+CompanyCard.propTypes = {
+  company: PropTypes.shape({
+    nom: PropTypes.string.isRequired,
+    site_web: PropTypes.string.isRequired,
+    department: PropTypes.string.isRequired,
+    siret: PropTypes.string.isRequired,
+    is_active: PropTypes.bool.isRequired,
+  }).isRequired,
+  onEdit: PropTypes.func.isRequired,
+};
+export default CompanyCard;

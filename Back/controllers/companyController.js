@@ -98,14 +98,14 @@ const activateCompany = async(req,res)=> {
     return res.status(200).json(result.data);
 };
 const getActiveCompanys = async(req,res) => {
-    const result = await companiesModel.getAllActiveCompanys();
+    const result = await companiesModel.getAllActivecompanys();
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
     return res.status(200).json(result.data);
 };
 const getInactiveCompanys = async(req,res) => {
-    const result = await companiesModel.getAllInactiveCompanys();
+    const result = await companiesModel.getAllInactivecompanys();
     if(!result.success){
         return res.status(400).json({error:result.error});
     }

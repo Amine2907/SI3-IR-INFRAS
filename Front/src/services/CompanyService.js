@@ -16,86 +16,86 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/companies';
 
 // Create Company
-const createCompany = async (data) => {
-    try {
-        const response = await axios.post(`${API_URL}`, data);
-        return { success: true, data: response.data };
-    } catch (error) {
-        return { success: false, error: error.response ? error.response.data.error : error.message };
-    }
+const createCompany = async data => {
+  try {
+    const response = await axios.post(`${API_URL}`, data);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
 };
 // Get all Companys
 const getAllCompanys = async () => {
-    try {
-        const response = await axios.get(`${API_URL}`);
-        return { success: true, data: response.data };
-    } catch (error) {
-        return { success: false, error: error.response ? error.response.data.error : error.message };
-    }
+  try {
+    const response = await axios.get(`${API_URL}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
 };
-// Get all active Companys 
+// Get all active Companys
 const getActiveCompanys = async () => {
-    try {
-        const response = await axios.get(`${API_URL}/active`);
-        return { success: true, data: response.data };
-    } catch (error) {
-        return { success: false, error: error.response ? error.response.data.error : error.message };
-    }
+  try {
+    const response = await axios.get(`${API_URL}/active`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
 };
 // Get all inactive Companys
 const getInactiveCompanys = async () => {
-    try {
-        const response = await axios.get(`${API_URL}/inactive`);
-        return { success: true, data: response.data };
-    } catch (error) {
-        return { success: false, error: error.response ? error.response.data.error : error.message };
-    }
+  try {
+    const response = await axios.get(`${API_URL}/inactive`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
 };
 // Get Company by ID
-const getCompanyById = async (id) => {
-    try {
-        const response = await axios.get(`${API_URL}/${id}`);
-        return { success: true, data: response.data };
-    } catch (error) {
-        return { success: false, error: error.response ? error.response.data.error : error.message };
-    }
+const getCompanyById = async id => {
+  try {
+    const response = await axios.get(`${API_URL}/${id}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
 };
 // Update Company
 const updateCompany = async (id, updates) => {
-    try {
-        const response = await axios.put(`${API_URL}/${id}`, updates);
-        return { success: true, data: response.data };
-    } catch (error) {
-        return { success: false, error: error.response ? error.response.data.error : error.message };
-    }
+  try {
+    const response = await axios.put(`${API_URL}/${id}`, updates);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
 };
 // Deactivate a Company
-const deactivateCompany = async (id) => {
-    try {
-        const response = await axios.patch(`${API_URL}/${id}/deactivate`);
-        return { success: true, data: response.data };
-    } catch (error) {
-        return { success: false, error: error.response ? error.response.data.error : error.message };
-    }
+const deactivateCompany = async id => {
+  try {
+    const response = await axios.patch(`${API_URL}/${id}/deactivate`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
 };
 // Activate a Company
-const activateCompany = async (id) => {
-    try {
-        const response = await axios.patch(`${API_URL}/${id}/activate`);
-        return { success: true, data: response.data };
-    } catch (error) {
-        return { success: false, error: error.response ? error.response.data.error : error.message };
-    }
+const activateCompany = async id => {
+  try {
+    const response = await axios.patch(`${API_URL}/${id}/activate`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
 };
 // Exporting the Company service
 const CompanyService = {
-    createCompany,
-    getAllCompanys,
-    getCompanyById,
-    updateCompany,
-    deactivateCompany,
-    activateCompany,
-    getActiveCompanys,
-    getInactiveCompanys,
+  createCompany,
+  getAllCompanys,
+  getCompanyById,
+  updateCompany,
+  deactivateCompany,
+  activateCompany,
+  getActiveCompanys,
+  getInactiveCompanys,
 };
 export default CompanyService;

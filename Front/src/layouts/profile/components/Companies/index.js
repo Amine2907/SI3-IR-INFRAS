@@ -1,9 +1,12 @@
 // components/Companies.js
 import React from 'react';
-import MDTypography from 'components/MDTypography';
-
+import CompanyList from './CompanyList';
+import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
 function Companies() {
-  return <MDTypography variant="h6">Companies Component</MDTypography>;
+  return (
+    <DashboardLayout>
+      <CompanyList />
+    </DashboardLayout>
+  );
 }
-
 export default Companies;
