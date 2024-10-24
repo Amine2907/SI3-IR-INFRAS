@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import ResetPasswordForm from 'layouts/authentification/ResetPasswordForm';
 import ConfirmSignup from 'layouts/authentification/ConfirmSignUp';
+import ProfileModal from 'examples/popup/SettingsPopUp/ProfilePopUp';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
@@ -148,6 +149,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/auth/confirm-reset-password" element={<ResetPasswordForm />} />
         <Route path="/auth/confirm-sign-up" element={<ConfirmSignup />} />
+        <Route path="/popup/profile" element={<ProfileModal />} />
       </Routes>
     </ThemeProvider>
   );

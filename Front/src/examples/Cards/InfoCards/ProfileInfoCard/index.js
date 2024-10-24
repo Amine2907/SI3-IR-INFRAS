@@ -44,17 +44,31 @@ function ProfileInfoCard({ title, info, action, shadow }) {
       </MDTypography>
     </MDBox>
   ));
+
   return (
     <Card sx={{ height: '100%', boxShadow: !shadow && 'none' }}>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" pt={2} px={2}>
         <MDTypography variant="h6" fontWeight="medium" textTransform="capitalize">
           {title}
         </MDTypography>
-        <MDTypography component={Link} to={action.route} variant="body2" color="secondary">
-          <Tooltip title={action.tooltip} placement="top">
-            <Icon>edit</Icon>
-          </Tooltip>
-        </MDTypography>
+        {action.route ? (
+          <MDTypography component={Link} to={action.route} variant="body2" color="secondary">
+            <Tooltip title={action.tooltip} placement="top">
+              <Icon>edit</Icon>
+            </Tooltip>
+          </MDTypography>
+        ) : (
+          <MDTypography
+            variant="body2"
+            color="secondary"
+            onClick={action.onClick}
+            sx={{ cursor: 'pointer' }}
+          >
+            <Tooltip title={action.tooltip} placement="top">
+              <Icon>edit</Icon>
+            </Tooltip>
+          </MDTypography>
+        )}
       </MDBox>
       <MDBox p={2}>
         <MDBox mb={2} lineHeight={1}></MDBox>
@@ -73,18 +87,18 @@ function ProfileInfoCard({ title, info, action, shadow }) {
 // Setting default props for the ProfileInfoCard
 ProfileInfoCard.defaultProps = {
   shadow: true,
+  action: { onClick: null, route: '', tooltip: '' }, // Default action props
 };
 
 // Typechecking props for the ProfileInfoCard
 ProfileInfoCard.propTypes = {
   title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
   info: PropTypes.objectOf(PropTypes.string).isRequired,
-  social: PropTypes.arrayOf(PropTypes.object).isRequired,
   action: PropTypes.shape({
-    route: PropTypes.string.isRequired,
+    route: PropTypes.string, // route is not always required now
+    onClick: PropTypes.func, // onClick can be passed instead of route
     tooltip: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
   shadow: PropTypes.bool,
 };
 
