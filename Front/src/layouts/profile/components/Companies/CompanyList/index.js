@@ -21,8 +21,9 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import { Grid, Switch } from '@mui/material';
 import MDAlert from 'components/MDAlert';
-import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
+// import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
 import CompanyService from 'services/CompanyService';
+import CompanyModal from '../CompanyPopUp';
 
 const companyList = () => {
   const [companies, setcompanies] = useState([]);
@@ -144,7 +145,7 @@ const companyList = () => {
         </MDBox>
       </Card>
       {showModal && (
-        <ContactModal company={selectedcompany} onSave={handleSave} onClose={handleModalClose} />
+        <CompanyModal company={selectedcompany} onSave={handleSave} onClose={handleModalClose} />
       )}
       {alert.show && (
         <MDAlert
