@@ -63,35 +63,38 @@ const ContactCard = ({ contact, onEdit }) => {
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>email</Icon> {/* Email Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Email: {contact.email}
+                    <strong>Email:</strong> {contact.email}
                   </MDTypography>
                 </MDBox>
                 {/* Position */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>work</Icon> {/* Position Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Position: {contact.mission}
+                    <strong>Position:</strong>
+                    {contact.mission}
                   </MDTypography>
                 </MDBox>
                 {/* Phone */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Tel: {contact.tel}
+                    <strong>Tel:</strong>
+                    {contact.tel}
                   </MDTypography>
                 </MDBox>
                 {/* Mobile */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>phone_iphone</Icon> {/* Phone Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Mobile: {contact.mobile}
+                    <strong>Mobile:</strong>
+                    {contact.mobile}
                   </MDTypography>
                 </MDBox>
                 {/* Active Status */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>check_circle</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Status: {contact.is_active ? 'Active' : 'Inactive'}
+                    <strong>Status::</strong> {contact.is_active ? 'Active' : 'Inactive'}
                   </MDTypography>
                 </MDBox>
                 <MDBox ml="auto" lineHeight={0} color={darkMode ? 'white' : 'dark'}>

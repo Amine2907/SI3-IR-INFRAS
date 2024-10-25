@@ -1,12 +1,7 @@
 // components/Companies.js
 import React from 'react';
-import CompanyList from './CompanyList';
-import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
+import CompanyList from '../../../../examples/Lists/CompanyList';
 function Companies() {
-  return (
-    <DashboardLayout>
-      <CompanyList />
-    </DashboardLayout>
-  );
+  return <CompanyList />;
 }
 export default Companies;

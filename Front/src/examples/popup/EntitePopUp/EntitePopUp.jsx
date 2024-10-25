@@ -113,13 +113,41 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
           placeholder="Code Postal"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
-        <MDInput
-          name="region"
-          value={formData.region || ''}
-          onChange={handleChange}
-          placeholder="Region"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
+        <FormControl
+          fullWidth
+          style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+          required
+        >
+          <Select
+            name="region"
+            value={formData.region || ''}
+            onChange={handleChange}
+            displayEmpty
+            style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+            required
+          >
+            <MenuItem value="" disabled>
+              -- Select a Region* --
+            </MenuItem>
+            <MenuItem value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</MenuItem>
+            <MenuItem value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</MenuItem>
+            <MenuItem value="Bretagne">Bretagne</MenuItem>
+            <MenuItem value="Centre-Val de Loire">Centre-Val de Loire</MenuItem>
+            <MenuItem value="Corse">Corse</MenuItem>
+            <MenuItem value="Grand Est">Grand Est</MenuItem>
+            <MenuItem value="Guadeloupe">Guadeloupe</MenuItem>
+            <MenuItem value="Guyane">Guyane</MenuItem>
+            <MenuItem value="Hauts-de-France">Hauts-de-France</MenuItem>
+            <MenuItem value="Île-de-France">Île-de-France</MenuItem>
+            <MenuItem value="Martinique">Martinique</MenuItem>
+            <MenuItem value="Normandie">Normandie</MenuItem>
+            <MenuItem value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</MenuItem>
+            <MenuItem value="Occitanie">Occitanie</MenuItem>
+            <MenuItem value="Pays de la Loire">Pays de la Loire</MenuItem>
+            <MenuItem value="Provence-Alpes-Côte d'Azur">Provence-Alpes-Côte d&apos;Azur</MenuItem>
+            <MenuItem value="Réunion">Réunion</MenuItem>
+          </Select>
+        </FormControl>
         <MDInput
           name="contact"
           value={formData.contact || ''}

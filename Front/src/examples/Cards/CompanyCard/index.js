@@ -7,8 +7,6 @@
  * Props:
  * - company: An object containing the company's information.
  *   - name (string): The name of the company (required).
- *   - role (string): The role of the company (required).
- *   - email (string): The address of the company (required).
  *
  * The component retrieves the `darkMode` state from the Material UI controller context
  * to adjust styling based on the current theme mode.
@@ -28,7 +26,7 @@ import Icon from '@mui/material/Icon';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
-import { useMaterialUIController } from '../../../../../context/index';
+import { useMaterialUIController } from '../../../context/index';
 import Card from '@mui/material/Card';
 const CompanyCard = ({ company, onEdit }) => {
   const [controller] = useMaterialUIController();
@@ -62,21 +60,24 @@ const CompanyCard = ({ company, onEdit }) => {
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>language</Icon> {/* Website Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Site Web: {company.site_web}
+                    <strong>Site Web:</strong> {company.site_web}
                   </MDTypography>
                 </MDBox>
                 {/* SIRET */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>corporate_fare</Icon> {/* Siret Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    SIRET: {company.siret}
+                    <strong>SIRET:</strong> {company.siret}
                   </MDTypography>
                 </MDBox>
                 {/* Départements */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>apartment</Icon> {/* Department Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Départements: {company.department}
+                    <strong>Départements:</strong>{' '}
+                    {Array.isArray(company.department)
+                      ? company.department.join(', ')
+                      : company.department}
                   </MDTypography>
                 </MDBox>
                 {/* Active Status */}

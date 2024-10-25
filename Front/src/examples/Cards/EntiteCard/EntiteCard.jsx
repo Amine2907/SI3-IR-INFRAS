@@ -63,84 +63,95 @@ const EntiteCard = ({ entite, onEdit }) => {
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>email</Icon> {/* Email Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Role: {entite.role}
+                    <strong>Role:</strong>
+                    {entite.role}
                   </MDTypography>
                 </MDBox>
                 {/* Adresse */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>home</Icon> {/* Position Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Adresse: {entite.adresse}
+                    <strong>Adresse:</strong>
+                    {entite.adresse}
                   </MDTypography>
                 </MDBox>
                 {/* Ville */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>location_city</Icon> {/* Position Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Ville: {entite.ville}
+                    <strong>Ville:</strong> {entite.ville}
                   </MDTypography>
                 </MDBox>
                 {/* Code Postal  */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>markunread_mailbox</Icon> {/* Position Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Code Postal : {entite.code_postal}
+                    <strong>Code Postal:</strong>
+                    {entite.code_postal}
                   </MDTypography>
                 </MDBox>
                 {/* Region */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>map</Icon> {/* Position Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Region: {entite.region}
+                    <strong>Region:</strong>
+                    {entite.region}
                   </MDTypography>
                 </MDBox>
                 {/* Active Status */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>check_circle</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Status: {entite.is_active ? 'Active' : 'Inactive'}
+                    <strong>Status:</strong>
+                    {entite.is_active ? 'Active' : 'Inactive'}
                   </MDTypography>
                 </MDBox>
                 {/* Contact */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>work</Icon> {/* Position Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Personne de conatct : {entite.contact}
+                    <strong>Personne de conatct :</strong>
+                    {entite.contact}
                   </MDTypography>
                 </MDBox>
                 {/* Email */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>email</Icon> {/* Email Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Email: {entite.email}
+                    <strong>Email:</strong>
+                    {entite.email}
                   </MDTypography>
                 </MDBox>
                 {/* Phone */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Tel: {entite.telephone}
+                    <strong>Tel:</strong>
+                    {entite.telephone}
                   </MDTypography>
                 </MDBox>
                 {/* Site web  */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>language</Icon> {/* Phone Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    Site web: {entite.site_web}
+                    <strong>Site web:</strong>
+                    {entite.site_web}
                   </MDTypography>
                 </MDBox>
                 {/* IBAN  */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>account_balance_wallet</Icon> {/* Phone Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    IBAN: {entite.IBAN}
+                    <strong>IBAN:</strong>
+                    {entite.IBAN}
                   </MDTypography>
                 </MDBox>
                 {/* BIC */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>account_balance</Icon> {/* Phone Icon */}
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    BIC: {entite.BIC}
+                    <strong>BIC:</strong>
+                    {entite.BIC}
                   </MDTypography>
                 </MDBox>
                 <MDBox ml="auto" lineHeight={0} color={darkMode ? 'white' : 'dark'}>

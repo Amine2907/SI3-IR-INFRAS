@@ -35,4 +35,7 @@
   button {
     margin-right: 10px;
   }
-  
+  .checkboxContainer {
+    display: flex;
+    align-items: center;
+  }

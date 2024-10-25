@@ -11,7 +11,7 @@
  * If there is an error, it renders an alert with the error message.
  */
 import React, { useEffect, useState } from 'react';
-import CompanyCard from '../CompanyCard';
+import CompanyCard from '../../Cards/CompanyCard';
 // @mui material components
 import Card from '@mui/material/Card';
 import Icon from '@mui/material/Icon';
@@ -23,7 +23,7 @@ import { Grid, Switch } from '@mui/material';
 import MDAlert from 'components/MDAlert';
 // import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
 import CompanyService from 'services/CompanyService';
-import CompanyModal from '../CompanyPopUp';
+import CompanyModal from '../../popup/CompanyPopUp';
 
 const companyList = () => {
   const [companies, setcompanies] = useState([]);
@@ -48,11 +48,11 @@ const companyList = () => {
     if (selectedcompany) {
       // Update company
       console.log('Updating company:', selectedcompany.id);
-      result = await CompanyService.updatecompany(selectedcompany.ENTid, data);
+      result = await CompanyService.updateCompany(selectedcompany.ENTid, data);
       successMessage = 'company updated successfully!';
     } else {
       // Create new company
-      result = await CompanyService.createcompany(data);
+      result = await CompanyService.createCompany(data);
       successMessage = 'company saved successfully!';
     }
     // Handle the result with alert feedback
@@ -106,7 +106,7 @@ const companyList = () => {
   ////////////////////////////////////////////////////////////////////////
   return (
     <div className="company-list">
-      <Card id="delete-account">
+      <Card id="company-card">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
             companies
