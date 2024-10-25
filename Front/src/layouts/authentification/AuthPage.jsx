@@ -16,28 +16,28 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import AuthService from 'services/authService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'context/Auth/AuthContext';
-
+import { Alert, AlertDescription } from 'components/ui/alert';
 export default function AuthPage() {
   const [FullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [resetEmail, setResetEmail] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const [showResetForm, setShowResetForm] = useState(false);
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
   const { login } = useAuth();
 
   useEffect(() => {
     // Clear messages after 10 seconds
     const timer = setTimeout(() => {
-      setErrorMessage('');
-      setSuccessMessage('');
+      setError('');
+      setMessage('');
     }, 10000);
 
     return () => clearTimeout(timer); // Cleanup the timeout on component unmount
-  }, [errorMessage, successMessage]);
+  }, [error, message]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -48,7 +48,7 @@ export default function AuthPage() {
     const response = await AuthService.signIn(email, password);
     // Check the response
     if (response.success === false) {
-      setErrorMessage('Identifiants invalides, veuillez réessayer.');
+      setError('Identifiants invalides, veuillez réessayer.');
     } else {
       console.log('Connexion réussie :', response);
       login();
@@ -62,25 +62,25 @@ export default function AuthPage() {
       const response = await AuthService.signUp(FullName, email, password);
       if (response && response.success) {
         if (response.data && response.data.message) {
-          setSuccessMessage(response.data.message);
+          setMessage(response.data.message);
           setEmail('');
           setPassword('');
           setFullName('');
         } else {
-          setSuccessMessage('Inscription réussie ! Veuillez vérifier votre e-mail.');
+          setMessage('Inscription réussie ! Veuillez vérifier votre e-mail.');
         }
-        setErrorMessage('');
+        setError('');
       } else {
-        setErrorMessage(response?.data?.message || "L'inscription a échoué. Veuillez réessayer.");
-        setSuccessMessage('');
+        setError(response?.data?.message || "L'inscription a échoué. Veuillez réessayer.");
+        setMessage('');
       }
     } catch (error) {
       console.error("Erreur d'inscription", error);
-      setErrorMessage(
+      setError(
         error?.response?.data?.message ||
           "Une erreur s'est produite lors de l'inscription. Veuillez réessayer."
       );
-      setSuccessMessage('');
+      setMessage('');
     }
   };
   // HANDLE RESET PASSWORD HERE
@@ -89,17 +89,17 @@ export default function AuthPage() {
     try {
       const response = await AuthService.resetPassword(resetEmail);
       if (response && response.success) {
-        setSuccessMessage('Un e-mail de réinitialisation a été envoyé.');
+        setMessage('Un e-mail de réinitialisation a été envoyé.');
         setResetEmail('');
       } else {
-        setErrorMessage(
+        setError(
           response?.data?.message ||
             'La réinitialisation du mot de passe a échoué. Veuillez réessayer.'
         );
       }
     } catch (error) {
       console.error('Erreur de réinitialisation du mot de passe', error);
-      setErrorMessage(
+      setError(
         error?.response?.data?.message ||
           "Une erreur s'est produite lors de la réinitialisation du mot de passe. Veuillez réessayer."
       );
@@ -186,9 +186,16 @@ export default function AuthPage() {
                   <Button className="w-full mt-6" type="submit" onClick={handleSignIn}>
                     Sign In
                   </Button>
-
-                  {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                  {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+                  {error && (
+                    <Alert variant="destructive" className="mt-4">
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                  )}
+                  {message && (
+                    <Alert variant="success" className="mt-4">
+                      <AlertDescription>{message}</AlertDescription>
+                    </Alert>
+                  )}
                 </form>
                 <div className="mt-4 text-center">
                   <Button onClick={() => setShowResetForm(!showResetForm)} variant="link">
@@ -210,8 +217,16 @@ export default function AuthPage() {
                     <Button className="w-full mt-4" type="submit">
                       Reset Password
                     </Button>
-                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                    {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+                    {error && (
+                      <Alert variant="destructive" className="mt-4">
+                        <AlertDescription>{error}</AlertDescription>
+                      </Alert>
+                    )}
+                    {message && (
+                      <Alert variant="success" className="mt-4">
+                        <AlertDescription>{message}</AlertDescription>
+                      </Alert>
+                    )}
                   </form>
                 )}
               </TabsContent>
@@ -266,8 +281,16 @@ export default function AuthPage() {
                   <Button className="w-full mt-6" type="submit" onClick={handleSignUp}>
                     Sign Up
                   </Button>
-                  {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                  {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+                  {error && (
+                    <Alert variant="destructive" className="mt-4">
+                      <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                  )}
+                  {message && (
+                    <Alert variant="success" className="mt-4">
+                      <AlertDescription>{message}</AlertDescription>
+                    </Alert>
+                  )}
                 </form>
               </TabsContent>
             </Tabs>

@@ -15,8 +15,8 @@ const API_URL = 'http://localhost:5000/api/auth';
 //   return { success: false, error: error.response ? error.response.data.error : error.message };
 // };
 // Sign in the user
-const signIn = (email, password) => {
-  return axios
+const signIn = async (email, password) => {
+  return await axios
     .post(`${API_URL}/signin`, { email, password })
     .then(response => {
       if (response.data.user) {
@@ -45,27 +45,36 @@ const isAuthenticated = () => {
   return user && user.token ? true : false;
 };
 // Password reset for the user
-const resetPassword = async (email, access_token) => {
-  return axios
-    .post(`${API_URL}/reset-password#access_token=${access_token}`, { email })
-    .then(response => response.data)
-    .catch(error => {
-      console.error('Reseting password failed !', error.response?.data || error);
-      return { success: false, error: error.response?.data?.error || 'Unknown error' };
-    });
+// Function to initiate password reset
+const resetPassword = async email => {
+  try {
+    const response = await axios.post(`${API_URL}/reset-password`, { email });
+    return response.data;
+  } catch (error) {
+    console.error('Resetting password failed!', error.response?.data || error);
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Unknown error occurred during password reset',
+    };
+  }
 };
-// Confirm reseting password for the user
-const confirmResetPassword = async (newPassword, access_token) => {
-  return axios
-    .post(`${API_URL}/confirm-reset-password#access_token=${access_token}`, { newPassword })
-    .then(response => response.data)
-    .catch(error => {
-      console.error('Password reset failed!', error);
-      return {
-        success: false,
-        error: error.response?.data?.error || 'Unknown error',
-      };
+
+// Function to confirm password reset for the user
+const confirmResetPassword = async (access_token, newPassword) => {
+  try {
+    const response = await axios.post(`${API_URL}/confirm-reset-password`, {
+      access_token: access_token,
+      new_password: newPassword,
     });
+    return response.data;
+  } catch (error) {
+    console.error('Password reset confirmation failed!', error.response?.data || error);
+    return {
+      success: false,
+      error:
+        error.response?.data?.error || 'Unknown error occurred during password reset confirmation',
+    };
+  }
 };
 // Exporting functions (for call AuthService.func)
 const AuthService = {

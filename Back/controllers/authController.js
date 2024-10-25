@@ -57,43 +57,89 @@ export const signOut = async (req, res) => {
     return res.status(200).json({ message: 'Sign out successfully!' });
 };
 // // Reset Pwd Controller 
+// export const resetPassword = async (req, res) => {
+//   const { email } = req.body;
+//   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+//     return res.status(400).json({ success: false, error: 'Invalid email address.' });
+//   }
+//   const redirectToUrl = `${FRONT_URL}/auth/confirm-reset-password`;
+//   try {
+//     const { data, error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: redirectToUrl });
+//     if (error) {
+//       return res.status(400).json({ success: false, error: error.message });
+//     }
+//     return res.status(200).json({ success: true, message: 'Password reset email sent successfully.' }); 
+//   } catch (error) {
+//     console.error('Server error during password reset:', error);
+//     return res.status(500).json({ success: false, error: 'Server error' });
+//   }
+// };
+// // Confirm Reset Password for the user
+// export const confirmResetPassword = async (req, res) => {
+//   const { newPassword } = req.body; // New password from the request body
+//   const { access_token } = req.query; // Token from the query string
+//   // Validate that both token and new password are provided
+//   if (!newPassword || !access_token) {
+//     return res.status(400).json({ success: false, error: 'New password and token are required.' });
+//   }
+//   try {
+//     // Step 1: Authenticate the user using the token
+//     const { error: sessionError } = await supabase.auth.setSession(access_token);
+//     if (sessionError) {
+//       return res.status(400).json({ success: false, error: 'Invalid or expired token.' });
+//     }
+//     // Step 2: Update the user's password after successful authentication
+//     const { data, error } = await supabase.auth.updateUser({ password: newPassword });
+//     if (error) {
+//       return res.status(400).json({ success: false, error: error.message });
+//     }
+//     // Respond with success if password update is successful
+//     return res.status(200).json({ success: true, message: 'Password reset successfully.' });
+//   } catch (error) {
+//     console.error('Server Error:', error);
+//     return res.status(500).json({ success: false, error: 'Server error.' });
+//   }
+// };
+// Function to initiate the password reset process
 export const resetPassword = async (req, res) => {
   const { email } = req.body;
+
+  // Validate email format
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
     return res.status(400).json({ success: false, error: 'Invalid email address.' });
   }
+
+  // URL to redirect after password reset
   const redirectToUrl = `${FRONT_URL}/auth/confirm-reset-password`;
   try {
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: redirectToUrl });
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: redirectToUrl });
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }
-    return res.status(200).json({ success: true, message: 'Password reset email sent successfully.' }); 
+    return res.status(200).json({ success: true, message: 'Password reset email sent successfully.' });
   } catch (error) {
     console.error('Server error during password reset:', error);
-    return res.status(500).json({ success: false, error: 'Server error' });
+    return res.status(500).json({ success: false, error: 'Internal server error.' });
   }
 };
-// Confirm Reset Password for the user
+
+// Function to confirm the password reset and set the new password
 export const confirmResetPassword = async (req, res) => {
-  const { newPassword } = req.body; // New password from the request body
-  const { access_token } = req.query; // Token from the query string
-  // Validate that both token and new password are provided
+  const { newPassword } = req.body; // This should match the key you're sending
+  const { access_token } = req.query; // Ensure the token is coming from the correct source
+
   if (!newPassword || !access_token) {
     return res.status(400).json({ success: false, error: 'New password and token are required.' });
   }
   try {
-    // Step 1: Authenticate the user using the token
     const { error: sessionError } = await supabase.auth.setSession(access_token);
     if (sessionError) {
       return res.status(400).json({ success: false, error: 'Invalid or expired token.' });
-    }
-    // Step 2: Update the user's password after successful authentication
-    const { data, error } = await supabase.auth.updateUser({ password: newPassword });
+    } 
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }
-    // Respond with success if password update is successful
     return res.status(200).json({ success: true, message: 'Password reset successfully.' });
   } catch (error) {
     console.error('Server Error:', error);

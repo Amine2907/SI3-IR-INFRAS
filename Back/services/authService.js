@@ -12,8 +12,8 @@ const handleError = (error) => {
   return { success: false, error: error.response ? error.response.data.error : error.message };
 };
 // Sign in the user 
-const signIn = (email, password) => {
-  return axios
+const signIn = async (email, password) => {
+  return await axios
     .post(`${API_URL}/signin`, { email, password })
     .then(response => {
       if (response.data.user) {
@@ -27,8 +27,8 @@ const signIn = (email, password) => {
     });
 };
 // Sign Up the user 
-const signUp = (FullName, email, password) => {
-  return axios
+const signUp = async (FullName, email, password) => {
+  return await axios
     .post(`${API_URL}/signup`, { FullName, email, password })
     .then(response => response.data)
     .catch(error => {
@@ -44,7 +44,7 @@ const isAuthenticated = () => {
 // Password reset for the user
 const resetPassword = async (email) => {
   return axios
-    .post(`${API_URL}/reset-password#access_token=${access_token}`, { email })
+    .post(`${API_URL}/reset-password`, { email })
     .then(response => response.data)
     .catch(error => {
       console.error('Reseting password failed !', error.response?.data || error);
@@ -54,7 +54,7 @@ const resetPassword = async (email) => {
 // Confirm reseting password for the user 
 const confirmResetPassword = async (newPassword, access_token) => {
   return axios
-    .post(`${API_URL}/confirm-reset-password#access_token=${access_token}`, { newPassword})
+    .post(`${API_URL}/confirm-reset-password?access_token=${access_token}`, { newPassword})
     .then(response => response.data)
     .catch(error => {
       console.error('Password reset failed!', error);
