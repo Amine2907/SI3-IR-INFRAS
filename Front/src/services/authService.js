@@ -30,9 +30,14 @@ const signIn = async (email, password) => {
     });
 };
 // Sign Up the user
-const signUp = async (FullName, email, password) => {
+const signUp = async (firstName, lastName, email, password) => {
   try {
-    const response = await axios.post(`${API_URL}/signup`, { FullName, email, password });
+    const response = await axios.post(`${API_URL}/signup`, {
+      firstName,
+      lastName,
+      email,
+      password,
+    });
     return response.data;
   } catch (error) {
     console.error('Sign-up error:', error.response?.data.error || error.message);

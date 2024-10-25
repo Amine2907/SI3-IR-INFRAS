@@ -13,15 +13,17 @@ import { configDotenv } from "dotenv";
 configDotenv();
 const FRONT_URL= process.env.FrontUrl;
 export const signUp = async (req, res) => {
-  const { email, password,FullName} = req.body;
+  const {firstName,lastName,email, password} = req.body;
+  console.log(req.body);
   const EmailConfirmURL = `${FRONT_URL}/auth/confirm-sign-up`
-    if (!FullName || !email || !password) {
+    if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({ success: false, error: 'Tous les champs sont obligatoires.' });
   }
   try {
     const { user, error } = await supabase.auth.signUp({ email, password , options: {
       data: {
-        FullName,
+        firstName,
+        lastName,
         emailRedirectTo: EmailConfirmURL,
       },
     },});

@@ -27,14 +27,14 @@ const signIn = async (email, password) => {
     });
 };
 // Sign Up the user 
-const signUp = async (FullName, email, password) => {
-  return await axios
-    .post(`${API_URL}/signup`, { FullName, email, password })
-    .then(response => response.data)
-    .catch(error => {
-      console.error('Sign-up error:', error.response?.data.error || error.message);
-      return { success: false, error: error.response?.data.error || 'Unknown error' };
-    });
+const signUp = async (firstName , lastName , email, password) => {
+  try {
+    const response = await axios.post(`${API_URL}/signup`, { firstName,lastName, email, password });
+    return response.data;
+  } catch (error) {
+    console.error('Sign-up error:', error.response?.data.error || error.message);
+    return { success: false, error: error.response?.data.error || 'Unknown error' };
+  }
 };
 // Check if the user is authenticated
 const isAuthenticated = () => {

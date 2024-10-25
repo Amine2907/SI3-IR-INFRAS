@@ -39,6 +39,10 @@ app.use('/api/user',usersRoute);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 // Start Server
 app.listen(5000, () => {
     console.log('Backend running on http://localhost:5000');

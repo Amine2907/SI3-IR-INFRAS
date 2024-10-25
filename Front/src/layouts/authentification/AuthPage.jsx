@@ -18,7 +18,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'context/Auth/AuthContext';
 import { Alert, AlertDescription } from 'components/ui/alert';
 export default function AuthPage() {
-  const [FullName, setFullName] = useState('');
+  const [firstName, setfirstName] = useState('');
+  const [lastName, setlastName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -59,15 +60,20 @@ export default function AuthPage() {
   const handleSignUp = async e => {
     e.preventDefault();
     try {
-      const response = await AuthService.signUp(FullName, email, password);
+      const response = await AuthService.signUp(firstName, lastName, email, password);
       if (response && response.success) {
         if (response.data && response.data.message) {
           setMessage(response.data.message);
           setEmail('');
           setPassword('');
-          setFullName('');
+          setfirstName('');
+          setlastName('');
         } else {
           setMessage('Inscription réussie ! Veuillez vérifier votre e-mail.');
+          setEmail('');
+          setPassword('');
+          setfirstName('');
+          setlastName('');
         }
         setError('');
       } else {
@@ -234,13 +240,23 @@ export default function AuthPage() {
                 <form>
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
+                      <Label htmlFor="name">First Name </Label>
                       <Input
-                        id="signup-name"
+                        id="signup-firstName"
                         placeholder="John Doe"
                         required
-                        value={FullName}
-                        onChange={e => setFullName(e.target.value)}
+                        value={firstName}
+                        onChange={e => setfirstName(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Last Name</Label>
+                      <Input
+                        id="signup-lastName"
+                        placeholder="John Doe"
+                        required
+                        value={lastName}
+                        onChange={e => setlastName(e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
