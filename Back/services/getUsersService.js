@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/users';
-const getUserService = async () => {
+const getUser = async () => {
     try {
         const response = await axios.get(`${API_URL}`);
         return { success: true, data: response.data };
@@ -10,7 +10,7 @@ const getUserService = async () => {
     }
 };
 const getUsersService = {
-    getUserService,
+    getUser,
 };
 
 export default getUsersService;

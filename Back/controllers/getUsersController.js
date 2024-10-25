@@ -1,7 +1,7 @@
 
 import getUsersModel from "../models/getUsersModel.js";
 const getAllUsers = async(req,res) => {
-    const result = await getUsersModel.getAllUsers();
+    const result = await getUsersModel.getUserInfo();
     if(!result.success){
         return res.status(400).json({error : result.error});
     }

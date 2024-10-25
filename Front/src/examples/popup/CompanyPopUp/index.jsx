@@ -50,7 +50,6 @@ const CompanyModal = ({ company, onSave, onClose }) => {
       setIsActive(!isActive);
     }
   };
-
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
