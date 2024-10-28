@@ -27,10 +27,10 @@ export { default as settingsService } from './services/settingsService.js';
 const app = express();
 app.use(cors({
   origin: 'http://localhost:3000',
-  credentials: true,
 }));
-app.use(bodyParser.json());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 // Use Routes
 app.use('/api/auth', authRoutes); 
 app.use('/api/dashboard', dashboardRoutes);
@@ -39,7 +39,6 @@ app.use('/api/contacts',contactsRoutes);
 app.use('/api/companies',companiesRoutes);
 app.use('/api/user',usersRoute);
 app.use('/api/settings',settingsRoutes);
-// app.use('/api/users',UsersRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });

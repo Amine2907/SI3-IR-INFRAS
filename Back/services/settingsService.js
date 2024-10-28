@@ -47,24 +47,34 @@ const updatePassword = async (currentPassword, newPassword) => {
     }
 };
 // update user account infromations 
-const updateUser = async (userId, lastname, firstname, date_de_naissance, entreprise, department, genre, is_active) => {
+// const updateUser = async (userId, lastname, firstname, date_de_naissance, entreprise, department, genre, is_active) => {
+//     try {
+//         const response = await axios.put(`${API_BASE_URL}/account/${userId}`, {   
+//             lastname,                         
+//             firstname,                      
+//             date_de_naissance,
+//             entreprise,
+//             department,
+//             genre,
+//             is_active
+//         }, {
+//             withCredentials: true,
+//         });
+//         return { success: true, data: response.data };
+//     } catch (error) {
+//         return { success: false, error: error.response?.data || error.message };    
+//         }
+// }  
+const updateUser = async (userId, userData) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/account/${userId}`, {   
-            lastname,                         
-            firstname,                      
-            date_de_naissance,
-            entreprise,
-            department,
-            genre,
-            is_active
-        }, {
+        const response = await axios.put(`${API_BASE_URL}/account/${userId}`, userData, {
             withCredentials: true,
         });
         return { success: true, data: response.data };
     } catch (error) {
-        return { success: false, error: error.response?.data || error.message };    
-        }
-}  
+        return { success: false, error: error.response?.data || error.message };
+    }
+};
 // 3. List All Users
 const listUsers = async () => {
     try {

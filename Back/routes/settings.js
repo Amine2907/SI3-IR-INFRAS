@@ -8,13 +8,10 @@
 import express from 'express';
 import settingsController from '../controllers/settingsController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
-
 const router = express.Router();
 
 router.get('/account/:userId', authMiddleware, settingsController.getAccountInfo);
-router.put('/account',authMiddleware,settingsController.updateUserAccount);
+router.put('/account/:userId',authMiddleware,settingsController.updateUserAccount);
 router.put('/account/password', authMiddleware, settingsController.updatePassword);
 router.get('/users', authMiddleware, settingsController.listUsers);
-
-
 export default router;

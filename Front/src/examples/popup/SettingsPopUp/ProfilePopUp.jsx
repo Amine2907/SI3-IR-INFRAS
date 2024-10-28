@@ -5,17 +5,21 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Select, MenuItem, FormControl } from '@mui/material';
-const ProfileModal = ({ entite, onSave, onClose }) => {
-  const [formData, setFormData] = useState(entite || {});
-  const [isActive] = useState(entite ? entite.is_active : true);
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import { DesktopDatePicker } from '@mui/x-date-pickers';
+const ProfileModal = ({ userData, onSave, onClose }) => {
+  const [formData, setFormData] = useState(userData || {});
+  const [isActive] = useState(userData ? userData.is_active : true);
   const [errors, setErrors] = useState({});
-
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = () => {
     const newErrors = {};
-    if (!formData.nom) newErrors.nom = true;
+    if (!formData.firstname) newErrors.firstname = true;
     if (!formData.role) newErrors.role = true;
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -30,15 +34,28 @@ const ProfileModal = ({ entite, onSave, onClose }) => {
           Modifier profil
         </MDTypography>
         <MDInput
-          name="nom"
-          value={formData.nom || ''}
+          name="firstname"
+          value={formData.firstname || ''}
           onChange={handleChange}
-          placeholder="Nom*"
+          placeholder="firstname*"
           style={{
             marginBottom: '5px',
             width: '320px',
             marginTop: '10px',
-            borderColor: errors.nom ? 'red' : '',
+            borderColor: errors.firstname ? 'red' : '',
+          }}
+          required
+        />
+        <MDInput
+          name="lastname"
+          value={formData.lastname || ''}
+          onChange={handleChange}
+          placeholder="lastname*"
+          style={{
+            marginBottom: '5px',
+            width: '320px',
+            marginTop: '10px',
+            borderColor: errors.firstname ? 'red' : '',
           }}
           required
         />
@@ -52,90 +69,48 @@ const ProfileModal = ({ entite, onSave, onClose }) => {
             value={formData.role || ''}
             onChange={handleChange}
             displayEmpty
-            style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+            style={{
+              padding: '10px',
+              fontSize: '14px',
+              borderColor: errors.prefirstname ? 'red' : '',
+            }}
             required
           >
             <MenuItem value="" disabled>
-              -- Select a Role* --
+              -- Select a Gender* --
             </MenuItem>
-            <MenuItem value="Fournisseur">Fournisseur</MenuItem>
-            <MenuItem value="CSPS">CSPS</MenuItem>
-            <MenuItem value="Syndicat">Syndicat</MenuItem>
-            <MenuItem value="Pyloniste">Pyloniste</MenuItem>
-            <MenuItem value="Génie Civiliste">Génie Civiliste</MenuItem>
-            <MenuItem value="Géotechnicien">Géotechnicien</MenuItem>
-            <MenuItem value="Dronist">Dronist</MenuItem>
-            <MenuItem value="Mairie">Mairie</MenuItem>
+            <MenuItem value="Homme">Homme</MenuItem>
+            <MenuItem value="Femme">Femme</MenuItem>
           </Select>
         </FormControl>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DesktopDatePicker
+            label="Date de naissance"
+            name="Date de naissance"
+            value={formData.date_de_naissance ? dayjs(formData.date_de_naissance) : null}
+            onChange={newValue => {
+              handleChange({
+                target: {
+                  name: 'Date de naissance',
+                  value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                },
+              });
+            }}
+            style={{ marginBottom: '10px', width: '320px' }}
+          />
+        </LocalizationProvider>
         <MDInput
-          name="adresse"
-          value={formData.adresse || ''}
+          name="Entreprise"
+          value={formData.entreprise || ''}
           onChange={handleChange}
-          placeholder="Adresse"
+          placeholder="Entreprise"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <MDInput
-          name="ville"
-          value={formData.ville || ''}
+          name="Department"
+          value={formData.department || ''}
           onChange={handleChange}
-          placeholder="Ville"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="code_postal"
-          value={formData.code_postal || ''}
-          onChange={handleChange}
-          placeholder="Code Postal"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="region"
-          value={formData.region || ''}
-          onChange={handleChange}
-          placeholder="Region"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="contact"
-          value={formData.contact || ''}
-          onChange={handleChange}
-          placeholder="Conatct"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="email"
-          value={formData.email || ''}
-          onChange={handleChange}
-          placeholder="Email"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="telephone"
-          value={formData.telephone || ''}
-          onChange={handleChange}
-          placeholder="Telephone"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="site_web"
-          value={formData.site_web || ''}
-          onChange={handleChange}
-          placeholder="Site Web"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="IBAN"
-          value={formData.IBAN || ''}
-          onChange={handleChange}
-          placeholder="IBAN"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="BIC"
-          value={formData.BIC || ''}
-          onChange={handleChange}
-          placeholder="BIC"
+          placeholder="Department"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <MDButton
@@ -154,18 +129,14 @@ const ProfileModal = ({ entite, onSave, onClose }) => {
   );
 };
 ProfileModal.propTypes = {
-  entite: PropTypes.shape({
-    nom: PropTypes.string,
+  userData: PropTypes.shape({
+    firstname: PropTypes.string,
+    lastname: PropTypes.string,
     role: PropTypes.string,
-    adresse: PropTypes.string,
-    ville: PropTypes.string,
-    code_postal: PropTypes.string,
-    region: PropTypes.string,
-    contact: PropTypes.string,
+    date_de_naissance: PropTypes.string,
+    entreprise: PropTypes.string,
+    department: PropTypes.arrayOf(PropTypes.string),
     email: PropTypes.string,
-    site_web: PropTypes.string,
-    IBAN: PropTypes.string,
-    BIC: PropTypes.string,
     is_active: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,

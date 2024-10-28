@@ -21,10 +21,10 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import { Grid, Switch } from '@mui/material';
 import MDAlert from 'components/MDAlert';
+// import { Alert, AlertDescription } from 'components/ui/alert';
 // import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
 import CompanyService from 'services/CompanyService';
 import CompanyModal from '../../popup/CompanyPopUp';
-
 const companyList = () => {
   const [companies, setcompanies] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -33,6 +33,10 @@ const companyList = () => {
   const [isActive, setIsActive] = useState(true);
   useEffect(() => {
     fetchActivecompanies();
+
+    // <Alert variant="destructive" className="mt-4">
+    //   <AlertDescription>No companies found</AlertDescription>
+    // </Alert>;
   }, []);
   const handleAddcompany = () => {
     setselectedcompany(null); // Clear selected company for new entry
