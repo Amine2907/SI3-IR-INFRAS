@@ -2,7 +2,6 @@
  * This file defines the routes of the application.
  *
  */
-// Material Dashboard 2 React layouts
 import Dashboard from 'layouts/dashboard';
 import Billing from 'layouts/billing';
 import Contacts from 'layouts/contacts';

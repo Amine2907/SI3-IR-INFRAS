@@ -255,7 +255,7 @@ export default function AuthPage() {
                       <Label htmlFor="name">First Name </Label>
                       <Input
                         id="signup-firstName"
-                        placeholder="John Doe"
+                        placeholder="John"
                         required
                         value={firstName}
                         onChange={e => setfirstName(e.target.value)}
@@ -265,7 +265,7 @@ export default function AuthPage() {
                       <Label htmlFor="name">Last Name</Label>
                       <Input
                         id="signup-lastName"
-                        placeholder="John Doe"
+                        placeholder="Doe"
                         required
                         value={lastName}
                         onChange={e => setlastName(e.target.value)}

@@ -18,29 +18,21 @@ export default function PasswordReset() {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const access_token = new URLSearchParams(window.location.search).get('access_token');
-
   useEffect(() => {
     if (!access_token) {
       setError('Missing reset token. Please try the reset password process again.');
     }
   }, [access_token]);
-
   const handleSubmit = async e => {
     e.preventDefault();
-
     if (!access_token) {
       setError('Missing reset token. Please try the reset password process again.');
       return;
     }
-
     if (!password || password !== confirmPassword) {
       setError('Passwords do not match. Please try again.');
       return;
     }
-
-    console.log('Access Token:', access_token); // Log the token for debugging
-    console.log('Password:', password); // Log the password for debugging
-
     try {
       const result = await AuthService.confirmResetPassword(access_token, password);
       if (result.success) {
@@ -55,7 +47,6 @@ export default function PasswordReset() {
       setMessage(null);
     }
   };
-
   return (
     <Card className="w-[350px] mx-auto mt-16">
       <CardHeader>
