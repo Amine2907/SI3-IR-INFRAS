@@ -85,7 +85,7 @@ function Settings() {
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
   };
-  ////////////////////////////////////////
+  ////////////////////////////////////////////////////////
   useEffect(() => {
     console.log('Auth loading:', authLoading);
     console.log('User from AuthContext:', user);
@@ -195,7 +195,7 @@ function Settings() {
                 onClick={handleSavePassword}
                 variant="gradient"
                 color="dark"
-                style={{ marginLeft: '10px', marginTop: '10px' }}
+                style={{ marginTop: '5px' }}
               >
                 Save
               </MDButton>

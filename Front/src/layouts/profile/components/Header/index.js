@@ -7,9 +7,8 @@ import Tab from '@mui/material/Tab';
 import Icon from '@mui/material/Icon';
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
-import MDAvatar from 'components/MDAvatar';
 import breakpoints from 'assets/theme/base/breakpoints';
-
+import { Avatar } from '@mui/material';
 // Import your components here
 import Settings from '../Settings';
 import Users from '../Users';
@@ -77,12 +76,13 @@ function Header() {
       >
         <Grid container spacing={3} alignItems="center">
           <Grid item>
-            <MDAvatar src={''} alt="profile-image" size="xl" shadow="sm" />
+            <Avatar src={'/default-avatar.png'} size="xl" shadow="sm" />
           </Grid>
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>
+              {/* DYNAMIC VALUE HERE NEED TO BE INSERT */}
               <MDTypography variant="h5" fontWeight="medium">
-                Richard Davis
+                {'BESBES'}
               </MDTypography>
             </MDBox>
           </Grid>
@@ -122,5 +122,4 @@ function Header() {
     </MDBox>
   );
 }
-
 export default Header;
