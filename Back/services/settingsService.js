@@ -19,10 +19,6 @@ const getAccountInfo = async (userId) => {
             console.error('No token found in local storage');
             return { success: false, error: 'No token found' };
         }
-
-        console.log('Fetching account info for userId:', userId);
-        console.log('Authorization Header:', `Bearer ${token}`);
-
         const response = await axios.get(`${API_BASE_URL}/account/${userId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
