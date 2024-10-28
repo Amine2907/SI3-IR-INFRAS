@@ -46,14 +46,29 @@ export default function AuthPage() {
   // HANDLE SIGN IN HERE
   const handleSignIn = async e => {
     e.preventDefault(); // Prevent the default form submission
+
+    // Call the signIn function from your AuthService
     const response = await AuthService.signIn(email, password);
-    // Check the response
+
+    // Check if response has an error
     if (response.success === false) {
       setError('Identifiants invalides, veuillez réessayer.');
     } else {
       console.log('Connexion réussie :', response);
-      login();
-      navigate('/dashboard');
+      // Make sure you're accessing the correct structure based on your controller
+      const { user, accessToken } = response; // Adjust according to your response structure
+      // Check if accessToken is available
+      if (accessToken) {
+        // Call the login function with user and accessToken
+        login(user, accessToken);
+        // Store the access token in localStorage
+        localStorage.setItem('token', accessToken);
+        console.log('Access token stored:', accessToken);
+        navigate('/dashboard');
+      } else {
+        console.error('Access token not found in response:', response);
+        setError("Token d'accès manquant.");
+      }
     }
   };
   // HANDLE SIGN UP HERE

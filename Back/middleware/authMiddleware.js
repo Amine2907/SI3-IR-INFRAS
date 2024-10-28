@@ -1,22 +1,20 @@
-/**
- * Middleware to verify user authentication.
- * Checks for the presence of an authorization token in the request headers.
- * If the token is missing, responds with a 401 Unauthorized status.
- * Otherwise, passes control to the next middleware function.
- * 
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Express next middleware function
- */
-export const verifyAuth = (req, res, next) => {
-    // Extract token from the authorization header
-    const token = req.headers.authorization?.split(" ")[1];
-    
-    // If token is absent, respond with 401 Unauthorized
-    if (!token) {
-        return res.status(401).json({ message: "Unauthorized" });
+// authMiddleware.js
+import { supabase } from '../config/supabaseClient.js';
+const authMiddleware = async (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1]; // Get the Bearer token
+
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized: No token provided' });
+  }
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    if (error || !user) {
+      return res.status(401).json({ error: 'Unauthorized: Invalid token' });
     }
-    
-    // Proceed to the next middleware
+    req.user = user;
     next();
+  } catch (err) {
+    return res.status(401).json({ error: 'Unauthorized: Error processing token' });
+  }
 };
+export default authMiddleware;

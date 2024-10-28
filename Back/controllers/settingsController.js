@@ -41,19 +41,19 @@ const updatePassword = async (req, res) => {
     }
     res.status(200).json({ message: "Password updated successfully." });
 };
-// 3. List All Users
-const listUsers = async (req, res) => {
-    const result = await settingsModel.listUsers();
-    
+//update User Account informations
+const updateUserAccount = async (req,res) => {
+    const userId = req.user.id;
+    const { lastname, firstname, date_de_naissance, entreprise, department, genre, is_active } = req.body;
+    const result = await settingsModel.updateUser(userId, lastname, firstname, date_de_naissance, entreprise, department, genre, is_active);
     if (!result.success) {
         return res.status(400).json({ error: result.error });
     }
-    
-    res.status(200).json(result.data);
-};
-// 4. List All Companies
-const listCompanies = async (req, res) => {
-    const result = await settingsModel.listCompanies();
+    res.status(200).json({ message: "User account updated successfully." });
+}
+// 3. List All Users
+const listUsers = async (req, res) => {
+    const result = await settingsModel.listUsers();
     
     if (!result.success) {
         return res.status(400).json({ error: result.error });
@@ -66,7 +66,6 @@ const settingsController = {
     getAccountInfo,
     updatePassword,
     listUsers,
-    listCompanies
+    updateUserAccount,
 };
-
 export default settingsController;

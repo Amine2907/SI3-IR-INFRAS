@@ -6,14 +6,14 @@
  * - `listCompanies`: lists all the companies in the database
  * @module settingsModel
  */
-import { supabase } from "../Config/supabaseClient";
+import { supabase } from "../config/supabaseClient.js";
 
 //Get Account informations 
 const getAccountInfo = async(userId) => {
     try {
         const {data,error} = await supabase
-        .from('auth.users')
-        .select('fields_here') // need to update auth.users 
+        .from('ausers')
+        .select('*')
         .eq('id',userId)
         .single();
         if(error){
@@ -24,7 +24,24 @@ const getAccountInfo = async(userId) => {
         return {success:false,error:error.message};
     }
 };
-
+//update Account informations 
+const updateUser = async (req,res) => {
+    const userId = req.user.id;
+    const { lastname, firstname, date_de_naissance, entreprise, department, genre, is_active } = req.body;
+    try {
+        const {data,error} = await supabase
+        .from('ausers')
+        .update({ lastname, firstname, date_de_naissance, entreprise, department, genre, is_active })
+        .eq('id',userId)
+        .single();
+        if(error){  
+            throw error ;   
+        }
+        return {success:true , data};           
+    }catch(error){
+        return {success:false,error:error.message};
+    }
+}
 // Update password 
 const updatePassword = async(userId,newPassword) =>{
     try {
@@ -41,7 +58,7 @@ const updatePassword = async(userId,newPassword) =>{
 const getCurrentPassword = async(userId) => {
     try {
         const{data,error} = await supabase
-        .from('auth.users')
+        .from('ausers')
         .select('password')
         .eq('id',userId)
         .single();
@@ -57,23 +74,9 @@ const getCurrentPassword = async(userId) => {
 const listUsers = async() => {
     try {
         const{data,error} = await supabase 
-        .from('auth.users')
-        .select('fields_here');
+        .from('ausers')
+        .select('*');
         
-        if(error){
-            throw error ;
-        }
-        return {success:true , data };
-    }catch(error){
-        return {success:false,error:error.message};
-    }
-};
-// List all companies 
-const listCompanies = async() => {
-    try {
-        const {data,error} = await supabase
-        .from('Entreprise')
-        .select('nom,site_web,siret,is_active');
         if(error){
             throw error ;
         }
@@ -86,7 +89,7 @@ const settingsModel = {
     getAccountInfo,
     getCurrentPassword,
     updatePassword,
-    listCompanies,
     listUsers,
+    updateUser,
 }
 export default settingsModel; 
