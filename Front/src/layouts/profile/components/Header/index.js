@@ -16,6 +16,7 @@ import Companies from '../Companies';
 function Header() {
   const [tabsOrientation, setTabsOrientation] = useState('horizontal');
   const [tabValue, setTabValue] = useState(0);
+  const [userData, setUserData] = useState({ firstname: '', lastname: '' });
 
   useEffect(() => {
     function handleTabsOrientation() {
@@ -36,7 +37,7 @@ function Header() {
   const renderTabContent = () => {
     switch (tabValue) {
       case 0:
-        return <Settings />;
+        return <Settings setUserData={setUserData} />;
       case 1:
         return <Users />;
       case 2:
@@ -45,7 +46,6 @@ function Header() {
         return null;
     }
   };
-
   return (
     <MDBox position="relative" mb={5}>
       <MDBox
@@ -82,7 +82,7 @@ function Header() {
             <MDBox height="100%" mt={0.5} lineHeight={1}>
               {/* DYNAMIC VALUE HERE NEED TO BE INSERT */}
               <MDTypography variant="h5" fontWeight="medium">
-                {'BESBES'}
+                {`${userData.firstname} ${userData.lastname}`}
               </MDTypography>
             </MDBox>
           </Grid>

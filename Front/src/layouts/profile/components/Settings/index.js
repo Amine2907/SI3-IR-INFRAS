@@ -26,10 +26,11 @@ import MDAlert from 'components/MDAlert';
 import { Grid, TextField, Typography } from '@mui/material';
 import MDButton from 'components/MDButton';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
-function Settings() {
+import PropTypes from 'prop-types';
+function Settings({ setUserData }) {
   const { user, loading: authLoading } = useAuth();
   const [showModal, setShowModal] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const [userData, setLocalUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -48,6 +49,7 @@ function Settings() {
         console.log('API response:', response); // Log full response for inspection
 
         if (response.success && response.data) {
+          setLocalUserData(response.data);
           setUserData(response.data);
         } else {
           // Ensure we are setting an error message as a string
@@ -297,4 +299,7 @@ function Settings() {
     </div>
   );
 }
+Settings.propTypes = {
+  setUserData: PropTypes.func.isRequired,
+};
 export default Settings;
