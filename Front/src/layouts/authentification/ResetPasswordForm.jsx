@@ -1,3 +1,11 @@
+/**
+ * A form to reset a user's password. It takes the user's ID from the URL
+ * parameter, and upon submission, it checks the password complexity and
+ * verifies that the passwords match. If both checks pass, it calls the
+ * updatePassword method from the AuthService to update the user's password.
+ *
+ * @return {React.ReactElement} The password reset form.
+ */
 import React, { useState, useEffect } from 'react';
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';

@@ -1,3 +1,10 @@
+/**
+ * A modal to edit a user's profile information.
+ * @param {Object} userData The user object returned by the useAuth hook.
+ * @param {Function} onSave A function that is called when the user clicks the save button.
+ * @param {Function} onClose A function that is called when the user clicks the close button.
+ * @returns A JSX element representing the modal.
+ */
 import React, { useState } from 'react';
 import styles from './ProfilePopUp.module.css';
 import PropTypes from 'prop-types';

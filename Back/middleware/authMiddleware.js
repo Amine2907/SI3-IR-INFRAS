@@ -1,3 +1,13 @@
+/**
+ * Express middleware that verifies a Bearer token in the Authorization header
+ * and attaches the authenticated user to the request object.
+ * If the token is invalid or no user is found, a 401 Unauthorized response is returned.
+ * @function
+ * @param {Object} req - The Express request object
+ * @param {Object} res - The Express response object
+ * @param {Function} next - The next middleware or route handler in the chain
+ * @returns {Promise<void>}
+ */
 import { supabase } from '../config/supabaseClient.js';
 
 const authMiddleware = async (req, res, next) => {

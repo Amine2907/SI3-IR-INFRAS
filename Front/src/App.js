@@ -1,3 +1,12 @@
+/**
+ * This function is the main entry point for the application.
+ * It uses the MaterialUIController to get the current state
+ * of the theme and sidenav, and renders the main components
+ * based on the current route.
+ *
+ * @function App
+ * @returns {ReactElement} The main application component.
+ */
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';

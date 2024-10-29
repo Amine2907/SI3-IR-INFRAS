@@ -1,3 +1,11 @@
+/**
+ * The AuthPage component is the main entry point for authentication.
+ *
+ * It provides a form to sign in or sign up, and handles the logic for
+ * authenticating and authorizing users.
+ *
+ * @returns {JSX.Element} The AuthPage component.
+ */
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Button } from 'components/ui/button';

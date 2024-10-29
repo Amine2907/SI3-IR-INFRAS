@@ -59,24 +59,6 @@ const updateUser = async (userId, userData) => {
         return { success: false, error: error.message };
     }
 };
-//////////////////////////////////////////////////////////////
-// Update password 
-// const updatePassword = async (userId, newPassword) => {
-//     try {
-//         // Update the user's password
-//         const { error } = await supabase.auth.updateUser({
-//             password: newPassword
-//         });
-//         // Check for errors
-//         if (error) {
-//             throw error; 
-//         }
-//         return { success: true };
-//     } catch (error) {
-//         // Return success status and error message if any
-//         return { success: false, error: error.message };
-//     }
-// };
 // List all users
 // in this version of code im going to only lit the user that is connected to the account , otherwise im going to list all the users for the admin or the company admin when changing this web application to SAAS 
 const listUsers = async() => {

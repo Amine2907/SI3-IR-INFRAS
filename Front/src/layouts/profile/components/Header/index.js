@@ -1,14 +1,14 @@
+/**
+ * @function Header
+ * @description This function returns the header component, which shows the user's name and avatar,
+ *              and allows the user to switch between settings, users, and companies.
+ * @returns {ReactElement} The header component.
+ */
 import { useState, useEffect } from 'react';
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
-import AppBar from '@mui/material/AppBar';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Icon from '@mui/material/Icon';
+import { Card, Grid, AppBar, Tabs, Tab, Icon, Avatar } from '@mui/material';
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import breakpoints from 'assets/theme/base/breakpoints';
-import { Avatar } from '@mui/material';
 // Import your components here
 import Settings from '../Settings';
 import Users from '../Users';

@@ -1,3 +1,17 @@
+/**
+ * CompanyModal component
+ *
+ * This component renders a modal window to add or edit a company.
+ * It displays input fields for name, site web, siret, and department.
+ * There is also a switch to toggle the company's active status.
+ * The component accepts three props: company (the company object to edit), onSave (callback to save the company), and onClose (callback to close the modal).
+ * The component uses Material UI components for styling and layout.
+ *
+ * @param {Object} company - The company object to edit.
+ * @param {Function} onSave - Callback to save the company.
+ * @param {Function} onClose - Callback to close the modal.
+ * @returns {ReactElement} The CompanyModal React element.
+ */
 import React, { useState } from 'react';
 import styles from './index.module.css';
 import PropTypes from 'prop-types';
@@ -17,7 +31,6 @@ const DEPARTMENTS = [
   'Énergie',
   'Finance',
 ];
-
 const CompanyModal = ({ company, onSave, onClose }) => {
   const [formData, setFormData] = useState(company || {});
   const [isActive, setIsActive] = useState(company ? company.is_active : true);
