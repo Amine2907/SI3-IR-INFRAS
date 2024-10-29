@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from 'components/ui/alert';
 import MDAlert from 'components/MDAlert';
 import { Grid, TextField, Typography } from '@mui/material';
 import MDButton from 'components/MDButton';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 function Settings() {
   const { user, loading: authLoading } = useAuth();
   const [showModal, setShowModal] = useState(false);
@@ -18,6 +19,7 @@ function Settings() {
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   // FETCH USER DATA FIRST COMPONENT
   const fetchUserData = useCallback(async () => {
@@ -104,6 +106,9 @@ function Settings() {
       console.error('Error changing password:', error); // Log error for debugging
       setAlert({ show: true, message: `Error: ${error.message}`, type: 'error' });
     }
+  };
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
   /////////////////////////////////////////////////////
   // Saving User Data Modifications
@@ -215,7 +220,7 @@ function Settings() {
                 label="Current Password"
                 variant="outlined"
                 fullWidth
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={currentPassword}
                 onChange={e => setCurrentPassword(e.target.value)}
                 sx={{ mb: 2 }}
@@ -224,7 +229,7 @@ function Settings() {
                 label="New Password"
                 variant="outlined"
                 fullWidth
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={newPassword}
                 onChange={e => setNewPassword(e.target.value)}
                 sx={{ mb: 2 }}
@@ -233,7 +238,7 @@ function Settings() {
                 label="Confirm New Password"
                 variant="outlined"
                 fullWidth
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={confirmNewPassword}
                 onChange={e => setConfirmNewPassword(e.target.value)}
                 sx={{ mb: 2 }}
@@ -245,6 +250,17 @@ function Settings() {
                 style={{ marginTop: '5px' }}
               >
                 Save
+              </MDButton>
+              <MDButton
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
+              >
+                {showPassword ? (
+                  <EyeOffIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
               </MDButton>
             </MDBox>
           </Grid>

@@ -115,7 +115,7 @@ export const resetPassword = async (req, res) => {
   // URL to redirect after password reset
   const redirectToUrl = `${FRONT_URL}/auth/confirm-reset-password`;
   try {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: redirectToUrl });
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: redirectToUrl  });
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }
