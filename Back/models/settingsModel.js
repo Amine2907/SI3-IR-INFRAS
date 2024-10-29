@@ -24,24 +24,8 @@ const getAccountInfo = async(userId) => {
         return {success:false,error:error.message};
     }
 };
-//update Account informations 
-// const updateUser = async (req,res) => {
-//     const userId = req.user?.id;
-//     const userData = { firstname, lastname, date_de_naissance, entreprise, department, genre, is_active } = req.body;
-//     try {
-//         const {data,error} = await supabase
-//         .from('ausers')
-//         .update(userData)
-//         .eq('id',userId)
-//         .single();
-//         if(error){  
-//             throw error ;   
-//         }
-//         return {success:true , data};           
-//     }catch(error){
-//         return {success:false,error:error.message};
-//     }
-// };
+// Update user account infromations
+// only the admin or company admin can change the user is_active state and Role that case will be handled after in the application
 const updateUser = async (userId, userData) => {
     if (!userId) {
         console.error("User ID is missing.");
@@ -91,7 +75,7 @@ const updatePassword = async(userId,newPassword) =>{
 const getCurrentPassword = async(userId) => {
     try {
         const{data,error} = await supabase
-        .from('ausers')
+        .from('auth.users')
         .select('password')
         .eq('id',userId)
         .single();
@@ -103,7 +87,8 @@ const getCurrentPassword = async(userId) => {
         return {success:false,error:error.message};
     }
 };
-// List all users 
+// List all users
+// in this version of code im going to only lit the user that is connected to the account , otherwise im going to list all the users for the admin or the company admin when changing this web application to SAAS 
 const listUsers = async() => {
     try {
         const{data,error} = await supabase 

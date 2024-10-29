@@ -64,14 +64,14 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           required
         >
           <Select
-            name="gender"
-            value={formData.role || ''}
+            name="genre"
+            value={formData.genre || ''}
             onChange={handleChange}
             displayEmpty
             style={{
               padding: '10px',
               fontSize: '14px',
-              borderColor: errors.prefirstname ? 'red' : '',
+              borderColor: errors.genre ? 'red' : '',
             }}
             required
           >
@@ -90,7 +90,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
             onChange={newValue => {
               handleChange({
                 target: {
-                  name: 'Date de naissance',
+                  name: 'date_de_naissance',
                   value: newValue ? newValue.format('YYYY-MM-DD') : '',
                 },
               });
@@ -99,26 +99,22 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           />
         </LocalizationProvider>
         <MDInput
-          name="Entreprise"
+          name="entreprise"
           value={formData.entreprise || ''}
           onChange={handleChange}
           placeholder="Entreprise"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
-        <FormControl
-          fullWidth
-          style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-          required
-        >
+        <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
           <Select
-            name="Department"
+            name="department"
             value={formData.department || ''}
             onChange={handleChange}
             displayEmpty
             style={{
               padding: '10px',
               fontSize: '14px',
-              borderColor: errors.prefirstname ? 'red' : '',
+              borderColor: errors.department ? 'red' : '',
             }}
             required
           >
@@ -154,7 +150,7 @@ ProfileModal.propTypes = {
   userData: PropTypes.shape({
     firstname: PropTypes.string,
     lastname: PropTypes.string,
-    role: PropTypes.string,
+    genre: PropTypes.string,
     date_de_naissance: PropTypes.string,
     entreprise: PropTypes.string,
     department: PropTypes.arrayOf(PropTypes.string),

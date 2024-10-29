@@ -61,6 +61,7 @@ const updateUserAccount = async (req, res) => {
     res.status(200).json({ message: "User account updated successfully." });
 };
 // 3. List All Users
+// in this version of code im going to only lit the user that is connected to the account , otherwise im going to list all the users for the admin or the company admin when changing this web application to SAAS 
 const listUsers = async (req, res) => {
     const result = await settingsModel.listUsers();
     

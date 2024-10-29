@@ -45,40 +45,7 @@ const updatePassword = async (currentPassword, newPassword) => {
     return { success: false, error: error.response?.data || error.message };
   }
 };
-// update user account infromations
-// const updateUser = async (
-//   userId,
-//   lastname,
-//   firstname,
-//   date_de_naissance,
-//   entreprise,
-//   department,
-//   genre,
-//   is_active
-// ) => {
-//   try {
-//     const response = await axios.put(
-//       `${API_BASE_URL}/account/${userId}`,
-//       {
-//         lastname,
-//         firstname,
-//         date_de_naissance,
-//         entreprise,
-//         department,
-//         genre,
-//         is_active,
-//       },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${localStorage.getItem('token')}`,
-//         },
-//       }
-//     );
-//     return { success: true, data: response.data };
-//   } catch (error) {
-//     return { success: false, error: error.response?.data || error.message };
-//   }
-// };
+// 3. Update User Account informations
 const updateUser = async (userId, userData) => {
   try {
     const response = await axios.put(`${API_BASE_URL}/account/${userId}`, userData, {

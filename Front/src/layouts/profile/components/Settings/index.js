@@ -19,6 +19,7 @@ function Settings() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  // FETCH USER DATA FIRST COMPONENT
   const fetchUserData = useCallback(async () => {
     if (user?.id) {
       try {
@@ -59,23 +60,24 @@ function Settings() {
   const handleSave = async data => {
     let result;
     let successMessage = '';
+    console.log('Data to save:', data); // Log data being saved
     try {
       if (selectedUser) {
         // Update user
         result = await settingsService.updateUser(selectedUser.id, data);
+        console.log('Update user response:', result); // Log the API response
         successMessage = 'User updated successfully!';
       }
-      // Check if result is defined and has the success property
       if (result && result.success) {
         setAlert({ show: true, message: successMessage, type: 'success' });
+        // await fetch User Data to view directly the modifications
+        await fetchUserData();
       } else {
-        // Handle case where result is undefined or does not have success
         const errorMessage = result?.error || 'Unknown error occurred while updating user.';
         setAlert({ show: true, message: `Error: ${errorMessage}`, type: 'error' });
       }
     } catch (error) {
-      // Catch any errors from the updateUser call
-      console.error('Error updating user:', error); // Log the error
+      console.error('Error updating user:', error);
       setAlert({ show: true, message: `Error: ${error.message}`, type: 'error' });
     } finally {
       handleModalClose(); // Ensure modal closes regardless of outcome
@@ -94,8 +96,11 @@ function Settings() {
       fetchUserData();
     }
   }, [authLoading, fetchUserData]);
-
-  const handleEditClick = () => setShowModal(true) && setSelectedUser(userData);
+  //////////////////////////////////////////////////////
+  const handleEditClick = () => {
+    setSelectedUser(userData); // Set the user data to be edited
+    setShowModal(true); // Show the modal
+  };
   const handleModalClose = () => setShowModal(false);
   // Handle loading state
   if (authLoading || loading)
@@ -151,11 +156,7 @@ function Settings() {
               shadow={false}
             />
             {showModal && (
-              <ProfileModal
-                userData={selectedUser}
-                onSave={handleSave}
-                onClose={handleModalClose}
-              />
+              <ProfileModal userData={userData} onSave={handleSave} onClose={handleModalClose} />
             )}
           </Grid>
           {/* Change Password Section */}
