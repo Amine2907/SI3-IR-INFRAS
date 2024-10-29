@@ -22,25 +22,34 @@ const getAccountInfo = async (req, res) => {
     
     res.status(200).json(result.data);
 };
+///////////////////////////////////////////////////////////////////////////////
 // 2. Update Password
 const updatePassword = async (req, res) => {
-    const userId = req.user.id;
-    const { currentPassword, newPassword } = req.body;
-    // Step 1: Verify the current password
-    const currentPasswordCheck = await settingsModel.getCurrentPassword(userId);
-    if (!currentPasswordCheck.success) {
-        return res.status(400).json({ error: currentPasswordCheck.error });
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user.id; // Assuming you have middleware that sets the user
+  try {
+    // Verify current password
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: req.user.email,
+      password: currentPassword,
+    });
+    if (signInError) {
+      return res.status(400).json({ error: 'Current password is incorrect.' });
     }
-    if (currentPasswordCheck.data !== currentPassword) {
-        return res.status(400).json({ error: "Current password is incorrect." });
+    // Update password
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+    if (updateError) {
+      throw updateError;
     }
-    // Step 2: Update to the new password
-    const result = await settingsModel.updatePassword(userId, newPassword);
-    if (!result.success) {
-        return res.status(400).json({ error: result.error });
-    }
-    res.status(200).json({ message: "Password updated successfully." });
+    res.status(200).json({ message: 'Password changed successfully.' });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ error: 'An error occurred while changing the password.' });
+  };
 };
+// //////////////////////////////////////////////////////////////////////////////////////
 //update User Account informations
 const updateUserAccount = async (req, res) => {
     // Log the userId from req.user to verify it's populated

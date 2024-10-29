@@ -35,36 +35,24 @@ const getAccountInfo = async (userId) => {
 // 2. Update Password
 const updatePassword = async (currentPassword, newPassword) => {
     try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found in local storage');
+            return { success: false, error: 'No token found' };
+        }
         const response = await axios.put(`${API_BASE_URL}/account/password`, {
             currentPassword,
             newPassword,
         }, {
-            withCredentials: true,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
         return { success: true, message: response.data.message };
     } catch (error) {
         return { success: false, error: error.response?.data || error.message };
     }
-};
-// update user account infromations 
-// const updateUser = async (userId, lastname, firstname, date_de_naissance, entreprise, department, genre, is_active) => {
-//     try {
-//         const response = await axios.put(`${API_BASE_URL}/account/${userId}`, {   
-//             lastname,                         
-//             firstname,                      
-//             date_de_naissance,
-//             entreprise,
-//             department,
-//             genre,
-//             is_active
-//         }, {
-//             withCredentials: true,
-//         });
-//         return { success: true, data: response.data };
-//     } catch (error) {
-//         return { success: false, error: error.response?.data || error.message };    
-//         }
-// }  
+};  
 const updateUser = async (userId, userData) => {
     try {
         const response = await axios.put(`${API_BASE_URL}/account/${userId}`, userData, {

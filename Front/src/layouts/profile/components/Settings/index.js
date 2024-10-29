@@ -49,14 +49,58 @@ function Settings() {
   }, [user]);
   /////////////////////////////////////////////////////
   const handleSavePassword = async () => {
+    const passwordComplexityCheck = password => {
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasLowerCase = /[a-z]/.test(password);
+      const hasNumbers = /\d/.test(password);
+      const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+      return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChars;
+    };
+    if (!passwordComplexityCheck(newPassword)) {
+      setAlert({
+        show: true,
+        message: 'Password must include uppercase, lowercase, number, and special character.',
+        type: 'error',
+      });
+      return;
+    }
     if (newPassword !== confirmNewPassword) {
       setAlert({ show: true, message: 'New passwords do not match.', type: 'error' });
       return;
     }
-    // LOGIC HERE
-    setAlert({ show: true, message: 'Password changed successfully.', type: 'success' });
+    if (newPassword.length < 8) {
+      // Example: Minimum password length check
+      setAlert({
+        show: true,
+        message: 'Password must be at least 8 characters long.',
+        type: 'error',
+      });
+      return;
+    }
+    try {
+      // Assuming you have a settingsService with a method to change password
+      const response = await settingsService.updatePassword({
+        currentPassword,
+        newPassword,
+      });
+      if (response.success) {
+        setAlert({ show: true, message: 'Password changed successfully.', type: 'success' });
+        // Optionally reset the password fields after successful change
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmNewPassword('');
+      } else {
+        // Handle specific error messages returned by the API
+        const errorMessage = response.error?.message || 'Failed to change password';
+        setAlert({ show: true, message: `Error: ${errorMessage}`, type: 'error' });
+      }
+    } catch (error) {
+      console.error('Error changing password:', error); // Log error for debugging
+      setAlert({ show: true, message: `Error: ${error.message}`, type: 'error' });
+    }
   };
   /////////////////////////////////////////////////////
+  // Saving User Data Modifications
   const handleSave = async data => {
     let result;
     let successMessage = '';
@@ -89,9 +133,6 @@ function Settings() {
   };
   ////////////////////////////////////////////////////////
   useEffect(() => {
-    console.log('Auth loading:', authLoading);
-    console.log('User from AuthContext:', user);
-
     if (!authLoading) {
       fetchUserData();
     }
@@ -123,7 +164,6 @@ function Settings() {
         <AlertDescription>No user data available</AlertDescription>
       </Alert>
     );
-  console.log('Rendering user data:', userData);
   return (
     <div>
       <MDBox mt={5} mb={3}>
