@@ -42,15 +42,24 @@ const updatePassword = async (req, res) => {
     res.status(200).json({ message: "Password updated successfully." });
 };
 //update User Account informations
-const updateUserAccount = async (req,res) => {
-    const userId = req.user.id;
-    const { lastname, firstname, date_de_naissance, entreprise, department, genre, is_active } = req.body;
-    const result = await settingsModel.updateUser(userId, lastname, firstname, date_de_naissance, entreprise, department, genre, is_active);
+const updateUserAccount = async (req, res) => {
+    // Log the userId from req.user to verify it's populated
+    const userId = req.user?.id;
+    // Return an error if userId is missing
+    if (!userId) {
+        return res.status(400).json({ error: "User ID is missing in the request." });
+    }
+    // Extract userData from request body
+    const userData = req.body;
+    // Call the updateUser function from the model, passing userId and userData
+    const result = await settingsModel.updateUser(userId, userData);
+    // Check for success and send an appropriate response
     if (!result.success) {
         return res.status(400).json({ error: result.error });
     }
+    // Respond with a success message
     res.status(200).json({ message: "User account updated successfully." });
-}
+};
 // 3. List All Users
 const listUsers = async (req, res) => {
     const result = await settingsModel.listUsers();

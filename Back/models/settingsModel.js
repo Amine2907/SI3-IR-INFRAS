@@ -25,21 +25,54 @@ const getAccountInfo = async(userId) => {
     }
 };
 //update Account informations 
-const updateUser = async (req,res) => {
-    const userId = req.user?.id;
-    const userData = { firstname, lastname, date_de_naissance, entreprise, department, genre, is_active } = req.body;
+// const updateUser = async (req,res) => {
+//     const userId = req.user?.id;
+//     const userData = { firstname, lastname, date_de_naissance, entreprise, department, genre, is_active } = req.body;
+//     try {
+//         const {data,error} = await supabase
+//         .from('ausers')
+//         .update(userData)
+//         .eq('id',userId)
+//         .single();
+//         if(error){  
+//             throw error ;   
+//         }
+//         return {success:true , data};           
+//     }catch(error){
+//         return {success:false,error:error.message};
+//     }
+// };
+const updateUser = async (userId, userData) => {
+    if (!userId) {
+        console.error("User ID is missing.");
+        return { success: false, error: "User ID is required" };
+    }
+    // Destructure fields from userData, if they exist
+    const { firstname, lastname, date_de_naissance, entreprise, department, genre, is_active } = userData || {};
+    // Construct the data object dynamically
+    const updateData = {
+        ...(firstname !== undefined && { firstname }),
+        ...(lastname !== undefined && { lastname }),
+        ...(date_de_naissance !== undefined && { date_de_naissance }),
+        ...(entreprise !== undefined && { entreprise }),
+        ...(department !== undefined && { department }),
+        ...(genre !== undefined && { genre }),
+        ...(is_active !== undefined && { is_active }),
+    };
     try {
-        const {data,error} = await supabase
-        .from('ausers')
-        .update(userData)
-        .eq('id',userId)
-        .single();
-        if(error){  
-            throw error ;   
+        const { data, error } = await supabase
+            .from('ausers')
+            .update(updateData)
+            .eq('id', userId);
+
+        if (error) {
+            throw error;
         }
-        return {success:true , data};           
-    }catch(error){
-        return {success:false,error:error.message};
+
+        return { success: true, data };
+    } catch (error) {
+        console.error("Error updating user:", error);
+        return { success: false, error: error.message };
     }
 };
 // Update password 

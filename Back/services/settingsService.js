@@ -68,7 +68,9 @@ const updatePassword = async (currentPassword, newPassword) => {
 const updateUser = async (userId, userData) => {
     try {
         const response = await axios.put(`${API_BASE_URL}/account/${userId}`, userData, {
-            withCredentials: true,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
         return { success: true, data: response.data };
     } catch (error) {

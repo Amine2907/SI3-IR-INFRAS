@@ -5,7 +5,6 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Select, MenuItem, FormControl } from '@mui/material';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -20,7 +19,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
   const handleSubmit = () => {
     const newErrors = {};
     if (!formData.firstname) newErrors.firstname = true;
-    if (!formData.role) newErrors.role = true;
+    if (!formData.lastname) newErrors.lastname = true;
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -65,7 +64,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           required
         >
           <Select
-            name="role"
+            name="gender"
             value={formData.role || ''}
             onChange={handleChange}
             displayEmpty
@@ -77,7 +76,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
             required
           >
             <MenuItem value="" disabled>
-              -- Select a Gender* --
+              -- Select a Gender --
             </MenuItem>
             <MenuItem value="Homme">Homme</MenuItem>
             <MenuItem value="Femme">Femme</MenuItem>
@@ -106,13 +105,36 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           placeholder="Entreprise"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
-        <MDInput
-          name="Department"
-          value={formData.department || ''}
-          onChange={handleChange}
-          placeholder="Department"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
+        <FormControl
+          fullWidth
+          style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+          required
+        >
+          <Select
+            name="Department"
+            value={formData.department || ''}
+            onChange={handleChange}
+            displayEmpty
+            style={{
+              padding: '10px',
+              fontSize: '14px',
+              borderColor: errors.prefirstname ? 'red' : '',
+            }}
+            required
+          >
+            <MenuItem value="" disabled>
+              -- Select a Department--
+            </MenuItem>
+            <MenuItem value="RH">RH</MenuItem>
+            <MenuItem value="Direction">Direction</MenuItem>
+            <MenuItem value="Contrôle De Gestion">Contrôle De Gestion</MenuItem>
+            <MenuItem value="Informatique">Informatique</MenuItem>
+            <MenuItem value="Conception">Conception</MenuItem>
+            <MenuItem value="Énergie">Énergie</MenuItem>
+            <MenuItem value="Finance">Finance</MenuItem>
+            <MenuItem value="Étude Prix">Étude Prix</MenuItem>
+          </Select>
+        </FormControl>
         <MDButton
           onClick={handleSubmit}
           variant="gradient"
