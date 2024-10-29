@@ -9,6 +9,7 @@
  * - listCompanies: lists all the companies in the database
  * @module settingsController
  */
+import { supabase } from "../config/supabaseClient.js";
 import settingsModel from "../models/settingsModel.js";
 
 // 1. Get Account Information

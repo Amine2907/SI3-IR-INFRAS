@@ -56,6 +56,7 @@ function Settings() {
       const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
       return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChars;
     };
+    // Check password complexity
     if (!passwordComplexityCheck(newPassword)) {
       setAlert({
         show: true,
@@ -64,12 +65,13 @@ function Settings() {
       });
       return;
     }
+    // Check if new passwords match
     if (newPassword !== confirmNewPassword) {
       setAlert({ show: true, message: 'New passwords do not match.', type: 'error' });
       return;
     }
+    // Check minimum password length
     if (newPassword.length < 8) {
-      // Example: Minimum password length check
       setAlert({
         show: true,
         message: 'Password must be at least 8 characters long.',
@@ -78,14 +80,18 @@ function Settings() {
       return;
     }
     try {
-      // Assuming you have a settingsService with a method to change password
-      const response = await settingsService.updatePassword({
-        currentPassword,
-        newPassword,
-      });
+      const userId = user?.id;
+      // Check if user ID is available
+      if (!userId) {
+        setAlert({ show: true, message: 'User ID is not available.', type: 'error' });
+        return; // Prevent making an API call without a user ID
+      }
+      // Call the settings service to update the password
+      const response = await settingsService.updatePassword(userId, currentPassword, newPassword);
+      // Check the response
       if (response.success) {
         setAlert({ show: true, message: 'Password changed successfully.', type: 'success' });
-        // Optionally reset the password fields after successful change
+        // Reset password fields after successful change
         setCurrentPassword('');
         setNewPassword('');
         setConfirmNewPassword('');

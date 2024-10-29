@@ -12,6 +12,6 @@ const router = express.Router();
 
 router.get('/account/:userId', authMiddleware, settingsController.getAccountInfo);
 router.put('/account/:userId',authMiddleware,settingsController.updateUserAccount);
-router.put('/account/password', authMiddleware, settingsController.updatePassword);
+router.put('/account/password/:userId', authMiddleware, settingsController.updatePassword);
 router.get('/users', authMiddleware, settingsController.listUsers);
 export default router;

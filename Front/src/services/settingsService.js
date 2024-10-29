@@ -28,7 +28,7 @@ const getAccountInfo = async userId => {
   }
 };
 // 2. Update Password
-const updatePassword = async (currentPassword, newPassword) => {
+const updatePassword = async (userId, currentPassword, newPassword) => {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -36,7 +36,7 @@ const updatePassword = async (currentPassword, newPassword) => {
       return { success: false, error: 'No token found' };
     }
     const response = await axios.put(
-      `${API_BASE_URL}/account/password`,
+      `${API_BASE_URL}/account/password/${userId}`,
       {
         currentPassword,
         newPassword,
