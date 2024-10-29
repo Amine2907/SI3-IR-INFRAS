@@ -125,27 +125,21 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({ success: false, error: 'Internal server error.' });
   }
 };
-
 // Function to confirm the password reset and set the new password
 export const confirmResetPassword = async (req, res) => {
-  const { newPassword } = req.body; // This should match the key you're sending
-  const { access_token } = req.query; // Ensure the token is coming from the correct source
-
-  if (!newPassword || !access_token) {
-    return res.status(400).json({ success: false, error: 'New password and token are required.' });
-  }
+  const {newPassword } = req.body;
+  const userId = req.user.id;
   try {
-    const { error: sessionError } = await supabase.auth.setSession(access_token);
-    if (sessionError) {
-      return res.status(400).json({ success: false, error: 'Invalid or expired token.' });
-    } 
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
-    if (error) {
-      return res.status(400).json({ success: false, error: error.message });
+    // Update password
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+    if (updateError) {
+      throw updateError;
     }
-    return res.status(200).json({ success: true, message: 'Password reset successfully.' });
+    res.status(200).json({ message: 'Password changed successfully.' });
   } catch (error) {
-    console.error('Server Error:', error);
-    return res.status(500).json({ success: false, error: 'Server error.' });
-  }
+    console.error('Error changing password:', error);
+    res.status(500).json({ error: 'An error occurred while changing the password.' });
+  };
 };

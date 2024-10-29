@@ -82,6 +82,29 @@ const confirmResetPassword = async (access_token, newPassword) => {
     };
   }
 };
+const updatePassword = async (userId, newPassword) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in local storage');
+      return { success: false, error: 'No token found' };
+    }
+    const response = await axios.post(
+      `${API_URL}/confirm-reset-password/${userId}`,
+      {
+        newPassword,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return { success: true, message: response.data.message };
+  } catch (error) {
+    return { success: false, error: error.response?.data || error.message };
+  }
+};
 // Exporting functions (for call AuthService.func)
 const AuthService = {
   signIn,
@@ -89,5 +112,6 @@ const AuthService = {
   isAuthenticated,
   resetPassword,
   confirmResetPassword,
+  updatePassword,
 };
 export default AuthService;

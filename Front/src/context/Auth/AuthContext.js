@@ -15,10 +15,20 @@ export const AuthProvider = ({ children }) => {
   const checkUser = async () => {
     const token = localStorage.getItem('token');
     if (token) {
-      const userData = JSON.parse(localStorage.getItem('user'));
-      console.log('User data from localStorage:', userData);
-      setIsAuthenticated(true);
-      setUser(userData);
+      try {
+        // You can fetch the user data based on the token here, if needed
+        const userData = JSON.parse(localStorage.getItem('user'));
+        console.log('User data from localStorage:', userData);
+        setIsAuthenticated(true);
+        setUser(userData);
+      } catch (error) {
+        console.error('Failed to parse user data', error);
+        // Handle parsing error (maybe reset authentication)
+      }
+    } else {
+      // Token is missing, maybe handle unauthenticated state
+      setIsAuthenticated(false);
+      setUser(null);
     }
     setLoading(false);
   };

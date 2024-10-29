@@ -11,42 +11,74 @@ import {
 } from 'components/ui/card';
 import { Alert, AlertDescription } from 'components/ui/alert';
 import AuthService from 'services/authService';
+import { useLocation } from 'react-router-dom';
 
 export default function PasswordReset() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const userId = queryParams.get('userId'); // Extract userId from URL
+
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const access_token = new URLSearchParams(window.location.search).get('access_token');
+
   useEffect(() => {
-    if (!access_token) {
-      setError('Missing reset token. Please try the reset password process again.');
+    // Check if userId is available
+    if (!userId) {
+      setError('Missing user ID. Please try the reset password process again.');
     }
-  }, [access_token]);
+  }, [userId]);
+
   const handleSubmit = async e => {
     e.preventDefault();
-    if (!access_token) {
-      setError('Missing reset token. Please try the reset password process again.');
+
+    // Password complexity check
+    const passwordComplexityCheck = password => {
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasLowerCase = /[a-z]/.test(password);
+      const hasNumbers = /\d/.test(password);
+      const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+      return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChars;
+    };
+
+    // Check password complexity
+    if (!passwordComplexityCheck(password)) {
+      setError('Password must include uppercase, lowercase, number, and special character.');
+      setMessage(null); // Clear any previous messages
       return;
     }
+
+    // Check if userId is available
+    if (!userId) {
+      setError('Missing user ID. Please try the reset password process again.');
+      setMessage(null); // Clear any previous messages
+      return;
+    }
+
+    // Check if passwords match
     if (!password || password !== confirmPassword) {
       setError('Passwords do not match. Please try again.');
+      setMessage(null); // Clear any previous messages
       return;
     }
+
     try {
-      const result = await AuthService.confirmResetPassword(access_token, password);
+      // Call the updatePassword method
+      const result = await AuthService.updatePassword(userId, password);
       if (result.success) {
         setMessage('Password reset successfully.');
-        setError(null);
+        setError(null); // Clear any previous errors
       } else {
         setError(result.error || 'An error occurred');
-        setMessage(null);
+        setMessage(null); // Clear any previous messages
       }
     } catch (err) {
-      setError(err.error || 'An error occurred');
-      setMessage(null);
+      setError(err.message || 'An error occurred'); // Improved error handling
+      setMessage(null); // Clear any previous messages
     }
   };
+
   return (
     <Card className="w-[350px] mx-auto mt-16">
       <CardHeader>
