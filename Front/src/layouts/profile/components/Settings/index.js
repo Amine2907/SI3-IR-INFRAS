@@ -1,3 +1,20 @@
+/**
+ * The Settings component is responsible for rendering the user's settings page.
+ *
+ * The component fetches the user's data on mount and displays it in a ProfileInfoCard.
+ * The user can edit their profile information by clicking the edit button, which opens a ProfileModal.
+ * The user can also change their password by entering their current password and the new password.
+ *
+ * @requires {Object} user - The user object returned by the useAuth hook.
+ * @requires {Boolean} loading - A boolean indicating whether the user data is being fetched.
+ * @requires {Function} fetchUserData - A function that fetches the user's data.
+ * @requires {Function} handleEditClick - A function that is called when the edit button is clicked.
+ * @requires {Function} handleModalClose - A function that is called when the modal is closed.
+ * @requires {Function} handleSave - A function that is called when the user clicks the save button.
+ * @requires {Function} handleSavePassword - A function that is called when the user clicks the save password button.
+ * @requires {Function} togglePasswordVisibility - A function that is called when the user clicks the eye button.
+ * @requires {Function} handleCloseAlert - A function that is called when the alert is closed.
+ */
 import React, { useState, useEffect, useCallback } from 'react';
 import MDBox from 'components/MDBox';
 import { useAuth } from 'context/Auth/AuthContext';
