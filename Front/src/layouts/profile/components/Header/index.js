@@ -1,51 +1,23 @@
 /**
- * @function Header
- * @description This function returns the header component, which shows the user's name and avatar,
- *              and allows the user to switch between settings, users, and companies.
- * @returns {ReactElement} The header component.
+ * Header component is responsible for rendering the header, which contains tabs with the routes to Settings, Users, and Companies.
+ * It also handles the orientation of the tabs based on the screen size, and renders the appropriate component based on the selected tab.
+ * @returns {Object} An object containing the state values and functions:
+ *   - tabsOrientation: The orientation of the tabs ('horizontal' or 'vertical')
+ *   - tabValue: The currently selected tab (0, 1, or 2)
+ *   - handleSetTabValue: A function to set the currently selected tab
+ *   - userData: The user data object
+ *   - renderTabContent: A function to render the appropriate component based on the selected tab
  */
-import { useState, useEffect } from 'react';
+import React from 'react';
 import { Card, Grid, AppBar, Tabs, Tab, Icon, Avatar } from '@mui/material';
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
-import breakpoints from 'assets/theme/base/breakpoints';
-// Import your components here
-import Settings from '../Settings';
-import Users from '../Users';
-import Companies from '../Companies';
+import HeaderFunctions from './headerFuncs';
+
 function Header() {
-  const [tabsOrientation, setTabsOrientation] = useState('horizontal');
-  const [tabValue, setTabValue] = useState(0);
-  const [userData, setUserData] = useState({ firstname: '', lastname: '' });
+  const { tabsOrientation, tabValue, handleSetTabValue, userData, renderTabContent } =
+    HeaderFunctions();
 
-  useEffect(() => {
-    function handleTabsOrientation() {
-      return window.innerWidth < breakpoints.values.sm
-        ? setTabsOrientation('vertical')
-        : setTabsOrientation('horizontal');
-    }
-
-    window.addEventListener('resize', handleTabsOrientation);
-    handleTabsOrientation();
-
-    return () => window.removeEventListener('resize', handleTabsOrientation);
-  }, []);
-
-  const handleSetTabValue = (event, newValue) => setTabValue(newValue);
-
-  // Function to render the appropriate component based on tabValue
-  const renderTabContent = () => {
-    switch (tabValue) {
-      case 0:
-        return <Settings setUserData={setUserData} />;
-      case 1:
-        return <Users />;
-      case 2:
-        return <Companies />;
-      default:
-        return null;
-    }
-  };
   return (
     <MDBox position="relative" mb={5}>
       <MDBox
@@ -80,7 +52,6 @@ function Header() {
           </Grid>
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>
-              {/* DYNAMIC VALUE HERE NEED TO BE INSERT */}
               <MDTypography variant="h5" fontWeight="medium">
                 {`${userData.firstname} ${userData.lastname}`}
               </MDTypography>

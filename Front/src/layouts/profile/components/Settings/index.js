@@ -1,204 +1,69 @@
-/**
- * The Settings component is responsible for rendering the user's settings page.
- *
- * The component fetches the user's data on mount and displays it in a ProfileInfoCard.
- * The user can edit their profile information by clicking the edit button, which opens a ProfileModal.
- * The user can also change their password by entering their current password and the new password.
- *
- * @requires {Object} user - The user object returned by the useAuth hook.
- * @requires {Boolean} loading - A boolean indicating whether the user data is being fetched.
- * @requires {Function} fetchUserData - A function that fetches the user's data.
- * @requires {Function} handleEditClick - A function that is called when the edit button is clicked.
- * @requires {Function} handleModalClose - A function that is called when the modal is closed.
- * @requires {Function} handleSave - A function that is called when the user clicks the save button.
- * @requires {Function} handleSavePassword - A function that is called when the user clicks the save password button.
- * @requires {Function} togglePasswordVisibility - A function that is called when the user clicks the eye button.
- * @requires {Function} handleCloseAlert - A function that is called when the alert is closed.
- */
-import React, { useState, useEffect, useCallback } from 'react';
+// src/components/Settings.js
+
+import React, { useEffect } from 'react';
 import MDBox from 'components/MDBox';
-import { useAuth } from 'context/Auth/AuthContext';
 import ProfileInfoCard from 'examples/Cards/InfoCards/ProfileInfoCard';
 import ProfileModal from 'examples/popup/SettingsPopUp/ProfilePopUp';
-import settingsService from 'services/settingsService';
-import { Alert, AlertDescription } from 'components/ui/alert';
-import MDAlert from 'components/MDAlert';
 import { Grid, TextField, Typography } from '@mui/material';
 import MDButton from 'components/MDButton';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import MDAlert from 'components/MDAlert';
+import { Alert, AlertDescription } from 'components/ui/alert';
 import PropTypes from 'prop-types';
-function Settings({ setUserData }) {
-  const { user, loading: authLoading } = useAuth();
-  const [showModal, setShowModal] = useState(false);
-  const [userData, setLocalUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  // FETCH USER DATA FIRST COMPONENT
-  const fetchUserData = useCallback(async () => {
-    if (user?.id) {
-      try {
-        setLoading(true);
-        console.log('Fetching user data for ID:', user.id);
-        const response = await settingsService.getAccountInfo(user.id); // Ensure this returns the correct structure
-        console.log('API response:', response); // Log full response for inspection
+import SettingsFunctions from './settingsFuncs';
 
-        if (response.success && response.data) {
-          setLocalUserData(response.data);
-          setUserData(response.data);
-        } else {
-          // Ensure we are setting an error message as a string
-          const apiError = response.error?.message || 'Failed to fetch user data';
-          console.error('API Error:', apiError); // Log the error
-          setError(apiError); // Set the error in state
-        }
-      } catch (err) {
-        console.error('Error fetching user data:', err); // Log the error
-        setError('An error occurred while fetching user data: ' + err.message);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      setLoading(false);
-      setError('User information is not available');
-    }
-  }, [user]);
-  /////////////////////////////////////////////////////
-  const handleSavePassword = async () => {
-    const passwordComplexityCheck = password => {
-      const hasUpperCase = /[A-Z]/.test(password);
-      const hasLowerCase = /[a-z]/.test(password);
-      const hasNumbers = /\d/.test(password);
-      const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-      return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChars;
-    };
-    // Check password complexity
-    if (!passwordComplexityCheck(newPassword)) {
-      setAlert({
-        show: true,
-        message: 'Password must include uppercase, lowercase, number, and special character.',
-        type: 'error',
-      });
-      return;
-    }
-    // Check if new passwords match
-    if (newPassword !== confirmNewPassword) {
-      setAlert({ show: true, message: 'New passwords do not match.', type: 'error' });
-      return;
-    }
-    // Check minimum password length
-    if (newPassword.length < 8) {
-      setAlert({
-        show: true,
-        message: 'Password must be at least 8 characters long.',
-        type: 'error',
-      });
-      return;
-    }
-    try {
-      const userId = user?.id;
-      // Check if user ID is available
-      if (!userId) {
-        setAlert({ show: true, message: 'User ID is not available.', type: 'error' });
-        return; // Prevent making an API call without a user ID
-      }
-      // Call the settings service to update the password
-      const response = await settingsService.updatePassword(userId, currentPassword, newPassword);
-      // Check the response
-      if (response.success) {
-        setAlert({ show: true, message: 'Password changed successfully.', type: 'success' });
-        // Reset password fields after successful change
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmNewPassword('');
-      } else {
-        // Handle specific error messages returned by the API
-        const errorMessage = response.error?.message || 'Failed to change password';
-        setAlert({ show: true, message: `Error: ${errorMessage}`, type: 'error' });
-      }
-    } catch (error) {
-      console.error('Error changing password:', error); // Log error for debugging
-      setAlert({ show: true, message: `Error: ${error.message}`, type: 'error' });
-    }
-  };
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-  /////////////////////////////////////////////////////
-  // Saving User Data Modifications
-  const handleSave = async data => {
-    let result;
-    let successMessage = '';
-    console.log('Data to save:', data); // Log data being saved
-    try {
-      if (selectedUser) {
-        // Update user
-        result = await settingsService.updateUser(selectedUser.id, data);
-        console.log('Update user response:', result); // Log the API response
-        successMessage = 'User updated successfully!';
-      }
-      if (result && result.success) {
-        setAlert({ show: true, message: successMessage, type: 'success' });
-        // await fetch User Data to view directly the modifications
-        await fetchUserData();
-      } else {
-        const errorMessage = result?.error || 'Unknown error occurred while updating user.';
-        setAlert({ show: true, message: `Error: ${errorMessage}`, type: 'error' });
-      }
-    } catch (error) {
-      console.error('Error updating user:', error);
-      setAlert({ show: true, message: `Error: ${error.message}`, type: 'error' });
-    } finally {
-      handleModalClose(); // Ensure modal closes regardless of outcome
-    }
-  };
-  ////////////////////////////////////////////////////////
-  const handleCloseAlert = () => {
-    setAlert({ show: false, message: '', type: '' });
-  };
-  ////////////////////////////////////////////////////////
+function Settings({ setUserData }) {
+  const {
+    showModal,
+    userData,
+    loading,
+    error,
+    alert,
+    currentPassword,
+    newPassword,
+    showPassword,
+    confirmNewPassword,
+    fetchUserData,
+    handleSavePassword,
+    handleSave,
+    handleCloseAlert,
+    handleEditClick,
+    handleModalClose,
+    togglePasswordVisibility,
+    setCurrentPassword,
+    setNewPassword,
+    setConfirmNewPassword,
+  } = SettingsFunctions(setUserData);
+
   useEffect(() => {
-    if (!authLoading) {
-      fetchUserData();
-    }
-  }, [authLoading, fetchUserData]);
-  //////////////////////////////////////////////////////
-  const handleEditClick = () => {
-    setSelectedUser(userData); // Set the user data to be edited
-    setShowModal(true); // Show the modal
-  };
-  const handleModalClose = () => setShowModal(false);
-  // Handle loading state
-  if (authLoading || loading)
+    fetchUserData();
+  }, [fetchUserData]);
+
+  if (loading)
     return (
       <Alert variant="destructive" className="mt-4">
         <AlertDescription>Loading</AlertDescription>
       </Alert>
     );
-  // Handle error state
+
   if (error)
     return (
       <Alert variant="destructive" className="mt-4">
         <AlertDescription>Error: {String(error)}</AlertDescription>
       </Alert>
     );
-  // Handle the case where userData is not available
+
   if (!userData)
     return (
       <Alert variant="destructive" className="mt-4">
         <AlertDescription>No user data available</AlertDescription>
       </Alert>
     );
+
   return (
     <div>
       <MDBox mt={5} mb={3}>
         <Grid container spacing={3}>
-          {/* Profile Information Section */}
           <Grid item xs={12} md={6}>
             <ProfileInfoCard
               userData={userData}
@@ -229,7 +94,7 @@ function Settings({ setUserData }) {
               <ProfileModal userData={userData} onSave={handleSave} onClose={handleModalClose} />
             )}
           </Grid>
-          {/* Change Password Section */}
+
           <Grid item xs={12} md={6}>
             <MDBox mb={2}>
               <Typography variant="h6" gutterBottom>
@@ -262,19 +127,10 @@ function Settings({ setUserData }) {
                 onChange={e => setConfirmNewPassword(e.target.value)}
                 sx={{ mb: 2 }}
               />
-              <MDButton
-                onClick={handleSavePassword}
-                variant="gradient"
-                color="dark"
-                style={{ marginTop: '5px' }}
-              >
+              <MDButton onClick={handleSavePassword} variant="gradient" color="dark">
                 Save
               </MDButton>
-              <MDButton
-                type="button"
-                onClick={togglePasswordVisibility}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
-              >
+              <MDButton type="button" onClick={togglePasswordVisibility}>
                 {showPassword ? (
                   <EyeOffIcon className="h-5 w-5" />
                 ) : (
@@ -285,7 +141,6 @@ function Settings({ setUserData }) {
           </Grid>
         </Grid>
       </MDBox>
-      {/* Alert Notification */}
       {alert.show && (
         <MDAlert
           color={alert.type}
@@ -299,7 +154,9 @@ function Settings({ setUserData }) {
     </div>
   );
 }
+
 Settings.propTypes = {
   setUserData: PropTypes.func.isRequired,
 };
+
 export default Settings;
