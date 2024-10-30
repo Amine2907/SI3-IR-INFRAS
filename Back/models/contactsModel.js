@@ -134,19 +134,21 @@ const desactivateContact = async(id) => {
     }
 };
 const searchContacts = async(filters) => {
+    console.log("Received filters:", filters);
     try {
+         console.log("Received filters:", filters);
         let query = supabase
             .from('Contacts')
             .select('*');
 
         if (filters.nom) {
-            query = query.ilike('Nom', `%${filters.nom}%`);
+            query = query.ilike('nom', `%${filters.nom}%`);
         }
         if (filters.prenom) {
-            query = query.ilike('Prenom', `%${filters.prenom}%`);
+            query = query.ilike('prenom', `%${filters.prenom}%`);
         }
         if (filters.mission) {
-            query = query.ilike('Mission', `%${filters.mission}%`);
+            query = query.ilike('mission', `%${filters.mission}%`);
         }
         const { data, error } = await query;
         if (error) {

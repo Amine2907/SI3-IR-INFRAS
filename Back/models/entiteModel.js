@@ -130,6 +130,7 @@ const activateEntity = async(id) => {
     }
 };
 const searchEntites = async (filters) => {
+    console.log("Received filters:", filters);
     try {
         let query = supabase
             .from('Entite')

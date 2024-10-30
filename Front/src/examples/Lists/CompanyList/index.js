@@ -100,7 +100,6 @@ const CompanyList = () => {
           onClose={handleModalClose}
         />
       )}
-
       {alert.show && (
         <MDAlert
           color={alert.type}

@@ -37,10 +37,8 @@ export default function App() {
   const navigate = useNavigate();
   const isTokenExpired = token => {
     if (!token) return true;
-
     const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT
     const expirationTime = payload.exp * 1000; // Convert exp to milliseconds
-
     return Date.now() >= expirationTime; // Check if the current time exceeds the expiration time
   };
   useEffect(() => {
@@ -134,7 +132,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
       onClick={handleConfiguratorOpen}
     >
       <Icon fontSize="small" color="inherit">
-        Paramètres
+        settings
       </Icon>
     </MDBox>
   );

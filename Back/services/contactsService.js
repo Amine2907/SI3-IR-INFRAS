@@ -93,7 +93,7 @@ const activateContact = async (id) => {
 // Search contacts
 const searchContacts = async (filters) => {
     try {
-        const response = await axios.get(`${API_URL}/search`, filters);
+        const response = await axios.get(`${API_URL}/search`,{ params: filters });
         return { success: true, data: response.data };
     } catch (error) {
         return { success: false, error: error.response ? error.response.data.error : error.message };

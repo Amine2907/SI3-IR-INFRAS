@@ -94,7 +94,7 @@ const activateEntity = async (id) => {
 // Search entities
 const searchEntities = async (filters) => {
     try {
-        const response = await axios.post(`${API_URL}/search`, filters);
+        const response = await axios.post(`${API_URL}/search`, { params: filters });
         return { success: true, data: response.data };
     } catch (error) {
         return { success: false, error: error.response ? error.response.data.error : error.message };
