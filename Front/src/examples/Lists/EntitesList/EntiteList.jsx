@@ -1,15 +1,3 @@
-/**
- * This component renders a list of entities.
- *
- * It fetches the list of entities from the backend when it mounts.
- * It renders a card for each entity, with a button to edit the entity.
- * It also renders a button to add a new entity, and a modal to edit or add an entity.
- *
- * The modal is used to edit or add an entity. It contains a form with the entity's name, email, and phone.
- * When the form is submitted, it sends the data to the backend and then fetches the new list of entities.
- *
- * If there is an error, it renders an alert with the error message.
- */
 import React, { useEffect, useState } from 'react';
 import entityService from 'services/entityService';
 // @mui material components
@@ -24,7 +12,7 @@ import MDInput from 'components/MDInput';
 import MDAlert from 'components/MDAlert';
 import EntiteCard from 'examples/Cards/EntiteCard/EntiteCard';
 import EntiteModal from 'examples/popup/EntitePopUp/EntitePopUp';
-
+import { FormControl, MenuItem, Select } from '@mui/material';
 const EntiteList = () => {
   const [entites, setEntites] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -38,11 +26,6 @@ const EntiteList = () => {
     code_postal: '',
     role: '',
   });
-
-  useEffect(() => {
-    fetchActiveEntites();
-  }, []);
-
   // Function to render the search results
   const renderSearch = () => {
     if (
@@ -75,7 +58,16 @@ const EntiteList = () => {
     }
     return entites; // Return original entities if no search query
   };
-
+  const roles = [
+    'Fournisseur',
+    'CSPS',
+    'Syndicat',
+    'Pyloniste',
+    'Génie Civiliste',
+    'Géotechnicien',
+    'Dronist',
+    'Mairie',
+  ];
   // Fetch Active and Inactive entities
   const fetchActiveEntites = async () => {
     const result = await entityService.getActiveEntites();
@@ -85,7 +77,6 @@ const EntiteList = () => {
       console.error(result.error);
     }
   };
-
   const fetchInactiveEntites = async () => {
     const result = await entityService.getInactiveEntites();
     if (result.success) {
@@ -94,7 +85,6 @@ const EntiteList = () => {
       console.error(result.error);
     }
   };
-
   // Function to handle adding entities
   const handleAddEntite = () => {
     setSelectedEntity(null); // Clear selected entity for new entry
@@ -141,18 +131,28 @@ const EntiteList = () => {
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
   };
-
+  // Search Role
+  const handleRoleChange = e => {
+    const { name, value } = e.target;
+    console.log(`Changing ${name} to ${value}`);
+    setSearchQuery(prev => ({ ...prev, [name]: value }));
+  };
   // Search functionality
   const handleSearchChange = e => {
-    const { name, value } = e.target;
-    setSearchQuery(prev => ({ ...prev, [name]: value }));
+    const { name, value } = e.target; // Destructure name and value from the event target
+    // Update searchQuery with the new value
+    setSearchQuery(prev => {
+      const updatedQuery = { ...prev, [name]: value }; // Update only the field that changed
+      console.log('Updated searchQuery:', updatedQuery); // Log the updated searchQuery
+      return updatedQuery; // Return the updated state
+    });
+    // If the input is cleared, fetch active entities
     if (value === '') {
-      fetchActiveEntites(); // If search input is cleared, fetch active entities
+      fetchActiveEntites();
     } else {
-      handleSearchEntities(); // If there's input, fetch filtered entities
+      handleSearchEntities(); // Otherwise, fetch entities based on the search query
     }
   };
-
   const handleSearchEntities = async () => {
     try {
       if (!searchQuery || typeof searchQuery !== 'object') {
@@ -169,7 +169,6 @@ const EntiteList = () => {
       console.error('Error searching for entities:', error);
     }
   };
-
   // Toggle active/inactive entities
   const handleToggleActiveInactive = async () => {
     setIsActive(prevIsActive => {
@@ -183,16 +182,27 @@ const EntiteList = () => {
       return newIsActive; // Update the state
     });
   };
+  useEffect(() => {
+    console.log('Updated searchQuery:', searchQuery); // Ensure `searchQuery` is updated
 
+    if (
+      searchQuery.nom ||
+      searchQuery.ville ||
+      searchQuery.region ||
+      searchQuery.code_postal ||
+      searchQuery.role
+    ) {
+      handleSearchEntities();
+    } else {
+      fetchActiveEntites(); // Clear filters if all fields are empty
+    }
+  }, [searchQuery]);
   // Render filtered entities
   const filteredEntites = renderSearch();
   return (
     <div className="entite-list">
       <Card id="delete-account">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium">
-            Entités
-          </MDTypography>
           <MDBox pr={1}>
             <div className="entite-list">
               <MDInput
@@ -223,6 +233,25 @@ const EntiteList = () => {
                 onChange={handleSearchChange}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />
+              {/* Dropdown for Role Selection */}
+              <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
+                <MDTypography variant="body2" fontWeight="medium">
+                  Role
+                </MDTypography>
+                <Select
+                  labelId="role-select-label"
+                  name="role"
+                  value={searchQuery.role}
+                  onChange={handleRoleChange}
+                  label="Role"
+                >
+                  {roles.map(role => (
+                    <MenuItem key={role} value={role}>
+                      {role}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <MDButton
                 onClick={() => {
                   setSearchQuery({ nom: '', ville: '', region: '', code_postal: '', role: '' });

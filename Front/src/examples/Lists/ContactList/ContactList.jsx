@@ -141,9 +141,6 @@ const ContactList = () => {
     <div className="contact-list">
       <Card id="delete-account">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
-          <MDTypography variant="h6" fontWeight="medium">
-            Contacts
-          </MDTypography>
           <MDBox pr={1}>
             <div className="contact-list">
               <MDInput
