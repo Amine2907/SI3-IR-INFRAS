@@ -186,7 +186,6 @@ const EntiteList = () => {
 
   // Render filtered entities
   const filteredEntites = renderSearch();
-
   return (
     <div className="entite-list">
       <Card id="delete-account">

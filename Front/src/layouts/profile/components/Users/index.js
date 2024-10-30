@@ -16,6 +16,7 @@ import {
 import { useAuth } from 'context/Auth/AuthContext';
 import { Alert, AlertDescription } from 'components/ui/alert';
 import useUserData from './userService';
+import cellStyle from './styles';
 function Users() {
   const { user, loading: authLoading } = useAuth();
   const { userData, loading, error, fetchUserData } = useUserData(user);
@@ -46,7 +47,6 @@ function Users() {
         <AlertDescription>No user data available</AlertDescription>
       </Alert>
     );
-
   return (
     <TableContainer>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
@@ -55,15 +55,15 @@ function Users() {
       <table>
         <thead>
           <TableRow>
-            <TableCell>Photo</TableCell>
-            <TableCell>Prenom</TableCell>
-            <TableCell>Nom</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Entreprise</TableCell>
-            <TableCell>Département</TableCell>
-            <TableCell>Rôle</TableCell>
-            <TableCell>Activé</TableCell>
-            <TableCell>Action</TableCell>
+            <TableCell sx={cellStyle}>Photo</TableCell>
+            <TableCell sx={cellStyle}>Prenom</TableCell>
+            <TableCell sx={cellStyle}>Nom</TableCell>
+            <TableCell sx={cellStyle}>Email</TableCell>
+            <TableCell sx={cellStyle}>Entreprise</TableCell>
+            <TableCell sx={cellStyle}>Département</TableCell>
+            <TableCell sx={cellStyle}>Rôle</TableCell>
+            <TableCell sx={cellStyle}>Activé</TableCell>
+            <TableCell sx={cellStyle}>Action</TableCell>
           </TableRow>
         </thead>
         <TableBody>
