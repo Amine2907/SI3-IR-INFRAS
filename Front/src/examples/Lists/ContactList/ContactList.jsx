@@ -24,7 +24,7 @@ import MDButton from 'components/MDButton';
 import { Grid, Switch } from '@mui/material';
 import MDAlert from 'components/MDAlert';
 import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
-
+import { Alert, AlertDescription } from 'components/ui/alert';
 const ContactList = () => {
   const [contacts, setContacts] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -36,6 +36,7 @@ const ContactList = () => {
     prenom: '',
     mission: '',
   });
+  const [noResultsMessage, setNoResultsMessage] = useState('');
   useEffect(() => {
     fetchActiveContacts();
   }, []);
@@ -95,19 +96,26 @@ const ContactList = () => {
     if (value === '') {
       fetchActiveContacts(); // If search input is cleared, fetch active entities
     } else {
-      handleSearchEntities(); // If there's input, fetch filtered entities
+      handleSearchContacts(); // If there's input, fetch filtered entities
     }
   };
-  const handleSearchEntities = async () => {
-    const result = await contactService.searchContacts(searchQuery); // You need to implement this on the backend
+  const handleSearchContacts = async () => {
+    const result = await contactService.searchContacts(searchQuery);
     if (result.success) {
       setContacts(result.data);
+      // Show message if no contacts are found
+      if (result.data.length === 0) {
+        setNoResultsMessage('No contacts found for the specified search criteria.');
+      } else {
+        setNoResultsMessage(''); // Clear message if results are found
+      }
     } else {
       console.error(result.error);
     }
   };
   ///////////////////////////////////////////////////////////////////////// TOGGLE ACTIVE / Inactive
   const fetchActiveContacts = async () => {
+    setNoResultsMessage('');
     const result = await contactService.getActiveContacts();
     if (result.success) {
       setContacts(result.data); // Update your contacts state here
@@ -167,6 +175,7 @@ const ContactList = () => {
 
               <MDButton
                 onClick={() => {
+                  setNoResultsMessage('');
                   setSearchQuery({ nom: '', prenom: '', mission: '' });
                   fetchActiveContacts(); // Reset to active entities
                 }}
@@ -208,6 +217,12 @@ const ContactList = () => {
               </Grid>
             ))}
           </Grid>
+          {/* Conditionally render the no results alert */}
+          {noResultsMessage && (
+            <Alert variant="success" className="mt-4">
+              <AlertDescription>{noResultsMessage}</AlertDescription>
+            </Alert>
+          )}
         </MDBox>
       </Card>
       {showModal && (

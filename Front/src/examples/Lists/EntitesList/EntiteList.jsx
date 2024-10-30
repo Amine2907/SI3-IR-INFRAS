@@ -13,6 +13,7 @@ import MDAlert from 'components/MDAlert';
 import EntiteCard from 'examples/Cards/EntiteCard/EntiteCard';
 import EntiteModal from 'examples/popup/EntitePopUp/EntitePopUp';
 import { FormControl, MenuItem, Select } from '@mui/material';
+import { Alert, AlertDescription } from 'components/ui/alert';
 const EntiteList = () => {
   const [entites, setEntites] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -26,6 +27,7 @@ const EntiteList = () => {
     code_postal: '',
     role: '',
   });
+  const [noResultsMessage, setNoResultsMessage] = useState('');
   // Function to render the search results
   const renderSearch = () => {
     if (
@@ -70,6 +72,7 @@ const EntiteList = () => {
   ];
   // Fetch Active and Inactive entities
   const fetchActiveEntites = async () => {
+    setNoResultsMessage('');
     const result = await entityService.getActiveEntites();
     if (result.success) {
       setEntites(result.data); // Update your entites state here
@@ -162,11 +165,17 @@ const EntiteList = () => {
       const result = await entityService.searchEntities(searchQuery);
       if (result.success) {
         setEntites(result.data);
+        // Show message if no contacts are found
+        if (result.data.length === 0) {
+          setNoResultsMessage('No contacts found for the specified search criteria.');
+        } else {
+          setNoResultsMessage(''); // Clear message if results are found
+        }
       } else {
         console.error(result.error);
       }
     } catch (error) {
-      console.error('Error searching for entities:', error);
+      console.error('Error while searching entities:', error);
     }
   };
   // Toggle active/inactive entities
@@ -254,6 +263,7 @@ const EntiteList = () => {
               </FormControl>
               <MDButton
                 onClick={() => {
+                  setNoResultsMessage('');
                   setSearchQuery({ nom: '', ville: '', region: '', code_postal: '', role: '' });
                   fetchActiveEntites();
                 }}
@@ -292,6 +302,12 @@ const EntiteList = () => {
               </Grid>
             ))}
           </Grid>
+          {/* Conditionally render the no results alert */}
+          {noResultsMessage && (
+            <Alert variant="success" className="mt-4">
+              <AlertDescription>{noResultsMessage}</AlertDescription>
+            </Alert>
+          )}
         </MDBox>
       </Card>
       {showModal && (
