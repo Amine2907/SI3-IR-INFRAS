@@ -114,7 +114,7 @@ const searchEntites = async(req,res) => {
     }
     res.status(200).json(result.data);
 };
-// Call for entityController 
+// Call for entityController
 const entityController = {
     createEntite,
     getAllEntites,

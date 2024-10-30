@@ -196,9 +196,30 @@ const EntiteList = () => {
           <MDBox pr={1}>
             <div className="entite-list">
               <MDInput
-                label="Search"
+                label="Search by name "
                 name="nom"
                 value={searchQuery.nom}
+                onChange={handleSearchChange}
+                style={{ marginBottom: '10px', marginRight: '10px' }}
+              />
+              <MDInput
+                label="Search by ville"
+                name="ville"
+                value={searchQuery.ville}
+                onChange={handleSearchChange}
+                style={{ marginBottom: '10px', marginRight: '10px' }}
+              />
+              <MDInput
+                label="Search by region"
+                name="region"
+                value={searchQuery.region}
+                onChange={handleSearchChange}
+                style={{ marginBottom: '10px', marginRight: '10px' }}
+              />
+              <MDInput
+                label="Search by code postal "
+                name="code_postal"
+                value={searchQuery.code_postal}
                 onChange={handleSearchChange}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />

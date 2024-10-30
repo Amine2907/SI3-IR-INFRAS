@@ -147,12 +147,27 @@ const ContactList = () => {
           <MDBox pr={1}>
             <div className="contact-list">
               <MDInput
-                label="Search"
+                label="Search by nom"
                 name="nom"
                 value={searchQuery.nom}
                 onChange={handleSearchChange}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />
+              <MDInput
+                label="Search by prenom"
+                name="prenom"
+                value={searchQuery.prenom}
+                onChange={handleSearchChange}
+                style={{ marginBottom: '10px', marginRight: '10px' }}
+              />
+              <MDInput
+                label="Search by mission "
+                name="mission"
+                value={searchQuery.mission}
+                onChange={handleSearchChange}
+                style={{ marginBottom: '10px', marginRight: '10px' }}
+              />
+
               <MDButton
                 onClick={() => {
                   setSearchQuery({ nom: '', prenom: '', mission: '' });
