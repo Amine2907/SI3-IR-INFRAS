@@ -1,8 +1,35 @@
-// src/components/SettingsFunctions.js
-
+/**
+ * SettingsFunctions component is responsible for rendering the settings feature, which
+ * contains the user information and the ability to change the password and update the user
+ * data. It also handles the orientation of the tabs based on the screen size, and renders the
+ * appropriate component based on the selected tab.
+ *
+ * @param {function} setUserData - A function to set the user data
+ * @returns {Object} An object containing the state values and functions:
+ *   - showModal: A boolean indicating whether the modal is open
+ *   - userData: The user data object
+ *   - loading: A boolean indicating whether the component is loading
+ *   - error: An error string if there was an error
+ *   - alert: An object with the alert message and type
+ *   - currentPassword: The current password
+ *   - setCurrentPassword: A function to set the current password
+ *   - newPassword: The new password
+ *   - setNewPassword: A function to set the new password
+ *   - showPassword: A boolean indicating whether the password is visible
+ *   - confirmNewPassword: The confirmed new password
+ *   - setConfirmNewPassword: A function to set the confirmed new password
+ *   - fetchUserData: A function to fetch the user data
+ *   - handleSavePassword: A function to handle saving the new password
+ *   - handleSave: A function to handle saving the updated user data
+ *   - handleCloseAlert: A function to close the alert
+ *   - handleEditClick: A function to handle the edit click
+ *   - handleModalClose: A function to close the modal
+ *   - togglePasswordVisibility: A function to toggle the password visibility
+ */
 import { useState, useCallback } from 'react';
 import settingsService from 'services/settingsService';
 import { useAuth } from 'context/Auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
 function SettingsFunctions(setUserData) {
   const { user } = useAuth();
   const [showModal, setShowModal] = useState(false);
@@ -15,7 +42,7 @@ function SettingsFunctions(setUserData) {
   const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
-
+  const navigate = useNavigate();
   // Fetch user data
   const fetchUserData = useCallback(async () => {
     if (user?.id) {
@@ -74,12 +101,17 @@ function SettingsFunctions(setUserData) {
         setAlert({ show: true, message: 'User ID is not available.', type: 'error' });
         return;
       }
+      let successMessage = '';
       const response = await settingsService.updatePassword(userId, currentPassword, newPassword);
       if (response.success) {
-        setAlert({ show: true, message: 'Password changed successfully.', type: 'success' });
+        successMessage = 'Password changed successfully.';
+        setAlert({ show: true, message: successMessage, type: 'success' });
         setCurrentPassword('');
         setNewPassword('');
         setConfirmNewPassword('');
+        setTimeout(() => {
+          navigate('/auth');
+        }, 3000);
       } else {
         const errorMessage = response.error?.message || 'Failed to change password';
         setAlert({ show: true, message: `Error: ${errorMessage}`, type: 'error' });

@@ -34,6 +34,21 @@ export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const isTokenExpired = token => {
+    if (!token) return true;
+
+    const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT
+    const expirationTime = payload.exp * 1000; // Convert exp to milliseconds
+
+    return Date.now() >= expirationTime; // Check if the current time exceeds the expiration time
+  };
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (isTokenExpired(token)) {
+      navigate('/auth');
+    }
+  }, [navigate]);
   return (
     <AuthProvider>
       <InnerApp

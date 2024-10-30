@@ -1,5 +1,10 @@
-// src/components/Settings.js
-
+/**
+ * The Settings component is responsible for rendering the profile information and
+ * the ability to change the password.
+ *
+ * @param {function} setUserData - A function to set the user data
+ * @returns {JSX.Element} The component
+ */
 import React, { useEffect } from 'react';
 import MDBox from 'components/MDBox';
 import ProfileInfoCard from 'examples/Cards/InfoCards/ProfileInfoCard';
@@ -11,7 +16,6 @@ import MDAlert from 'components/MDAlert';
 import { Alert, AlertDescription } from 'components/ui/alert';
 import PropTypes from 'prop-types';
 import SettingsFunctions from './settingsFuncs';
-
 function Settings({ setUserData }) {
   const {
     showModal,
@@ -94,7 +98,6 @@ function Settings({ setUserData }) {
               <ProfileModal userData={userData} onSave={handleSave} onClose={handleModalClose} />
             )}
           </Grid>
-
           <Grid item xs={12} md={6}>
             <MDBox mb={2}>
               <Typography variant="h6" gutterBottom>
@@ -154,9 +157,7 @@ function Settings({ setUserData }) {
     </div>
   );
 }
-
 Settings.propTypes = {
   setUserData: PropTypes.func.isRequired,
 };
-
 export default Settings;
