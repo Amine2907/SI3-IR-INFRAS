@@ -136,7 +136,6 @@ const desactivateContact = async(id) => {
 const searchContacts = async(filters) => {
     console.log("Received filters:", filters);
     try {
-         console.log("Received filters:", filters);
         let query = supabase
             .from('Contacts')
             .select('*');

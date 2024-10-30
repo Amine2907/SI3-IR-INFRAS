@@ -107,7 +107,7 @@ const activateEntity = async(req,res) => {
 };
 // SearchENtity controller 
 const searchEntites = async(req,res) => {
-    const filters = req.body 
+    const filters = req.query ; 
     const result = await entityModel.searchEntites(filters);
     if(!result.success){
         return res.status(400).json({error : result.error})
