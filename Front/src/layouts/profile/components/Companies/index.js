@@ -6,8 +6,9 @@
  */
 import React from 'react';
 import CompanyList from '../../../../examples/Lists/CompanyList';
-
+// import { useState } from 'react';
 function Companies() {
+  // const [setNoResultsMessage] = useState('');
   return <CompanyList />;
 }
 export default Companies;

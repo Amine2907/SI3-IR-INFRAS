@@ -8,8 +8,12 @@ export const fetchActiveCompanies = async (setCompanies, setAlert) => {
   const result = await CompanyService.getActiveCompanys();
   if (result.success) {
     setCompanies(result.data);
+    // if (result.data.length === 0) {
+    //   setNoResultsMessage('No Active contacts found.');
+    // }
   } else {
     setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
+    // setNoResultsMessage('Error fetching contacts. Please try again later.');
   }
 };
 // Fetch inactive companies
@@ -17,11 +21,14 @@ export const fetchInactiveCompanies = async (setCompanies, setAlert) => {
   const result = await CompanyService.getInactiveCompanys();
   if (result.success) {
     setCompanies(result.data);
+    // if (result.data.length === 0) {
+    //   setNoResultsMessage('No Inactive companies found.');
+    // }
   } else {
     setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
+    // setNoResultsMessage('Error fetching companies. Please try again later.');
   }
 };
-
 // Toggle between active and inactive companies
 export const handleToggleActiveInactive = (isActive, setIsActive, setCompanies, setAlert) => {
   setIsActive(prevIsActive => {

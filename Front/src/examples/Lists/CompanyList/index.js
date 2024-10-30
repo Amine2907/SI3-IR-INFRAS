@@ -14,7 +14,6 @@ import MDButton from 'components/MDButton';
 import { Grid, Switch } from '@mui/material';
 import MDAlert from 'components/MDAlert';
 import CompanyModal from '../../popup/CompanyPopUp';
-
 import {
   fetchActiveCompanies,
   handleSave,

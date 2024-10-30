@@ -76,16 +76,24 @@ const EntiteList = () => {
     const result = await entityService.getActiveEntites();
     if (result.success) {
       setEntites(result.data); // Update your entites state here
+      if (result.data.length === 0) {
+        setNoResultsMessage('No Active entites found.');
+      }
     } else {
       console.error(result.error);
+      setNoResultsMessage('Error fetching entites. Please try again later.');
     }
   };
   const fetchInactiveEntites = async () => {
     const result = await entityService.getInactiveEntites();
     if (result.success) {
-      setEntites(result.data); // Update your entites state here
+      setEntites(result.data);
+      if (result.data.length === 0) {
+        setNoResultsMessage('No Inactive entites found.');
+      } // Update your entites state here
     } else {
       console.error(result.error);
+      setNoResultsMessage('Error fetching entites. Please try again later.');
     }
   };
   // Function to handle adding entities

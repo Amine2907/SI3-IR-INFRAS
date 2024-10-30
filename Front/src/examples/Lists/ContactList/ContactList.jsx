@@ -118,17 +118,25 @@ const ContactList = () => {
     setNoResultsMessage('');
     const result = await contactService.getActiveContacts();
     if (result.success) {
-      setContacts(result.data); // Update your contacts state here
+      setContacts(result.data);
+      if (result.data.length === 0) {
+        setNoResultsMessage('No active contacts found.');
+      }
     } else {
       console.error(result.error);
+      setNoResultsMessage('Error fetching contacts. Please try again later.');
     }
   };
   const fetchInactiveContacts = async () => {
     const result = await contactService.getInactiveContacts();
     if (result.success) {
       setContacts(result.data); // Update your contacts state here
+      if (result.data.length === 0) {
+        setNoResultsMessage('No Inactive contacts found.');
+      }
     } else {
       console.error(result.error);
+      setNoResultsMessage('Error fetching contacts. Please try again later.');
     }
   };
   // GetActive and Inactive contacts
