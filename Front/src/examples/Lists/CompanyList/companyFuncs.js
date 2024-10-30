@@ -24,14 +24,17 @@ export const fetchInactiveCompanies = async (setCompanies, setAlert) => {
 
 // Toggle between active and inactive companies
 export const handleToggleActiveInactive = (isActive, setIsActive, setCompanies, setAlert) => {
-  setIsActive(!isActive);
-  if (!isActive) {
-    fetchActiveCompanies(setCompanies, setAlert);
-  } else {
-    fetchInactiveCompanies(setCompanies, setAlert);
-  }
+  setIsActive(prevIsActive => {
+    const newIsActive = !prevIsActive; // Toggle the active state
+    // Fetch companies based on the new state
+    if (newIsActive) {
+      fetchActiveCompanies(setCompanies, setAlert);
+    } else {
+      fetchInactiveCompanies(setCompanies, setAlert);
+    }
+    return newIsActive; // Update the state
+  });
 };
-
 // Handle save function for adding or editing a company
 export const handleSave = async (
   data,
@@ -65,7 +68,8 @@ export const handleSave = async (
   } else {
     fetchInactiveCompanies(setCompanies, setAlert);
   }
-  setIsActive(true); // Reset to active after modification
+  setIsActive(true);
+  fetchActiveCompanies(setCompanies, setAlert);
 };
 
 // Close alert function
