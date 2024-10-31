@@ -1,10 +1,3 @@
-/**
- * The Settings component is responsible for rendering the profile information and
- * the ability to change the password.
- *
- * @param {function} setUserData - A function to set the user data
- * @returns {JSX.Element} The component
- */
 import React, { useEffect } from 'react';
 import MDBox from 'components/MDBox';
 import ProfileInfoCard from 'examples/Cards/InfoCards/ProfileInfoCard';
@@ -16,6 +9,7 @@ import MDAlert from 'components/MDAlert';
 import { Alert, AlertDescription } from 'components/ui/alert';
 import PropTypes from 'prop-types';
 import SettingsFunctions from './settingsFuncs';
+
 function Settings({ setUserData }) {
   const {
     showModal,
@@ -43,6 +37,20 @@ function Settings({ setUserData }) {
     fetchUserData();
   }, [fetchUserData]);
 
+  // Define icons for each profile parameter
+  const profileIcons = {
+    'Account Created': 'calendar_today',
+    Email: 'email',
+    'First Name': 'person',
+    'Last Name': 'person',
+    Role: 'security',
+    Company: 'business',
+    Department: 'apartment',
+    Status: 'toggle_on',
+    'Date of Birth': 'cake',
+    Gender: 'wc',
+  };
+
   if (loading)
     return (
       <Alert variant="destructive" className="mt-4">
@@ -63,7 +71,6 @@ function Settings({ setUserData }) {
         <AlertDescription>No user data available</AlertDescription>
       </Alert>
     );
-
   return (
     <div>
       <MDBox mt={5} mb={3}>
@@ -93,6 +100,7 @@ function Settings({ setUserData }) {
                 tooltip: 'Edit Profile',
               }}
               shadow={false}
+              icons={profileIcons} // Pass the icon map
             />
             {showModal && (
               <ProfileModal userData={userData} onSave={handleSave} onClose={handleModalClose} />
@@ -157,7 +165,9 @@ function Settings({ setUserData }) {
     </div>
   );
 }
+
 Settings.propTypes = {
   setUserData: PropTypes.func.isRequired,
 };
+
 export default Settings;

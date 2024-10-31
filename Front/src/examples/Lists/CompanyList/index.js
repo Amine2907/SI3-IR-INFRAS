@@ -20,17 +20,17 @@ import {
   handleToggleActiveInactive,
   handleCloseAlert,
 } from './companyFuncs';
-
+import { Alert, AlertDescription } from 'components/ui/alert';
 const CompanyList = () => {
   const [companies, setCompanies] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [isActive, setIsActive] = useState(true);
-
+  const [noResultsMessage, setNoResultsMessage] = useState('');
   // Fetch companies on mount
   useEffect(() => {
-    fetchActiveCompanies(setCompanies, setAlert);
+    fetchActiveCompanies(setCompanies, setAlert, setNoResultsMessage);
   }, []);
 
   // Handle adding a new company
@@ -62,7 +62,13 @@ const CompanyList = () => {
           <Switch
             checked={isActive}
             onChange={() =>
-              handleToggleActiveInactive(isActive, setIsActive, setCompanies, setAlert)
+              handleToggleActiveInactive(
+                isActive,
+                setIsActive,
+                setCompanies,
+                setAlert,
+                setNoResultsMessage
+              )
             }
             style={{ marginRight: '10px' }}
           />
@@ -79,6 +85,12 @@ const CompanyList = () => {
               </Grid>
             ))}
           </Grid>
+          {/* Conditionally render the no results alert */}
+          {noResultsMessage && (
+            <Alert variant="destructive" className="mt-4">
+              <AlertDescription>{noResultsMessage}</AlertDescription>
+            </Alert>
+          )}
         </MDBox>
       </Card>
 

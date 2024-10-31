@@ -4,40 +4,48 @@
 import CompanyService from 'services/CompanyService';
 
 // Fetch active companies
-export const fetchActiveCompanies = async (setCompanies, setAlert) => {
+export const fetchActiveCompanies = async (setCompanies, setAlert, setNoResultsMessage) => {
   const result = await CompanyService.getActiveCompanys();
   if (result.success) {
+    setNoResultsMessage('');
     setCompanies(result.data);
-    // if (result.data.length === 0) {
-    //   setNoResultsMessage('No Active contacts found.');
-    // }
+    if (result.data.length === 0) {
+      setNoResultsMessage('No Active contacts found.');
+    }
   } else {
     setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
-    // setNoResultsMessage('Error fetching contacts. Please try again later.');
+    setNoResultsMessage('Error fetching contacts. Please try again later.');
   }
 };
 // Fetch inactive companies
-export const fetchInactiveCompanies = async (setCompanies, setAlert) => {
+export const fetchInactiveCompanies = async (setCompanies, setAlert, setNoResultsMessage) => {
   const result = await CompanyService.getInactiveCompanys();
   if (result.success) {
+    setNoResultsMessage('');
     setCompanies(result.data);
-    // if (result.data.length === 0) {
-    //   setNoResultsMessage('No Inactive companies found.');
-    // }
+    if (result.data.length === 0) {
+      setNoResultsMessage('No Inactive companies found.');
+    }
   } else {
     setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
-    // setNoResultsMessage('Error fetching companies. Please try again later.');
+    setNoResultsMessage('Error fetching companies. Please try again later.');
   }
 };
 // Toggle between active and inactive companies
-export const handleToggleActiveInactive = (isActive, setIsActive, setCompanies, setAlert) => {
+export const handleToggleActiveInactive = (
+  isActive,
+  setIsActive,
+  setCompanies,
+  setAlert,
+  setNoResultsMessage
+) => {
   setIsActive(prevIsActive => {
     const newIsActive = !prevIsActive; // Toggle the active state
     // Fetch companies based on the new state
     if (newIsActive) {
-      fetchActiveCompanies(setCompanies, setAlert);
+      fetchActiveCompanies(setCompanies, setAlert, setNoResultsMessage);
     } else {
-      fetchInactiveCompanies(setCompanies, setAlert);
+      fetchInactiveCompanies(setCompanies, setAlert, setNoResultsMessage);
     }
     return newIsActive; // Update the state
   });
@@ -50,7 +58,8 @@ export const handleSave = async (
   handleModalClose,
   setIsActive,
   isActive,
-  setCompanies
+  setCompanies,
+  setNoResultsMessage
 ) => {
   let result;
   const successMessage = selectedCompany
@@ -71,12 +80,12 @@ export const handleSave = async (
 
   handleModalClose();
   if (isActive) {
-    fetchActiveCompanies(setCompanies, setAlert);
+    fetchActiveCompanies(setCompanies, setAlert, setNoResultsMessage);
   } else {
-    fetchInactiveCompanies(setCompanies, setAlert);
+    fetchInactiveCompanies(setCompanies, setAlert, setNoResultsMessage);
   }
   setIsActive(true);
-  fetchActiveCompanies(setCompanies, setAlert);
+  fetchActiveCompanies(setCompanies, setAlert, setNoResultsMessage);
 };
 
 // Close alert function
