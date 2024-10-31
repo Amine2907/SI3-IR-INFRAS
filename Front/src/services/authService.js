@@ -68,10 +68,17 @@ const resetPassword = async email => {
 // Function to confirm password reset for the user
 const confirmResetPassword = async (access_token, newPassword) => {
   try {
-    const response = await axios.post(`${API_URL}/confirm-reset-password`, {
-      access_token: access_token,
-      new_password: newPassword,
-    });
+    const response = await axios.post(
+      `${API_URL}/confirm-reset-password`,
+      {
+        new_password: newPassword,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error('Password reset confirmation failed!', error.response?.data || error);

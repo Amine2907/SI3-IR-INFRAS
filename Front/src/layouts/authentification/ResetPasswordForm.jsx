@@ -1,11 +1,3 @@
-/**
- * A form to reset a user's password. It takes the user's ID from the URL
- * parameter, and upon submission, it checks the password complexity and
- * verifies that the passwords match. If both checks pass, it calls the
- * updatePassword method from the AuthService to update the user's password.
- *
- * @return {React.ReactElement} The password reset form.
- */
 import React, { useState, useEffect } from 'react';
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
@@ -19,68 +11,51 @@ import {
 } from 'components/ui/card';
 import { Alert, AlertDescription } from 'components/ui/alert';
 import AuthService from 'services/authService';
-import { useParams } from 'react-router-dom'; // Import useParams
 
 export default function PasswordReset() {
-  const { userId } = useParams(); // Get userId from URL params
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-
+  const access_token = new URLSearchParams(window.location.search).get('access_token');
+  // Check if access_token is present in the URL
   useEffect(() => {
-    // Check if userId is available
-    if (!userId) {
-      setError('Missing user ID. Please try the reset password process again.');
+    if (!access_token) {
+      setError('Missing reset token. Please try the reset password process again.');
     }
-  }, [userId]);
+  }, [access_token]);
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    // Password complexity check
-    const passwordComplexityCheck = password => {
-      const hasUpperCase = /[A-Z]/.test(password);
-      const hasLowerCase = /[a-z]/.test(password);
-      const hasNumbers = /\d/.test(password);
-      const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-      return hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChars;
-    };
-
-    // Check password complexity
-    if (!passwordComplexityCheck(password)) {
-      setError('Password must include uppercase, lowercase, number, and special character.');
-      setMessage(null); // Clear any previous messages
+    // Validate access_token
+    if (!access_token) {
+      setError('Missing reset token. Please try the reset password process again.');
       return;
     }
-
-    // Check if passwords match
+    // Validate password inputs
     if (!password || password !== confirmPassword) {
       setError('Passwords do not match. Please try again.');
-      setMessage(null); // Clear any previous messages
       return;
     }
-
+    // Reset error state before the request
+    setError(null);
     try {
-      // Check if userId is available
-      if (!userId) {
-        setError('Missing user ID. Please try the reset password process again.');
-        setMessage(null); // Clear any previous messages
-        return;
-      }
+      // Call the password reset service
+      const result = await AuthService.confirmResetPassword(access_token, password);
 
-      // Call the updatePassword method
-      const result = await AuthService.updatePassword(userId, password);
+      // Handle the response from the service
       if (result.success) {
         setMessage('Password reset successfully.');
-        setError(null); // Clear any previous errors
+        setPassword(''); // Clear password fields after success
+        setConfirmPassword(''); // Clear confirm password field
       } else {
-        setError(result.error || 'An error occurred');
-        setMessage(null); // Clear any previous messages
+        setError(result.error || 'An error occurred while resetting the password.');
+        setMessage(null);
       }
     } catch (err) {
-      setError(err.message || 'An error occurred'); // Improved error handling
-      setMessage(null); // Clear any previous messages
+      setError(err.message || 'An error occurred while resetting the password.'); // Ensure error message is clear
+      setMessage(null);
     }
   };
 

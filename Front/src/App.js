@@ -86,9 +86,6 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
       if (!isAuthenticated && !publicPaths.includes(pathname)) {
         navigate('/dashboard', { replace: true });
         setShowSidebar(true);
-      } else {
-        navigate('/auth', { replace: true });
-        setShowSidebar(false);
       }
     };
     window.history.pushState(null, null, window.location.href);

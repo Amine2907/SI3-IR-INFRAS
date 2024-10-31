@@ -44,6 +44,9 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
   const { email, password } = req.body; 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (data && data.session) {
+    console.log('Access Token:', data.session.access_token);
+  }
   if (error) {
     console.error('Supabase Sign-in Error:', error.message); // Log the error message
     return res.status(400).json({ error: error.message });
@@ -108,11 +111,10 @@ export const resetPassword = async (req, res) => {
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
     return res.status(400).json({ success: false, error: 'Invalid email address.' });
   }
-
   // URL to redirect after password reset
-  const redirectToUrl = `${FRONT_URL}/auth/confirm-reset-password`;
+  // const redirectToUrl = `${FRONT_URL}/auth/confirm-reset-password`;
   try {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: redirectToUrl  });
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }
@@ -124,12 +126,23 @@ export const resetPassword = async (req, res) => {
 };
 // Function to confirm the password reset and set the new password
 export const confirmResetPassword = async (req, res) => {
-  const {newPassword } = req.body;
-  const userId = req.user.id;
+  const { newPassword } = req.body;
+  // Assuming the access token is sent in the Authorization header as Bearer <token>
+  const authHeader = req.headers.authorization;
+  const accessToken = authHeader && authHeader.split(' ')[1];
+  if (!accessToken) {
+    return res.status(401).json({ error: 'Access token is required.' });
+  }
   try {
-    // Update password
+    // Verify the access token and get the user information
+    const { data: user, error: userError } = await supabase.auth.getUser(accessToken);
+    if (userError || !user) {
+      throw userError || new Error('User not found.');
+    }
+    // Update the password using the user ID from the verified token
     const { error: updateError } = await supabase.auth.updateUser({
       password: newPassword,
+      id: user.id, // You can directly get user.id from the user data retrieved above
     });
     if (updateError) {
       throw updateError;
@@ -138,5 +151,5 @@ export const confirmResetPassword = async (req, res) => {
   } catch (error) {
     console.error('Error changing password:', error);
     res.status(500).json({ error: 'An error occurred while changing the password.' });
-  };
+  }
 };
