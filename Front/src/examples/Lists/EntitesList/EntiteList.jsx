@@ -312,7 +312,7 @@ const EntiteList = () => {
           </Grid>
           {/* Conditionally render the no results alert */}
           {noResultsMessage && (
-            <Alert variant="success" className="mt-4">
+            <Alert variant="destructive" className="mt-4">
               <AlertDescription>{noResultsMessage}</AlertDescription>
             </Alert>
           )}

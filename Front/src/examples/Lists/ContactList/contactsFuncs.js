@@ -1,90 +1,95 @@
-// // src/services/contactsFuncs.js
+// contactFunctions.js
+import contactService from 'services/contactsService';
 
-// import contactService from 'services/contactsService'; // Import the contact service
+export const fetchActiveContacts = async (setContacts, setNoResultsMessage) => {
+  setNoResultsMessage('');
+  const result = await contactService.getActiveContacts();
+  if (result.success) {
+    setContacts(result.data);
+    if (result.data.length === 0) {
+      setNoResultsMessage('No active contacts found.');
+    }
+  } else {
+    console.error(result.error);
+    setNoResultsMessage('Error fetching contacts. Please try again later.');
+  }
+};
 
-// // Function to fetch contacts based on the active state
-// export const fetchContacts = async (isActive, setContacts) => {
-//   try {
-//     const result = isActive
-//       ? await contactService.getActiveContacts()
-//       : await contactService.getInactiveContacts();
-//     if (result.success) {
-//       setContacts(result.data);
-//     } else {
-//       console.error(result.error);
-//     }
-//   } catch (error) {
-//     console.error('Failed to fetch contacts:', error);
-//   }
-// };
+export const fetchInactiveContacts = async (setContacts, setNoResultsMessage) => {
+  const result = await contactService.getInactiveContacts();
+  if (result.success) {
+    setContacts(result.data);
+    if (result.data.length === 0) {
+      setNoResultsMessage('No inactive contacts found.');
+    }
+  } else {
+    console.error(result.error);
+    setNoResultsMessage('Error fetching contacts. Please try again later.');
+  }
+};
 
-// // Function to handle adding a new contact
-// export const handleAddContact = (setSelectedContact, setShowModal) => {
-//   setSelectedContact(null);
-//   setShowModal(true);
-// };
+export const handleSave = async (
+  data,
+  selectedContact,
+  setAlert,
+  isActive,
+  setContacts,
+  setNoResultsMessage,
+  handleModalClose
+) => {
+  let result;
+  let successMessage = '';
 
-// // Function to handle saving contact data
-// export const handleSave = async (data, selectedContact, setAlert, handleModalClose) => {
-//   let result;
-//   let successMessage = '';
+  if (selectedContact) {
+    result = await contactService.updateContact(selectedContact.Cid, data);
+    successMessage = 'Contact updated successfully!';
+  } else {
+    result = await contactService.createContact(data);
+    successMessage = 'Contact saved successfully!';
+  }
 
-//   if (selectedContact) {
-//     // Update contact
-//     result = await contactService.updateContact(selectedContact.id, data);
-//     successMessage = 'Contact updated successfully!';
-//   } else {
-//     // Create new contact
-//     result = await contactService.createContact(data);
-//     successMessage = 'Contact saved successfully!';
-//   }
+  if (result.success) {
+    handleModalClose();
+    setAlert({ show: true, message: successMessage, type: 'success' });
+  } else {
+    setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
+  }
 
-//   if (result.success) {
-//     setAlert({ show: true, message: successMessage, type: 'success' });
-//   } else {
-//     setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
-//   }
+  if (isActive) {
+    fetchActiveContacts(setContacts, setNoResultsMessage);
+  } else {
+    fetchInactiveContacts(setContacts, setNoResultsMessage);
+  }
+};
 
-//   handleModalClose();
-// };
+export const handleSearchChange = (
+  e,
+  searchQuery,
+  setSearchQuery,
+  setContacts,
+  setNoResultsMessage,
+  handleSearchContacts
+) => {
+  const { name, value } = e.target;
+  setSearchQuery(prev => ({ ...prev, [name]: value }));
 
-// // Function to handle search query changes
-// export const handleSearchChange = (
-//   e,
-//   searchQuery,
-//   setSearchQuery,
-//   fetchContacts,
-//   isActive,
-//   setContacts
-// ) => {
-//   const { name, value } = e.target;
-//   setSearchQuery(prev => ({ ...prev, [name]: value }));
+  if (value === '') {
+    fetchActiveContacts(setContacts, setNoResultsMessage); // If search input is cleared, fetch active entities
+  } else {
+    handleSearchContacts(searchQuery, setContacts, setNoResultsMessage);
+  }
+};
 
-//   if (value === '') {
-//     fetchContacts(isActive, setContacts); // If search input is cleared, fetch active entities
-//   } else {
-//     handleSearchEntities(searchQuery, fetchContacts, setContacts); // If there's input, fetch filtered entities
-//   }
-// };
-
-// // Function to search contacts
-// export const handleSearchEntities = async (searchQuery, fetchContacts, setContacts) => {
-//   const result = await contactService.searchContacts(searchQuery);
-//   if (result.success) {
-//     setContacts(result.data); // Update contacts directly with search results
-//   } else {
-//     console.error(result.error);
-//   }
-// };
-
-// // Function to toggle active/inactive state
-// export const handleToggleActiveInactive = (
-//   prevIsActive,
-//   fetchContacts,
-//   setIsActive,
-//   setContacts
-// ) => {
-//   const newIsActive = !prevIsActive; // Toggle the active state
-//   fetchContacts(newIsActive, setContacts); // Fetch contacts based on the new state
-//   setIsActive(newIsActive); // Update the state
-// };
+export const handleSearchContacts = async (searchQuery, setContacts, setNoResultsMessage) => {
+  const result = await contactService.searchContacts(searchQuery);
+  if (result.success) {
+    setContacts(result.data);
+    if (result.data.length === 0) {
+      setNoResultsMessage('No contacts found for the specified search criteria.');
+    } else {
+      setNoResultsMessage('');
+    }
+  } else {
+    console.error(result.error);
+  }
+};
