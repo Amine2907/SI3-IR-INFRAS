@@ -45,13 +45,13 @@ export const signIn = async (req, res) => {
   const { email, password } = req.body; 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (data && data.session) {
-    console.log('Access Token:', data.session.tokenHash);
+    console.log('Access Token:', data.session.access_token);
   }
   if (error) {
     console.error('Supabase Sign-in Error:', error.message); // Log the error message
     return res.status(400).json({ error: error.message });
   }
-  return res.status(200).json({ message: 'Sign in successful', user: data.user,accessToken: data.session.tokenHash, });
+  return res.status(200).json({ message: 'Sign in successful', user: data.user,accessToken: data.session.access_token, });
 };
 // Sign out Controller
 export const signOut = async (req, res) => {

@@ -1,23 +1,8 @@
-/**
- * AuthProvider component
- *
- * This component provides authentication context to its child components.
- * It manages the authentication state, including whether a user is authenticated,
- * the user information, and loading state. It also provides login and logout functions
- * to manage user sessions.
- *
- * On mount, it checks if a valid token exists in localStorage to determine
- * the initial authentication state and user data.
- *
- * @param {ReactNode} children - The child components that will have access to
- * the authentication context.
- * @returns {ReactElement} The AuthProvider component wrapping its children
- * with AuthContext.
- */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 const AuthContext = createContext();
+
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
