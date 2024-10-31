@@ -67,8 +67,10 @@ export const handleSave = async (
     : 'Company saved successfully!';
 
   if (selectedCompany) {
+    setNoResultsMessage('');
     result = await CompanyService.updateCompany(selectedCompany.ENTid, data);
   } else {
+    setNoResultsMessage('');
     result = await CompanyService.createCompany(data);
   }
 

@@ -35,12 +35,14 @@ const CompanyList = () => {
 
   // Handle adding a new company
   const handleAddCompany = () => {
+    setNoResultsMessage('');
     setSelectedCompany(null);
     setShowModal(true);
   };
 
   // Close modal and refresh companies
   const handleModalClose = () => {
+    setNoResultsMessage('');
     setShowModal(false);
   };
 
@@ -80,6 +82,7 @@ const CompanyList = () => {
                   onEdit={() => {
                     setSelectedCompany(company);
                     setShowModal(true);
+                    setNoResultsMessage('');
                   }}
                 />
               </Grid>
@@ -105,7 +108,8 @@ const CompanyList = () => {
               handleModalClose,
               setIsActive,
               isActive,
-              setCompanies
+              setCompanies,
+              setNoResultsMessage
             )
           }
           onClose={handleModalClose}
