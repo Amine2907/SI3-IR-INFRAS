@@ -17,19 +17,22 @@ export default function PasswordReset() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const access_token = new URLSearchParams(window.location.search).get('access_token');
-  // Check if access_token is present in the URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const type = urlParams.get('type') || 'recovery';
+  const token_hash = new URLSearchParams(window.location.search).get('token_hash');
+
+  // Check if token_hash is present in the URL
   useEffect(() => {
-    if (!access_token) {
+    if (!token_hash) {
       setError('Missing reset token. Please try the reset password process again.');
     }
-  }, [access_token]);
+  }, [token_hash]);
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    // Validate access_token
-    if (!access_token) {
+    // Validate token_hash
+    if (!token_hash) {
       setError('Missing reset token. Please try the reset password process again.');
       return;
     }
@@ -42,7 +45,7 @@ export default function PasswordReset() {
     setError(null);
     try {
       // Call the password reset service
-      const result = await AuthService.confirmResetPassword(access_token, password);
+      const result = await AuthService.confirmResetPassword(token_hash, type, password);
 
       // Handle the response from the service
       if (result.success) {

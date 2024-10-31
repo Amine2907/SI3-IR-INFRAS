@@ -45,13 +45,13 @@ export const signIn = async (req, res) => {
   const { email, password } = req.body; 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (data && data.session) {
-    console.log('Access Token:', data.session.access_token);
+    console.log('Access Token:', data.session.tokenHash);
   }
   if (error) {
     console.error('Supabase Sign-in Error:', error.message); // Log the error message
     return res.status(400).json({ error: error.message });
   }
-  return res.status(200).json({ message: 'Sign in successful', user: data.user,accessToken: data.session.access_token, });
+  return res.status(200).json({ message: 'Sign in successful', user: data.user,accessToken: data.session.tokenHash, });
 };
 // Sign out Controller
 export const signOut = async (req, res) => {
@@ -80,14 +80,14 @@ export const signOut = async (req, res) => {
 // // Confirm Reset Password for the user
 // export const confirmResetPassword = async (req, res) => {
 //   const { newPassword } = req.body; // New password from the request body
-//   const { access_token } = req.query; // Token from the query string
+//   const { tokenHash } = req.query; // Token from the query string
 //   // Validate that both token and new password are provided
-//   if (!newPassword || !access_token) {
+//   if (!newPassword || !tokenHash) {
 //     return res.status(400).json({ success: false, error: 'New password and token are required.' });
 //   }
 //   try {
 //     // Step 1: Authenticate the user using the token
-//     const { error: sessionError } = await supabase.auth.setSession(access_token);
+//     const { error: sessionError } = await supabase.auth.setSession(tokenHash);
 //     if (sessionError) {
 //       return res.status(400).json({ success: false, error: 'Invalid or expired token.' });
 //     }
@@ -111,8 +111,6 @@ export const resetPassword = async (req, res) => {
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
     return res.status(400).json({ success: false, error: 'Invalid email address.' });
   }
-  // URL to redirect after password reset
-  // const redirectToUrl = `${FRONT_URL}/auth/confirm-reset-password`;
   try {
     const { error } = await supabase.auth.resetPasswordForEmail(email);
     if (error) {
@@ -126,30 +124,32 @@ export const resetPassword = async (req, res) => {
 };
 // Function to confirm the password reset and set the new password
 export const confirmResetPassword = async (req, res) => {
-  const { newPassword } = req.body;
-  // Assuming the access token is sent in the Authorization header as Bearer <token>
-  const authHeader = req.headers.authorization;
-  const accessToken = authHeader && authHeader.split(' ')[1];
-  if (!accessToken) {
-    return res.status(401).json({ error: 'Access token is required.' });
+  const { token_hash, type, newPassword } = req.body;
+  // Check if newPassword and tokenHash are provided
+  if (!token_hash || !type || !newPassword) {
+    return res.status(400).json({ error: 'Token hash, type, and new password are required.' });
   }
   try {
-    // Verify the access token and get the user information
-    const { data: user, error: userError } = await supabase.auth.getUser(accessToken);
-    if (userError || !user) {
-      throw userError || new Error('User not found.');
+    // Step 1: Verify the OTP using tokenHash
+    const { data, error: verifyError } = await supabase.auth.verifyOtp({
+      type: 'recovery',
+      token_hash,
+    });
+    if (verifyError) {
+      return res.status(400).json({ error: 'Invalid or expired token hash.' });
     }
-    // Update the password using the user ID from the verified token
+    // Step 2: Update the user password
+    const userId = data.user.id; // retrieve user ID from verification data
     const { error: updateError } = await supabase.auth.updateUser({
       password: newPassword,
-      id: user.id, // You can directly get user.id from the user data retrieved above
     });
     if (updateError) {
-      throw updateError;
+      throw updateError; // Error if updating password fails
     }
+    // Successful response
     res.status(200).json({ message: 'Password changed successfully.' });
   } catch (error) {
-    console.error('Error changing password:', error);
-    res.status(500).json({ error: 'An error occurred while changing the password.' });
+    console.error('Error changing password:', error.message);
+    res.status(500).json({ error: error.message || 'An error occurred while changing the password.' });
   }
 };

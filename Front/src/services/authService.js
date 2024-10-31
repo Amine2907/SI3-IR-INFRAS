@@ -66,18 +66,20 @@ const resetPassword = async email => {
 };
 
 // Function to confirm password reset for the user
-const confirmResetPassword = async (access_token, newPassword) => {
+const confirmResetPassword = async (token_hash, type, newPassword) => {
   try {
     const response = await axios.post(
       `${API_URL}/confirm-reset-password`,
       {
-        new_password: newPassword,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
+        token_hash: token_hash,
+        type: type,
+        newPassword: newPassword,
       }
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${tokenHash}`,
+      //   },
+      // }
     );
     return response.data;
   } catch (error) {

@@ -54,7 +54,6 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   const { isAuthenticated } = useAuth();
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const navigate = useNavigate();
-  const [showSidebar, setShowSidebar] = useState(true);
   const handleOnMouseEnter = () => {
     if (controller.miniSidenav && !onMouseEnter) {
       setMiniSidenav(dispatch, false);
@@ -80,12 +79,10 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
     const publicPaths = ['/auth/confirm-sign-up', '/auth/confirm-reset-password'];
     if (!isAuthenticated && !publicPaths.includes(pathname)) {
       navigate('/auth', { replace: true });
-      setShowSidebar(false);
     }
     const handlePopState = () => {
       if (!isAuthenticated && !publicPaths.includes(pathname)) {
         navigate('/dashboard', { replace: true });
-        setShowSidebar(true);
       }
     };
     window.history.pushState(null, null, window.location.href);
@@ -131,7 +128,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {controller.layout === 'dashboard' && showSidebar && !pathname.startsWith('/auth') && (
+      {controller.layout === 'dashboard' && !pathname.startsWith('/auth') && (
         <>
           <Sidenav
             color={controller.sidenavColor}
