@@ -49,6 +49,7 @@ const ContactList = () => {
   const handleAddContact = () => {
     setSelectedContact(null); // Clear selected contact for new entry
     setShowModal(true); // Show modal for adding a new contact
+    fetchActiveContacts(setContacts, setNoResultsMessage);
   };
 
   const handleModalClose = () => {
@@ -69,6 +70,8 @@ const ContactList = () => {
     );
     if (result) {
       handleModalClose();
+      fetchActiveContacts(setContacts, setNoResultsMessage);
+      setIsActive(true);
     }
   };
   // Handle search change

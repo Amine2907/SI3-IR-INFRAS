@@ -131,6 +131,7 @@ const EntiteList = () => {
   const handleAddEntite = () => {
     setSelectedEntity(null); // Clear selected entity for new entry
     setShowModal(true); // Show modal for adding a new entity
+    fetchActiveEntites(); // Refresh entity list after adding/editing
   };
 
   // Function to close modal
@@ -145,7 +146,7 @@ const EntiteList = () => {
     let successMessage = '';
     if (selectedEntity) {
       // Update entity
-      console.log('Updating entity:', selectedEntity.Eid);
+      // console.log('Updating entity:', selectedEntity.Eid);
       result = await entityService.updateEntity(selectedEntity.Eid, data);
       successMessage = 'Entité updated successfully!';
     } else {
@@ -153,12 +154,13 @@ const EntiteList = () => {
       result = await entityService.createEntity(data);
       successMessage = 'Entité saved successfully!';
     }
-
     // Handle the result with alert feedback
     if (result.success) {
       setAlert({ show: true, message: successMessage, type: 'success' });
+      fetchActiveEntites();
     } else {
       setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
+      fetchActiveEntites();
     }
     handleModalClose();
     if (isActive) {
