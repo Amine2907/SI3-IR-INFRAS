@@ -1,4 +1,13 @@
-// contactFunctions.js
+/**
+ * This file contains functions to interact with the contacts feature.
+ * The functions are:
+ *
+ * - fetchActiveContacts: Fetches all the active contacts from the database.
+ * - fetchInactiveContacts: Fetches all the inactive contacts from the database.
+ * - handleToggleActiveInactive: Toggles between displaying active and inactive contacts.
+ * - handleSearchContacts: Fetches contacts matching the search query.
+ * - handleSave: Saves a contact in the database or updates an existing one.
+ */
 import contactService from 'services/contactsService';
 
 export const fetchActiveContacts = async (setContacts, setNoResultsMessage) => {

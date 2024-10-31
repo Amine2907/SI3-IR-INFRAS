@@ -1,3 +1,34 @@
+/**
+ * EntiteList component
+ *
+ * This component renders a list of entities with search and filter capabilities.
+ * Users can toggle between active and inactive entities, search by multiple criteria,
+ * and add or edit entities via a modal form.
+ *
+ * State Variables:
+ * - entites: Array of entities to be displayed.
+ * - showModal: Boolean indicating whether the entity modal is visible.
+ * - selectedEntity: The currently selected entity for editing, or null for adding a new entity.
+ * - alert: Object containing alert visibility, message, and type.
+ * - isActive: Boolean indicating whether active entities are displayed.
+ * - searchQuery: Object containing search fields for filtering entities.
+ * - noResultsMessage: Message displayed when no entities match the search criteria.
+ *
+ * Functions:
+ * - renderSearch: Filters entities based on the search query.
+ * - fetchActiveEntites: Fetches and updates the list of active entities.
+ * - fetchInactiveEntites: Fetches and updates the list of inactive entities.
+ * - handleAddEntite: Opens the modal for adding a new entity.
+ * - handleModalClose: Closes the modal and refreshes the entity list.
+ * - handleSave: Saves a new or edited entity and updates the list.
+ * - handleCloseAlert: Closes the alert notification.
+ * - handleRoleChange: Updates search query based on role selection.
+ * - handleSearchChange: Updates search query and fetches entities based on input.
+ * - handleSearchEntities: Fetches entities matching the search query.
+ * - handleToggleActiveInactive: Toggles between displaying active and inactive entities.
+ *
+ * The component uses Material Dashboard 2 React components and Material UI for styling.
+ */
 import React, { useEffect, useState } from 'react';
 import entityService from 'services/entityService';
 // @mui material components

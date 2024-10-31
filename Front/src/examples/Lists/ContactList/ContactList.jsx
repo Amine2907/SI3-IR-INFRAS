@@ -1,4 +1,13 @@
-// ContactList.js
+/**
+ * This component renders the contact list page.
+ *
+ * It renders a card with a form to search contacts by name, first name, and mission.
+ * It renders a button to add a new contact.
+ * It renders a list of contacts, with a card for each contact.
+ * It renders a toggle to activate or desactivate the contact.
+ * It renders a modal to add or edit a contact.
+ * It also renders a feedback alert for actions.
+ */
 import React, { useEffect, useState } from 'react';
 import ContactCard from 'examples/Cards/ConatctCards/ContactCard';
 // @mui material components
@@ -20,7 +29,6 @@ import {
   handleSearchContacts,
   handleSearchChange,
 } from './contactsFuncs';
-
 const ContactList = () => {
   const [contacts, setContacts] = useState([]);
   const [showModal, setShowModal] = useState(false);

@@ -1,5 +1,11 @@
 /**
  * Functions for handling companies list, saving, fetching, and toggling active/inactive status.
+ * fetchActiveCompanies: fetches active companies and updates the state
+ * fetchInactiveCompanies: fetches inactive companies and updates the state
+ * handleSave: handles saving a new or edited company
+ * handleToggleActiveInactive: toggles the active status of a company
+ * handleCloseAlert: closes any alerts
+ * handleSearchCompanies: searches companies by name or siret
  */
 import CompanyService from 'services/CompanyService';
 
