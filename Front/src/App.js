@@ -29,24 +29,14 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import ResetPasswordForm from 'layouts/authentification/ResetPasswordForm';
 import ConfirmSignup from 'layouts/authentification/ConfirmSignUp';
-import ProfileModal from 'examples/popup/SettingsPopUp/ProfilePopUp';
+import Billing from 'layouts/billing';
+import Contacts from 'layouts/contacts';
+import Profile from 'layouts/profile';
+import Entites from 'layouts/entites';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
   const { pathname } = useLocation();
-  const navigate = useNavigate();
-  const isTokenExpired = token => {
-    if (!token) return true;
-    const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT
-    const expirationTime = payload.exp * 1000; // Convert exp to milliseconds
-    return Date.now() >= expirationTime; // Check if the current time exceeds the expiration time
-  };
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (isTokenExpired(token)) {
-      navigate('/auth');
-    }
-  }, [navigate]);
   return (
     <AuthProvider>
       <InnerApp
@@ -64,6 +54,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   const { isAuthenticated } = useAuth();
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const navigate = useNavigate();
+  const [showSidebar, setShowSidebar] = useState(true);
   const handleOnMouseEnter = () => {
     if (controller.miniSidenav && !onMouseEnter) {
       setMiniSidenav(dispatch, false);
@@ -81,7 +72,6 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   const handleConfiguratorOpen = () => {
     setOpenConfigurator(dispatch, !controller.openConfigurator);
   };
-
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -90,10 +80,15 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
     const publicPaths = ['/auth/confirm-sign-up', '/auth/confirm-reset-password'];
     if (!isAuthenticated && !publicPaths.includes(pathname)) {
       navigate('/auth', { replace: true });
+      setShowSidebar(false);
     }
     const handlePopState = () => {
       if (!isAuthenticated && !publicPaths.includes(pathname)) {
         navigate('/dashboard', { replace: true });
+        setShowSidebar(true);
+      } else {
+        navigate('/auth', { replace: true });
+        setShowSidebar(false);
       }
     };
     window.history.pushState(null, null, window.location.href);
@@ -139,7 +134,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {controller.layout === 'dashboard' && !pathname.startsWith('/auth') && (
+      {controller.layout === 'dashboard' && showSidebar && !pathname.startsWith('/auth') && (
         <>
           <Sidenav
             color={controller.sidenavColor}
@@ -166,12 +161,43 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/billing"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Billing />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/contacts"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Contacts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/entites"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Entites />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/auth" />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/auth/confirm-reset-password" element={<ResetPasswordForm />} />
         <Route path="/auth/confirm-sign-up" element={<ConfirmSignup />} />
-        <Route path="/popup/profile" element={<ProfileModal />} />
       </Routes>
     </ThemeProvider>
   );
