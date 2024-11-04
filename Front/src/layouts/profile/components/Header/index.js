@@ -61,7 +61,7 @@ function Header() {
             <AppBar position="static">
               <Tabs orientation={tabsOrientation} value={tabValue} onChange={handleSetTabValue}>
                 <Tab
-                  label="Settings"
+                  label="Paramètres"
                   icon={
                     <Icon fontSize="small" sx={{ mt: -0.25 }}>
                       settings
@@ -69,7 +69,7 @@ function Header() {
                   }
                 />
                 <Tab
-                  label="Users"
+                  label="Utiisateur"
                   icon={
                     <Icon fontSize="small" sx={{ mt: -0.25 }}>
                       person
@@ -77,7 +77,7 @@ function Header() {
                   }
                 />
                 <Tab
-                  label="Companies"
+                  label="Entreprises"
                   icon={
                     <Icon fontSize="small" sx={{ mt: -0.25 }}>
                       business

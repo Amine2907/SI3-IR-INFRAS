@@ -23,7 +23,7 @@ const useUserData = user => {
         if (response.success && response.data) {
           setUserData(Array.isArray(response.data) ? response.data : [response.data]);
         } else {
-          setError(response.error?.message || 'Failed to fetch user data');
+          setError(response.error?.message || 'Échec de la récupération des données utilisateur');
         }
       } catch (err) {
         setError('An error occurred while fetching user data: ' + err.message);
@@ -32,7 +32,7 @@ const useUserData = user => {
       }
     } else {
       setLoading(false);
-      setError('User information is not available');
+      setError("Les informations sur l'utilisateur ne sont pas disponibles");
     }
   }, [user]);
 

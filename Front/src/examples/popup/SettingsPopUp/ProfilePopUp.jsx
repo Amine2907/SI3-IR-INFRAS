@@ -6,7 +6,7 @@
  * @returns A JSX element representing the modal.
  */
 import React, { useState } from 'react';
-import styles from './ProfilePopUp.module.css';
+import styles from '../style.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
@@ -43,7 +43,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           name="firstname"
           value={formData.firstname || ''}
           onChange={handleChange}
-          placeholder="firstname*"
+          placeholder="Prenom*"
           style={{
             marginBottom: '5px',
             width: '320px',
@@ -56,7 +56,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           name="lastname"
           value={formData.lastname || ''}
           onChange={handleChange}
-          placeholder="lastname*"
+          placeholder="Nom*"
           style={{
             marginBottom: '5px',
             width: '320px',
@@ -83,7 +83,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
             required
           >
             <MenuItem value="" disabled>
-              -- Select a Gender --
+              -- Choisir genre --
             </MenuItem>
             <MenuItem value="Homme">Homme</MenuItem>
             <MenuItem value="Femme">Femme</MenuItem>
@@ -126,7 +126,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
             required
           >
             <MenuItem value="" disabled>
-              -- Select a Department--
+              -- Choisir le département--
             </MenuItem>
             <MenuItem value="RH">RH</MenuItem>
             <MenuItem value="Direction">Direction</MenuItem>
@@ -147,7 +147,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           Save
         </MDButton>
         <MDButton onClick={onClose} variant="gradient" color="dark" style={{ marginLeft: '170px' }}>
-          Close
+          Fermer
         </MDButton>
       </div>
     </div>

@@ -16,11 +16,13 @@ export const fetchActiveCompanies = async (setCompanies, setAlert, setNoResultsM
     setNoResultsMessage('');
     setCompanies(result.data);
     if (result.data.length === 0) {
-      setNoResultsMessage('No Active contacts found.');
+      setNoResultsMessage('Aucun entreprise actif trouvé.');
     }
   } else {
     setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
-    setNoResultsMessage('Error fetching contacts. Please try again later.');
+    setNoResultsMessage(
+      'Erreur lors de la récupération des entreprises. Veuillez réessayer plus tard.'
+    );
   }
 };
 // Fetch inactive companies
@@ -30,11 +32,13 @@ export const fetchInactiveCompanies = async (setCompanies, setAlert, setNoResult
     setNoResultsMessage('');
     setCompanies(result.data);
     if (result.data.length === 0) {
-      setNoResultsMessage('No Inactive companies found.');
+      setNoResultsMessage('Aucune entreprise inactive trouvée.');
     }
   } else {
     setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
-    setNoResultsMessage('Error fetching companies. Please try again later.');
+    setNoResultsMessage(
+      'Erreur lors de la récupération des entreprises. Veuillez réessayer plus tard.'
+    );
   }
 };
 // Toggle between active and inactive companies
@@ -69,8 +73,8 @@ export const handleSave = async (
 ) => {
   let result;
   const successMessage = selectedCompany
-    ? 'Company updated successfully!'
-    : 'Company saved successfully!';
+    ? 'Entreprise mise à jour avec succès !'
+    : 'Entreprise enregistrée avec succès !';
 
   if (selectedCompany) {
     setNoResultsMessage('');

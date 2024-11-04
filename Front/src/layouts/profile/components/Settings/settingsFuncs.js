@@ -53,7 +53,7 @@ function SettingsFunctions(setUserData) {
           setLocalUserData(response.data);
           setUserData(response.data);
         } else {
-          setError(response.error?.message || 'Failed to fetch user data');
+          setError(response.error?.message || 'Échec de la récupération des données utilisateur.');
         }
       } catch (err) {
         setError('An error occurred while fetching user data: ' + err.message);
@@ -62,7 +62,7 @@ function SettingsFunctions(setUserData) {
       }
     } else {
       setLoading(false);
-      setError('User information is not available');
+      setError('Les informations utilisateur ne sont pas disponibles');
     }
   }, [user, setUserData]);
 
@@ -78,19 +78,24 @@ function SettingsFunctions(setUserData) {
     if (!passwordComplexityCheck(newPassword)) {
       setAlert({
         show: true,
-        message: 'Password must include uppercase, lowercase, number, and special character.',
+        message:
+          'Le mot de passe doit inclure des majuscules, des minuscules, un chiffre et un caractère spécial.',
         type: 'error',
       });
       return;
     }
     if (newPassword !== confirmNewPassword) {
-      setAlert({ show: true, message: 'New passwords do not match.', type: 'error' });
+      setAlert({
+        show: true,
+        message: 'Les nouveaux mots de passe ne correspondent pas.',
+        type: 'error',
+      });
       return;
     }
     if (newPassword.length < 8) {
       setAlert({
         show: true,
-        message: 'Password must be at least 8 characters long.',
+        message: 'Le mot de passe doit comporter au moins 8 caractères.',
         type: 'error',
       });
       return;
@@ -98,7 +103,11 @@ function SettingsFunctions(setUserData) {
     try {
       const userId = user?.id;
       if (!userId) {
-        setAlert({ show: true, message: 'User ID is not available.', type: 'error' });
+        setAlert({
+          show: true,
+          message: "L'ID utilisateur n'est pas disponible.",
+          type: 'error',
+        });
         return;
       }
       let successMessage = '';
@@ -113,7 +122,7 @@ function SettingsFunctions(setUserData) {
           navigate('/auth');
         }, 3000);
       } else {
-        const errorMessage = response.error?.message || 'Failed to change password';
+        const errorMessage = response.error?.message || 'Échec de la modification du mot de passe.';
         setAlert({ show: true, message: `Error: ${errorMessage}`, type: 'error' });
       }
     } catch (error) {
@@ -127,13 +136,15 @@ function SettingsFunctions(setUserData) {
     try {
       if (selectedUser) {
         result = await settingsService.updateUser(selectedUser.id, data);
-        successMessage = 'User updated successfully!';
+        successMessage = 'Utilisateur mis à jour avec succès !';
       }
       if (result && result.success) {
         setAlert({ show: true, message: successMessage, type: 'success' });
         await fetchUserData();
       } else {
-        const errorMessage = result?.error || 'Unknown error occurred while updating user.';
+        const errorMessage =
+          result?.error ||
+          "Une erreur inconnue s'est produite lors de la mise à jour de l'utilisateur.";
         setAlert({ show: true, message: `Error: ${errorMessage}`, type: 'error' });
       }
     } catch (error) {

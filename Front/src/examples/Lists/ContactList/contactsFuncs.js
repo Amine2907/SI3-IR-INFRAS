@@ -16,11 +16,13 @@ export const fetchActiveContacts = async (setContacts, setNoResultsMessage) => {
   if (result.success) {
     setContacts(result.data);
     if (result.data.length === 0) {
-      setNoResultsMessage('No active contacts found.');
+      setNoResultsMessage('Aucun contact actif trouvé.');
     }
   } else {
     console.error(result.error);
-    setNoResultsMessage('Error fetching contacts. Please try again later.');
+    setNoResultsMessage(
+      'Erreur lors de la récupération des contacts. Veuillez réessayer plus tard.'
+    );
   }
 };
 
@@ -29,11 +31,13 @@ export const fetchInactiveContacts = async (setContacts, setNoResultsMessage) =>
   if (result.success) {
     setContacts(result.data);
     if (result.data.length === 0) {
-      setNoResultsMessage('No inactive contacts found.');
+      setNoResultsMessage('Aucun contact inactif trouvé.');
     }
   } else {
     console.error(result.error);
-    setNoResultsMessage('Error fetching contacts. Please try again later.');
+    setNoResultsMessage(
+      'Erreur lors de la récupération des contacts. Veuillez réessayer plus tard.'
+    );
   }
 };
 
@@ -51,10 +55,10 @@ export const handleSave = async (
 
   if (selectedContact) {
     result = await contactService.updateContact(selectedContact.Cid, data);
-    successMessage = 'Contact updated successfully!';
+    successMessage = 'Contact mis à jour avec succès !';
   } else {
     result = await contactService.createContact(data);
-    successMessage = 'Contact saved successfully!';
+    successMessage = 'Contact enregistré avec succès !';
   }
 
   if (result.success) {
@@ -94,7 +98,7 @@ export const handleSearchContacts = async (searchQuery, setContacts, setNoResult
   if (result.success) {
     setContacts(result.data);
     if (result.data.length === 0) {
-      setNoResultsMessage('No contacts found for the specified search criteria.');
+      setNoResultsMessage('Aucun contact trouvé pour les critères de recherche spécifiés.');
     } else {
       setNoResultsMessage('');
     }

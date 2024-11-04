@@ -30,7 +30,7 @@ function Users() {
   if (authLoading || loading)
     return (
       <Alert variant="destructive" className="mt-4">
-        <AlertDescription>Loading</AlertDescription>
+        <AlertDescription>Chargement...</AlertDescription>
       </Alert>
     );
 
@@ -44,7 +44,7 @@ function Users() {
   if (!userData.length)
     return (
       <Alert variant="destructive" className="mt-4">
-        <AlertDescription>No user data available</AlertDescription>
+        <AlertDescription>Aucune donnée utilisateur disponible</AlertDescription>
       </Alert>
     );
   return (

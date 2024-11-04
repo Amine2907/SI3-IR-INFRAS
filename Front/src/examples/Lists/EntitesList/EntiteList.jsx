@@ -108,11 +108,13 @@ const EntiteList = () => {
     if (result.success) {
       setEntites(result.data); // Update your entites state here
       if (result.data.length === 0) {
-        setNoResultsMessage('No Active entites found.');
+        setNoResultsMessage('Aucune entité active trouvée.');
       }
     } else {
       console.error(result.error);
-      setNoResultsMessage('Error fetching entites. Please try again later.');
+      setNoResultsMessage(
+        'Erreur lors de la récupération des entités. Veuillez réessayer plus tard.'
+      );
     }
   };
   const fetchInactiveEntites = async () => {
@@ -120,11 +122,13 @@ const EntiteList = () => {
     if (result.success) {
       setEntites(result.data);
       if (result.data.length === 0) {
-        setNoResultsMessage('No Inactive entites found.');
+        setNoResultsMessage('Aucune entité inactive trouvée.');
       } // Update your entites state here
     } else {
       console.error(result.error);
-      setNoResultsMessage('Error fetching entites. Please try again later.');
+      setNoResultsMessage(
+        'Erreur lors de la récupération des entités. Veuillez réessayer plus tard.'
+      );
     }
   };
   // Function to handle adding entities
@@ -148,11 +152,11 @@ const EntiteList = () => {
       // Update entity
       // console.log('Updating entity:', selectedEntity.Eid);
       result = await entityService.updateEntity(selectedEntity.Eid, data);
-      successMessage = 'Entité updated successfully!';
+      successMessage = 'Entité mise à jour avec succès !';
     } else {
       // Create new entity
       result = await entityService.createEntity(data);
-      successMessage = 'Entité saved successfully!';
+      successMessage = 'Entité enregistrée avec succès !';
     }
     // Handle the result with alert feedback
     if (result.success) {
@@ -208,7 +212,7 @@ const EntiteList = () => {
         setEntites(result.data);
         // Show message if no contacts are found
         if (result.data.length === 0) {
-          setNoResultsMessage('No contacts found for the specified search criteria.');
+          setNoResultsMessage('Aucune entité trouvée pour les critères de recherche spécifiés.');
         } else {
           setNoResultsMessage(''); // Clear message if results are found
         }
@@ -251,33 +255,33 @@ const EntiteList = () => {
   const filteredEntites = renderSearch();
   return (
     <div className="entite-list">
-      <Card id="delete-account">
+      <Card id="search-entite">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDBox pr={1}>
             <div className="entite-list">
               <MDInput
-                label="Search by name "
+                label="Recherche par nom"
                 name="nom"
                 value={searchQuery.nom}
                 onChange={handleSearchChange}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />
               <MDInput
-                label="Search by ville"
+                label="Recherche par ville"
                 name="ville"
                 value={searchQuery.ville}
                 onChange={handleSearchChange}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />
               <MDInput
-                label="Search by region"
+                label="Recherche par region"
                 name="region"
                 value={searchQuery.region}
                 onChange={handleSearchChange}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />
               <MDInput
-                label="Search by code postal "
+                label="Recherche par code postal"
                 name="code_postal"
                 value={searchQuery.code_postal}
                 onChange={handleSearchChange}
@@ -311,7 +315,7 @@ const EntiteList = () => {
                 variant="gradient"
                 color="dark"
               >
-                Clear Search
+                Effacer la recherche
               </MDButton>
             </div>
           </MDBox>

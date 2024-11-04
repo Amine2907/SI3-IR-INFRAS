@@ -51,10 +51,10 @@ const CompanyList = () => {
       <Card id="company-card">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
-            Companies
+            Entreprises
           </MDTypography>
           <MDButton onClick={handleAddCompany} variant="gradient" color="dark">
-            <Icon sx={{ fontWeight: 'bold' }}>add</Icon>&nbsp;Add Company
+            <Icon sx={{ fontWeight: 'bold' }}>add</Icon>&nbsp;Ajouter Entreprise
           </MDButton>
         </MDBox>
         <MDBox p={2}>

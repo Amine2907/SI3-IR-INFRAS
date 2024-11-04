@@ -24,7 +24,9 @@ export default function PasswordReset() {
   // Check if token_hash is present in the URL
   useEffect(() => {
     if (!token_hash) {
-      setError('Missing reset token. Please try the reset password process again.');
+      setError(
+        'Token de réinitialisation manquant. Veuillez réessayer le processus de réinitialisation du mot de passe.'
+      );
     }
   }, [token_hash]);
 
@@ -33,12 +35,14 @@ export default function PasswordReset() {
 
     // Validate token_hash
     if (!token_hash) {
-      setError('Missing reset token. Please try the reset password process again.');
+      setError(
+        'Token de réinitialisation manquant. Veuillez réessayer le processus de réinitialisation du mot de passe.'
+      );
       return;
     }
     // Validate password inputs
     if (!password || password !== confirmPassword) {
-      setError('Passwords do not match. Please try again.');
+      setError('Les mots de passe ne correspondent pas. Veuillez réessayer.');
       return;
     }
     // Reset error state before the request
@@ -49,15 +53,21 @@ export default function PasswordReset() {
 
       // Handle the response from the service
       if (result.success) {
-        setMessage('Password reset successfully.');
+        setMessage('Le mot de passe a été réinitialisé avec succès.');
         setPassword(''); // Clear password fields after success
         setConfirmPassword(''); // Clear confirm password field
       } else {
-        setError(result.error || 'An error occurred while resetting the password.');
+        setError(
+          result.error ||
+            'Une erreur s&apos;est produite lors de la réinitialisation du mot de passe.'
+        );
         setMessage(null);
       }
     } catch (err) {
-      setError(err.message || 'An error occurred while resetting the password.'); // Ensure error message is clear
+      setError(
+        err.message ||
+          'Une erreur s&apos;est produite lors de la réinitialisation du mot de passe..'
+      ); // Ensure error message is clear
       setMessage(null);
     }
   };
@@ -65,8 +75,8 @@ export default function PasswordReset() {
   return (
     <Card className="w-[350px] mx-auto mt-16">
       <CardHeader>
-        <CardTitle>Reset Password</CardTitle>
-        <CardDescription>Enter your new password below</CardDescription>
+        <CardTitle>Réinitialiser le mot de passe</CardTitle>
+        <CardDescription>Entrez votre nouveau mot de passe ci-dessous</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
@@ -75,7 +85,7 @@ export default function PasswordReset() {
               <Input
                 id="password"
                 type="password"
-                placeholder="New Password"
+                placeholder="Noyveau Mot de passe"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
@@ -85,7 +95,7 @@ export default function PasswordReset() {
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="Confirm New Password"
+                placeholder="Confirmer mot de passe"
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
                 required
@@ -103,7 +113,7 @@ export default function PasswordReset() {
             </Alert>
           )}
           <CardFooter className="flex justify-between mt-4 px-0">
-            <Button type="submit">Reset Password</Button>
+            <Button type="submit">Réinitialiser le mot de passe</Button>
           </CardFooter>
         </form>
       </CardContent>

@@ -39,22 +39,22 @@ function Settings({ setUserData }) {
 
   // Define icons for each profile parameter
   const profileIcons = {
-    'Account Created': 'calendar_today',
+    'Compte créé le ': 'calendar_today',
     Email: 'email',
-    'First Name': 'person',
-    'Last Name': 'person',
+    Prénom: 'person',
+    Nom: 'person',
     Role: 'security',
-    Company: 'business',
+    Entreprise: 'business',
     Department: 'apartment',
     Status: 'toggle_on',
-    'Date of Birth': 'cake',
-    Gender: 'wc',
+    'Date de naissance': 'cake',
+    Genre: 'wc',
   };
 
   if (loading)
     return (
       <Alert variant="destructive" className="mt-4">
-        <AlertDescription>Loading</AlertDescription>
+        <AlertDescription>Chargement</AlertDescription>
       </Alert>
     );
 
@@ -68,7 +68,7 @@ function Settings({ setUserData }) {
   if (!userData)
     return (
       <Alert variant="destructive" className="mt-4">
-        <AlertDescription>No user data available</AlertDescription>
+        <AlertDescription>Aucune donnée utilisateur disponible</AlertDescription>
       </Alert>
     );
   return (
@@ -80,24 +80,24 @@ function Settings({ setUserData }) {
               userData={userData}
               title="Profile Information"
               info={{
-                'Account Created': userData.created_at
+                'Compte créé le ': userData.created_at
                   ? new Date(userData.created_at).toLocaleDateString()
-                  : 'Not available',
-                Email: userData.email || 'Not available',
-                'First Name': userData.firstname || 'Not available',
-                'Last Name': userData.lastname || 'Not available',
-                Role: userData.user_access || 'Not available',
-                Company: userData.entreprise || 'Not available',
-                Department: userData.department || 'Not available',
+                  : 'Non disponible',
+                Email: userData.email || 'Non disponible',
+                Prénom: userData.firstname || 'Non disponible',
+                Nom: userData.lastname || 'Non disponible',
+                Role: userData.user_access || 'Non disponible',
+                Entreprise: userData.entreprise || 'Non disponible',
+                Department: userData.department || 'Non disponible',
                 Status: userData.is_active ? 'Active' : 'Inactive',
-                'Date of Birth': userData.date_de_naissance
+                'Date de naissance': userData.date_de_naissance
                   ? new Date(userData.date_de_naissance).toLocaleDateString()
-                  : 'Not available',
-                Gender: userData.genre || 'Not available',
+                  : 'Non disponible',
+                Genre: userData.genre || 'Non disponible',
               }}
               action={{
                 onClick: handleEditClick,
-                tooltip: 'Edit Profile',
+                tooltip: 'Modifier Profil',
               }}
               shadow={false}
               icons={profileIcons} // Pass the icon map
@@ -109,10 +109,10 @@ function Settings({ setUserData }) {
           <Grid item xs={12} md={6}>
             <MDBox mb={2}>
               <Typography variant="h6" gutterBottom>
-                Change Password
+                Changer mot de passe
               </Typography>
               <TextField
-                label="Current Password"
+                label="Mot de passe actuel"
                 variant="outlined"
                 fullWidth
                 type={showPassword ? 'text' : 'password'}
@@ -121,7 +121,7 @@ function Settings({ setUserData }) {
                 sx={{ mb: 2 }}
               />
               <TextField
-                label="New Password"
+                label="Nouveau mot de passe"
                 variant="outlined"
                 fullWidth
                 type={showPassword ? 'text' : 'password'}
@@ -130,7 +130,7 @@ function Settings({ setUserData }) {
                 sx={{ mb: 2 }}
               />
               <TextField
-                label="Confirm New Password"
+                label="Confirmer mot de passe"
                 variant="outlined"
                 fullWidth
                 type={showPassword ? 'text' : 'password'}
@@ -139,7 +139,7 @@ function Settings({ setUserData }) {
                 sx={{ mb: 2 }}
               />
               <MDButton onClick={handleSavePassword} variant="gradient" color="dark">
-                Save
+                ENREGISTRER
               </MDButton>
               <MDButton type="button" onClick={togglePasswordVisibility}>
                 {showPassword ? (
@@ -169,5 +169,4 @@ function Settings({ setUserData }) {
 Settings.propTypes = {
   setUserData: PropTypes.func.isRequired,
 };
-
 export default Settings;

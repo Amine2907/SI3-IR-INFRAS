@@ -14,7 +14,7 @@
  * @param {Function} onClose the callback when the close button is clicked
  */
 import React, { useState } from 'react';
-import styles from './ContactPopUp.module.css';
+import styles from '../style.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
@@ -118,7 +118,7 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           Save
         </MDButton>
         <MDButton onClick={onClose} variant="gradient" color="dark" style={{ marginLeft: '170px' }}>
-          Close
+          Fermer
         </MDButton>
       </div>
     </div>

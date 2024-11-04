@@ -98,26 +98,26 @@ const ContactList = () => {
   };
   return (
     <div className="contact-list">
-      <Card id="delete-account">
+      <Card id="search-contacts">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDBox pr={1}>
             <div className="contact-list">
               <MDInput
-                label="Search by nom"
+                label="Recherche par nom"
                 name="nom"
                 value={searchQuery.nom}
                 onChange={handleChange}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />
               <MDInput
-                label="Search by prenom"
+                label="Recherche par prénom"
                 name="prenom"
                 value={searchQuery.prenom}
                 onChange={handleChange}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />
               <MDInput
-                label="Search by mission "
+                label="Recherche par mission"
                 name="mission"
                 value={searchQuery.mission}
                 onChange={handleChange}
@@ -133,7 +133,7 @@ const ContactList = () => {
                 variant="gradient"
                 color="dark"
               >
-                Clear Search
+                Effacer la recherche
               </MDButton>
             </div>
           </MDBox>

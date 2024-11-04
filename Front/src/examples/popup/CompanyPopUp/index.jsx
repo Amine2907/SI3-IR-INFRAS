@@ -13,7 +13,7 @@
  * @returns {ReactElement} The CompanyModal React element.
  */
 import React, { useState } from 'react';
-import styles from './index.module.css';
+import styles from '../style.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
@@ -67,7 +67,7 @@ const CompanyModal = ({ company, onSave, onClose }) => {
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
-          {company ? 'Modifier Company' : 'Ajouter Company'}
+          {company ? 'Modifier Entreprise' : 'Ajouter Entreprise'}
         </MDTypography>
         <MDInput
           name="nom"
@@ -138,7 +138,7 @@ const CompanyModal = ({ company, onSave, onClose }) => {
           Save
         </MDButton>
         <MDButton onClick={onClose} variant="gradient" color="dark" style={{ marginLeft: '170px' }}>
-          Close
+          Fermer
         </MDButton>
       </div>
     </div>

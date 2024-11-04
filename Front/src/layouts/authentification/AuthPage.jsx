@@ -152,16 +152,16 @@ export default function AuthPage() {
         </Card>
         <Card className="w-full lg:w-1/2">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center">Welcome</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">Bienvenue</CardTitle>
             <CardDescription className="text-center">
-              Sign in to your account or create a new one
+              Connectez-vous à votre compte ou créez-en un nouveau
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="signin" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="signin">Sign In</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                <TabsTrigger value="signin">Se connecter</TabsTrigger>
+                <TabsTrigger value="signup">S&apos;inscrire</TabsTrigger>
               </TabsList>
               <TabsContent value="signin">
                 <form>
@@ -178,7 +178,7 @@ export default function AuthPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
+                      <Label htmlFor="password">mot de passe</Label>
                       <div className="relative">
                         <Input
                           id="password"
@@ -202,7 +202,7 @@ export default function AuthPage() {
                     </div>
                   </div>
                   <Button className="w-full mt-6" type="submit" onClick={handleSignIn}>
-                    Sign In
+                    Se connecter
                   </Button>
                   {error && (
                     <Alert variant="destructive" className="mt-4">
@@ -217,13 +217,13 @@ export default function AuthPage() {
                 </form>
                 <div className="mt-4 text-center">
                   <Button onClick={() => setShowResetForm(!showResetForm)} variant="link">
-                    Forgot Password?
+                    Oublier mot de passe ?
                   </Button>
                 </div>
                 {showResetForm && (
                   <form onSubmit={handleResetPassword} className="mt-4">
                     <div className="space-y-2">
-                      <Label htmlFor="reset-email">Enter your email</Label>
+                      <Label htmlFor="reset-email">Entrez votre email</Label>
                       <Input
                         id="reset-email"
                         type="email"
@@ -233,7 +233,7 @@ export default function AuthPage() {
                       />
                     </div>
                     <Button className="w-full mt-4" type="submit">
-                      Reset Password
+                      Réinitialiser le mot de passe
                     </Button>
                     {error && (
                       <Alert variant="destructive" className="mt-4">
@@ -252,7 +252,7 @@ export default function AuthPage() {
                 <form>
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">First Name </Label>
+                      <Label htmlFor="name">Prenom</Label>
                       <Input
                         id="signup-firstName"
                         placeholder="John"
@@ -262,7 +262,7 @@ export default function AuthPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="name">Last Name</Label>
+                      <Label htmlFor="name">Nom</Label>
                       <Input
                         id="signup-lastName"
                         placeholder="Doe"
@@ -283,7 +283,7 @@ export default function AuthPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
+                      <Label htmlFor="password">Mot de passe</Label>
                       <div className="relative">
                         <Input
                           id="signup-password"
@@ -307,7 +307,7 @@ export default function AuthPage() {
                     </div>
                   </div>
                   <Button className="w-full mt-6" type="submit" onClick={handleSignUp}>
-                    Sign Up
+                    Inscription
                   </Button>
                   {error && (
                     <Alert variant="destructive" className="mt-4">
@@ -325,15 +325,14 @@ export default function AuthPage() {
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-sm text-gray-500">
-              By signing in, you agree to our{' '}
+              En vous connectant, vous acceptez nos{' '}
               <a href="#" className="font-medium text-primary hover:underline">
-                Terms of Service
+                Conditions d&apos;utilisation
               </a>{' '}
-              and{' '}
+              et{' '}
               <a href="#" className="font-medium text-primary hover:underline">
-                Privacy Policy
+                Politique de confidentialité.
               </a>
-              .
             </p>
           </CardFooter>
         </Card>
