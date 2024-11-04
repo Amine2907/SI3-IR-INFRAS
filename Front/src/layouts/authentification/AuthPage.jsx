@@ -17,9 +17,10 @@ import AuthService from 'services/authService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'context/Auth/AuthContext';
 import { Alert, AlertDescription } from 'components/ui/alert';
+
 export default function AuthPage() {
-  const [firstName, setfirstName] = useState('');
-  const [lastName, setlastName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,7 +44,8 @@ export default function AuthPage() {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  // HANDLE SIGN IN HERE
+
+  // HANDLE SIGN IN
   const handleSignIn = async e => {
     e.preventDefault(); // Prevent the default form submission
     // Call the signIn function from your AuthService
@@ -53,13 +55,9 @@ export default function AuthPage() {
       setError('Identifiants invalides, veuillez réessayer.');
     } else {
       console.log('Connexion réussie :', response);
-      // Make sure you're accessing the correct structure based on your controller
       const { user, accessToken } = response; // Adjust according to your response structure
-      // Check if accessToken is available
       if (accessToken) {
-        // Call the login function with user and accessToken
         login(user, accessToken);
-        // Store the access token in localStorage
         localStorage.setItem('token', accessToken);
         navigate('/dashboard');
       } else {
@@ -68,25 +66,18 @@ export default function AuthPage() {
       }
     }
   };
-  // HANDLE SIGN UP HERE
+
+  // HANDLE SIGN UP
   const handleSignUp = async e => {
     e.preventDefault();
     try {
       const response = await AuthService.signUp(firstName, lastName, email, password);
       if (response && response.success) {
-        if (response.data && response.data.message) {
-          setMessage(response.data.message);
-          setEmail('');
-          setPassword('');
-          setfirstName('');
-          setlastName('');
-        } else {
-          setMessage('Inscription réussie ! Veuillez vérifier votre e-mail.');
-          setEmail('');
-          setPassword('');
-          setfirstName('');
-          setlastName('');
-        }
+        setMessage('Inscription réussie ! Veuillez vérifier votre e-mail.');
+        setEmail('');
+        setPassword('');
+        setFirstName('');
+        setLastName('');
         setError('');
       } else {
         setError(response?.data?.message || "L'inscription a échoué. Veuillez réessayer.");
@@ -101,7 +92,8 @@ export default function AuthPage() {
       setMessage('');
     }
   };
-  // HANDLE RESET PASSWORD HERE
+
+  // HANDLE RESET PASSWORD
   const handleResetPassword = async e => {
     e.preventDefault();
     try {
@@ -109,6 +101,7 @@ export default function AuthPage() {
       if (response && response.success) {
         setMessage('Un e-mail de réinitialisation a été envoyé.');
         setResetEmail('');
+        setShowResetForm(false); // Hide reset form after successful submission
       } else {
         setError(
           response?.data?.message ||
@@ -123,6 +116,7 @@ export default function AuthPage() {
       );
     }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-7xl flex flex-col lg:flex-row gap-8">
@@ -139,13 +133,13 @@ export default function AuthPage() {
               </p>
               <ul className="list-disc pl-5 space-y-2">
                 <li>Répertoires des parties prenantes</li>
-                <li>Stockage des information des sites</li>
+                <li>Stockage des informations des sites</li>
                 <li>Gestion des tâches</li>
-                <li>Suivre les activities de chaque site</li>
-                <li>Suivre le statut de réglement des devis</li>
+                <li>Suivre les activités de chaque site</li>
+                <li>Suivre le statut de règlement des devis</li>
                 <li>Notifications automatisées</li>
                 <li>S&apos;assurer que le projet est sur les rails</li>
-                <li>Rapports et analyses avancés pour prendre les bonnes decisions</li>
+                <li>Rapports et analyses avancés pour prendre les bonnes décisions</li>
               </ul>
             </div>
           </CardContent>
@@ -163,64 +157,62 @@ export default function AuthPage() {
                 <TabsTrigger value="signin">Se connecter</TabsTrigger>
                 <TabsTrigger value="signup">S&apos;inscrire</TabsTrigger>
               </TabsList>
+
+              {/* Sign In Tab */}
               <TabsContent value="signin">
-                <form>
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        placeholder="m@example.com"
-                        type="email"
-                        value={email}
-                        required
-                        onChange={e => setEmail(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="password">mot de passe</Label>
-                      <div className="relative">
+                {!showResetForm ? (
+                  <form onSubmit={handleSignIn}>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
                         <Input
-                          id="password"
-                          type={showPassword ? 'text' : 'password'}
-                          value={password}
-                          onChange={e => setPassword(e.target.value)}
+                          id="email"
+                          placeholder="m@example.com"
+                          type="email"
+                          value={email}
                           required
+                          onChange={e => setEmail(e.target.value)}
                         />
-                        <button
-                          type="button"
-                          onClick={togglePasswordVisibility}
-                          className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
-                        >
-                          {showPassword ? (
-                            <EyeOffIcon className="h-5 w-5" />
-                          ) : (
-                            <EyeIcon className="h-5 w-5" />
-                          )}
-                        </button>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="password">Mot de passe</Label>
+                        <div className="relative">
+                          <Input
+                            id="password"
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            required
+                          />
+                          <button
+                            type="button"
+                            onClick={togglePasswordVisibility}
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
+                          >
+                            {showPassword ? (
+                              <EyeOffIcon className="h-5 w-5" />
+                            ) : (
+                              <EyeIcon className="h-5 w-5" />
+                            )}
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <Button className="w-full mt-6" type="submit" onClick={handleSignIn}>
-                    Se connecter
-                  </Button>
-                  {error && (
-                    <Alert variant="destructive" className="mt-4">
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
-                  {message && (
-                    <Alert variant="success" className="mt-4">
-                      <AlertDescription>{message}</AlertDescription>
-                    </Alert>
-                  )}
-                </form>
-                <div className="mt-4 text-center">
-                  <Button onClick={() => setShowResetForm(!showResetForm)} variant="link">
-                    Oublier mot de passe ?
-                  </Button>
-                </div>
-                {showResetForm && (
+                    <Button className="w-full mt-6" type="submit">
+                      Se connecter
+                    </Button>
+                    {error && (
+                      <Alert variant="destructive" className="mt-4">
+                        <AlertDescription>{error}</AlertDescription>
+                      </Alert>
+                    )}
+                    {message && (
+                      <Alert variant="success" className="mt-4">
+                        <AlertDescription>{message}</AlertDescription>
+                      </Alert>
+                    )}
+                  </form>
+                ) : (
                   <form onSubmit={handleResetPassword} className="mt-4">
                     <div className="space-y-2">
                       <Label htmlFor="reset-email">Entrez votre email</Label>
@@ -245,51 +237,66 @@ export default function AuthPage() {
                         <AlertDescription>{message}</AlertDescription>
                       </Alert>
                     )}
+                    <div className="mt-4 text-center">
+                      <Button onClick={() => setShowResetForm(false)} variant="link">
+                        Retour à la connexion
+                      </Button>
+                    </div>
                   </form>
                 )}
+                <div className="mt-4 text-center">
+                  {!showResetForm && (
+                    <Button onClick={() => setShowResetForm(true)} variant="link">
+                      Oublier mot de passe ?
+                    </Button>
+                  )}
+                </div>
               </TabsContent>
+              {/* Sign Up Tab */}
               <TabsContent value="signup">
-                <form>
+                <form onSubmit={handleSignUp}>
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Prenom</Label>
+                      <Label htmlFor="firstName">Prénom</Label>
                       <Input
-                        id="signup-firstName"
-                        placeholder="John"
-                        required
+                        id="firstName"
+                        type="text"
+                        placeholder="Votre prénom"
                         value={firstName}
-                        onChange={e => setfirstName(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Nom</Label>
-                      <Input
-                        id="signup-lastName"
-                        placeholder="Doe"
                         required
-                        value={lastName}
-                        onChange={e => setlastName(e.target.value)}
+                        onChange={e => setFirstName(e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="lastName">Nom</Label>
+                      <Input
+                        id="lastName"
+                        type="text"
+                        placeholder="Votre nom"
+                        value={lastName}
+                        required
+                        onChange={e => setLastName(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-email">Email</Label>
                       <Input
                         id="signup-email"
-                        placeholder="m@example.com"
                         type="email"
-                        required
+                        placeholder="m@example.com"
                         value={email}
+                        required
                         onChange={e => setEmail(e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="password">Mot de passe</Label>
+                      <Label htmlFor="signup-password">Mot de passe</Label>
                       <div className="relative">
                         <Input
                           id="signup-password"
                           type={showPassword ? 'text' : 'password'}
-                          required
                           value={password}
+                          required
                           onChange={e => setPassword(e.target.value)}
                         />
                         <button
@@ -306,8 +313,8 @@ export default function AuthPage() {
                       </div>
                     </div>
                   </div>
-                  <Button className="w-full mt-6" type="submit" onClick={handleSignUp}>
-                    Inscription
+                  <Button className="w-full mt-6" type="submit">
+                    S&apos;inscrire
                   </Button>
                   {error && (
                     <Alert variant="destructive" className="mt-4">
@@ -323,17 +330,10 @@ export default function AuthPage() {
               </TabsContent>
             </Tabs>
           </CardContent>
-          <CardFooter className="flex justify-center">
-            <p className="text-sm text-gray-500">
-              En vous connectant, vous acceptez nos{' '}
-              <a href="#" className="font-medium text-primary hover:underline">
-                Conditions d&apos;utilisation
-              </a>{' '}
-              et{' '}
-              <a href="#" className="font-medium text-primary hover:underline">
-                Politique de confidentialité.
-              </a>
-            </p>
+          <CardFooter>
+            <div className="text-center text-sm text-gray-500">
+              &copy; {new Date().getFullYear()} IR INFRAS. Tous droits réservés.
+            </div>
           </CardFooter>
         </Card>
       </div>
