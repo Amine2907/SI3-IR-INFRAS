@@ -17,39 +17,30 @@ export default function PasswordReset() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const urlParams = new URLSearchParams(window.location.search);
-  const type = urlParams.get('type') || 'recovery';
-  const token_hash = new URLSearchParams(window.location.search).get('token_hash');
+  const [access_token, setAccessToken] = useState('');
 
-  // Check if token_hash is present in the URL
   useEffect(() => {
-    if (!token_hash) {
-      setError(
-        'Token de réinitialisation manquant. Veuillez réessayer le processus de réinitialisation du mot de passe.'
-      );
+    const queryParams = new URLSearchParams(window.location.hash.replace('#', '?'));
+    const token = queryParams.get('access_token');
+    if (token) {
+      setAccessToken(token);
     }
-  }, [token_hash]);
+  }, []);
 
   const handleSubmit = async e => {
     e.preventDefault();
-
-    // Validate token_hash
-    if (!token_hash) {
-      setError(
-        'Token de réinitialisation manquant. Veuillez réessayer le processus de réinitialisation du mot de passe.'
-      );
-      return;
-    }
     // Validate password inputs
     if (!password || password !== confirmPassword) {
       setError('Les mots de passe ne correspondent pas. Veuillez réessayer.');
       return;
     }
+
     // Reset error state before the request
     setError(null);
+
     try {
-      // Call the password reset service
-      const result = await AuthService.confirmResetPassword(token_hash, type, password);
+      // Call the password reset service with password, accessToken, and recoveryType
+      const result = await AuthService.confirmResetPassword(password, access_token);
 
       // Handle the response from the service
       if (result.success) {
@@ -65,8 +56,7 @@ export default function PasswordReset() {
       }
     } catch (err) {
       setError(
-        err.message ||
-          'Une erreur s&apos;est produite lors de la réinitialisation du mot de passe..'
+        err.message || 'Une erreur s&apos;est produite lors de la réinitialisation du mot de passe.'
       ); // Ensure error message is clear
       setMessage(null);
     }
@@ -85,7 +75,7 @@ export default function PasswordReset() {
               <Input
                 id="password"
                 type="password"
-                placeholder="Noyveau Mot de passe"
+                placeholder="Nouveau Mot de passe"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required

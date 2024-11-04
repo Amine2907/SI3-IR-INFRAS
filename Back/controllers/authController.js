@@ -112,7 +112,7 @@ export const resetPassword = async (req, res) => {
     return res.status(400).json({ success: false, error: 'Invalid email address.' });
   }
   try {
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${FRONT_URL}/auth/confirm-reset-password` });
     if (error) {
       return res.status(400).json({ success: false, error: error.message });
     }
@@ -124,32 +124,28 @@ export const resetPassword = async (req, res) => {
 };
 // Function to confirm the password reset and set the new password
 export const confirmResetPassword = async (req, res) => {
-  const { token_hash, type, newPassword } = req.body;
-  // Check if newPassword and tokenHash are provided
-  if (!token_hash || !type || !newPassword) {
-    return res.status(400).json({ error: 'Token hash, type, and new password are required.' });
-  }
+  const { newPassword } = req.body; // Destructure required parameters
+  const access_token = req.headers['authorization']?.split(' ')[1]; // Extract the Bearer token
+  console.log('Received newPassword:', newPassword);
+  console.log('Received access_token:', access_token);
   try {
-    // Step 1: Verify the OTP using tokenHash
-    const { data, error: verifyError } = await supabase.auth.verifyOtp({
-      type: 'recovery',
-      token_hash,
-    });
-    if (verifyError) {
-      return res.status(400).json({ error: 'Invalid or expired token hash.' });
+    if (!newPassword || !access_token) {
+      return res.status(400).json({ error: 'Missing required fields.' });
     }
-    // Step 2: Update the user password
-    const userId = data.user.id; // retrieve user ID from verification data
-    const { error: updateError } = await supabase.auth.updateUser({
-      password: newPassword,
-    });
+    // Verify the access token to retrieve the user
+    const { data, error } = await supabase.auth.getUser(access_token);
+    if (error || !data?.user) {
+      return res.status(400).json({ error: error?.message || 'User not found or session invalid.' });
+    }
+    // Update the user's password
+    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
     if (updateError) {
-      throw updateError; // Error if updating password fails
+      return res.status(500).json({ error: updateError.message || 'Failed to update password.' });
     }
-    // Successful response
-    res.status(200).json({ message: 'Password changed successfully.' });
+    // Return success response
+    return res.status(200).json({ message: 'Password changed successfully.' });
   } catch (error) {
     console.error('Error changing password:', error.message);
-    res.status(500).json({ error: error.message || 'An error occurred while changing the password.' });
+    return res.status(500).json({ error: error.message || 'An error occurred while changing the password.' });
   }
 };
