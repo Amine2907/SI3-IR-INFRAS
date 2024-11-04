@@ -71,6 +71,7 @@ const ContactList = () => {
     if (result) {
       handleModalClose();
       fetchActiveContacts(setContacts, setNoResultsMessage);
+      handleToggleActiveInactive();
       setIsActive(true);
     }
   };
@@ -93,6 +94,7 @@ const ContactList = () => {
       } else {
         fetchInactiveContacts(setContacts, setNoResultsMessage);
       }
+      setNoResultsMessage(''); // clear the no results message if any
       return newIsActive; // Update the state
     });
   };

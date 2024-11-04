@@ -25,8 +25,7 @@ const getAllEntites = async() => {
 try {
     const {data , error } = await supabase
     .from('Entite')
-    .select('*')
-    .eq('is_active',true);
+    .select('*');
     if (error) {
         throw error ; 
     } 
@@ -71,9 +70,7 @@ const getEntityById = async(id) => {
         const {data,error} = await supabase
         .from('Entite')
         .select('*')
-        .eq('Eid',id)
-        .eq('is_active',true);
-        
+        .eq('Eid',id);
         if(error){
             throw error;
         }

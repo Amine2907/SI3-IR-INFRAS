@@ -150,7 +150,6 @@ const EntiteList = () => {
     let successMessage = '';
     if (selectedEntity) {
       // Update entity
-      // console.log('Updating entity:', selectedEntity.Eid);
       result = await entityService.updateEntity(selectedEntity.Eid, data);
       successMessage = 'Entité mise à jour avec succès !';
     } else {
@@ -172,6 +171,7 @@ const EntiteList = () => {
     } else {
       fetchInactiveEntites(); // Fetch inactive entities
     }
+    fetchActiveEntites();
     setIsActive(true); // Set the switch state to Active after modifying an entity
   };
 
@@ -233,12 +233,12 @@ const EntiteList = () => {
       } else {
         fetchInactiveEntites();
       }
+      setNoResultsMessage(''); // clear the no results message if any
       return newIsActive; // Update the state
     });
   };
   useEffect(() => {
     console.log('Updated searchQuery:', searchQuery); // Ensure `searchQuery` is updated
-
     if (
       searchQuery.nom ||
       searchQuery.ville ||
@@ -310,7 +310,6 @@ const EntiteList = () => {
                 onClick={() => {
                   setNoResultsMessage('');
                   setSearchQuery({ nom: '', ville: '', region: '', code_postal: '', role: '' });
-                  fetchActiveEntites();
                 }}
                 variant="gradient"
                 color="dark"

@@ -62,8 +62,8 @@ export const handleSave = async (
   }
 
   if (result.success) {
-    handleModalClose();
     setAlert({ show: true, message: successMessage, type: 'success' });
+    handleModalClose();
   } else {
     setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
   }
@@ -73,6 +73,7 @@ export const handleSave = async (
   } else {
     fetchInactiveContacts(setContacts, setNoResultsMessage);
   }
+  fetchActiveContacts(setContacts, setNoResultsMessage);
 };
 
 export const handleSearchChange = (
