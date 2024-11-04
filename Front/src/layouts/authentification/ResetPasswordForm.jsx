@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
 import {
@@ -17,18 +17,22 @@ export default function PasswordReset() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const [access_token, setAccessToken] = useState('');
 
-  useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.hash.replace('#', '?'));
-    const token = queryParams.get('access_token');
-    if (token) {
-      setAccessToken(token);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const queryParams = new URLSearchParams(window.location.hash.replace('#', '?'));
+  //   const token = queryParams.get('access_token');
+  //   if (token) {
+  //     setAccessToken(token);
+  //   } else {
+  //     setError("Token d'accès non trouvé. Veuillez vérifier votre lien.");
+  //   }
+  // }, []);
 
   const handleSubmit = async e => {
     e.preventDefault();
+    // Reset error and message states before each submit
+    setError(null);
+    setMessage(null);
     // Validate password inputs
     if (!password || password !== confirmPassword) {
       setError('Les mots de passe ne correspondent pas. Veuillez réessayer.');
@@ -40,7 +44,7 @@ export default function PasswordReset() {
 
     try {
       // Call the password reset service with password, accessToken, and recoveryType
-      const result = await AuthService.confirmResetPassword(password, access_token);
+      const result = await AuthService.updatePassword(password);
 
       // Handle the response from the service
       if (result.success) {

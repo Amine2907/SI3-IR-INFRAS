@@ -65,14 +65,14 @@ const resetPassword = async email => {
   }
 };
 // Function to confirm password reset for the user
-const confirmResetPassword = async (newPassword, accessToken) => {
+const confirmResetPassword = async (newPassword, access_token) => {
   try {
     const response = await axios.post(
       `${API_URL}/confirm-reset-password`,
       { newPassword },
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${access_token}`,
         },
       }
     );
@@ -110,12 +110,34 @@ const confirmResetPassword = async (newPassword, accessToken) => {
 //   }
 // };
 // Exporting functions (for call AuthService.func)
+const updatePassword = async newPassword => {
+  try {
+    const response = await axios.post(`${API_URL}/update-password`, { newPassword });
+    return response.data;
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : new Error('An error occurred while updating password');
+  }
+};
+
+const getSession = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/session`);
+    return response.data;
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : new Error('An error occurred while getting session');
+  }
+};
 const AuthService = {
   signIn,
   signUp,
   isAuthenticated,
   resetPassword,
   confirmResetPassword,
-  // updatePassword,
+  updatePassword,
+  getSession,
 };
 export default AuthService;

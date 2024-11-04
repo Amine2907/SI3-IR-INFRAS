@@ -10,6 +10,8 @@
  */
 import express from 'express';
 import { signUp, signIn, signOut , resetPassword , confirmResetPassword } from '../controllers/authController.js';
+import { handleResetPassword, handleUpdatePassword, handleGetSession } from '../controllers/resetController.js';
+import { sessionMiddleware } from '../middleware/sessionMiddleware.js';
 const router = express.Router();
 
 // Authentication Routes
@@ -17,5 +19,9 @@ router.post('/signup', signUp);  // Sign up Route
 router.post('/signin', signIn);  // Sign in Route
 router.post('/signout', signOut); // Sign out Route
 router.post('/reset-password',resetPassword); //Reset Password Route
-router.post('/confirm-reset-password',confirmResetPassword); //Confirm Reset Password Route
+router.post('/confirm-reset-password',sessionMiddleware,confirmResetPassword); //Confirm Reset Password Route
+///////////////////////////////////////////////////
+router.post('/reset-password', handleResetPassword);
+router.post('/update-password', handleUpdatePassword);
+router.get('/session', handleGetSession);
 export default router;

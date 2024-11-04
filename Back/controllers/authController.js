@@ -124,28 +124,55 @@ export const resetPassword = async (req, res) => {
 };
 // Function to confirm the password reset and set the new password
 export const confirmResetPassword = async (req, res) => {
-  const { newPassword } = req.body; // Destructure required parameters
-  const access_token = req.headers['authorization']?.split(' ')[1]; // Extract the Bearer token
-  console.log('Received newPassword:', newPassword);
-  console.log('Received access_token:', access_token);
+  const { newPassword } = req.body; // Get the new password from the request body
+  // const access_token = req.headers['authorization']?.split(' ')[1]; // Extract access_token from the Authorization header
+  const { access_token } = req;
+  if (!newPassword || !access_token) {
+    return res.status(400).json({ error: 'Missing new password or authorization token.' });
+  }
   try {
-    if (!newPassword || !access_token) {
-      return res.status(400).json({ error: 'Missing required fields.' });
+    // Get the user session based on the access token
+    const { data: { user }, error: getUserError } = await supabase.auth.getUser(access_token);
+
+    if (getUserError || !user) {
+      return res.status(401).json({ error: 'Invalid or expired access token.' });
     }
-    // Verify the access token to retrieve the user
-    const { data, error } = await supabase.auth.getUser(access_token);
-    if (error || !data?.user) {
-      return res.status(400).json({ error: error?.message || 'User not found or session invalid.' });
-    }
+    supabase.auth.setSession(access_token, { maxAge: 604800000 });
     // Update the user's password
-    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+    const { error: updateError } = await supabase.auth.updateUser({ 
+      password: newPassword,
+    });
     if (updateError) {
-      return res.status(500).json({ error: updateError.message || 'Failed to update password.' });
+      return res.status(400).json({ error: updateError.message });
     }
-    // Return success response
-    return res.status(200).json({ message: 'Password changed successfully.' });
+    // Respond with success if the password update succeeded
+    res.status(200).json({ message: 'Password changed successfully.' });
   } catch (error) {
     console.error('Error changing password:', error.message);
-    return res.status(500).json({ error: error.message || 'An error occurred while changing the password.' });
+    res.status(500).json({ error: 'An error occurred while changing the password.' });
   }
 };
+/////////////////////////////////////////////////////////////////////
+export const updatePassword = async (newPassword, accessToken) => {
+  try {
+    // Set the access token for this request
+    supabase.auth.setSession(accessToken)
+
+    const { data, error } = await supabase.auth.updateUser({
+      password: newPassword,
+    })
+
+    if (error) throw error
+
+    return { success: true, message: 'Password updated successfully' }
+  } catch (error) {
+    console.error('Error in updatePassword:', error.message)
+    return { success: false, message: error.message }
+  }
+}
+
+export const getSession = async () => {
+  const { data, error } = await supabase.auth.getSession()
+  if (error) throw error
+  return data.session
+}
