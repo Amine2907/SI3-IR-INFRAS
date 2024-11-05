@@ -65,17 +65,9 @@ const resetPassword = async email => {
   }
 };
 // Function to confirm password reset for the user
-const confirmResetPassword = async (newPassword, access_token) => {
+const confirmResetPassword = async (email, newPassword) => {
   try {
-    const response = await axios.post(
-      `${API_URL}/confirm-reset-password`,
-      { newPassword },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
+    const response = await axios.post(`${API_URL}/update-password`, { email, newPassword });
     return { success: true, message: response.data.message };
   } catch (error) {
     console.error('Password reset confirmation failed:', error.response?.data || error);
@@ -86,33 +78,14 @@ const confirmResetPassword = async (newPassword, access_token) => {
     };
   }
 };
-// const updatePassword = async (userId, newPassword) => {
-//   try {
-//     const token = localStorage.getItem('token');
-//     if (!token) {
-//       console.error('No token found in local storage');
-//       return { success: false, error: 'No token found' };
-//     }
-//     const response = await axios.post(
-//       `${API_URL}/confirm-reset-password/${userId}`,
-//       {
-//         newPassword,
-//       },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }
-//     );
-//     return { success: true, message: response.data.message };
-//   } catch (error) {
-//     return { success: false, error: error.response?.data || error.message };
-//   }
-// };
 // Exporting functions (for call AuthService.func)
-const updatePassword = async newPassword => {
+const updatePassword = async (newPassword, accessToken) => {
   try {
-    const response = await axios.post(`${API_URL}/update-password`, { newPassword });
+    const response = await axios.post(
+      `${API_URL}/update-password`,
+      { newPassword, accessToken },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    );
     return response.data;
   } catch (error) {
     throw error.response
@@ -120,7 +93,6 @@ const updatePassword = async newPassword => {
       : new Error('An error occurred while updating password');
   }
 };
-
 const getSession = async () => {
   try {
     const response = await axios.get(`${API_URL}/session`);

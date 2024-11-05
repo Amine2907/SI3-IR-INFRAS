@@ -9,9 +9,8 @@
  * - POST /confirm-reset-password: Confirms a password reset
  */
 import express from 'express';
-import { signUp, signIn, signOut , resetPassword , confirmResetPassword } from '../controllers/authController.js';
-import { handleResetPassword, handleUpdatePassword, handleGetSession } from '../controllers/resetController.js';
-import { sessionMiddleware } from '../middleware/sessionMiddleware.js';
+import { signUp, signIn, signOut , resetPassword  } from '../controllers/authController.js';
+import {handleUpdatePassword, handleGetSession } from '../controllers/resetController.js';
 const router = express.Router();
 
 // Authentication Routes
@@ -19,9 +18,6 @@ router.post('/signup', signUp);  // Sign up Route
 router.post('/signin', signIn);  // Sign in Route
 router.post('/signout', signOut); // Sign out Route
 router.post('/reset-password',resetPassword); //Reset Password Route
-router.post('/confirm-reset-password',sessionMiddleware,confirmResetPassword); //Confirm Reset Password Route
-///////////////////////////////////////////////////
-router.post('/reset-password', handleResetPassword);
-router.post('/update-password', handleUpdatePassword);
-router.get('/session', handleGetSession);
+router.post('/update-password', handleUpdatePassword); // confirm reset password
+router.get('/session', handleGetSession); // get session route
 export default router;

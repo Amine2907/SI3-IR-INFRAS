@@ -23,7 +23,6 @@ const getAccountInfo = async (req, res) => {
     
     res.status(200).json(result.data);
 };
-///////////////////////////////////////////////////////////////////////////////
 // 2. Update Password
 const updatePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
@@ -50,7 +49,6 @@ const updatePassword = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while changing the password.' });
   };
 };
-// //////////////////////////////////////////////////////////////////////////////////////
 //update User Account informations
 const updateUserAccount = async (req, res) => {
     // Log the userId from req.user to verify it's populated
