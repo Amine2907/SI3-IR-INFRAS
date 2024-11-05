@@ -1,3 +1,28 @@
+/**
+ * ResetPasswordForm component.
+ *
+ * This component is responsible for allowing users to reset their passwords.
+ * It provides inputs for the new password and its confirmation, and handles
+ * the password reset process using the AuthService.
+ *
+ * Key functionalities:
+ * - Allows users to input a new password and confirm it.
+ * - Toggles the visibility of the password input.
+ * - Validates that the new password and confirmation match.
+ * - Displays error messages if the reset process fails.
+ * - Navigates the user to a different page upon successful password reset.
+ *
+ * State variables:
+ * - password: Stores the new password input by the user.
+ * - showPassword: Toggles the visibility of the password input.
+ * - confirmPassword: Stores the confirmation of the new password.
+ * - error: Holds error messages to display to the user.
+ * - message: Holds success messages to display to the user.
+ * - accessToken: Stores the access token required for the password reset.
+ * - refresh_token: Stores the refresh token if needed for the process.
+ *
+ * @returns {React.ReactElement} The ResetPasswordForm component.
+ */
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'components/ui/button';

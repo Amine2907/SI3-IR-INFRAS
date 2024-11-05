@@ -73,8 +73,43 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({ success: false, error: 'Internal server error.' });
   }
 };
-export const getSession = async () => {
-  const { data, error } = await supabase.auth.getSession()
-  if (error) throw error
-  return data.session
-}
+// handle update the password 
+export const handleUpdatePassword = async (req, res) => {
+  const { newPassword, accessToken ,  refresh_token} = req.body;
+  // console.log('Received data:', { newPassword, accessToken,refresh_token }); // Log input data for debugging
+  // Validate the new password
+  if (!newPassword || newPassword.length < 6) {
+    return res.status(400).json({ success: false, error: 'Password must be at least 6 characters.' });
+  }
+  try {
+    // console.log('Attempting to set session with access token:', accessToken)
+    const { error: sessionError } = await supabase.auth.setSession({ access_token: accessToken , refresh_token: refresh_token  });
+    
+    if (sessionError) {
+      console.error('Session error:', sessionError.message);
+      return res.status(401).json({ success: false, error: 'Invalid access token.' });
+    }
+    // Use the access token to get the user
+    const { data, error: userError } = await supabase.auth.getUser();
+    // Check for user retrieval errors
+    if (userError) {
+      console.error('Error getting user:', userError.message);
+      return res.status(401).json({ success: false, error: userError.message });
+    }
+    // Ensure a user is returned
+    if (!data.user) {
+      return res.status(401).json({ success: false, error: 'Invalid access token.' });
+    }
+    // Update the user’s password
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    // Check for update errors
+    if (error) {
+      console.error('Update error:', error);
+      return res.status(400).json({ success: false, error: error.message });
+    }
+    return res.status(200).json({ success: true, message: 'Password updated successfully.' });
+  } catch (error) {
+    console.error('Internal server error:', error);
+    return res.status(500).json({ success: false, error: 'Internal server error.' });
+  }
+};

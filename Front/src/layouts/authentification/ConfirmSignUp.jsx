@@ -25,7 +25,7 @@ const ConfirmSignup = () => {
     }
     const timer = setTimeout(() => {
       navigate('/auth');
-    }, 3000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, [token, navigate]);
 

@@ -1,3 +1,12 @@
+/**
+ * AuthPage component.
+ *
+ * This component renders a page for logging in, signing up, and resetting passwords.
+ * It uses the AuthService to handle the authentication, and the useAuth hook to
+ * get the login function.
+ *
+ * @returns {React.ReactElement} The AuthPage component.
+ */
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Button } from 'components/ui/button';

@@ -1,19 +1,22 @@
 /**
- * This file contains functions for user authentication
- * - `signIn`: signs in the user and returns the user if successful
- * - `signUp`: signs up the user and returns the user if successful
- * - `isAuthenticated`: checks if the user is authenticated
- * @module authService
+ * @file authService.js
+ * @description This file provides authentication services including sign in, sign up,
+ * password reset, and updating password functionalities. It interacts with the backend
+ * API to perform these operations and manages user session data locally.
+ *
+ * @module AuthService
+ *
+ * Functions:
+ * - `signIn(email, password)`: Authenticates the user with the provided email and password.
+ * - `signUp(firstName, lastName, email, password)`: Registers a new user with the provided
+ *   details.
+ * - `isAuthenticated()`: Checks if the user is currently authenticated.
+ * - `resetPassword(email)`: Initiates a password reset process for the user with the given email.
+ * - `updatePassword(newPassword, accessToken, refresh_token)`: Updates the user's password
+ *   using the provided new password and tokens.
  */
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/auth';
-// import dotenv from 'dotenv';
-// dotenv.config();
-// const API_URL = process.env.AUTH_URL;
-// Error handling helper
-// const handleError = error => {
-//   return { success: false, error: error.response ? error.response.data.error : error.message };
-// };
 // Sign in the user
 const signIn = async (email, password) => {
   return await axios
@@ -79,17 +82,6 @@ const updatePassword = async (newPassword, accessToken, refresh_token) => {
       : new Error('An error occurred while updating password');
   }
 };
-// function to get session
-const getSession = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/session`);
-    return response.data;
-  } catch (error) {
-    throw error.response
-      ? error.response.data
-      : new Error('An error occurred while getting session');
-  }
-};
 // Exporting functions (for call AuthService.func)
 const AuthService = {
   signIn,
@@ -97,6 +89,5 @@ const AuthService = {
   isAuthenticated,
   resetPassword,
   updatePassword,
-  getSession,
 };
 export default AuthService;
