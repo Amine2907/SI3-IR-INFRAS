@@ -10,18 +10,17 @@
  * @param {Object} req - The HTTP request object containing the new password.
  * @param {Object} res - The HTTP response object used to send back the result.
  */
-import { supabase } from '../config/supabaseClient.js'
-import { updatePassword, getSession } from './authController.js'
+import { supabase } from '../config/supabaseClient.js';
 // Function to handle the update of a user's password 
 export const handleUpdatePassword = async (req, res) => {
   const { newPassword, accessToken ,  refresh_token} = req.body;
-  console.log('Received data:', { newPassword, accessToken,refresh_token }); // Log input data for debugging
+  // console.log('Received data:', { newPassword, accessToken,refresh_token }); // Log input data for debugging
   // Validate the new password
   if (!newPassword || newPassword.length < 6) {
     return res.status(400).json({ success: false, error: 'Password must be at least 6 characters.' });
   }
   try {
-    console.log('Attempting to set session with access token:', accessToken)
+    // console.log('Attempting to set session with access token:', accessToken)
     const { error: sessionError } = await supabase.auth.setSession({ access_token: accessToken , refresh_token: refresh_token  });
     
     if (sessionError) {

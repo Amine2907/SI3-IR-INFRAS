@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
 import {
@@ -9,15 +10,18 @@ import {
   CardHeader,
   CardTitle,
 } from 'components/ui/card';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { Alert, AlertDescription } from 'components/ui/alert';
 import AuthService from 'services/authService';
 export default function PasswordReset() {
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const [accessToken, setAccessToken] = useState('');
   const [refresh_token, setRefreshToken] = useState('');
+  const navigate = useNavigate();
   useEffect(() => {
     // Extract token from URL hash
     const hashParams = new URLSearchParams(window.location.hash.slice(1));
@@ -32,6 +36,9 @@ export default function PasswordReset() {
       console.error('No access token found in URL hash');
     }
   }, []);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   const handleSubmit = async e => {
     e.preventDefault();
     if (!accessToken || !refresh_token) {
@@ -54,9 +61,14 @@ export default function PasswordReset() {
 
       // Handle the response from the service
       if (result.success) {
-        setMessage('Le mot de passe a été réinitialisé avec succès.');
+        setMessage(
+          'Le mot de passe a été réinitialisé avec succès.On va vous diriger vers la page de connexion dans 5 secondes'
+        );
         setPassword(''); // Clear password fields after success
         setConfirmPassword(''); // Clear confirm password field
+        setTimeout(() => {
+          navigate('/auth');
+        }, 5000);
       } else {
         setError(
           result.error || "Une erreur s'est produite lors de la réinitialisation du mot de passe."
@@ -82,7 +94,7 @@ export default function PasswordReset() {
             <div className="flex flex-col space-y-1.5">
               <Input
                 id="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Nouveau Mot de passe"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
@@ -92,7 +104,7 @@ export default function PasswordReset() {
             <div className="flex flex-col space-y-1.5">
               <Input
                 id="confirmPassword"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Confirmer mot de passe"
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
@@ -112,6 +124,10 @@ export default function PasswordReset() {
           )}
           <CardFooter className="flex justify-between mt-4 px-0">
             <Button type="submit">Réinitialiser le mot de passe</Button>
+            <button type="button" onClick={togglePasswordVisibility}>
+              {' '}
+              {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+            </button>
           </CardFooter>
         </form>
       </CardContent>

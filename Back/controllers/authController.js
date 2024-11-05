@@ -73,24 +73,6 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({ success: false, error: 'Internal server error.' });
   }
 };
-// Function to confirm a password reset and to get the session to avoid AuthSessionExpiredError 
-export const updatePassword = async (newPassword, accessToken) => {
-  try {
-    // Set the access token for this request
-    supabase.auth.setSession(accessToken)
-
-    const { data, error } = await supabase.auth.updateUser({
-      password: newPassword,
-    })
-
-    if (error) throw error
-
-    return { success: true, message: 'Password updated successfully' }
-  } catch (error) {
-    console.error('Error in updatePassword:', error.message)
-    return { success: false, message: error.message }
-  }
-}
 export const getSession = async () => {
   const { data, error } = await supabase.auth.getSession()
   if (error) throw error
