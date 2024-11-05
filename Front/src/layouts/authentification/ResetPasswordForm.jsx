@@ -17,21 +17,27 @@ export default function PasswordReset() {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const [accessToken, setAccessToken] = useState('');
+  const [refresh_token, setRefreshToken] = useState('');
   useEffect(() => {
     // Extract token from URL hash
     const hashParams = new URLSearchParams(window.location.hash.slice(1));
     const token = hashParams.get('access_token');
-    if (token) {
+    const refresh_token = hashParams.get('refresh_token');
+    if (token && refresh_token) {
       setAccessToken(token);
+      setRefreshToken(refresh_token);
       console.log('Access token set:', token);
+      console.log('Access token set:', refresh_token);
     } else {
       console.error('No access token found in URL hash');
     }
   }, []);
   const handleSubmit = async e => {
     e.preventDefault();
-    if (!accessToken) {
-      setMessage('No access token available. Please try resetting your password again.');
+    if (!accessToken || !refresh_token) {
+      setMessage(
+        'No access token or refresh token available. Please try resetting your password again.'
+      );
       return;
     }
     // Reset error and message states before each submit
@@ -44,7 +50,7 @@ export default function PasswordReset() {
     }
     try {
       // Call the password reset service with email, password, and accessToken
-      const result = await AuthService.updatePassword(password, accessToken);
+      const result = await AuthService.updatePassword(password, accessToken, refresh_token);
 
       // Handle the response from the service
       if (result.success) {

@@ -14,21 +14,20 @@ import { supabase } from '../config/supabaseClient.js'
 import { updatePassword, getSession } from './authController.js'
 // Function to handle the update of a user's password 
 export const handleUpdatePassword = async (req, res) => {
-  const { newPassword, accessToken } = req.body;
-  console.log('Received data:', { newPassword, accessToken }); // Log input data for debugging
+  const { newPassword, accessToken ,  refresh_token} = req.body;
+  console.log('Received data:', { newPassword, accessToken,refresh_token }); // Log input data for debugging
   // Validate the new password
   if (!newPassword || newPassword.length < 6) {
     return res.status(400).json({ success: false, error: 'Password must be at least 6 characters.' });
   }
   try {
     console.log('Attempting to set session with access token:', accessToken)
-    const { error: sessionError } = await supabase.auth.setSession({ access_token: accessToken });
+    const { error: sessionError } = await supabase.auth.setSession({ access_token: accessToken , refresh_token: refresh_token  });
     
     if (sessionError) {
       console.error('Session error:', sessionError.message);
       return res.status(401).json({ success: false, error: 'Invalid access token.' });
     }
-    console.log('Session set successfully:', { user, session });
     // Use the access token to get the user
     const { data, error: userError } = await supabase.auth.getUser();
     // Check for user retrieval errors
@@ -53,7 +52,6 @@ export const handleUpdatePassword = async (req, res) => {
     return res.status(500).json({ success: false, error: 'Internal server error.' });
   }
 };
-
 // Function to handle the get of a user's session
 export const handleGetSession = async (req, res) => {
   try {

@@ -79,11 +79,11 @@ const confirmResetPassword = async (email, newPassword) => {
   }
 };
 // Exporting functions (for call AuthService.func)
-const updatePassword = async (newPassword, accessToken) => {
+const updatePassword = async (newPassword, accessToken, refresh_token) => {
   try {
     const response = await axios.post(
       `${API_URL}/update-password`,
-      { newPassword, accessToken },
+      { newPassword, accessToken, refresh_token },
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     return response.data;
