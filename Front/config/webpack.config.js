@@ -293,6 +293,12 @@ module.exports = function (webpackEnv) {
       ],
     },
     resolve: {
+      fallback: {
+        process: require.resolve('process/browser'), 
+        fs: false, // No polyfill needed for fs
+        path: require.resolve('path-browserify'), // Use path-browserify for the browser
+        os: require.resolve('os-browserify/browser'), // Use os-browserify for the browser
+      },
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
@@ -322,6 +328,9 @@ module.exports = function (webpackEnv) {
         ...(modules.webpackAliases || {}),
       },
       plugins: [
+        // new webpack.DefinePlugin({
+        //   'process.env.REACT_APP_API_URL': JSON.stringify('https://example.com'),
+        // }),
         // Prevents users from importing files from outside of src/ (or node_modules/).
         // This often causes confusion because we only process files within src/ with babel.
         // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
