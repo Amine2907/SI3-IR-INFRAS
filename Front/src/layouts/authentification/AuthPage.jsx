@@ -22,7 +22,7 @@ import {
 } from 'components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'components/ui/tabs';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import AuthService from '@back/services/authService.js';
+import AuthService from 'services/authService';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'context/Auth/AuthContext';
 import { Alert, AlertDescription } from 'components/ui/alert';
