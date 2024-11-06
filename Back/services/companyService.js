@@ -13,8 +13,9 @@
  * - getInactiveCompanys: gets all the inactive Companys in the database
  */
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/companies';
-
+import dotenv from 'dotenv'; 
+dotenv.config();
+const API_URL = process.env.BACK_COMPANIES_API || 'your-company-api-url';
 // Create Company
 const createCompany = async (data) => {
     try {
