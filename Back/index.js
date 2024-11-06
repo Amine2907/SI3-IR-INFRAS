@@ -10,12 +10,12 @@ import express from "express";
 import cors from "cors"; 
 import bodyParser from "body-parser";
 // Routes
-import authRoutes from './Routes/auth.js';
-import dashboardRoutes from './Routes/dashboard.js';
-import entitesRoutes from './Routes/entites.js';
-import contactsRoutes from './Routes/contacts.js';
-import companiesRoutes from './Routes/companies.js';
-import settingsRoutes from './Routes/settings.js'
+import authRoutes from './routes/auth.js';
+import dashboardRoutes from './routes/dashboard.js';
+import entitesRoutes from './routes/entites.js';
+import contactsRoutes from './routes/contacts.js';
+import companiesRoutes from './routes/companies.js';
+import settingsRoutes from './routes/settings.js'
 // import UsersRoutes from './Routes/getUsers.js';
 // Exports here 
 export { default as contactService } from './services/contactsService.js';

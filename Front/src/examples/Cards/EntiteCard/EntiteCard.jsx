@@ -1,26 +1,44 @@
-/**
- * EntiteCard Component
- *
- * This component renders a card displaying information about an entity.
- * It uses Material Dashboard 2 React components for styling and layout.
- *
- * Props:
- * - entite: An object containing the entity's information.
- *   - nom (string): The name of the entity (required).
- *   - role (string): The role of the entity (required).
- *   - adresse (string): The address of the entity (required).
- * - onEdit: A function to handle editing of the entity.
- *
- * The component retrieves the `darkMode` state from the Material UI controller context
- * to adjust styling based on the current theme mode.
- *
- * Dependencies:
- * - React
- * - PropTypes for prop type validation
- * - Material UI components: Grid, Tooltip, Icon, Card
- * - Material Dashboard 2 React components: MDBox, MDTypography
- * - useMaterialUIController for accessing the UI controller context
- */
+// Description :
+// Le composant EntiteCard permet d'afficher une carte contenant des informations détaillées sur une entité (par exemple, une entreprise ou un individu). Cette carte présente plusieurs détails, tels que le nom, le rôle, l'adresse, le statut actif, les contacts, les informations de localisation, ainsi que les informations financières (IBAN et BIC). Ce composant utilise des éléments de la bibliothèque Material UI pour la mise en page et le style.
+
+// Props :
+// entite (objet, requis): Un objet contenant les informations de l'entité. Il doit contenir les propriétés suivantes :
+
+// nom (string): Le nom de l'entité.
+// role (string): Le rôle de l'entité.
+// adresse (string): L'adresse de l'entité.
+// ville (string): La ville de l'entité.
+// code_postal (string): Le code postal de l'entité.
+// region (string): La région où se situe l'entité.
+// contact (string): Le nom de la personne de contact au sein de l'entité.
+// email (string): L'email de l'entité.
+// telephone (string): Le numéro de téléphone de l'entité.
+// site_web (string): L'URL du site web de l'entité.
+// IBAN (string): L'IBAN de l'entité.
+// BIC (string): Le code BIC de l'entité.
+// is_active (booléen): Le statut d'activité de l'entité, où true signifie actif et false inactif.
+// onEdit (fonction, requis): Une fonction qui sera exécutée lorsque l'utilisateur cliquera sur l'icône d'édition, permettant de gérer l'édition de l'entité.
+
+// Dépendances :
+// React : Utilisé pour la création du composant fonctionnel.
+// PropTypes : Utilisé pour valider les types des props.
+// Material UI : Utilisé pour les composants visuels comme Grid, Tooltip, Icon, Card, etc.
+// Material Dashboard 2 React : Utilisation des composants MDBox et MDTypography pour améliorer le rendu et l'ergonomie.
+// useMaterialUIController : Permet d'accéder à l'état darkMode du contexte de l'interface utilisateur, afin d'adapter le style en fonction du mode sombre ou clair.
+// Fonctionnalité :
+// Affichage des informations de l'entité :
+
+// Le nom de l'entité est affiché avec une icône de personne.
+// Le rôle de l'entité est affiché avec une icône de mail.
+// L'adresse, la ville, le code postal et la région sont affichés avec des icônes respectives pour chaque champ.
+// Le statut d'activité de l'entité est affiché avec une icône de statut (actif ou inactif).
+// Les informations de contact, email, téléphone, site web, IBAN et BIC sont également affichées avec des icônes correspondantes.
+// Édition de l'entité :
+
+// Le composant inclut une icône d'édition qui, lorsqu'elle est cliquée, appelle la fonction onEdit pour permettre la modification des informations de l'entité.
+// Mode sombre/clair :
+
+// Le style du composant s'ajuste dynamiquement au mode actuel (sombre ou clair), contrôlé par l'état darkMode provenant du contexte useMaterialUIController.
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
