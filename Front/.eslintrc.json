@@ -24,9 +24,10 @@
     "react/react-in-jsx-scope": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/jsx-props-no-spreading": [
-      1,
+      "error",
       {
-        "custom": "ignore"
+        "custom": "ignore",
+        "html": "ignore"
       }
     ],
     "react/jsx-curly-spacing": [2, "never"]
