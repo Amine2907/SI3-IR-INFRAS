@@ -1,11 +1,17 @@
+/**
+ * A modal to edit a user's profile information.
+ * @param {Object} userData The user object returned by the useAuth hook.
+ * @param {Function} onSave A function that is called when the user clicks the save button.
+ * @param {Function} onClose A function that is called when the user clicks the close button.
+ * @returns A JSX element representing the modal.
+ */
 import React, { useState } from 'react';
-import styles from './ProfilePopUp.module.css';
+import styles from '../style.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Select, MenuItem, FormControl } from '@mui/material';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -20,7 +26,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
   const handleSubmit = () => {
     const newErrors = {};
     if (!formData.firstname) newErrors.firstname = true;
-    if (!formData.role) newErrors.role = true;
+    if (!formData.lastname) newErrors.lastname = true;
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -37,7 +43,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           name="firstname"
           value={formData.firstname || ''}
           onChange={handleChange}
-          placeholder="firstname*"
+          placeholder="Prenom*"
           style={{
             marginBottom: '5px',
             width: '320px',
@@ -50,7 +56,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           name="lastname"
           value={formData.lastname || ''}
           onChange={handleChange}
-          placeholder="lastname*"
+          placeholder="Nom*"
           style={{
             marginBottom: '5px',
             width: '320px',
@@ -65,19 +71,19 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           required
         >
           <Select
-            name="role"
-            value={formData.role || ''}
+            name="genre"
+            value={formData.genre || ''}
             onChange={handleChange}
             displayEmpty
             style={{
               padding: '10px',
               fontSize: '14px',
-              borderColor: errors.prefirstname ? 'red' : '',
+              borderColor: errors.genre ? 'red' : '',
             }}
             required
           >
             <MenuItem value="" disabled>
-              -- Select a Gender* --
+              -- Choisir genre --
             </MenuItem>
             <MenuItem value="Homme">Homme</MenuItem>
             <MenuItem value="Femme">Femme</MenuItem>
@@ -91,7 +97,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
             onChange={newValue => {
               handleChange({
                 target: {
-                  name: 'Date de naissance',
+                  name: 'date_de_naissance',
                   value: newValue ? newValue.format('YYYY-MM-DD') : '',
                 },
               });
@@ -100,19 +106,38 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           />
         </LocalizationProvider>
         <MDInput
-          name="Entreprise"
+          name="entreprise"
           value={formData.entreprise || ''}
           onChange={handleChange}
           placeholder="Entreprise"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
-        <MDInput
-          name="Department"
-          value={formData.department || ''}
-          onChange={handleChange}
-          placeholder="Department"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
+        <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+          <Select
+            name="department"
+            value={formData.department || ''}
+            onChange={handleChange}
+            displayEmpty
+            style={{
+              padding: '10px',
+              fontSize: '14px',
+              borderColor: errors.department ? 'red' : '',
+            }}
+            required
+          >
+            <MenuItem value="" disabled>
+              -- Choisir le département--
+            </MenuItem>
+            <MenuItem value="RH">RH</MenuItem>
+            <MenuItem value="Direction">Direction</MenuItem>
+            <MenuItem value="Contrôle De Gestion">Contrôle De Gestion</MenuItem>
+            <MenuItem value="Informatique">Informatique</MenuItem>
+            <MenuItem value="Conception">Conception</MenuItem>
+            <MenuItem value="Énergie">Énergie</MenuItem>
+            <MenuItem value="Finance">Finance</MenuItem>
+            <MenuItem value="Étude Prix">Étude Prix</MenuItem>
+          </Select>
+        </FormControl>
         <MDButton
           onClick={handleSubmit}
           variant="gradient"
@@ -122,7 +147,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           Save
         </MDButton>
         <MDButton onClick={onClose} variant="gradient" color="dark" style={{ marginLeft: '170px' }}>
-          Close
+          Fermer
         </MDButton>
       </div>
     </div>
@@ -132,7 +157,7 @@ ProfileModal.propTypes = {
   userData: PropTypes.shape({
     firstname: PropTypes.string,
     lastname: PropTypes.string,
-    role: PropTypes.string,
+    genre: PropTypes.string,
     date_de_naissance: PropTypes.string,
     entreprise: PropTypes.string,
     department: PropTypes.arrayOf(PropTypes.string),

@@ -1,19 +1,22 @@
 /**
- * This file contains functions for user authentication
- * - `signIn`: signs in the user and returns the user if successful
- * - `signUp`: signs up the user and returns the user if successful
- * - `isAuthenticated`: checks if the user is authenticated
- * @module authService
+ * @file authService.js
+ * @description This file provides authentication services including sign in, sign up,
+ * password reset, and updating password functionalities. It interacts with the backend
+ * API to perform these operations and manages user session data locally.
+ *
+ * @module AuthService
+ *
+ * Functions:
+ * - `signIn(email, password)`: Authenticates the user with the provided email and password.
+ * - `signUp(firstName, lastName, email, password)`: Registers a new user with the provided
+ *   details.
+ * - `isAuthenticated()`: Checks if the user is currently authenticated.
+ * - `resetPassword(email)`: Initiates a password reset process for the user with the given email.
+ * - `updatePassword(newPassword, accessToken, refresh_token)`: Updates the user's password
+ *   using the provided new password and tokens.
  */
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/auth';
-// import dotenv from 'dotenv';
-// dotenv.config();
-// const API_URL = process.env.AUTH_URL;
-// Error handling helper
-// const handleError = error => {
-//   return { success: false, error: error.response ? error.response.data.error : error.message };
-// };
 // Sign in the user
 const signIn = async (email, password) => {
   return await axios
@@ -64,22 +67,19 @@ const resetPassword = async email => {
     };
   }
 };
-
 // Function to confirm password reset for the user
-const confirmResetPassword = async (access_token, newPassword) => {
+const updatePassword = async (newPassword, accessToken, refresh_token) => {
   try {
-    const response = await axios.post(`${API_URL}/confirm-reset-password`, {
-      access_token: access_token,
-      new_password: newPassword,
-    });
+    const response = await axios.post(
+      `${API_URL}/update-password`,
+      { newPassword, accessToken, refresh_token },
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    );
     return response.data;
   } catch (error) {
-    console.error('Password reset confirmation failed!', error.response?.data || error);
-    return {
-      success: false,
-      error:
-        error.response?.data?.error || 'Unknown error occurred during password reset confirmation',
-    };
+    throw error.response
+      ? error.response.data
+      : new Error('An error occurred while updating password');
   }
 };
 // Exporting functions (for call AuthService.func)
@@ -88,6 +88,6 @@ const AuthService = {
   signUp,
   isAuthenticated,
   resetPassword,
-  confirmResetPassword,
+  updatePassword,
 };
 export default AuthService;

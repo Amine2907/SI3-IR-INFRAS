@@ -13,8 +13,9 @@
  * - searchEntities: searches contacts in the database
  */
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/entites';
-
+import dotenv from 'dotenv'; 
+dotenv.config();
+const API_URL = process.env.BACK_ENTITES_API || 'your-entites-api-url';
 // Error handling helper
 const handleError = (error) => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
@@ -94,7 +95,7 @@ const activateEntity = async (id) => {
 // Search entities
 const searchEntities = async (filters) => {
     try {
-        const response = await axios.post(`${API_URL}/search`, filters);
+        const response = await axios.get(`${API_URL}/search`, { params: filters });
         return { success: true, data: response.data };
     } catch (error) {
         return { success: false, error: error.response ? error.response.data.error : error.message };
@@ -112,5 +113,4 @@ const entityService = {
     getActiveEntites,
     getInactiveEntites,
 };
-
 export default entityService;

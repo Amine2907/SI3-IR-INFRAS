@@ -15,7 +15,6 @@ import dashboardRoutes from './Routes/dashboard.js';
 import entitesRoutes from './Routes/entites.js';
 import contactsRoutes from './Routes/contacts.js';
 import companiesRoutes from './Routes/companies.js';
-import usersRoute from './Routes/getUsers.js';
 import settingsRoutes from './Routes/settings.js'
 // import UsersRoutes from './Routes/getUsers.js';
 // Exports here 
@@ -37,7 +36,6 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/entites',entitesRoutes);
 app.use('/api/contacts',contactsRoutes);
 app.use('/api/companies',companiesRoutes);
-app.use('/api/user',usersRoute);
 app.use('/api/settings',settingsRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');

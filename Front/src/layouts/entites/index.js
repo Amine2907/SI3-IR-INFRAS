@@ -1,10 +1,9 @@
 /**
- * Entites Page
+ * Entites component
  *
- * This page renders the EntiteNavBr and an EntiteList.
- *
- * See https://github.com/creativetimofficial/material-dashboard-react/blob/v2.2.0/docs/getting-started/structure.md
- * for a description of the components and layout.
+ * This component renders the main layout for the entities page.
+ * It includes the navigation bar, the list of entities, and the footer.
+ * It uses the DashboardLayout component to structure the page.
  */
 // Material Dashboard 2 React example components
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';

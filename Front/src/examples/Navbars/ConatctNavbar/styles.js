@@ -1,3 +1,11 @@
+/**
+ * Creates the styles for the Navbar component.
+ * 
+ * @param {Object} theme - The theme object from Material-UI.
+ * @param {Object} ownerState - The props of the Navbar component.
+ * @returns {Object} The styles for the Navbar component.
+ */
+
 function navbar(theme, ownerState) {
     const { palette, boxShadows, functions, transitions, breakpoints, borders } = theme;
     const { transparentNavbar, absolute, light, darkMode } = ownerState;

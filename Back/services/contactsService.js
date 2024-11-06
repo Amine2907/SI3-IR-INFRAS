@@ -13,7 +13,9 @@
  * - getInactiveContacts: gets all the inactive contacts in the database
  */
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/contacts';
+import dotenv from 'dotenv'; 
+dotenv.config();
+const API_URL = process.env.BACK_CONTACTS_API || 'your-contacts-api-url';
 // Error handling helper
 const handleError = (error) => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
@@ -93,7 +95,7 @@ const activateContact = async (id) => {
 // Search contacts
 const searchContacts = async (filters) => {
     try {
-        const response = await axios.get(`${API_URL}/search`, filters);
+        const response = await axios.get(`${API_URL}/search`,{ params: filters });
         return { success: true, data: response.data };
     } catch (error) {
         return { success: false, error: error.response ? error.response.data.error : error.message };

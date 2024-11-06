@@ -9,6 +9,7 @@
  * - listCompanies: lists all the companies in the database
  * @module settingsController
  */
+import { supabase } from "../config/supabaseClient.js";
 import settingsModel from "../models/settingsModel.js";
 
 // 1. Get Account Information
@@ -24,34 +25,51 @@ const getAccountInfo = async (req, res) => {
 };
 // 2. Update Password
 const updatePassword = async (req, res) => {
-    const userId = req.user.id;
-    const { currentPassword, newPassword } = req.body;
-    // Step 1: Verify the current password
-    const currentPasswordCheck = await settingsModel.getCurrentPassword(userId);
-    if (!currentPasswordCheck.success) {
-        return res.status(400).json({ error: currentPasswordCheck.error });
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user.id; // Assuming you have middleware that sets the user
+  try {
+    // Verify current password
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: req.user.email,
+      password: currentPassword,
+    });
+    if (signInError) {
+      return res.status(400).json({ error: 'Current password is incorrect.' });
     }
-    if (currentPasswordCheck.data !== currentPassword) {
-        return res.status(400).json({ error: "Current password is incorrect." });
+    // Update password
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+    if (updateError) {
+      throw updateError;
     }
-    // Step 2: Update to the new password
-    const result = await settingsModel.updatePassword(userId, newPassword);
-    if (!result.success) {
-        return res.status(400).json({ error: result.error });
-    }
-    res.status(200).json({ message: "Password updated successfully." });
+    res.status(200).json({ message: 'Password changed successfully.' });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ error: 'An error occurred while changing the password.' });
+  };
 };
 //update User Account informations
-const updateUserAccount = async (req,res) => {
-    const userId = req.user.id;
-    const { lastname, firstname, date_de_naissance, entreprise, department, genre, is_active } = req.body;
-    const result = await settingsModel.updateUser(userId, lastname, firstname, date_de_naissance, entreprise, department, genre, is_active);
+const updateUserAccount = async (req, res) => {
+    // Log the userId from req.user to verify it's populated
+    const userId = req.user?.id;
+    // Return an error if userId is missing
+    if (!userId) {
+        return res.status(400).json({ error: "User ID is missing in the request." });
+    }
+    // Extract userData from request body
+    const userData = req.body;
+    // Call the updateUser function from the model, passing userId and userData
+    const result = await settingsModel.updateUser(userId, userData);
+    // Check for success and send an appropriate response
     if (!result.success) {
         return res.status(400).json({ error: result.error });
     }
+    // Respond with a success message
     res.status(200).json({ message: "User account updated successfully." });
-}
+};
 // 3. List All Users
+// in this version of code im going to only lit the user that is connected to the account , otherwise im going to list all the users for the admin or the company admin when changing this web application to SAAS 
 const listUsers = async (req, res) => {
     const result = await settingsModel.listUsers();
     

@@ -18,7 +18,7 @@
  * - Material Design components: MDTypography, MDButton, MDInput, Switch, Select, MenuItem, FormControl
  */
 import React, { useState } from 'react';
-import styles from './EntitePopUp.module.css';
+import styles from '../style.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
@@ -80,7 +80,7 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
             required
           >
             <MenuItem value="" disabled>
-              -- Select a Role* --
+              -- Choisir un Role* --
             </MenuItem>
             <MenuItem value="Fournisseur">Fournisseur</MenuItem>
             <MenuItem value="CSPS">CSPS</MenuItem>
@@ -127,7 +127,7 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
             required
           >
             <MenuItem value="" disabled>
-              -- Select a Region* --
+              -- Choisir une Region* --
             </MenuItem>
             <MenuItem value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</MenuItem>
             <MenuItem value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</MenuItem>
@@ -206,7 +206,7 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
           Save
         </MDButton>
         <MDButton onClick={onClose} variant="gradient" color="dark" style={{ marginLeft: '170px' }}>
-          Close
+          Fermer
         </MDButton>
       </div>
     </div>

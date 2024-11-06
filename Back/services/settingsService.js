@@ -5,12 +5,13 @@
  * @module settingsService
  */
 import axios from 'axios';
-const API_BASE_URL = 'http://localhost:5000/api/settings';
-
+import dotenv from 'dotenv'; 
+dotenv.config();
+const API_URL = process.env.BACK_SETTINGS_API || 'your-entites-api-url';
 // Error handling helper
-// const handleError = (error) => {
-//     return { success: false, error: error.response ? error.response.data.error : error.message };
-// };
+const handleError = (error) => {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+};
 // 1. Get Account Information
 const getAccountInfo = async (userId) => {
     try {
@@ -19,7 +20,7 @@ const getAccountInfo = async (userId) => {
             console.error('No token found in local storage');
             return { success: false, error: 'No token found' };
         }
-        const response = await axios.get(`${API_BASE_URL}/account/${userId}`, {
+        const response = await axios.get(`${API_URL}/account/${userId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -35,40 +36,30 @@ const getAccountInfo = async (userId) => {
 // 2. Update Password
 const updatePassword = async (currentPassword, newPassword) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/account/password`, {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('No token found in local storage');
+            return { success: false, error: 'No token found' };
+        }
+        const response = await axios.put(`${API_URL}/account/password`, {
             currentPassword,
             newPassword,
         }, {
-            withCredentials: true,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
         return { success: true, message: response.data.message };
     } catch (error) {
         return { success: false, error: error.response?.data || error.message };
     }
-};
-// update user account infromations 
-// const updateUser = async (userId, lastname, firstname, date_de_naissance, entreprise, department, genre, is_active) => {
-//     try {
-//         const response = await axios.put(`${API_BASE_URL}/account/${userId}`, {   
-//             lastname,                         
-//             firstname,                      
-//             date_de_naissance,
-//             entreprise,
-//             department,
-//             genre,
-//             is_active
-//         }, {
-//             withCredentials: true,
-//         });
-//         return { success: true, data: response.data };
-//     } catch (error) {
-//         return { success: false, error: error.response?.data || error.message };    
-//         }
-// }  
+};  
 const updateUser = async (userId, userData) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/account/${userId}`, userData, {
-            withCredentials: true,
+        const response = await axios.put(`${API_URL}/account/${userId}`, userData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
         return { success: true, data: response.data };
     } catch (error) {
@@ -78,7 +69,7 @@ const updateUser = async (userId, userData) => {
 // 3. List All Users
 const listUsers = async () => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/users`, {
+        const response = await axios.get(`${API_URL}/users`, {
             withCredentials: true,
         });
         return { success: true, data: response.data };

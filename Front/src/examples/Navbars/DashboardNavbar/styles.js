@@ -1,3 +1,10 @@
+/**
+ * Generates a style object for a navbar component based on the provided theme and owner state.
+ *
+ * @param {object} theme - The theme object containing palette, boxShadows, functions, transitions, breakpoints, and borders.
+ * @param {object} ownerState - The state object containing transparentNavbar, absolute, light, and darkMode properties.
+ * @returns {object} - A style object defining various CSS properties for the navbar.
+ */
 function navbar(theme, ownerState) {
   const { palette, boxShadows, functions, transitions, breakpoints, borders } = theme;
   const { transparentNavbar, absolute, light, darkMode } = ownerState;

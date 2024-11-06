@@ -1,100 +1,90 @@
-// components/Users.js
-import React from 'react';
+/**
+ * Displays a list of users.
+ *
+ * @returns {JSX.Element} The users list
+ */
+import React, { useEffect } from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
   TableContainer,
-  TableHead,
+  TableCell,
   TableRow,
-  Avatar,
-  Switch,
-  IconButton,
-  Typography,
-  Select,
-  MenuItem,
-  Paper,
   Box,
+  Typography,
+  Avatar,
+  TableBody,
 } from '@mui/material';
-import MDBox from 'components/MDBox';
-import EditIcon from '@mui/icons-material/Edit';
+import { useAuth } from 'context/Auth/AuthContext';
+import { Alert, AlertDescription } from 'components/ui/alert';
+import useUserData from './userService';
+import cellStyle from './styles';
 function Users() {
-  const users = [
-    {
-      id: 1,
-      photo: '',
-      firstName: 'Mohamed Amine',
-      lastName: 'ELBAH',
-      email: 'elbah.ma02@gmail.com',
-      entreprise: 'IR-INFRAS',
-      department: '',
-      role: 'Employee',
-      isActive: true,
-    },
-  ];
-  return (
-    <MDBox p={3}>
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-        <Typography variant="h6">1 Résultat(s)</Typography>
-      </Box>
+  const { user, loading: authLoading } = useAuth();
+  const { userData, loading, error, fetchUserData } = useUserData(user);
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow sx={{ backgroundColor: '' }}>
-              <TableCell sx={{ color: 'white' }}>Photo</TableCell>
-              <TableCell sx={{ color: 'white' }}>Prenom</TableCell>
-              <TableCell sx={{ color: 'white' }}>Nom</TableCell>
-              <TableCell sx={{ color: 'white' }}>Email</TableCell>
-              <TableCell sx={{ color: 'white' }}>Entreprise</TableCell>
-              <TableCell sx={{ color: 'white' }}>Département</TableCell>
-              <TableCell sx={{ color: 'white' }}>Rôle</TableCell>
-              <TableCell sx={{ color: 'white' }}>Activé</TableCell>
-              <TableCell sx={{ color: 'white' }}>Action</TableCell>
+  useEffect(() => {
+    if (!authLoading) {
+      fetchUserData();
+    }
+  }, [authLoading, fetchUserData]);
+
+  if (authLoading || loading)
+    return (
+      <Alert variant="destructive" className="mt-4">
+        <AlertDescription>Chargement...</AlertDescription>
+      </Alert>
+    );
+
+  if (error)
+    return (
+      <Alert variant="destructive" className="mt-4">
+        <AlertDescription>Error: {String(error)}</AlertDescription>
+      </Alert>
+    );
+
+  if (!userData.length)
+    return (
+      <Alert variant="destructive" className="mt-4">
+        <AlertDescription>Aucune donnée utilisateur disponible</AlertDescription>
+      </Alert>
+    );
+  return (
+    <TableContainer>
+      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+        <Typography variant="h6">{userData.length} Résultat(s)</Typography>
+      </Box>
+      <table>
+        <thead>
+          <TableRow>
+            <TableCell sx={cellStyle}>Photo</TableCell>
+            <TableCell sx={cellStyle}>Prenom</TableCell>
+            <TableCell sx={cellStyle}>Nom</TableCell>
+            <TableCell sx={cellStyle}>Email</TableCell>
+            <TableCell sx={cellStyle}>Entreprise</TableCell>
+            <TableCell sx={cellStyle}>Département</TableCell>
+            <TableCell sx={cellStyle}>Rôle</TableCell>
+            <TableCell sx={cellStyle}>Activé</TableCell>
+            <TableCell sx={cellStyle}>Action</TableCell>
+          </TableRow>
+        </thead>
+        <TableBody>
+          {userData.map(user => (
+            <TableRow key={user.id}>
+              <TableCell>
+                <Avatar src={user.photo || '/placeholder.svg'} alt={user.firstName} />
+              </TableCell>
+              <TableCell>{user.firstname || 'N/A'}</TableCell>
+              <TableCell>{user.lastname || 'N/A'}</TableCell>
+              <TableCell>{user.email || 'N/A'}</TableCell>
+              <TableCell>{user.entreprise || 'N/A'}</TableCell>
+              <TableCell>{user.department || 'N/A'}</TableCell>
+              <TableCell>{user.user_access || 'N/A'}</TableCell>
+              <TableCell>{user.isActive ? 'Oui' : 'Non'}</TableCell>
+              <TableCell>-</TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map(user => (
-              <TableRow key={user.id}>
-                <TableCell>
-                  <Avatar src={user.photo || '/default-avatar.png'} alt={user.firstName} />
-                </TableCell>
-                <TableCell>{user.firstName}</TableCell>
-                <TableCell>{user.lastName}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.entreprise}</TableCell>
-                <TableCell>
-                  <Select
-                    value={user.department}
-                    displayEmpty
-                    variant="outlined"
-                    sx={{ width: '120px' }}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value="IR-INFRAS">IR-INFRAS</MenuItem>
-                    <MenuItem value="HR">HR</MenuItem>
-                    <MenuItem value="IT">IT</MenuItem>
-                  </Select>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="button">{user.role}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Switch checked={user.isActive} />
-                </TableCell>
-                <TableCell>
-                  <IconButton>
-                    <EditIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </MDBox>
+          ))}
+        </TableBody>
+      </table>
+    </TableContainer>
   );
 }
 export default Users;

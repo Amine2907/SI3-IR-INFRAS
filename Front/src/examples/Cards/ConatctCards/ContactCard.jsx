@@ -94,7 +94,7 @@ const ContactCard = ({ contact, onEdit }) => {
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>check_circle</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Status::</strong> {contact.is_active ? 'Active' : 'Inactive'}
+                    <strong>Status:</strong> {contact.is_active ? 'Active' : 'Inactive'}
                   </MDTypography>
                 </MDBox>
                 <MDBox ml="auto" lineHeight={0} color={darkMode ? 'white' : 'dark'}>

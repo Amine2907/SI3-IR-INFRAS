@@ -1,3 +1,12 @@
+/**
+ * This function is the main entry point for the application.
+ * It uses the MaterialUIController to get the current state
+ * of the theme and sidenav, and renders the main components
+ * based on the current route.
+ *
+ * @function App
+ * @returns {ReactElement} The main application component.
+ */
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
@@ -20,7 +29,10 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import ResetPasswordForm from 'layouts/authentification/ResetPasswordForm';
 import ConfirmSignup from 'layouts/authentification/ConfirmSignUp';
-import ProfileModal from 'examples/popup/SettingsPopUp/ProfilePopUp';
+import Billing from 'layouts/billing';
+import Contacts from 'layouts/contacts';
+import Profile from 'layouts/profile';
+import Entites from 'layouts/entites';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
@@ -59,7 +71,6 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   const handleConfiguratorOpen = () => {
     setOpenConfigurator(dispatch, !controller.openConfigurator);
   };
-
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
@@ -110,7 +121,7 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
       onClick={handleConfiguratorOpen}
     >
       <Icon fontSize="small" color="inherit">
-        Paramètres
+        settings
       </Icon>
     </MDBox>
   );
@@ -144,12 +155,43 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/billing"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Billing />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/contacts"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Contacts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/entites"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Entites />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/auth" />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/auth/confirm-reset-password" element={<ResetPasswordForm />} />
         <Route path="/auth/confirm-sign-up" element={<ConfirmSignup />} />
-        <Route path="/popup/profile" element={<ProfileModal />} />
       </Routes>
     </ThemeProvider>
   );
