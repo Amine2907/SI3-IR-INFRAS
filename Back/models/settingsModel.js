@@ -77,9 +77,7 @@ const listUsers = async() => {
 };
 const settingsModel = {
     getAccountInfo,
-    // updatePassword,
     listUsers,
     updateUser,
-    // verifyCurrentPassword,
 }
 export default settingsModel; 
