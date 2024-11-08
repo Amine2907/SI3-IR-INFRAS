@@ -43,7 +43,7 @@ const getsitesById = async(req,res) => {
 const updatesite = async (req, res) => {
     try {
       // Extract site ID from URL parameters
-      const siteId = req.params.id;
+      const siteId = req.params.EB.replace(':EB=', '');
       // Extract update fields from request body
       const updates = req.body;
       console.log('--- Update site Request ---');

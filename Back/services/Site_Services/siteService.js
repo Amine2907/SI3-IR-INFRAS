@@ -53,42 +53,42 @@ const getInactiveSites = async () => {
     }
 };
 // Get Site by ID
-const getSiteById = async (id) => {
+const getSiteById = async (EB) => {
     try {
-        const response = await axios.get(`${API_URL}/${id}`);
+        const response = await axios.get(`${API_URL}/${EB}`);
         return { success: true, data: response.data };
     } catch (error) {
         return { success: false, error: error.response ? error.response.data.error : error.message };
     }
 };
 // Update Site
-const updateSite = async (id, updates) => {
+const updateSite = async (EB, updates) => {
     try {
-        const response = await axios.put(`${API_URL}/${id}`, updates);
+        const response = await axios.put(`${API_URL}/${EB}`, updates);
         return { success: true, data: response.data };
     } catch (error) {
         return { success: false, error: error.response ? error.response.data.error : error.message };
     }
 };
 // Deactivate a Site
-const deactivateSite = async (id) => {
+const deactivateSite = async (EB) => {
     try {
-        const response = await axios.patch(`${API_URL}/${id}/deactivate`);
+        const response = await axios.patch(`${API_URL}/${EB}/deactivate`);
         return { success: true, data: response.data };
     } catch (error) {
         return { success: false, error: error.response ? error.response.data.error : error.message };
     }
 };
 // Activate a Site
-const activateSite = async (id) => {
+const activateSite = async (EB) => {
     try {
-        const response = await axios.patch(`${API_URL}/${id}/activate`);
+        const response = await axios.patch(`${API_URL}/${EB}/activate`);
         return { success: true, data: response.data };
     } catch (error) {
         return { success: false, error: error.response ? error.response.data.error : error.message };
     }
 };
-const searchSites = async (filters) => {
+const searchSites = async filters  => {
   try {
       const response = await axios.get(`${API_URL}/search`, { params: filters });
       return { success: true, data: response.data };

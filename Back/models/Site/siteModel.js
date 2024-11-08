@@ -31,27 +31,28 @@ const createsite = async (data) => {
 const getAllsites = async() => {
     try {
         const {data,error} = await supabase
-        .from('site')
-        .select(`
-            EB , 
-            G2R ,
-            nom,
-            Ville,
-            zone,
-            region,
-            lot,
-            commentaires,
-            Operateurs,
-            is_active,
-            code_postal,
-            status_site_SFR,
-            priorite_fk:Site_priorite(SPid,SP_desc),
-            programme_fk:Programme(PRid,PR_desc),
-            status_site_fk:Site-status(SSid,SS_desc),
-            Acteur_ENEDIS:Entreprise(ENTid,nom)
-            `)
-            .eq('Entreprise.is_active', true);
-            ;
+        .from('Site')
+        // depends on use i will decide if im gonna use the query or not 
+        // .select(`
+        //     EB , 
+        //     G2R ,
+        //     nom,
+        //     Ville,
+        //     zone,
+        //     region,
+        //     lot,
+        //     commentaires,
+        //     Operateurs,
+        //     is_active,
+        //     code_postal,
+        //     status_site_SFR,
+        //     priorite_fk:Site_priorite(SPid,SP_desc),
+        //     programme_fk:Programme(PRid,PR_desc),
+        //     status_site_fk:Site-status(SSid,SS_desc),
+        //     Acteur_ENEDIS_id:Entreprise(ENTid,nom)
+        //     `)
+        //     .eq('Entreprise.is_active', true);
+        .select('*');
         if(error){
             throw error;
         }
@@ -80,7 +81,7 @@ const getActiveCompaniesForActeurEnedis = async () => {
 const getAllActivesites = async() => {
     try {
         const {data,error} = await supabase
-        .from('site')
+        .from('Site')
         .select('*')
         .eq('is_active',true);
 
@@ -95,7 +96,7 @@ const getAllActivesites = async() => {
 const getAllInactivesites = async() => {
     try {
         const {data,error} = await supabase
-        .from('site')
+        .from('Site')
         .select('*')
         .eq('is_active',false);
 
@@ -111,7 +112,7 @@ const getAllInactivesites = async() => {
 const GetsitesById = async(EB) => {
     try {
         const {data,error} = await supabase
-        .from('site')
+        .from('Site')
         .select('*')
         .eq('EB',EB);
         if(error){
@@ -126,7 +127,7 @@ const GetsitesById = async(EB) => {
 const updatesite = async (EB, updates) => {
     try {
       const { data, error } = await supabase
-        .from('site') // Make sure the table name is correct
+        .from('Site')
         .update(updates)
         .eq('EB', EB);
       if (error) {
@@ -143,7 +144,7 @@ const updatesite = async (EB, updates) => {
 const activatesite = async(id) => {
     try {
         const {data,error} = await supabase
-        .from('site')
+        .from('Site')
         .update({is_active:true})
         .eq('EB',id);
         if(error){
@@ -158,7 +159,7 @@ const activatesite = async(id) => {
 const desactivatesite = async(id) => {
     try {
         const {data,error} = await supabase
-        .from('site')
+        .from('Site')
         .update({is_active:false})
         .eq('EB',id);
         if(error){
@@ -170,17 +171,17 @@ const desactivatesite = async(id) => {
     }
 };
 // Search sites 
-const Searchsite = async(filters) => {
+const Searchsite = async (filters) => {
     console.log("Received filters:", filters);
     try {
         let query = supabase
-            .from('site')
+            .from('Site')
             .select(`
                 *,
                 programme_fk:Programme(PR_desc),
                 Acteur_ENEDIS_id:Entreprise(nom),
-                status_site_fk:Site-status(SS_desc),
-                `);
+                status_site_fk:Site-status(SS_desc)
+            `);
         // filter by EB 
         if (filters.EB) {
             query = query.ilike('EB', `%${filters.EB}%`);
@@ -209,15 +210,15 @@ const Searchsite = async(filters) => {
         if (filters.Operateurs) {
             query = query.ilike('Operateurs', `%${filters.Operateurs}%`);
         }
-        // search by programme 
+        // search by programme description (PR_desc)
         if (filters.programme_fk) {
             query = query.ilike('programme_fk.PR_desc', `%${filters.programme_fk}%`);
         }
-        // search by acteur enedis 
+        // search by acteur enedis name (nom)
         if (filters.Acteur_ENEDIS_id) {
             query = query.ilike('Acteur_ENEDIS_id.nom', `%${filters.Acteur_ENEDIS_id}%`);
         }
-        // search by status 
+        // search by status description (SS_desc)
         if (filters.status_site_fk) {
             query = query.ilike('status_site_fk.SS_desc', `%${filters.status_site_fk}%`);
         }
@@ -233,7 +234,7 @@ const Searchsite = async(filters) => {
     } catch (error) {
         return { success: false, error: error.message };
     }
-}
+};
 const siteModel = {
     createsite,
     getAllsites,
