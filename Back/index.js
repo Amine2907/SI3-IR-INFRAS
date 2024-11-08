@@ -16,6 +16,7 @@ import entitesRoutes from './routes/entites.js';
 import contactsRoutes from './routes/contacts.js';
 import companiesRoutes from './routes/companies.js';
 import settingsRoutes from './routes/settings.js'
+import siteRoutes from './routes/Site/sites.js'
 // import UsersRoutes from './Routes/getUsers.js';
 // Exports here 
 export { default as contactService } from './services/contactsService.js';
@@ -37,6 +38,7 @@ app.use('/api/entites',entitesRoutes);
 app.use('/api/contacts',contactsRoutes);
 app.use('/api/companies',companiesRoutes);
 app.use('/api/settings',settingsRoutes);
+app.use('/api/site',siteRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });
