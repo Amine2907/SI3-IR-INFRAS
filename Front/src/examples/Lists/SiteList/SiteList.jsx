@@ -334,12 +334,12 @@ const SiteList = () => {
             style={{ marginRight: '10px' }}
           />
           <Grid container spacing={3}>
-            {filteredsites.map(Site => (
-              <Grid item xs={12} sm={8} md={4} key={Site.id}>
+            {filteredsites.map(site => (
+              <Grid item xs={12} sm={8} md={4} key={site.EB}>
                 <SiteCard
-                  Site={Site}
+                  site={site}
                   onEdit={() => {
-                    setselectedSite(Site);
+                    setselectedSite(site);
                     setShowModal(true);
                   }}
                 />

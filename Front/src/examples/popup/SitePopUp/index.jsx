@@ -18,7 +18,7 @@
  * - Material Design components: MDTypography, MDButton, MDInput, Switch, Select, MenuItem, FormControl
  */
 import React, { useState } from 'react';
-import styles from '../style.module.css';
+import styles from './style.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
@@ -53,158 +53,268 @@ const SiteModal = ({ site, onSave, onClose }) => {
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           {site ? 'Modifier site' : 'Ajouter site'}
         </MDTypography>
-        <MDInput
-          name="nom"
-          value={formData.nom || ''}
-          onChange={handleChange}
-          placeholder="Nom*"
-          style={{
-            marginBottom: '5px',
-            width: '320px',
-            marginTop: '10px',
-            borderColor: errors.nom ? 'red' : '',
-          }}
-          required
-        />
-        <FormControl
-          fullWidth
-          style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-          required
-        >
-          <Select
-            name="role"
-            value={formData.role || ''}
+        <div className={styles.formGrid}>
+          <MDInput
+            name="EB"
+            value={formData.EB || ''}
             onChange={handleChange}
-            displayEmpty
-            style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+            placeholder="EB*"
+            style={{
+              marginBottom: '5px',
+              width: '320px',
+              marginTop: '10px',
+              borderColor: errors.nom ? 'red' : '',
+            }}
+            required
+          />
+          <MDInput
+            name="G2R"
+            value={formData.G2R || ''}
+            onChange={handleChange}
+            placeholder="G2R*"
+            style={{
+              marginBottom: '5px',
+              width: '320px',
+              marginTop: '10px',
+              borderColor: errors.nom ? 'red' : '',
+            }}
+            required
+          />
+          <MDInput
+            name="Nom"
+            value={formData.nom || ''}
+            onChange={handleChange}
+            placeholder="Nom*"
+            style={{
+              marginBottom: '5px',
+              width: '320px',
+              marginTop: '10px',
+              borderColor: errors.nom ? 'red' : '',
+            }}
+            required
+          />
+          <FormControl
+            fullWidth
+            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
             required
           >
-            <MenuItem value="" disabled>
-              -- Choisir un Role* --
-            </MenuItem>
-            <MenuItem value="Fournisseur">Fournisseur</MenuItem>
-            <MenuItem value="CSPS">CSPS</MenuItem>
-            <MenuItem value="Syndicat">Syndicat</MenuItem>
-            <MenuItem value="Pyloniste">Pyloniste</MenuItem>
-            <MenuItem value="Génie Civiliste">Génie Civiliste</MenuItem>
-            <MenuItem value="Géotechnicien">Géotechnicien</MenuItem>
-            <MenuItem value="Dronist">Dronist</MenuItem>
-            <MenuItem value="Mairie">Mairie</MenuItem>
-          </Select>
-        </FormControl>
-        <MDInput
-          name="adresse"
-          value={formData.adresse || ''}
-          onChange={handleChange}
-          placeholder="Adresse"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="ville"
-          value={formData.ville || ''}
-          onChange={handleChange}
-          placeholder="Ville"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="code_postal"
-          value={formData.code_postal || ''}
-          onChange={handleChange}
-          placeholder="Code Postal"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <FormControl
-          fullWidth
-          style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-          required
-        >
-          <Select
-            name="region"
-            value={formData.region || ''}
+            <Select
+              name="role"
+              value={formData.priorite_fk || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir une priorite --
+              </MenuItem>
+              <MenuItem value="P00">P00</MenuItem>
+              <MenuItem value="P0">P0</MenuItem>
+              <MenuItem value="P1">P1</MenuItem>
+              <MenuItem value="P2">P2</MenuItem>
+            </Select>
+          </FormControl>
+          <MDInput
+            name="lot"
+            value={formData.lot || ''}
             onChange={handleChange}
-            displayEmpty
-            style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+            placeholder="LOT"
+            style={{ marginBottom: '5px', width: '320px' }}
+          ></MDInput>
+          <MDInput
+            name="Ville"
+            value={formData.Ville || ''}
+            onChange={handleChange}
+            placeholder="Ville"
+            style={{ marginBottom: '5px', width: '320px' }}
+          ></MDInput>
+          <MDInput
+            name="zone"
+            value={formData.zone || ''}
+            onChange={handleChange}
+            placeholder="Zone"
+            style={{ marginBottom: '5px', width: '320px' }}
+          ></MDInput>
+          <FormControl
+            fullWidth
+            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
             required
           >
-            <MenuItem value="" disabled>
-              -- Choisir une Region* --
-            </MenuItem>
-            <MenuItem value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</MenuItem>
-            <MenuItem value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</MenuItem>
-            <MenuItem value="Bretagne">Bretagne</MenuItem>
-            <MenuItem value="Centre-Val de Loire">Centre-Val de Loire</MenuItem>
-            <MenuItem value="Corse">Corse</MenuItem>
-            <MenuItem value="Grand Est">Grand Est</MenuItem>
-            <MenuItem value="Guadeloupe">Guadeloupe</MenuItem>
-            <MenuItem value="Guyane">Guyane</MenuItem>
-            <MenuItem value="Hauts-de-France">Hauts-de-France</MenuItem>
-            <MenuItem value="Île-de-France">Île-de-France</MenuItem>
-            <MenuItem value="Martinique">Martinique</MenuItem>
-            <MenuItem value="Normandie">Normandie</MenuItem>
-            <MenuItem value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</MenuItem>
-            <MenuItem value="Occitanie">Occitanie</MenuItem>
-            <MenuItem value="Pays de la Loire">Pays de la Loire</MenuItem>
-            <MenuItem value="Provence-Alpes-Côte d'Azur">Provence-Alpes-Côte d&apos;Azur</MenuItem>
-            <MenuItem value="Réunion">Réunion</MenuItem>
-          </Select>
-        </FormControl>
-        <MDInput
-          name="contact"
-          value={formData.contact || ''}
-          onChange={handleChange}
-          placeholder="Conatct"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="email"
-          value={formData.email || ''}
-          onChange={handleChange}
-          placeholder="Email"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="telephone"
-          value={formData.telephone || ''}
-          onChange={handleChange}
-          placeholder="Telephone"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="site_web"
-          value={formData.site_web || ''}
-          onChange={handleChange}
-          placeholder="Site Web"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="IBAN"
-          value={formData.IBAN || ''}
-          onChange={handleChange}
-          placeholder="IBAN"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <MDInput
-          name="BIC"
-          value={formData.BIC || ''}
-          onChange={handleChange}
-          placeholder="BIC"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <div>
-          <label>{isActive ? 'Active' : 'Inactive'}</label>
-          <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
-            {' '}
-            {isActive ? 'Active' : 'Inactive'}
-          </Switch>
+            <Select
+              name="region"
+              value={formData.region || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir une Region* --
+              </MenuItem>
+              <MenuItem value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</MenuItem>
+              <MenuItem value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</MenuItem>
+              <MenuItem value="Bretagne">Bretagne</MenuItem>
+              <MenuItem value="Centre-Val de Loire">Centre-Val de Loire</MenuItem>
+              <MenuItem value="Corse">Corse</MenuItem>
+              <MenuItem value="Grand Est">Grand Est</MenuItem>
+              <MenuItem value="Guadeloupe">Guadeloupe</MenuItem>
+              <MenuItem value="Guyane">Guyane</MenuItem>
+              <MenuItem value="Hauts-de-France">Hauts-de-France</MenuItem>
+              <MenuItem value="Île-de-France">Île-de-France</MenuItem>
+              <MenuItem value="Martinique">Martinique</MenuItem>
+              <MenuItem value="Normandie">Normandie</MenuItem>
+              <MenuItem value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</MenuItem>
+              <MenuItem value="Occitanie">Occitanie</MenuItem>
+              <MenuItem value="Pays de la Loire">Pays de la Loire</MenuItem>
+              <MenuItem value="Provence-Alpes-Côte d'Azur">
+                Provence-Alpes-Côte d&apos;Azur
+              </MenuItem>
+              <MenuItem value="Réunion">Réunion</MenuItem>
+            </Select>
+          </FormControl>
+          <MDInput
+            name="code_postal"
+            value={formData.code_postal || ''}
+            onChange={handleChange}
+            placeholder="Code Postal"
+            style={{ marginBottom: '5px', width: '320px' }}
+          ></MDInput>
+          <FormControl
+            fullWidth
+            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+            required
+          >
+            <Select
+              name="Operateurs"
+              value={formData.Operateurs || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir un operateur(s) --
+              </MenuItem>
+              <MenuItem value="SFR">SFR</MenuItem>
+              <MenuItem value="FREE">FREE</MenuItem>
+              <MenuItem value="ORANGE">ORANGE</MenuItem>
+              <MenuItem value="Bouygues Telecom">Bouygues Telecom</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl
+            fullWidth
+            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+            required
+          >
+            <Select
+              name="programme_fk"
+              value={formData.programme_fk || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir un Programme --
+              </MenuItem>
+              <MenuItem value="4GFixe">4GFixe</MenuItem>
+              <MenuItem value="DCC">DCC</MenuItem>
+              <MenuItem value="ARP">ARP</MenuItem>
+              <MenuItem value="DENSIF_CZ_RED">DENSIF_CZ_RED</MenuItem>
+              <MenuItem value="DENSIF_CZ">DENSIF_CZ</MenuItem>
+              <MenuItem value="ZTD_RED">ZTD_RED</MenuItem>
+              <MenuItem value="PAC-REMP">PAC-REMP</MenuItem>
+              <MenuItem value="PAC">PAC</MenuItem>
+              <MenuItem value="PAC-DUP">PAC-DUP</MenuItem>
+              <MenuItem value="PAC-CONTINUITY-PLAN">PAC-CONTINUITY-PLAN</MenuItem>
+              <MenuItem value="FM">FM</MenuItem>
+              <MenuItem value="ORF">ORF</MenuItem>
+              <MenuItem value="SFR TT ">SFR TT </MenuItem>
+              <MenuItem value="FM TT ">FM TT </MenuItem>
+            </Select>
+          </FormControl>
+          <MDInput
+            name="Acteur_ENEDIS_id"
+            value={formData.Acteur_ENEDIS_id || ''}
+            onChange={handleChange}
+            placeholder="Acteur ENEDIS"
+            style={{ marginBottom: '5px', width: '320px' }}
+          ></MDInput>
+          <FormControl
+            fullWidth
+            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+            required
+          >
+            <Select
+              name="status_site_SFR"
+              value={formData.status_site_SFR || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              required
+            >
+              <MenuItem value="" disabled>
+                --Choisir le status de site SFR--
+              </MenuItem>
+              <MenuItem value="0.Bloquée/Suspendu MAD">0.Bloquée/Suspendu MAD</MenuItem>
+              <MenuItem value="0.Bloquée/Suspendu Conv">0.Bloquée/Suspendu Conv</MenuItem>
+              <MenuItem value="0.Bloquée/Suspendu DP">0.Bloquée/Suspendu DP</MenuItem>
+              <MenuItem value="1.En Recherche">1.En Recherche</MenuItem>
+              <MenuItem value="2.En validation">2.En validation</MenuItem>
+              <MenuItem value="3.Validé">3.Validé</MenuItem>
+              <MenuItem value="3.En Conception">3.En Conception</MenuItem>
+              <MenuItem value="4.En cours conception">4.En cours conception</MenuItem>
+              <MenuItem value="4.GO Constr. Anticipé">4.GO Constr. Anticipé</MenuItem>
+              <MenuItem value="5.En attente visées FH">5.En attente visées FH</MenuItem>
+              <MenuItem value="5.GO Constructibilité">5.GO Constructibilité</MenuItem>
+              <MenuItem value="6.GO Constructibilité">6.GO Constructibilité</MenuItem>
+              <MenuItem value="7.GO Constructibilité Anticipé">
+                7.GO Constructibilité Anticipé
+              </MenuItem>
+              <MenuItem value="7.MES">7.MES</MenuItem>
+              <MenuItem value="8.Annulé">8.Annulé</MenuItem>
+              <MenuItem value="8.PEM">8.PEM</MenuItem>
+              <MenuItem value="En service">En service</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl
+            fullWidth
+            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+            required
+          >
+            <Select
+              name="status_site_fk"
+              value={formData.status_site_fk || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir le status de site--
+              </MenuItem>
+              <MenuItem value="Activé">Activé</MenuItem>
+              <MenuItem value="Inactif">Inactif</MenuItem>
+              <MenuItem value="Terminé">Terminé</MenuItem>
+            </Select>
+          </FormControl>
+          <div>
+            <label>{isActive ? 'Active' : 'Inactive'}</label>
+            <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
+              {' '}
+              {isActive ? 'Active' : 'Inactive'}
+            </Switch>
+          </div>
+          <MDButton
+            onClick={handleSubmit}
+            variant="gradient"
+            color="dark"
+            style={{ marginLeft: '10px', marginTop: '10px' }}
+          >
+            Save
+          </MDButton>
         </div>
-        <MDButton
-          onClick={handleSubmit}
-          variant="gradient"
-          color="dark"
-          style={{ marginLeft: '10px', marginTop: '10px' }}
-        >
-          Save
-        </MDButton>
         <MDButton onClick={onClose} variant="gradient" color="dark" style={{ marginLeft: '170px' }}>
           Fermer
         </MDButton>
@@ -214,17 +324,20 @@ const SiteModal = ({ site, onSave, onClose }) => {
 };
 SiteModal.propTypes = {
   site: PropTypes.shape({
+    EB: PropTypes.string,
+    G2R: PropTypes.string,
     nom: PropTypes.string,
-    role: PropTypes.string,
-    adresse: PropTypes.string,
-    ville: PropTypes.string,
-    code_postal: PropTypes.string,
+    priorite_fk: PropTypes.string,
+    lot: PropTypes.string,
+    Ville: PropTypes.string,
+    zone: PropTypes.string,
     region: PropTypes.string,
-    contact: PropTypes.string,
-    email: PropTypes.string,
-    site_web: PropTypes.string,
-    IBAN: PropTypes.string,
-    BIC: PropTypes.string,
+    code_postal: PropTypes.string,
+    Operateurs: PropTypes.string,
+    programme_fk: PropTypes.string,
+    Acteur_ENEDIS_id: PropTypes.string,
+    status_site_SFR: PropTypes.string,
+    status_site_fk: PropTypes.string,
     is_active: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,

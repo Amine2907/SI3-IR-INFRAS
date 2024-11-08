@@ -70,50 +70,107 @@ const SiteCard = ({ site, onEdit }) => {
                     `${borderWidth[1]} solid ${borderColor}`,
                 }}
               >
+                {/* EB */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>business</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {site.EB}
+                  </MDTypography>
+                </MDBox>
+                {/* G2R */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>map</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {site.G2R}
+                  </MDTypography>
+                </MDBox>
                 {/* Name */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>person</Icon> {/* Full Name Icon */}
+                  <Icon sx={{ mr: 1 }}>label</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     {site.nom}
                   </MDTypography>
                 </MDBox>
-                {/* Role */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>email</Icon> {/* Email Icon */}
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Role:</strong>
-                    {site.role}
-                  </MDTypography>
-                </MDBox>
-                {/* Adresse */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>home</Icon> {/* Position Icon */}
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Adresse:</strong>
-                    {site.adresse}
-                  </MDTypography>
-                </MDBox>
                 {/* Ville */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>location_city</Icon> {/* Position Icon */}
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Ville:</strong> {site.ville}
+                  <Icon sx={{ mr: 1 }}>location_city</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {site.Ville}
                   </MDTypography>
                 </MDBox>
-                {/* Code Postal  */}
+                {/* lot */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>markunread_mailbox</Icon> {/* Position Icon */}
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Code Postal:</strong>
+                  <Icon sx={{ mr: 1 }}>place</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {site.lot}
+                  </MDTypography>
+                </MDBox>
+                {/* zone */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>area_chart</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {site.zone}
+                  </MDTypography>
+                </MDBox>
+                {/* region */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>public</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {site.region}
+                  </MDTypography>
+                </MDBox>
+                {/* code postal */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>mail</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
                     {site.code_postal}
                   </MDTypography>
                 </MDBox>
-                {/* Region */}
+                {/* Acteur ENEDIS */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>map</Icon> {/* Position Icon */}
+                  <Icon sx={{ mr: 1 }}>business_center</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {site.Acteur_ENEDIS_id}
+                  </MDTypography>
+                </MDBox>
+                {/* priorite_fk */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>priority_high</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    <strong>Priorite:</strong>
+                    {site.priorite_fk}
+                  </MDTypography>
+                </MDBox>
+                {/* Operateurs */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>engineering</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Region:</strong>
-                    {site.region}
+                    <strong>Operateurs:</strong>{' '}
+                    {Array.isArray(site.Operateurs) ? site.Operateurs.join(', ') : site.Operateurs}
+                  </MDTypography>
+                </MDBox>
+                {/* Status Site  */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    <strong>Status Site :</strong>
+                    {site.status_site_fk}
+                  </MDTypography>
+                </MDBox>
+                {/* Status Site SFR  */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    <strong>Status SFR:</strong>
+                    {site.status_site_SFR}
+                  </MDTypography>
+                </MDBox>
+                {/* Programme  */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    <strong>Programme :</strong>
+                    {site.programme_fk}
                   </MDTypography>
                 </MDBox>
                 {/* Active Status */}
@@ -124,52 +181,12 @@ const SiteCard = ({ site, onEdit }) => {
                     {site.is_active ? 'Active' : 'Inactive'}
                   </MDTypography>
                 </MDBox>
-                {/* Contact */}
+                {/* Commentaires */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>work</Icon> {/* Position Icon */}
+                  <Icon sx={{ mr: 1 }}>comment</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Personne de conatct :</strong>
-                    {site.contact}
-                  </MDTypography>
-                </MDBox>
-                {/* Email */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>email</Icon> {/* Email Icon */}
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Email:</strong>
-                    {site.email}
-                  </MDTypography>
-                </MDBox>
-                {/* Phone */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>phone</Icon> {/* Phone Icon */}
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Tel:</strong>
-                    {site.telephone}
-                  </MDTypography>
-                </MDBox>
-                {/* Site web  */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>language</Icon> {/* Phone Icon */}
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Site web:</strong>
-                    {site.site_web}
-                  </MDTypography>
-                </MDBox>
-                {/* IBAN  */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>account_balance_wallet</Icon> {/* Phone Icon */}
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>IBAN:</strong>
-                    {site.IBAN}
-                  </MDTypography>
-                </MDBox>
-                {/* BIC */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>account_balance</Icon> {/* Phone Icon */}
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>BIC:</strong>
-                    {site.BIC}
+                    <strong>Commentaires:</strong>
+                    {site.commentaires}
                   </MDTypography>
                 </MDBox>
                 <MDBox ml="auto" lineHeight={0} color={darkMode ? 'white' : 'dark'}>
@@ -189,18 +206,21 @@ const SiteCard = ({ site, onEdit }) => {
 };
 SiteCard.propTypes = {
   site: PropTypes.shape({
+    EB: PropTypes.string.isRequired,
+    G2R: PropTypes.string.isRequired,
     nom: PropTypes.string.isRequired,
-    role: PropTypes.string.isRequired,
-    adresse: PropTypes.string.isRequired,
-    ville: PropTypes.string.isRequired,
-    code_postal: PropTypes.string.isRequired,
+    Ville: PropTypes.string.isRequired,
+    lot: PropTypes.string.isRequired,
+    zone: PropTypes.string.isRequired,
     region: PropTypes.string.isRequired,
-    contact: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-    site_web: PropTypes.string.isRequired,
-    IBAN: PropTypes.string.isRequired,
-    BIC: PropTypes.string.isRequired,
-    telephone: PropTypes.string.isRequired,
+    code_postal: PropTypes.string.isRequired,
+    Acteur_ENEDIS_id: PropTypes.string.isRequired,
+    priorite_fk: PropTypes.string.isRequired,
+    status_site_fk: PropTypes.string.isRequired,
+    Operateurs: PropTypes.string.isRequired,
+    programme_fk: PropTypes.string.isRequired,
+    commentaires: PropTypes.string.isRequired,
+    status_site_SFR: PropTypes.string.isRequired,
     is_active: PropTypes.bool.isRequired,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
