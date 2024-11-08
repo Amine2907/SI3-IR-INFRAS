@@ -167,7 +167,7 @@ const SiteCard = ({ site, onEdit }) => {
                 </MDBox>
                 {/* Programme  */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
+                  <Icon sx={{ mr: 1 }}>assignment</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
                     <strong>Programme :</strong>
                     {site.programme_fk}
