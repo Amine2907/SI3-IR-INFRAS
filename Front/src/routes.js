@@ -3,7 +3,7 @@
  *
  */
 import Dashboard from 'layouts/dashboard';
-import Billing from 'layouts/billing';
+import Sites from 'layouts/sites';
 import Contacts from 'layouts/contacts';
 import Profile from 'layouts/profile';
 // @mui icons
@@ -24,8 +24,8 @@ const routes = [
     name: 'Site',
     key: 'billing',
     icon: <Icon fontSize="small">construction</Icon>,
-    route: '/billing',
-    component: <Billing />,
+    route: '/sites',
+    component: <Sites />,
   },
   {
     type: 'collapse',
