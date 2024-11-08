@@ -12,7 +12,7 @@
  * - getActivesites: gets all the active sites in the database
  * - getInactivesites: gets all the inactive sites in the database
  */
-import siteModel from "../../models/Site/siteModel";
+import siteModel from "../../models/Site/siteModel.js";
 //Create site controlller 
 const createsite = async(req,res) =>{
     const newsite = {...req.body,is_active:true};

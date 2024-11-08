@@ -13,7 +13,7 @@
  */
 import express from "express";
 const router = express.Router();
-import siteController from "../../controllers/Site/siteController";
+import siteController from "../../controllers/Site/siteController.js";
 
 router.post('/',siteController.createsite);
 router.get('/',siteController.getAllsites);

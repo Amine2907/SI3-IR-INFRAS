@@ -12,7 +12,7 @@
  * - getActivesites: gets all the active sites in the database
  * - getInactivesites: gets all the inactive sites in the database
  */
-import { supabase } from "../config/supabaseClient.js";
+import { supabase } from "../../config/supabaseClient.js";
 //Create site 
 const createsite = async (data) => {
     try {
