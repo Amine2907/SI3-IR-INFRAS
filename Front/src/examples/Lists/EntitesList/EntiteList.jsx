@@ -233,7 +233,7 @@ const EntiteList = () => {
       } else {
         fetchInactiveEntites();
       }
-      setNoResultsMessage(''); // clear the no results message if any
+      setNoResultsMessage(''); // clear the no results message
       return newIsActive; // Update the state
     });
   };

@@ -42,7 +42,7 @@ import MDInput from 'components/MDInput';
 import MDAlert from 'components/MDAlert';
 import SiteCard from 'examples/Cards/SiteCard';
 import SiteModal from 'examples/popup/SitePopUp';
-import { FormControl, MenuItem, Select } from '@mui/material';
+// import { FormControl, MenuItem, Select } from '@mui/material';
 import { Alert, AlertDescription } from 'components/ui/alert';
 import SiteService from 'services/Site_Services/siteService';
 const SiteList = () => {
@@ -52,55 +52,53 @@ const SiteList = () => {
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [isActive, setIsActive] = useState(true);
   const [searchQuery, setSearchQuery] = useState({
+    EB: '',
+    G2R: '',
     nom: '',
-    ville: '',
-    region: '',
     code_postal: '',
-    role: '',
+    Ville: '',
   });
   const [noResultsMessage, setNoResultsMessage] = useState('');
   // Function to render the search results
   const renderSearch = () => {
     if (
-      searchQuery.nom.length > 0 ||
-      searchQuery.ville.length > 0 ||
-      searchQuery.region.length > 0 ||
+      searchQuery.EB.length > 0 ||
+      searchQuery.G2R.length > 0 ||
+      searchQuery.Ville.length > 0 ||
       searchQuery.code_postal.length > 0 ||
-      searchQuery.role.length > 0
+      searchQuery.nom.length > 0
     ) {
       const filteredsites = sites.filter(Site => {
+        const EB = Site.EB ? Site.EB.toLowerCase().includes(searchQuery.EB.toLowerCase()) : false;
+        const G2R = Site.G2R
+          ? Site.G2R.toLowerCase().includes(searchQuery.G2R.toLowerCase())
+          : false;
         const nom = Site.nom
           ? Site.nom.toLowerCase().includes(searchQuery.nom.toLowerCase())
           : false;
-        const ville = Site.ville
-          ? Site.ville.toLowerCase().includes(searchQuery.ville.toLowerCase())
-          : false;
-        const region = Site.region
-          ? Site.region.toLowerCase().includes(searchQuery.region.toLowerCase())
-          : false;
         const code_postal = Site.code_postal
-          ? Site.code_postal.toLowerCase().includes(searchQuery.code_postal.toLowerCase())
+          ? String(Site.code_postal).toLowerCase().includes(searchQuery.code_postal.toLowerCase())
           : false;
-        const role = Site.role
-          ? Site.role.toLowerCase().includes(searchQuery.role.toLowerCase())
+        const Ville = Site.Ville
+          ? Site.Ville.toLowerCase().includes(searchQuery.Ville.toLowerCase())
           : false;
-        return nom || ville || region || code_postal || role;
+        return EB || G2R || nom || code_postal || Ville;
       });
 
       return filteredsites; // Return filtered Sites
     }
     return sites; // Return original Sites if no search query
   };
-  const roles = [
-    'Fournisseur',
-    'CSPS',
-    'Syndicat',
-    'Pyloniste',
-    'Génie Civiliste',
-    'Géotechnicien',
-    'Dronist',
-    'Mairie',
-  ];
+  // const roles = [
+  //   'Fournisseur',
+  //   'CSPS',
+  //   'Syndicat',
+  //   'Pyloniste',
+  //   'Génie Civiliste',
+  //   'Géotechnicien',
+  //   'Dronist',
+  //   'Mairie',
+  // ];
   // Fetch Active and Inactive Sites
   const fetchActivesites = async () => {
     setNoResultsMessage('');
@@ -180,11 +178,11 @@ const SiteList = () => {
     setAlert({ show: false, message: '', type: '' });
   };
   // Search Role
-  const handleRoleChange = e => {
-    const { name, value } = e.target;
-    console.log(`Changing ${name} to ${value}`);
-    setSearchQuery(prev => ({ ...prev, [name]: value }));
-  };
+  // const handleRoleChange = e => {
+  //   const { name, value } = e.target;
+  //   console.log(`Changing ${name} to ${value}`);
+  //   setSearchQuery(prev => ({ ...prev, [name]: value }));
+  // };
   // Search functionality
   const handleSearchChange = e => {
     const { name, value } = e.target; // Destructure name and value from the event target
@@ -241,10 +239,10 @@ const SiteList = () => {
     console.log('Updated searchQuery:', searchQuery); // Ensure `searchQuery` is updated
     if (
       searchQuery.nom ||
-      searchQuery.ville ||
-      searchQuery.region ||
+      searchQuery.EB ||
+      searchQuery.G2R ||
       searchQuery.code_postal ||
-      searchQuery.role
+      searchQuery.Ville
     ) {
       handleSearchSites();
     } else {
@@ -260,23 +258,23 @@ const SiteList = () => {
           <MDBox pr={1}>
             <div className="Site-list">
               <MDInput
-                label="Recherche par nom"
+                label="Recherche par EB"
+                name="EB"
+                value={searchQuery.EB}
+                onChange={handleSearchChange}
+                style={{ marginBottom: '10px', marginRight: '10px' }}
+              />
+              <MDInput
+                label="Recherche par G2R"
+                name="G2R"
+                value={searchQuery.G2R}
+                onChange={handleSearchChange}
+                style={{ marginBottom: '10px', marginRight: '10px' }}
+              />
+              <MDInput
+                label="Recherche par nom du site"
                 name="nom"
                 value={searchQuery.nom}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par ville"
-                name="ville"
-                value={searchQuery.ville}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par region"
-                name="region"
-                value={searchQuery.region}
                 onChange={handleSearchChange}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />
@@ -287,8 +285,15 @@ const SiteList = () => {
                 onChange={handleSearchChange}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />
+              <MDInput
+                label="Recherche par ville"
+                name="Ville"
+                value={searchQuery.Ville}
+                onChange={handleSearchChange}
+                style={{ marginBottom: '10px', marginRight: '10px' }}
+              />
               {/* Dropdown for Role Selection */}
-              <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
+              {/* <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
                 <MDTypography variant="body2" fontWeight="medium">
                   Role
                 </MDTypography>
@@ -305,11 +310,11 @@ const SiteList = () => {
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+              </FormControl> */}
               <MDButton
                 onClick={() => {
                   setNoResultsMessage('');
-                  setSearchQuery({ nom: '', ville: '', region: '', code_postal: '', role: '' });
+                  setSearchQuery({ EB: '', G2R: '', nom: '', code_postal: '', Ville: '' });
                 }}
                 variant="gradient"
                 color="dark"
