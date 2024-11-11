@@ -176,12 +176,13 @@ const Searchsite = async (filters) => {
     try {
         let query = supabase
             .from('Site')
-            .select(`
-                *,
-                programme_fk:Programme(PR_desc),
-                Acteur_ENEDIS_id:Entreprise(nom),
-                status_site_fk:Site-status(SS_desc)
-            `);
+            // .select(`
+            //     *,
+            //     programme_fk:Programme(PR_desc),
+            //     Acteur_ENEDIS_id:Entreprise(nom),
+            //     status_site_fk:Site-status(SS_desc)
+            // `);
+            .select('*');
         // filter by EB 
         if (filters.EB) {
             query = query.ilike('EB', `%${filters.EB}%`);
@@ -211,17 +212,17 @@ const Searchsite = async (filters) => {
             query = query.ilike('Operateurs', `%${filters.Operateurs}%`);
         }
         // search by programme description (PR_desc)
-        if (filters.programme_fk) {
-            query = query.ilike('programme_fk.PR_desc', `%${filters.programme_fk}%`);
-        }
+        // if (filters.programme_fk) {
+        //     query = query.ilike('programme_fk.PR_desc', `%${filters.programme_fk}%`);
+        // }
         // search by acteur enedis name (nom)
-        if (filters.Acteur_ENEDIS_id) {
-            query = query.ilike('Acteur_ENEDIS_id.nom', `%${filters.Acteur_ENEDIS_id}%`);
-        }
-        // search by status description (SS_desc)
-        if (filters.status_site_fk) {
-            query = query.ilike('status_site_fk.SS_desc', `%${filters.status_site_fk}%`);
-        }
+        // if (filters.Acteur_ENEDIS_id) {
+        //     query = query.ilike('Acteur_ENEDIS_id.nom', `%${filters.Acteur_ENEDIS_id}%`);
+        // }
+        // // search by status description (SS_desc)
+        // if (filters.status_site_fk) {
+        //     query = query.ilike('status_site_fk.SS_desc', `%${filters.status_site_fk}%`);
+        // }
         // search by status_site_SFR 
         if (filters.status_site_SFR) {
             query = query.ilike('status_site_SFR', `%${filters.status_site_SFR}%`);

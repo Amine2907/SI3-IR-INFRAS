@@ -42,7 +42,7 @@ import MDInput from 'components/MDInput';
 import MDAlert from 'components/MDAlert';
 import SiteCard from 'examples/Cards/SiteCard';
 import SiteModal from 'examples/popup/SitePopUp';
-// import { FormControl, MenuItem, Select } from '@mui/material';
+import { FormControl, MenuItem, Select } from '@mui/material';
 import { Alert, AlertDescription } from 'components/ui/alert';
 import SiteService from 'services/Site_Services/siteService';
 const SiteList = () => {
@@ -57,16 +57,22 @@ const SiteList = () => {
     nom: '',
     code_postal: '',
     Ville: '',
+    status_site_SFR: '',
+    region: '',
+    Operateurs: '',
   });
   const [noResultsMessage, setNoResultsMessage] = useState('');
   // Function to render the search results
   const renderSearch = () => {
     if (
+      searchQuery.status_site_SFR.length > 0 ||
       searchQuery.EB.length > 0 ||
       searchQuery.G2R.length > 0 ||
       searchQuery.Ville.length > 0 ||
       searchQuery.code_postal.length > 0 ||
-      searchQuery.nom.length > 0
+      searchQuery.nom.length > 0 ||
+      searchQuery.region.length > 0 ||
+      searchQuery.Operateurs.length > 0
     ) {
       const filteredsites = sites.filter(Site => {
         const EB = Site.EB ? Site.EB.toLowerCase().includes(searchQuery.EB.toLowerCase()) : false;
@@ -76,28 +82,87 @@ const SiteList = () => {
         const nom = Site.nom
           ? Site.nom.toLowerCase().includes(searchQuery.nom.toLowerCase())
           : false;
+        const status_site_SFR = Site.status_site_SFR
+          ? Site.status_site_SFR.toLowerCase().includes(searchQuery.status_site_SFR.toLowerCase())
+          : false;
+        const Operateurs = Site.Operateurs
+          ? String(Site.Operateurs).toLowerCase().includes(searchQuery.Operateurs.toLowerCase())
+          : false;
+        const region = Site.region
+          ? Site.region.toLowerCase().includes(searchQuery.region.toLowerCase())
+          : false;
         const code_postal = Site.code_postal
           ? String(Site.code_postal).toLowerCase().includes(searchQuery.code_postal.toLowerCase())
           : false;
         const Ville = Site.Ville
           ? Site.Ville.toLowerCase().includes(searchQuery.Ville.toLowerCase())
           : false;
-        return EB || G2R || nom || code_postal || Ville;
+        return EB || G2R || nom || code_postal || Ville || status_site_SFR || region || Operateurs;
       });
 
       return filteredsites; // Return filtered Sites
     }
     return sites; // Return original Sites if no search query
   };
-  // const roles = [
-  //   'Fournisseur',
-  //   'CSPS',
-  //   'Syndicat',
-  //   'Pyloniste',
-  //   'Génie Civiliste',
-  //   'Géotechnicien',
-  //   'Dronist',
-  //   'Mairie',
+  // Dictionnary for searching dorpdowns ( site page )
+  // const Status_Site = ['Activé', 'Inactif', 'Terminé'];
+  const Status_Site_SFR = [
+    '0.Bloquée/Suspendu MAD',
+    '0.Bloquée/Suspendu Conv',
+    '0.Bloquée/Suspendu DP',
+    '1.En Recherche',
+    '2.En validation',
+    '3.Validé',
+    '3.En Conception',
+    '4.En cours conception',
+    '4.GO Constr. Anticipé',
+    '5.En attente visées FH',
+    '5.GO Constructibilité',
+    '6.GO Constructibilité',
+    '6.Mad Infra',
+    '7.GO Constructibilité Anticipé',
+    '7.MES',
+    '8.Annulé',
+    '8.PEM',
+    'En service',
+  ];
+  const operateurs = ['SFR', 'ORANGE', 'FREE', 'Bouygues Telecom'];
+  const regions = [
+    'Auvergne-Rhône-Alpes',
+    'Bourgogne-Franche-Comté',
+    'Bretagne',
+    'Centre-Val de Loire',
+    'Corse',
+    'Grand-Est',
+    'Guadeloupe',
+    'Guyane',
+    'Hauts-de-France',
+    'Ile-de-France',
+    'Martinique',
+    'Normandie',
+    'Nouvelle-Aquitaine',
+    'Occitanie',
+    'Pays de la Loire',
+    'Provence-Alpes-Cote-dAzur',
+  ];
+  // const program = [
+  //   '4GFixe',
+  //   'DCC',
+  //   'ARP',
+  //   'DENSIF_CZ_RED',
+  //   'DENSIF_CZ',
+  //   'ZTD_RED',
+  //   'PAC-REMP',
+  //   'PAC',
+  //   'PAC-DUP',
+  //   'PAC-CONTINUITY-PLAN',
+  //   'FM',
+  //   'ORF',
+  //   'SFR TT',
+  //   'FM TT',
+  // ];
+  // const Acteur_ENEDIS = [
+
   // ];
   // Fetch Active and Inactive Sites
   const fetchActivesites = async () => {
@@ -178,11 +243,11 @@ const SiteList = () => {
     setAlert({ show: false, message: '', type: '' });
   };
   // Search Role
-  // const handleRoleChange = e => {
-  //   const { name, value } = e.target;
-  //   console.log(`Changing ${name} to ${value}`);
-  //   setSearchQuery(prev => ({ ...prev, [name]: value }));
-  // };
+  const handleSearchDropDown = e => {
+    const { name, value } = e.target;
+    console.log(`Changing ${name} to ${value}`);
+    setSearchQuery(prev => ({ ...prev, [name]: value }));
+  };
   // Search functionality
   const handleSearchChange = e => {
     const { name, value } = e.target; // Destructure name and value from the event target
@@ -242,7 +307,10 @@ const SiteList = () => {
       searchQuery.EB ||
       searchQuery.G2R ||
       searchQuery.code_postal ||
-      searchQuery.Ville
+      searchQuery.Ville ||
+      searchQuery.status_site_SFR ||
+      searchQuery.region ||
+      searchQuery.Operateurs
     ) {
       handleSearchSites();
     } else {
@@ -292,29 +360,76 @@ const SiteList = () => {
                 onChange={handleSearchChange}
                 style={{ marginBottom: '10px', marginRight: '10px' }}
               />
-              {/* Dropdown for Role Selection */}
-              {/* <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
+              {/* Dropdown for Status Site SFR Selection */}
+              <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
                 <MDTypography variant="body2" fontWeight="medium">
-                  Role
+                  Status Site SFR
                 </MDTypography>
                 <Select
                   labelId="role-select-label"
-                  name="role"
-                  value={searchQuery.role}
-                  onChange={handleRoleChange}
-                  label="Role"
+                  name="status_site_SFR"
+                  value={searchQuery.status_site_SFR}
+                  onChange={handleSearchDropDown}
+                  label="Status_Site_SFR"
                 >
-                  {roles.map(role => (
-                    <MenuItem key={role} value={role}>
-                      {role}
+                  {Status_Site_SFR.map(status_site_SFR => (
+                    <MenuItem key={status_site_SFR} value={status_site_SFR}>
+                      {status_site_SFR}
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl> */}
+              </FormControl>
+              {/* Dropdown for Region Selection */}
+              <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
+                <MDTypography variant="body2" fontWeight="medium">
+                  Region
+                </MDTypography>
+                <Select
+                  labelId="role-select-label"
+                  name="region"
+                  value={searchQuery.region}
+                  onChange={handleSearchDropDown}
+                  label="region"
+                >
+                  {regions.map(region => (
+                    <MenuItem key={region} value={region}>
+                      {region}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {/* Dropdown for Operateurs Selection */}
+              <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
+                <MDTypography variant="body2" fontWeight="medium">
+                  Operateurs
+                </MDTypography>
+                <Select
+                  labelId="role-select-label"
+                  name="Operateurs"
+                  value={searchQuery.Operateurs}
+                  onChange={handleSearchDropDown}
+                  label="Operateurs"
+                >
+                  {operateurs.map(Operateurs => (
+                    <MenuItem key={Operateurs} value={Operateurs}>
+                      {Operateurs}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <MDButton
                 onClick={() => {
                   setNoResultsMessage('');
-                  setSearchQuery({ EB: '', G2R: '', nom: '', code_postal: '', Ville: '' });
+                  setSearchQuery({
+                    EB: '',
+                    G2R: '',
+                    nom: '',
+                    code_postal: '',
+                    Ville: '',
+                    status_site_SFR: '',
+                    region: '',
+                    Operateurs: '',
+                  });
                 }}
                 variant="gradient"
                 color="dark"
