@@ -1,8 +1,8 @@
 /**
- * Entites component
+ * Sites component
  *
- * This component renders the main layout for the entities page.
- * It includes the navigation bar, the list of entities, and the footer.
+ * This component renders the main layout for the Sites page.
+ * It includes the navigation bar, the list of Sites, and the footer.
  * It uses the DashboardLayout component to structure the page.
  */
 // Material Dashboard 2 React example components

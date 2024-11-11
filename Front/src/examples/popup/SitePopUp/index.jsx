@@ -306,18 +306,15 @@ const SiteModal = ({ site, onSave, onClose }) => {
               {isActive ? 'Active' : 'Inactive'}
             </Switch>
           </div>
-          <MDButton
-            onClick={handleSubmit}
-            variant="gradient"
-            color="dark"
-            style={{ marginLeft: '10px', marginTop: '10px' }}
-          >
-            Save
-          </MDButton>
+          <div className={styles.buttonContainer}>
+            <MDButton onClick={handleSubmit} variant="gradient" color="dark">
+              Save
+            </MDButton>
+            <MDButton onClick={onClose} variant="gradient" color="dark">
+              Fermer
+            </MDButton>
+          </div>
         </div>
-        <MDButton onClick={onClose} variant="gradient" color="dark" style={{ marginLeft: '170px' }}>
-          Fermer
-        </MDButton>
       </div>
     </div>
   );
