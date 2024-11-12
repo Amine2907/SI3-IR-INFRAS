@@ -52,7 +52,7 @@ import Card from '@mui/material/Card';
 const SiteCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-  // console.log('Site data:', site);
+  console.log('Site data:', site);
   return (
     <Grid item xs={12}>
       <Card id="site_card">

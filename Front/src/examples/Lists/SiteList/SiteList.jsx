@@ -238,6 +238,14 @@ const SiteList = () => {
     console.log(`Changing ${name} to ${value}`);
     setSearchQuery(prev => ({ ...prev, [name]: value }));
   };
+  const handleSearchCompanies = event => {
+    const { value } = event.target;
+    console.log('Selected Acteur_ENEDIS_id:', value); // Check if the selected value is correct
+    setSearchQuery(prevState => ({
+      ...prevState,
+      Acteur_ENEDIS_id: value,
+    }));
+  };
   // Search functionality
   const handleSearchChange = e => {
     const { name, value } = e.target; // Destructure name and value from the event target
@@ -459,7 +467,7 @@ const SiteList = () => {
                   labelId="role-select-label"
                   name="Acteur_ENEDIS_id"
                   value={searchQuery.Acteur_ENEDIS_id || ''}
-                  onChange={handleSearchDropDown}
+                  onChange={handleSearchCompanies}
                   label="Acteur_ENEDIS_id"
                 >
                   {/* Map over activeCompanies to generate MenuItems */}
