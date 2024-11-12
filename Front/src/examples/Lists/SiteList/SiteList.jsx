@@ -60,6 +60,8 @@ const SiteList = () => {
     status_site_SFR: '',
     region: '',
     Operateurs: '',
+    programme_fk: '',
+    status_site_fk: '',
   });
   const [noResultsMessage, setNoResultsMessage] = useState('');
   // Function to render the search results
@@ -72,7 +74,9 @@ const SiteList = () => {
       searchQuery.code_postal.length > 0 ||
       searchQuery.nom.length > 0 ||
       searchQuery.region.length > 0 ||
-      searchQuery.Operateurs.length > 0
+      searchQuery.Operateurs.length > 0 ||
+      searchQuery.programme_fk.length > 0 ||
+      searchQuery.status_site_fk.length > 0
     ) {
       const filteredsites = sites.filter(Site => {
         const EB = Site.EB ? Site.EB.toLowerCase().includes(searchQuery.EB.toLowerCase()) : false;
@@ -91,13 +95,32 @@ const SiteList = () => {
         const region = Site.region
           ? Site.region.toLowerCase().includes(searchQuery.region.toLowerCase())
           : false;
+        const status_site_fk = Site.status_site_fk
+          ? String(Site.status_site_fk)
+              .toLowerCase()
+              .includes(searchQuery.status_site_fk.toLowerCase())
+          : false;
+        const programme_fk = Site.programme_fk
+          ? String(Site.programme_fk).toLowerCase().includes(searchQuery.programme_fk.toLowerCase())
+          : false;
         const code_postal = Site.code_postal
           ? String(Site.code_postal).toLowerCase().includes(searchQuery.code_postal.toLowerCase())
           : false;
         const Ville = Site.Ville
           ? Site.Ville.toLowerCase().includes(searchQuery.Ville.toLowerCase())
           : false;
-        return EB || G2R || nom || code_postal || Ville || status_site_SFR || region || Operateurs;
+        return (
+          EB ||
+          G2R ||
+          nom ||
+          code_postal ||
+          Ville ||
+          status_site_SFR ||
+          region ||
+          Operateurs ||
+          programme_fk ||
+          status_site_fk
+        );
       });
 
       return filteredsites; // Return filtered Sites
@@ -105,8 +128,7 @@ const SiteList = () => {
     return sites; // Return original Sites if no search query
   };
   // Dictionnary for searching dorpdowns ( site page )
-  // const Status_Site = ['Activé', 'Inactif', 'Terminé'];
-  const Status_Site_SFR = [
+  const status_Site_SFRS = [
     '0.Bloquée/Suspendu MAD',
     '0.Bloquée/Suspendu Conv',
     '0.Bloquée/Suspendu DP',
@@ -137,7 +159,7 @@ const SiteList = () => {
     'Guadeloupe',
     'Guyane',
     'Hauts-de-France',
-    'Ile-de-France',
+    'Île-de-France',
     'Martinique',
     'Normandie',
     'Nouvelle-Aquitaine',
@@ -145,25 +167,26 @@ const SiteList = () => {
     'Pays de la Loire',
     'Provence-Alpes-Cote-dAzur',
   ];
-  // const program = [
-  //   '4GFixe',
-  //   'DCC',
-  //   'ARP',
-  //   'DENSIF_CZ_RED',
-  //   'DENSIF_CZ',
-  //   'ZTD_RED',
-  //   'PAC-REMP',
-  //   'PAC',
-  //   'PAC-DUP',
-  //   'PAC-CONTINUITY-PLAN',
-  //   'FM',
-  //   'ORF',
-  //   'SFR TT',
-  //   'FM TT',
-  // ];
+  const program = [
+    '4GFixe',
+    'DCC',
+    'ARP',
+    'DENSIF_CZ_RED',
+    'DENSIF_CZ',
+    'ZTD_RED',
+    'PAC-REMP',
+    'PAC',
+    'PAC-DUP',
+    'PAC-CONTINUITY-PLAN',
+    'FM',
+    'ORF',
+    'SFR TT',
+    'FM TT',
+  ];
   // const Acteur_ENEDIS = [
 
   // ];
+  const Status_Site = ['Activé', 'Inactif', 'Terminé'];
   // Fetch Active and Inactive Sites
   const fetchActivesites = async () => {
     setNoResultsMessage('');
@@ -301,6 +324,9 @@ const SiteList = () => {
     });
   };
   useEffect(() => {
+    console.log(sites);
+  }, [sites]);
+  useEffect(() => {
     console.log('Updated searchQuery:', searchQuery); // Ensure `searchQuery` is updated
     if (
       searchQuery.nom ||
@@ -310,7 +336,9 @@ const SiteList = () => {
       searchQuery.Ville ||
       searchQuery.status_site_SFR ||
       searchQuery.region ||
-      searchQuery.Operateurs
+      searchQuery.Operateurs ||
+      searchQuery.programme_fk ||
+      searchQuery.status_site_fk
     ) {
       handleSearchSites();
     } else {
@@ -370,9 +398,9 @@ const SiteList = () => {
                   name="status_site_SFR"
                   value={searchQuery.status_site_SFR}
                   onChange={handleSearchDropDown}
-                  label="Status_Site_SFR"
+                  label="status_site_SFR"
                 >
-                  {Status_Site_SFR.map(status_site_SFR => (
+                  {status_Site_SFRS.map(status_site_SFR => (
                     <MenuItem key={status_site_SFR} value={status_site_SFR}>
                       {status_site_SFR}
                     </MenuItem>
@@ -417,6 +445,44 @@ const SiteList = () => {
                   ))}
                 </Select>
               </FormControl>
+              {/* Dropdown for Program Selection */}
+              <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
+                <MDTypography variant="body2" fontWeight="medium">
+                  Program
+                </MDTypography>
+                <Select
+                  labelId="role-select-label"
+                  name="programme_fk"
+                  value={searchQuery.programme_fk}
+                  onChange={handleSearchDropDown}
+                  label="region"
+                >
+                  {program.map(programme_fk => (
+                    <MenuItem key={programme_fk} value={programme_fk}>
+                      {programme_fk}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              {/* Dropdown for Status Site SFR Selection */}
+              <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
+                <MDTypography variant="body2" fontWeight="medium">
+                  Status Site
+                </MDTypography>
+                <Select
+                  labelId="role-select-label"
+                  name="status_site_fk"
+                  value={searchQuery.status_site_fk}
+                  onChange={handleSearchDropDown}
+                  label="status_site_fk"
+                >
+                  {Status_Site.map(status_site_fk => (
+                    <MenuItem key={status_site_fk} value={status_site_fk}>
+                      {status_site_fk}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <MDButton
                 onClick={() => {
                   setNoResultsMessage('');
@@ -429,6 +495,8 @@ const SiteList = () => {
                     status_site_SFR: '',
                     region: '',
                     Operateurs: '',
+                    programme_fk: '',
+                    status_site_fk: '',
                   });
                 }}
                 variant="gradient"

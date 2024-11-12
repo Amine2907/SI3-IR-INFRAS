@@ -5,16 +5,16 @@
  * - createsite: creates a site in the database
  * - getAllsites: gets all the sites in the database
  * - getsiteById: gets a site by its ID
- * - updatesite: updates a site in the database
- * - deactivatesite: deactivates a site in the database
- * - activatesite: activates a site in the database
- * - searchsites: searches sites in the database
+ * - updateSite: updates a site in the database
+ * - deactivateSite: deactivates a site in the database
+ * - activateSite: activates a site in the database
+ * - SearchSites: searches sites in the database
  * - getActivesites: gets all the active sites in the database
  * - getInactivesites: gets all the inactive sites in the database
  */
 import { supabase } from "../../config/supabaseClient.js";
 //Create site 
-const createsite = async (data) => {
+const createSite = async (data) => {
     try {
         const { data: result, error } = await supabase
             .from('Site')
@@ -28,31 +28,19 @@ const createsite = async (data) => {
     }
 };
 //GetAllsites 
-const getAllsites = async() => {
+const getAllSites = async() => {
     try {
         const {data,error} = await supabase
         .from('Site')
         // depends on use i will decide if im gonna use the query or not 
-        // .select(`
-        //     EB , 
-        //     G2R ,
-        //     nom,
-        //     Ville,
-        //     zone,
-        //     region,
-        //     lot,
-        //     commentaires,
-        //     Operateurs,
-        //     is_active,
-        //     code_postal,
-        //     status_site_SFR,
-        //     priorite_fk:Site_priorite(SPid,SP_desc),
-        //     programme_fk:Programme(PRid,PR_desc),
-        //     status_site_fk:Site-status(SSid,SS_desc),
-        //     Acteur_ENEDIS_id:Entreprise(ENTid,nom)
-        //     `)
-        //     .eq('Entreprise.is_active', true);
-        .select('*');
+        .select(`
+            * ,
+            priorite_fk:Site-priorite(SP_desc),
+            programme_fk:Programme(PR_desc),
+            status_site_fk:Site-status(SS_desc),
+            Acteur_ENEDIS_id:Entreprise(nom)
+            `)
+            .eq('Entreprise.is_active', true);
         if(error){
             throw error;
         }
@@ -124,7 +112,7 @@ const GetsitesById = async(EB) => {
     }
 };
 //Update sites 
-const updatesite = async (EB, updates) => {
+const updateSite = async (EB, updates) => {
     try {
       const { data, error } = await supabase
         .from('Site')
@@ -141,7 +129,7 @@ const updatesite = async (EB, updates) => {
     }
   };
 // Activate sites 
-const activatesite = async(id) => {
+const activateSite = async(id) => {
     try {
         const {data,error} = await supabase
         .from('Site')
@@ -156,7 +144,7 @@ const activatesite = async(id) => {
     }
 };
 // Desactivate sites
-const desactivatesite = async(id) => {
+const desactivateSite = async(id) => {
     try {
         const {data,error} = await supabase
         .from('Site')
@@ -171,7 +159,7 @@ const desactivatesite = async(id) => {
     }
 };
 // Search sites 
-const Searchsite = async (filters) => {
+const SearchSite = async (filters) => {
     console.log("Received filters:", filters);
     try {
         let query = supabase
@@ -237,14 +225,14 @@ const Searchsite = async (filters) => {
     }
 };
 const siteModel = {
-    createsite,
-    getAllsites,
+    createSite,
+    getAllSites,
     GetsitesById,
-    updatesite,
-    activatesite,
-    desactivatesite,
+    updateSite,
+    activateSite,
+    desactivateSite,
     getAllActivesites,
     getAllInactivesites,
-    Searchsite,
+    SearchSite,
 }
 export default siteModel ; 

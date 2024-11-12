@@ -19,10 +19,10 @@ router.post('/',siteController.createsite);
 router.get('/',siteController.getAllsites);
 router.get('/active',siteController.getActivesites);
 router.get('/inactive',siteController.getInactivesites);
-router.get('/search',siteController.searchsites);
+router.get('/search',siteController.SearchSites);
 router.get('/:EB',siteController.getsitesById);
 router.put('/:EB',siteController.updatesite);
-router.patch('/:EB/desactivate',siteController.desactivatesite);
-router.patch('/:EB/activate',siteController.activatesite);
+router.patch('/:EB/desactivate',siteController.desactivateSite);
+router.patch('/:EB/activate',siteController.activateSite);
 
 export default router ; 

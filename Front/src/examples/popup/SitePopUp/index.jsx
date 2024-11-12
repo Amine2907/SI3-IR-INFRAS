@@ -23,12 +23,18 @@ import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch, Select, MenuItem, FormControl } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 const SiteModal = ({ site, onSave, onClose }) => {
-  const [formData, setFormData] = useState(site || {});
+  const [formData, setFormData] = useState(
+    site || {
+      priorite_fk: { SP_desc: '' },
+      status_site_fk: { SS_desc: '' },
+      programme_fk: { PR_desc: '' },
+    }
+  );
   const [isActive, setIsActive] = useState(site ? site.is_active : true);
   const [errors, setErrors] = useState({});
-
+  const operateurs = ['SFR', 'ORANGE', 'FREE', 'Bouygues Telecom'];
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -36,16 +42,29 @@ const SiteModal = ({ site, onSave, onClose }) => {
     const newErrors = {};
     if (!formData.nom) newErrors.nom = true;
     if (!formData.role) newErrors.role = true;
+    if (!formData.priorite_fk?.SP_desc) newErrors.priorite_fk = true;
+    if (!formData.programme_fk?.PR_desc) newErrors.programme_fk = true;
+    if (!formData.status_site_fk?.SS_desc) newErrors.status_site_fk = true;
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    onSave({ ...formData, is_active: isActive });
+    onSave({
+      ...formData,
+      priorite_fk: { SP_desc: formData.priorite_fk },
+      status_site_fk: { SS_desc: formData.status_site_fk },
+      programme_fk: { PR_desc: formData.programme_fk?.PR_desc || '' },
+      is_active: isActive,
+    });
   };
   const handleToggleActive = () => {
     if (site) {
       setIsActive(!isActive);
     }
+  };
+  const handleOperateursChange = e => {
+    const { value } = e.target;
+    setFormData({ ...formData, Operateurs: value });
   };
   return (
     <div className={styles.modal}>
@@ -81,7 +100,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
             required
           />
           <MDInput
-            name="Nom"
+            name="nom"
             value={formData.nom || ''}
             onChange={handleChange}
             placeholder="Nom*"
@@ -99,9 +118,9 @@ const SiteModal = ({ site, onSave, onClose }) => {
             required
           >
             <Select
-              name="role"
-              value={formData.priorite_fk || ''}
-              onChange={handleChange}
+              name="priorite_fk"
+              value={formData.priorite_fk?.SP_desc || ''}
+              onChange={e => handleChange(e)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
               required
@@ -180,26 +199,28 @@ const SiteModal = ({ site, onSave, onClose }) => {
             placeholder="Code Postal"
             style={{ marginBottom: '5px', width: '320px' }}
           ></MDInput>
-          <FormControl
-            fullWidth
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-            required
-          >
+          <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+            <InputLabel id="operateurs-label">Operateurs</InputLabel>
             <Select
+              labelId="operateurs-label"
               name="Operateurs"
-              value={formData.Operateurs || ''}
-              onChange={handleChange}
-              displayEmpty
+              multiple
+              value={formData.Operateurs || []}
+              onChange={handleOperateursChange}
+              renderValue={selected => selected.join(', ')}
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
-              required
             >
-              <MenuItem value="" disabled>
-                -- Choisir un operateur(s) --
-              </MenuItem>
-              <MenuItem value="SFR">SFR</MenuItem>
-              <MenuItem value="FREE">FREE</MenuItem>
-              <MenuItem value="ORANGE">ORANGE</MenuItem>
-              <MenuItem value="Bouygues Telecom">Bouygues Telecom</MenuItem>
+              {operateurs.map(operateur => (
+                <MenuItem key={operateur} value={operateur}>
+                  <input
+                    type="checkbox"
+                    checked={formData.Operateurs && formData.Operateurs.includes(operateur)}
+                    readOnly
+                    style={{ marginRight: '10px' }}
+                  />
+                  <MDTypography variant="body2">{operateur}</MDTypography>
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl
@@ -209,8 +230,8 @@ const SiteModal = ({ site, onSave, onClose }) => {
           >
             <Select
               name="programme_fk"
-              value={formData.programme_fk || ''}
-              onChange={handleChange}
+              value={formData.programme_fk?.PR_desc || ''}
+              onChange={e => handleChange(e)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
               required
@@ -234,6 +255,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <MenuItem value="FM TT ">FM TT </MenuItem>
             </Select>
           </FormControl>
+          {/* fetch active comapnies here !  */}
           <MDInput
             name="Acteur_ENEDIS_id"
             value={formData.Acteur_ENEDIS_id || ''}
@@ -285,8 +307,8 @@ const SiteModal = ({ site, onSave, onClose }) => {
           >
             <Select
               name="status_site_fk"
-              value={formData.status_site_fk || ''}
-              onChange={handleChange}
+              value={formData.status_site_fk?.SS_desc || ''}
+              onChange={e => handleChange(e)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
               required
@@ -324,17 +346,26 @@ SiteModal.propTypes = {
     EB: PropTypes.string,
     G2R: PropTypes.string,
     nom: PropTypes.string,
-    priorite_fk: PropTypes.string,
     lot: PropTypes.string,
     Ville: PropTypes.string,
     zone: PropTypes.string,
     region: PropTypes.string,
     code_postal: PropTypes.string,
-    Operateurs: PropTypes.string,
-    programme_fk: PropTypes.string,
-    Acteur_ENEDIS_id: PropTypes.string,
+    priorite_fk: PropTypes.shape({
+      SP_desc: PropTypes.string.isRequired,
+    }).isRequired,
+    Operateurs: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
+      .isRequired,
+    programme_fk: PropTypes.shape({
+      PR_desc: PropTypes.string.isRequired,
+    }).isRequired,
+    Acteur_ENEDIS_id: PropTypes.shape({
+      nom: PropTypes.string.isRequired,
+    }).isRequired,
     status_site_SFR: PropTypes.string,
-    status_site_fk: PropTypes.string,
+    status_site_fk: PropTypes.shape({
+      SS_desc: PropTypes.string.isRequired,
+    }).isRequired,
     is_active: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,

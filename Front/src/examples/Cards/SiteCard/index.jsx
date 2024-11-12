@@ -130,7 +130,7 @@ const SiteCard = ({ site, onEdit }) => {
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>business_center</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
-                    {site.Acteur_ENEDIS_id}
+                    {site.Acteur_ENEDIS_id?.nom || 'N/A'}
                   </MDTypography>
                 </MDBox>
                 {/* priorite_fk */}
@@ -138,7 +138,7 @@ const SiteCard = ({ site, onEdit }) => {
                   <Icon sx={{ mr: 1 }}>priority_high</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     <strong>Priorite:</strong>
-                    {site.priorite_fk}
+                    {site.priorite_fk.SP_desc || 'N/A'}
                   </MDTypography>
                 </MDBox>
                 {/* Operateurs */}
@@ -154,7 +154,7 @@ const SiteCard = ({ site, onEdit }) => {
                   <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
                     <strong>Status Site :</strong>
-                    {site.status_site_fk}
+                    {site.status_site_fk?.SS_desc || 'N/A'}
                   </MDTypography>
                 </MDBox>
                 {/* Status Site SFR  */}
@@ -170,7 +170,9 @@ const SiteCard = ({ site, onEdit }) => {
                   <Icon sx={{ mr: 1 }}>assignment</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
                     <strong>Programme :</strong>
-                    {site.programme_fk}
+                    {site.programme_fk && site.programme_fk.PR_desc
+                      ? site.programme_fk.PR_desc
+                      : 'N/A'}
                   </MDTypography>
                 </MDBox>
                 {/* Active Status */}
@@ -214,11 +216,20 @@ SiteCard.propTypes = {
     zone: PropTypes.string.isRequired,
     region: PropTypes.string.isRequired,
     code_postal: PropTypes.string.isRequired,
-    Acteur_ENEDIS_id: PropTypes.string.isRequired,
-    priorite_fk: PropTypes.string.isRequired,
-    status_site_fk: PropTypes.string.isRequired,
-    Operateurs: PropTypes.string.isRequired,
-    programme_fk: PropTypes.string.isRequired,
+    Acteur_ENEDIS_id: PropTypes.shape({
+      nom: PropTypes.string.isRequired,
+    }).isRequired,
+    priorite_fk: PropTypes.shape({
+      SP_desc: PropTypes.string.isRequired,
+    }).isRequired,
+    status_site_fk: PropTypes.shape({
+      SS_desc: PropTypes.string.isRequired,
+    }).isRequired,
+    Operateurs: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
+      .isRequired,
+    programme_fk: PropTypes.shape({
+      PR_desc: PropTypes.string.isRequired,
+    }).isRequired,
     commentaires: PropTypes.string.isRequired,
     status_site_SFR: PropTypes.string.isRequired,
     is_active: PropTypes.bool.isRequired,

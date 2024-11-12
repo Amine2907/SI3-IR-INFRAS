@@ -8,7 +8,7 @@
  * - updatesite: updates a site in the database
  * - desactivatesite: deactivates a site in the database
  * - activatesite: activates a site in the database
- * - searchsites: searches sites in the database
+ * - SearchSites: searches sites in the database
  * - getActivesites: gets all the active sites in the database
  * - getInactivesites: gets all the inactive sites in the database
  */
@@ -16,7 +16,7 @@ import siteModel from "../../models/Site/siteModel.js";
 //Create site controlller 
 const createsite = async(req,res) =>{
     const newsite = {...req.body,is_active:true};
-    const result = await siteModel.createsite(newsite);
+    const result = await siteModel.createSite(newsite);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
@@ -24,7 +24,7 @@ const createsite = async(req,res) =>{
 };
 // Get all active sites controller 
 const getAllsites = async(req,res)=>{
-    const result = await siteModel.getAllsites();
+    const result = await siteModel.getAllSites();
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
@@ -60,7 +60,7 @@ const updatesite = async (req, res) => {
         return res.status(400).json({ error: 'No update fields provided.' });
       }
       // Call the model to update the site
-      const result = await siteModel.updatesite(siteId, updates);
+      const result = await siteModel.updateSite(siteId, updates);
       console.log('--- Model Response ---');
       console.log('Result:', result);
   
@@ -79,18 +79,18 @@ const updatesite = async (req, res) => {
     }
   };
 // Desactivate site controller 
-const desactivatesite = async(req,res) =>{
+const desactivateSite = async(req,res) =>{
     const siteId = req.params.id ; 
-    const result = await siteModel.desactivatesite(siteId);
+    const result = await siteModel.desactivateSite(siteId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
     return res.status(200).json(result.data);
 };
 // Activate site controller 
-const activatesite = async(req,res)=> {
+const activateSite = async(req,res)=> {
     const siteId = req.params.id ; 
-    const result = await siteModel.desactivatesite(siteId);
+    const result = await siteModel.activateSite(siteId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
@@ -111,9 +111,9 @@ const getInactivesites = async(req,res) => {
     return res.status(200).json(result.data);
 }
 // Search sites controller 
-const searchsites = async(req,res) => {
+const SearchSites = async(req,res) => {
     const filters = req.query ;
-    const result = await siteModel.Searchsite(filters); 
+    const result = await siteModel.SearchSite(filters); 
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
@@ -124,9 +124,9 @@ const siteController = {
     getAllsites,
     getsitesById,
     updatesite,
-    desactivatesite,
-    activatesite,
-    searchsites,
+    desactivateSite,
+    activateSite,
+    SearchSites,
     getActivesites,
     getInactivesites,
 }
