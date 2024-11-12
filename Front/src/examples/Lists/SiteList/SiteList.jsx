@@ -98,7 +98,7 @@ const SiteList = () => {
       searchQuery.Operateurs.length > 0 ||
       searchQuery.programme_fk.length > 0 ||
       searchQuery.status_site_fk.length > 0 ||
-      searchQuery.Acteur_ENEDIS_id.length > 0
+      (searchQuery.Acteur_ENEDIS_id && searchQuery.Acteur_ENEDIS_id.length > 0)
     ) {
       const filteredsites = sites.filter(Site => {
         const EB = Site.EB ? Site.EB.toLowerCase().includes(searchQuery.EB.toLowerCase()) : false;
@@ -458,7 +458,7 @@ const SiteList = () => {
                 <Select
                   labelId="role-select-label"
                   name="Acteur_ENEDIS_id"
-                  value={searchQuery.Acteur_ENEDIS_id}
+                  value={searchQuery.Acteur_ENEDIS_id || ''}
                   onChange={handleSearchDropDown}
                   label="Acteur_ENEDIS_id"
                 >

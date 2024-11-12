@@ -290,7 +290,7 @@ const SearchSite = async (filters) => {
             }
         }
         if (filters.Acteur_ENEDIS_id) {
-            const acteurId = nameToIdMap[filters.Acteur_ENEDIS_id];
+            const acteurId = idToNameMap[filters.Acteur_ENEDIS_id];
             if (acteurId) {
                 query = query.eq('Acteur_ENEDIS_id', acteurId);  // Use the mapped ENTid to filter
             } else {
