@@ -98,6 +98,14 @@ const searchSites = async filters => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
+const getActiveCompanies = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/active-companies`);
+    return { success: true, data: response.data }; // Assuming the data is in response.data
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
 // Exporting the Site service
 const SiteService = {
   createSite,
@@ -109,5 +117,6 @@ const SiteService = {
   getActiveSites,
   getInactiveSites,
   searchSites,
+  getActiveCompanies,
 };
 export default SiteService;

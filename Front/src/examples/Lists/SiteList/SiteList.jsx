@@ -45,11 +45,13 @@ import SiteModal from 'examples/popup/SitePopUp';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import { Alert, AlertDescription } from 'components/ui/alert';
 import SiteService from 'services/Site_Services/siteService';
+import { status_sfr, ops, regions, program, Status_Site } from './SiteData';
 const SiteList = () => {
   const [sites, setsites] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedSite, setselectedSite] = useState(null);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+  const [activeCompanies, setActiveCompanies] = useState([]);
   const [isActive, setIsActive] = useState(true);
   const [searchQuery, setSearchQuery] = useState({
     EB: '',
@@ -62,8 +64,27 @@ const SiteList = () => {
     Operateurs: '',
     programme_fk: '',
     status_site_fk: '',
+    Acteur_ENEDIS_id: '',
   });
   const [noResultsMessage, setNoResultsMessage] = useState('');
+  // Fetch active companies when the component mounts
+  useEffect(() => {
+    const fetchActiveCompanies = async () => {
+      try {
+        const result = await SiteService.getActiveCompanies();
+        if (result.success) {
+          setActiveCompanies(result.data); // Assuming result.data is an array of company objects
+        } else {
+          console.error('Error fetching active companies:', result.error);
+          setActiveCompanies([]);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error.message);
+        setActiveCompanies([]);
+      }
+    };
+    fetchActiveCompanies();
+  }, []); // Empty dependency array to run once when the component mounts
   // Function to render the search results
   const renderSearch = () => {
     if (
@@ -76,7 +97,8 @@ const SiteList = () => {
       searchQuery.region.length > 0 ||
       searchQuery.Operateurs.length > 0 ||
       searchQuery.programme_fk.length > 0 ||
-      searchQuery.status_site_fk.length > 0
+      searchQuery.status_site_fk.length > 0 ||
+      searchQuery.Acteur_ENEDIS_id.length > 0
     ) {
       const filteredsites = sites.filter(Site => {
         const EB = Site.EB ? Site.EB.toLowerCase().includes(searchQuery.EB.toLowerCase()) : false;
@@ -88,6 +110,11 @@ const SiteList = () => {
           : false;
         const status_site_SFR = Site.status_site_SFR
           ? Site.status_site_SFR.toLowerCase().includes(searchQuery.status_site_SFR.toLowerCase())
+          : false;
+        const Acteur_ENEDIS_id = Site.Acteur_ENEDIS_id
+          ? String(Site.Acteur_ENEDIS_id)
+              .toLowerCase()
+              .includes(searchQuery.Acteur_ENEDIS_id.toLowerCase())
           : false;
         const Operateurs = Site.Operateurs
           ? String(Site.Operateurs).toLowerCase().includes(searchQuery.Operateurs.toLowerCase())
@@ -119,74 +146,14 @@ const SiteList = () => {
           region ||
           Operateurs ||
           programme_fk ||
-          status_site_fk
+          status_site_fk ||
+          Acteur_ENEDIS_id
         );
       });
-
       return filteredsites; // Return filtered Sites
     }
     return sites; // Return original Sites if no search query
   };
-  // Dictionnary for searching dorpdowns ( site page )
-  const status_Site_SFRS = [
-    '0.Bloquée/Suspendu MAD',
-    '0.Bloquée/Suspendu Conv',
-    '0.Bloquée/Suspendu DP',
-    '1.En Recherche',
-    '2.En validation',
-    '3.Validé',
-    '3.En Conception',
-    '4.En cours conception',
-    '4.GO Constr. Anticipé',
-    '5.En attente visées FH',
-    '5.GO Constructibilité',
-    '6.GO Constructibilité',
-    '6.Mad Infra',
-    '7.GO Constructibilité Anticipé',
-    '7.MES',
-    '8.Annulé',
-    '8.PEM',
-    'En service',
-  ];
-  const operateurs = ['SFR', 'ORANGE', 'FREE', 'Bouygues Telecom'];
-  const regions = [
-    'Auvergne-Rhône-Alpes',
-    'Bourgogne-Franche-Comté',
-    'Bretagne',
-    'Centre-Val de Loire',
-    'Corse',
-    'Grand-Est',
-    'Guadeloupe',
-    'Guyane',
-    'Hauts-de-France',
-    'Île-de-France',
-    'Martinique',
-    'Normandie',
-    'Nouvelle-Aquitaine',
-    'Occitanie',
-    'Pays de la Loire',
-    'Provence-Alpes-Cote-dAzur',
-  ];
-  const program = [
-    '4GFixe',
-    'DCC',
-    'ARP',
-    'DENSIF_CZ_RED',
-    'DENSIF_CZ',
-    'ZTD_RED',
-    'PAC-REMP',
-    'PAC',
-    'PAC-DUP',
-    'PAC-CONTINUITY-PLAN',
-    'FM',
-    'ORF',
-    'SFR TT',
-    'FM TT',
-  ];
-  // const Acteur_ENEDIS = [
-
-  // ];
-  const Status_Site = ['Activé', 'Inactif', 'Terminé'];
   // Fetch Active and Inactive Sites
   const fetchActivesites = async () => {
     setNoResultsMessage('');
@@ -338,7 +305,8 @@ const SiteList = () => {
       searchQuery.region ||
       searchQuery.Operateurs ||
       searchQuery.programme_fk ||
-      searchQuery.status_site_fk
+      searchQuery.status_site_fk ||
+      searchQuery.Acteur_ENEDIS_id
     ) {
       handleSearchSites();
     } else {
@@ -400,7 +368,7 @@ const SiteList = () => {
                   onChange={handleSearchDropDown}
                   label="status_site_SFR"
                 >
-                  {status_Site_SFRS.map(status_site_SFR => (
+                  {status_sfr.map(status_site_SFR => (
                     <MenuItem key={status_site_SFR} value={status_site_SFR}>
                       {status_site_SFR}
                     </MenuItem>
@@ -438,7 +406,7 @@ const SiteList = () => {
                   onChange={handleSearchDropDown}
                   label="Operateurs"
                 >
-                  {operateurs.map(Operateurs => (
+                  {ops.map(Operateurs => (
                     <MenuItem key={Operateurs} value={Operateurs}>
                       {Operateurs}
                     </MenuItem>
@@ -483,6 +451,30 @@ const SiteList = () => {
                   ))}
                 </Select>
               </FormControl>
+              <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
+                <MDTypography variant="body2" fontWeight="medium">
+                  Acteur ENEDIS
+                </MDTypography>
+                <Select
+                  labelId="role-select-label"
+                  name="Acteur_ENEDIS_id"
+                  value={searchQuery.Acteur_ENEDIS_id}
+                  onChange={handleSearchDropDown}
+                  label="Acteur_ENEDIS_id"
+                >
+                  {/* Map over activeCompanies to generate MenuItems */}
+                  {activeCompanies.length > 0 ? (
+                    activeCompanies.map(company => (
+                      <MenuItem key={company.ENTid} value={company.ENTid}>
+                        {' '}
+                        {company.nom}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem value="">No active companies available</MenuItem>
+                  )}
+                </Select>
+              </FormControl>
               <MDButton
                 onClick={() => {
                   setNoResultsMessage('');
@@ -497,6 +489,7 @@ const SiteList = () => {
                     Operateurs: '',
                     programme_fk: '',
                     status_site_fk: '',
+                    Acteur_ENEDIS_id: '',
                   });
                 }}
                 variant="gradient"

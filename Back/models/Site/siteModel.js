@@ -16,6 +16,56 @@ import { supabase } from "../../config/supabaseClient.js";
 //Create site 
 const createSite = async (data) => {
     try {
+        const priorityMapping = {
+            "P00" : 1 , 
+            "P0" : 2 , 
+            "P1" : 3 ,
+            "P2" : 4 ,
+        };
+        const programMapping = {
+            "4GFixe" : 1 , 
+            "DCC" : 2 , 
+            "ARP" : 3 , 
+            "DENSIF_CZ_RED" : 4 ,
+            "DENSIF_CZ" : 5 , 
+            "ZTD_RED" : 6 , 
+            "PAC-REMP" : 7 ,
+            "PAC" : 8 , 
+            "PAC-DUP" : 9 ,
+            "PAC-CONTINUITY-PLAN" : 10 ,
+            "FM" : 11 , 
+            "ORF" : 12 , 
+            "SFR TT" : 13 , 
+            "FM TT" : 14 ,
+        };
+        const siteStatusMapping  = {
+            "Activé" : 1 ,
+            "Inactif" : 2 , 
+            "Terminé" : 3 ,
+        };
+         // Check and map priorite_fk, programme_fk, and status_site_fk to their corresponding IDs
+         if (data.priorite_fk) {
+            const prioriteId = priorityMapping[data.priorite_fk];
+            if (!prioriteId) {
+                throw new Error(`Invalid priority description: ${data.priorite_fk}`);
+            }
+            data.priorite_fk = prioriteId;
+        }
+
+        if (data.programme_fk) {
+            const programId = programMapping[data.programme_fk];
+            if (!programId) {
+                throw new Error(`Invalid program description: ${data.programme_fk}`);
+            }
+            data.programme_fk = programId;
+        }
+        if (data.status_site_fk) {
+            const statusId = siteStatusMapping[data.status_site_fk];
+            if (!statusId) {
+                throw new Error(`Invalid status description: ${data.status_site_fk}`);
+            }
+            data.status_site_fk = statusId;
+        }
         const { data: result, error } = await supabase
             .from('Site')
             .insert([data]);
@@ -54,9 +104,8 @@ const getActiveCompaniesForActeurEnedis = async () => {
     try {
         const { data, error } = await supabase
             .from('Entreprise')
-            .select('ENTid, nom')
-            .eq('is_active', true); // Fetch only active companies
-
+            .select('nom')
+            .eq('is_active', true);
         if (error) {
             throw error;
         }
@@ -162,64 +211,119 @@ const desactivateSite = async(id) => {
 const SearchSite = async (filters) => {
     console.log("Received filters:", filters);
     try {
-        let query = supabase
-            .from('Site')
-            // .select(`
-            //     *,
-            //     programme_fk:Programme(PR_desc),
-            //     Acteur_ENEDIS_id:Entreprise(nom),
-            //     status_site_fk:Site-status(SS_desc)
-            // `);
-            .select('*');
-        // filter by EB 
+        // Mappings for converting human-readable descriptions to IDs
+        const priorityMapping = {
+            "P00" : 1 , 
+            "P0" : 2 , 
+            "P1" : 3 ,
+            "P2" : 4 ,
+        };
+
+        const programMapping = {
+            "4GFixe" : 1 , 
+            "DCC" : 2 , 
+            "ARP" : 3 , 
+            "DENSIF_CZ_RED" : 4 ,
+            "DENSIF_CZ" : 5 , 
+            "ZTD_RED" : 6 , 
+            "PAC-REMP" : 7 ,
+            "PAC" : 8 , 
+            "PAC-DUP" : 9 ,
+            "PAC-CONTINUITY-PLAN" : 10 ,
+            "FM" : 11 , 
+            "ORF" : 12 , 
+            "SFR TT" : 13 , 
+            "FM TT" : 14 ,
+        };
+        const siteStatusMapping  = {
+            "Activé" : 1 ,
+            "Inactif" : 2 , 
+            "Terminé" : 3 ,
+        };
+                // Query active company names and IDs from Acteur_ENEDIS table
+        const { data: acteurData, error: acteurError } = await supabase
+        .from('Entreprise')
+        .select('ENTid, nom');
+        if (acteurError) throw acteurError;
+    
+        // Create a mapping from ID to company name
+        const idToNameMap = acteurData.reduce((acc, { ENTid, nom }) => {
+            acc[nom] = ENTid;
+             return acc;
+        }, {});
+        // Initialize the query with the table 'Site'
+        let query = supabase.from('Site').select('*');
+        // Filter by EB
         if (filters.EB) {
             query = query.ilike('EB', `%${filters.EB}%`);
         }
-        // filter by G2R
+        // Filter by G2R
         if (filters.G2R) {
             query = query.ilike('G2R', filters.G2R);
         }
-        // filter by nom 
+        // Filter by nom (name of the site)
         if (filters.nom) {
             query = query.ilike('nom', `%${filters.nom}%`);
         }
-        // filter by code_postal 
+        // Filter by code_postal
         if (filters.code_postal) {
             query = query.eq('code_postal', filters.code_postal);
         }
-        // filter by ville 
+        // Filter by Ville (City)
         if (filters.Ville) {
             query = query.ilike('Ville', `%${filters.Ville}%`);
         }
-        // filter by region 
+        // Filter by region
         if (filters.region) {
             query = query.ilike('region', `%${filters.region}%`);
         }
-        // filter by operateur 
+        // Filter by Operateurs
         if (filters.Operateurs) {
             query = query.ilike('Operateurs', `%${filters.Operateurs}%`);
         }
-        // search by programme description (PR_desc)
-        // if (filters.programme_fk) {
-        //     query = query.ilike('programme_fk.PR_desc', `%${filters.programme_fk}%`);
-        // }
-        // search by acteur enedis name (nom)
-        // if (filters.Acteur_ENEDIS_id) {
-        //     query = query.ilike('Acteur_ENEDIS_id.nom', `%${filters.Acteur_ENEDIS_id}%`);
-        // }
-        // // search by status description (SS_desc)
-        // if (filters.status_site_fk) {
-        //     query = query.ilike('status_site_fk.SS_desc', `%${filters.status_site_fk}%`);
-        // }
-        // search by status_site_SFR 
+        // Convert the 'programme_fk' description to its numeric ID if provided
+        if (filters.programme_fk) {
+            const programId = programMapping[filters.programme_fk];
+            if (programId) {
+                query = query.eq('programme_fk', programId);  // Using numeric ID in the query
+            }
+        }
+        if (filters.Acteur_ENEDIS_id) {
+            const acteurId = nameToIdMap[filters.Acteur_ENEDIS_id];
+            if (acteurId) {
+                query = query.eq('Acteur_ENEDIS_id', acteurId);  // Use the mapped ENTid to filter
+            } else {
+                return { success: false, error: "No active company found with this name." };  // If the name doesn't match any active company
+            }
+        }
+        // Convert the 'status_site_fk' description to its numeric ID if provided
+        if (filters.status_site_fk) {
+            const statusId = siteStatusMapping[filters.status_site_fk];
+            if (statusId) {
+                query = query.eq('status_site_fk', statusId);  // Using numeric ID in the query
+            }
+        }
+        // Convert the 'priorite_fk' description to its numeric ID if provided
+        if (filters.priorite_fk) {
+            const priorityId = priorityMapping[filters.priorite_fk];
+            if (priorityId) {
+                query = query.eq('priorite_fk', priorityId);  // Using numeric ID in the query
+            }
+        }
+        // Filter by status_site_SFR
         if (filters.status_site_SFR) {
             query = query.ilike('status_site_SFR', `%${filters.status_site_SFR}%`);
         }
+        // Execute the query and handle the result
         const { data, error } = await query;
         if (error) {
             throw error;
         }
-        return { success: true, data };
+        // const resultWithNames = data.map(item => ({
+        //     ...item,
+        //     Acteur_ENEDIS_name: idToNameMap[item.Acteur_ENEDIS_id] || null,  // Add company name based on the ID
+        // }));
+        return { success: true, data  };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -234,5 +338,6 @@ const siteModel = {
     getAllActivesites,
     getAllInactivesites,
     SearchSite,
+    getActiveCompaniesForActeurEnedis,
 }
 export default siteModel ; 

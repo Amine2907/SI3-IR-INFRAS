@@ -119,6 +119,18 @@ const SearchSites = async(req,res) => {
     }
     return res.status(200).json(result.data);
 };
+const getActiveCompaniesForActeurEnedis = async (req, res) => {
+    try {
+        const result = await siteModel.getActiveCompaniesForActeurEnedis();
+        if (result.success) {
+            return res.status(200).json(result.data);
+        } else {
+            return res.status(500).json({ success: false, message: result.error });
+        }
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
 const siteController = {
     createsite,
     getAllsites,
@@ -129,5 +141,6 @@ const siteController = {
     SearchSites,
     getActivesites,
     getInactivesites,
+    getActiveCompaniesForActeurEnedis,
 }
 export default siteController ; 
