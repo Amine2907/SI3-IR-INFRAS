@@ -279,7 +279,8 @@ const SearchSite = async (filters) => {
         }
         // Filter by Operateurs
         if (filters.Operateurs) {
-            query = query.ilike('Operateurs', `%${filters.Operateurs}%`);
+            query = query
+                .filter('Operateurs', 'cs', `{${filters.Operateurs}}`);
         }
         // Convert the 'programme_fk' description to its numeric ID if provided
         if (filters.programme_fk) {
