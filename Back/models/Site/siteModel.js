@@ -23,7 +23,7 @@ const getActiveCompanies = async () => {
             throw new Error(`Error fetching active companies: ${error.message}`);
         }
         // Log the fetched companies to ensure it's an array
-        console.log('Fetched active companies:', data);
+        // console.log('Fetched active companies:', data);
         return {success:true , data}; // Return active companies data (list of objects with ENTid and nom)
     } catch (error) {
         console.error(error);
@@ -35,24 +35,19 @@ const createSite = async (data) => {
     try {
         // Fetch active companies list
         const activeCompaniesResponse = await getActiveCompanies();
-
         // Log the response to ensure it's correct
         console.log('Active Companies Response:', activeCompaniesResponse);
-
         // Check if the response is successful and if the data is an array
         if (!activeCompaniesResponse.success) {
             throw new Error('Failed to fetch active companies');
         }
-
         const activeCompanies = activeCompaniesResponse.data;
         if (!Array.isArray(activeCompanies)) {
             throw new Error('Active companies data is not an array.');
         }
-
         if (activeCompanies.length === 0) {
             throw new Error('No active companies found');
         }
-
         // Log the incoming data to inspect Acteur_ENEDIS_id
         console.log('Incoming data for createSite:', data);
 
@@ -256,46 +251,50 @@ const SearchSite = async (filters) => {
     try {
         // Mappings for converting human-readable descriptions to IDs
         const priorityMapping = {
-            "P00" : 1 , 
-            "P0" : 2 , 
-            "P1" : 3 ,
-            "P2" : 4 ,
+            "P00": 1, 
+            "P0": 2, 
+            "P1": 3,
+            "P2": 4,
         };
 
         const programMapping = {
-            "4GFixe" : 1 , 
-            "DCC" : 2 , 
-            "ARP" : 3 , 
-            "DENSIF_CZ_RED" : 4 ,
-            "DENSIF_CZ" : 5 , 
-            "ZTD_RED" : 6 , 
-            "PAC-REMP" : 7 ,
-            "PAC" : 8 , 
-            "PAC-DUP" : 9 ,
-            "PAC-CONTINUITY-PLAN" : 10 ,
-            "FM" : 11 , 
-            "ORF" : 12 , 
-            "SFR TT" : 13 , 
-            "FM TT" : 14 ,
+            "4GFixe": 1, 
+            "DCC": 2, 
+            "ARP": 3, 
+            "DENSIF_CZ_RED": 4,
+            "DENSIF_CZ": 5, 
+            "ZTD_RED": 6, 
+            "PAC-REMP": 7,
+            "PAC": 8, 
+            "PAC-DUP": 9,
+            "PAC-CONTINUITY-PLAN": 10,
+            "FM": 11, 
+            "ORF": 12, 
+            "SFR TT": 13, 
+            "FM TT": 14,
         };
-        const siteStatusMapping  = {
-            "Activé" : 1 ,
-            "Inactif" : 2 , 
-            "Terminé" : 3 ,
+        
+        const siteStatusMapping = {
+            "Activé": 1,
+            "Inactif": 2, 
+            "Terminé": 3,
         };
-                // Query active company names and IDs from Acteur_ENEDIS table
+
+        // Query active company names and IDs from Acteur_ENEDIS table
         const { data: acteurData, error: acteurError } = await supabase
-        .from('Entreprise')
-        .select('ENTid, nom');
+            .from('Entreprise')
+            .select('ENTid, nom');
         if (acteurError) throw acteurError;
-    
+
         // Create a mapping from ID to company name
         const idToNameMap = acteurData.reduce((acc, { ENTid, nom }) => {
             acc[nom] = ENTid;
-             return acc;
+            return acc;
         }, {});
+
         // Initialize the query with the table 'Site'
         let query = supabase.from('Site').select('*');
+
         // Filter by EB
         if (filters.EB) {
             query = query.ilike('EB', `%${filters.EB}%`);
@@ -332,12 +331,15 @@ const SearchSite = async (filters) => {
                 query = query.eq('programme_fk', programId);  // Using numeric ID in the query
             }
         }
+        
+        // Convert 'Acteur_ENEDIS_id' to company name if it is a numeric ID
         if (filters.Acteur_ENEDIS_id) {
-            const acteurId = idToNameMap[filters.Acteur_ENEDIS_id];
-            if (acteurId) {
-                query = query.eq('Acteur_ENEDIS_id', acteurId);  // Use the mapped ENTid to filter
+            const acteurName = Object.keys(idToNameMap).find(name => idToNameMap[name] == filters.Acteur_ENEDIS_id);
+            if (acteurName) {
+                // Filter the query by the company name
+                query = query.eq('Acteur_ENEDIS_id', idToNameMap[acteurName]);
             } else {
-                return { success: false, error: "No active company found with this name." };  // If the name doesn't match any active company
+                return { success: false, error: "No active company found with this ID." };  // If no matching name
             }
         }
         // Convert the 'status_site_fk' description to its numeric ID if provided
@@ -363,7 +365,8 @@ const SearchSite = async (filters) => {
         if (error) {
             throw error;
         }
-        return { success: true, data  };
+        return { success: true, data };
+
     } catch (error) {
         return { success: false, error: error.message };
     }
