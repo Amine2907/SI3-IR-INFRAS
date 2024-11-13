@@ -17,13 +17,14 @@
  * - PropTypes for prop type validation
  * - Material Design components: MDTypography, MDButton, MDInput, Switch, Select, MenuItem, FormControl
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './style.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import SiteService from 'services/Site_Services/siteService';
 const SiteModal = ({ site, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     site || {
@@ -33,6 +34,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
       Acteur_ENEDIS_id: { nom: '' },
     }
   );
+  const [activeCompanies, setActiveCompanies] = useState([]);
   const [isActive, setIsActive] = useState(site ? site.is_active : true);
   const [errors, setErrors] = useState({});
   const operateurs = ['SFR', 'ORANGE', 'FREE', 'Bouygues Telecom'];
@@ -46,10 +48,29 @@ const SiteModal = ({ site, onSave, onClose }) => {
       setFormData({ ...formData, programme_fk: { PR_desc: value } });
     } else if (name === 'status_site_fk') {
       setFormData({ ...formData, status_site_fk: { SS_desc: value } });
+    } else if (name === 'Acteur_ENEDIS_id') {
+      setFormData({ ...formData, Acteur_ENEDIS_id: { nom: value } });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
+  useEffect(() => {
+    const fetchActiveCompanies = async () => {
+      try {
+        const result = await SiteService.getActiveCompanies();
+        if (result.success) {
+          setActiveCompanies(result.data); // Assuming result.data is an array of company objects
+        } else {
+          console.error('Error fetching active companies:', result.error);
+          setActiveCompanies([]);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error.message);
+        setActiveCompanies([]);
+      }
+    };
+    fetchActiveCompanies();
+  }, []);
   const handleSubmit = () => {
     const newErrors = {};
     if (!formData.nom) newErrors.nom = true;
@@ -272,13 +293,34 @@ const SiteModal = ({ site, onSave, onClose }) => {
             </Select>
           </FormControl>
           {/* fetch active comapnies here !  */}
-          <MDInput
-            name="Acteur_ENEDIS_id"
-            value={formData.Acteur_ENEDIS_id.nom || ''}
-            onChange={e => handleDropdownChange('Acteur_ENEDIS_id', 'nom', e.target.value)}
-            placeholder="Acteur ENEDIS"
-            style={{ marginBottom: '5px', width: '320px' }}
-          ></MDInput>
+          <FormControl
+            fullWidth
+            required
+            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+          >
+            <Select
+              labelId="role-select-label"
+              name="Acteur_ENEDIS_id"
+              value={formData.Acteur_ENEDIS_id.nom || ''}
+              displayEmpty
+              onChange={e => handleDropdownChange('Acteur_ENEDIS_id', 'nom', e.target.value)}
+              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir un acteur enedis --
+              </MenuItem>
+              {activeCompanies.length > 0 ? (
+                activeCompanies.map(company => (
+                  <MenuItem key={company.ENTid} value={company.ENTid}>
+                    {company.nom}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="">No active companies available</MenuItem>
+              )}
+            </Select>
+          </FormControl>
           <FormControl
             fullWidth
             style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
