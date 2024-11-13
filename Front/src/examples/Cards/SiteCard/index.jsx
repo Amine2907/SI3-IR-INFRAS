@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
@@ -8,8 +8,7 @@ import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import { useMaterialUIController } from '../../../context/index';
 import Card from '@mui/material/Card';
-import { program, Status_Site, priority, fetchCompanyNameById } from './SiteData';
-import { useState, useEffect } from 'react';
+import { program, Status_Site, priority, fetchCompanyNameById } from './CardData';
 const SiteCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -109,8 +108,7 @@ const SiteCard = ({ site, onEdit }) => {
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>priority_high</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
-                    <strong>Priorite:</strong>
-                    {priority[site.priorite_fk] || 'N/A'}
+                    <strong>Priorite:</strong> {priority[site.priorite_fk] || 'N/A'}
                   </MDTypography>
                 </MDBox>
                 {/* Operateurs */}
