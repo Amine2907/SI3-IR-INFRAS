@@ -1,44 +1,3 @@
-// Description :
-// Le composant SiteCard permet d'afficher une carte contenant des informations détaillées sur une entité (par exemple, une entreprise ou un individu). Cette carte présente plusieurs détails, tels que le nom, le rôle, l'adresse, le statut actif, les contacts, les informations de localisation, ainsi que les informations financières (IBAN et BIC). Ce composant utilise des éléments de la bibliothèque Material UI pour la mise en page et le style.
-
-// Props :
-// site (objet, requis): Un objet contenant les informations de l'entité. Il doit contenir les propriétés suivantes :
-
-// nom (string): Le nom de l'entité.
-// role (string): Le rôle de l'entité.
-// adresse (string): L'adresse de l'entité.
-// ville (string): La ville de l'entité.
-// code_postal (string): Le code postal de l'entité.
-// region (string): La région où se situe l'entité.
-// contact (string): Le nom de la personne de contact au sein de l'entité.
-// email (string): L'email de l'entité.
-// telephone (string): Le numéro de téléphone de l'entité.
-// site_web (string): L'URL du site web de l'entité.
-// IBAN (string): L'IBAN de l'entité.
-// BIC (string): Le code BIC de l'entité.
-// is_active (booléen): Le statut d'activité de l'entité, où true signifie actif et false inactif.
-// onEdit (fonction, requis): Une fonction qui sera exécutée lorsque l'utilisateur cliquera sur l'icône d'édition, permettant de gérer l'édition de l'entité.
-
-// Dépendances :
-// React : Utilisé pour la création du composant fonctionnel.
-// PropTypes : Utilisé pour valider les types des props.
-// Material UI : Utilisé pour les composants visuels comme Grid, Tooltip, Icon, Card, etc.
-// Material Dashboard 2 React : Utilisation des composants MDBox et MDTypography pour améliorer le rendu et l'ergonomie.
-// useMaterialUIController : Permet d'accéder à l'état darkMode du contexte de l'interface utilisateur, afin d'adapter le style en fonction du mode sombre ou clair.
-// Fonctionnalité :
-// Affichage des informations de l'entité :
-
-// Le nom de l'entité est affiché avec une icône de personne.
-// Le rôle de l'entité est affiché avec une icône de mail.
-// L'adresse, la ville, le code postal et la région sont affichés avec des icônes respectives pour chaque champ.
-// Le statut d'activité de l'entité est affiché avec une icône de statut (actif ou inactif).
-// Les informations de contact, email, téléphone, site web, IBAN et BIC sont également affichées avec des icônes correspondantes.
-// Édition de l'entité :
-
-// Le composant inclut une icône d'édition qui, lorsqu'elle est cliquée, appelle la fonction onEdit pour permettre la modification des informations de l'entité.
-// Mode sombre/clair :
-
-// Le style du composant s'ajuste dynamiquement au mode actuel (sombre ou clair), contrôlé par l'état darkMode provenant du contexte useMaterialUIController.
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
@@ -55,18 +14,16 @@ const SiteCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const [companyName, setCompanyName] = useState('N/A');
-
   useEffect(() => {
-    // Fetch the company name for the current `Acteur_ENEDIS_id`
+    const acteurId = site.Acteur_ENEDIS_id;
     const fetchCompanyName = async () => {
-      const name = await fetchCompanyNameById(site.Acteur_ENEDIS_id);
-      setCompanyName(name);
+      if (acteurId) {
+        const name = await fetchCompanyNameById(acteurId);
+        setCompanyName(name);
+      }
     };
-    if (site.Acteur_ENEDIS_id) {
-      fetchCompanyName();
-    }
+    fetchCompanyName();
   }, [site.Acteur_ENEDIS_id]);
-  console.log('Site data:', site);
   return (
     <Grid item xs={12}>
       <Card id="site_card">
@@ -229,20 +186,12 @@ SiteCard.propTypes = {
     zone: PropTypes.string.isRequired,
     region: PropTypes.string.isRequired,
     code_postal: PropTypes.string.isRequired,
-    Acteur_ENEDIS_id: PropTypes.shape({
-      nom: PropTypes.string.isRequired,
-    }).isRequired,
-    priorite_fk: PropTypes.shape({
-      SP_desc: PropTypes.string.isRequired,
-    }).isRequired,
-    status_site_fk: PropTypes.shape({
-      SS_desc: PropTypes.string.isRequired,
-    }).isRequired,
+    Acteur_ENEDIS_id: PropTypes.string.isRequired,
+    priorite_fk: PropTypes.string.isRequired,
+    status_site_fk: PropTypes.string.isRequired,
+    programme_fk: PropTypes.string.isRequired,
     Operateurs: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
       .isRequired,
-    programme_fk: PropTypes.shape({
-      PR_desc: PropTypes.string.isRequired,
-    }).isRequired,
     commentaires: PropTypes.string.isRequired,
     status_site_SFR: PropTypes.string.isRequired,
     is_active: PropTypes.bool.isRequired,

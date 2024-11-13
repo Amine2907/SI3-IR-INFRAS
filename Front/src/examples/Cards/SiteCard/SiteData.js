@@ -17,13 +17,12 @@ const program = {
 };
 const priority = { 1: 'P00', 2: 'P0', 3: 'P1', 4: 'P2' };
 const Status_Site = { 1: 'Activé', 2: 'Inactif', 3: 'Terminé' };
-const fetchCompanyNameById = async id => {
+const fetchCompanyNameById = async acteurId => {
   try {
     const result = await SiteService.getActiveCompanies();
     if (result.success) {
-      // Find the company by id
-      const company = result.data.find(company => company.id === id);
-      // Return the name if found, otherwise return a fallback
+      // Look for a company where ENTid matches Acteur_ENEDIS_id
+      const company = result.data.find(company => company.ENTid === acteurId);
       return company ? company.nom : 'N/A';
     } else {
       console.error('Error fetching active companies:', result.error);
