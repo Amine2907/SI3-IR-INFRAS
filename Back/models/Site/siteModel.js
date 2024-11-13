@@ -16,6 +16,17 @@ import { supabase } from "../../config/supabaseClient.js";
 //Create site 
 const createSite = async (data) => {
     try {
+        const  activeCompanies = await  fetchActiveCompanies();
+        // Log the active companies to ensure they are correctly returned as an array
+        console.log('Active Companies:', activeCompanies);
+        // Check if activeCompanies is an array and contains objects
+        if (!Array.isArray(activeCompanies)) {
+            throw new Error('Active companies data is not an array.');
+        }
+
+        if (activeCompanies.length === 0) {
+            throw new Error('No active companies found');
+        }
         const priorityMapping = {
             "P00" : 1 , 
             "P0" : 2 , 
@@ -66,6 +77,17 @@ const createSite = async (data) => {
             }
             data.status_site_fk = statusId;
         }
+        // Step 4: Map Acteur_ENEDIS_id (company) dynamically to ENTid
+        if (data.Acteur_ENEDIS_id) {
+            const company = activeCompanies.find(company => company.nom === data.Acteur_ENEDIS_id);
+            if (company) {
+                data.Acteur_ENEDIS_id = company.ENTid; // Map to ENTid (numeric value only)
+            } else {
+                throw new Error(`Invalid Acteur_ENEDIS_id: ${data.Acteur_ENEDIS_id}`);
+            }
+        } else {
+            throw new Error('Acteur_ENEDIS_id is required');
+        }
         const { data: result, error } = await supabase
             .from('Site')
             .insert([data]);
@@ -100,18 +122,24 @@ const getAllSites = async() => {
     }
 };
 // Get all active companies for the Acteur Enedis dropdown
-const getActiveCompaniesForActeurEnedis = async () => {
+const fetchActiveCompanies = async () => {
     try {
         const { data, error } = await supabase
             .from('Entreprise')
-            .select('nom')
+            .select('ENTid, nom')
             .eq('is_active', true);
+
         if (error) {
-            throw error;
+            throw new Error(`Error fetching active companies: ${error.message}`);
         }
-        return { success: true, data };
+
+        // Log the fetched companies to ensure it's an array
+        console.log('Fetched active companies:', data);
+
+        return data; // Return active companies data (list of objects with ENTid and nom)
     } catch (error) {
-        return { success: false, error: error.message };
+        console.error(error);
+        return []; // Return empty array if an error occurs
     }
 };
 // Get all active sites
@@ -339,6 +367,6 @@ const siteModel = {
     getAllActivesites,
     getAllInactivesites,
     SearchSite,
-    getActiveCompaniesForActeurEnedis,
+    fetchActiveCompanies,
 }
 export default siteModel ; 
