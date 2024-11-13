@@ -30,30 +30,40 @@ const SiteModal = ({ site, onSave, onClose }) => {
       priorite_fk: { SP_desc: '' },
       status_site_fk: { SS_desc: '' },
       programme_fk: { PR_desc: '' },
+      Acteur_ENEDIS_id: { nom: '' },
     }
   );
   const [isActive, setIsActive] = useState(site ? site.is_active : true);
   const [errors, setErrors] = useState({});
   const operateurs = ['SFR', 'ORANGE', 'FREE', 'Bouygues Telecom'];
   const handleChange = e => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // setFormData({ ...formData, [e.target.name]: e.target.value });*
+    const { name, value } = e.target;
+    // Special handling for nested fields
+    if (name === 'priorite_fk') {
+      setFormData({ ...formData, priorite_fk: { SP_desc: value } });
+    } else if (name === 'programme_fk') {
+      setFormData({ ...formData, programme_fk: { PR_desc: value } });
+    } else if (name === 'status_site_fk') {
+      setFormData({ ...formData, status_site_fk: { SS_desc: value } });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
   const handleSubmit = () => {
     const newErrors = {};
     if (!formData.nom) newErrors.nom = true;
-    if (!formData.role) newErrors.role = true;
-    if (!formData.priorite_fk?.SP_desc) newErrors.priorite_fk = true;
-    if (!formData.programme_fk?.PR_desc) newErrors.programme_fk = true;
-    if (!formData.status_site_fk?.SS_desc) newErrors.status_site_fk = true;
+    if (!formData.priorite_fk.SP_desc) newErrors.priorite_fk = true;
+    if (!formData.programme_fk.PR_desc) newErrors.programme_fk = true;
+    if (!formData.status_site_fk.SS_desc) newErrors.status_site_fk = true;
+    console.log('Validation errors:', newErrors);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+    console.log('Form data submitted:', formData);
     onSave({
       ...formData,
-      priorite_fk: { SP_desc: formData.priorite_fk },
-      status_site_fk: { SS_desc: formData.status_site_fk },
-      programme_fk: { PR_desc: formData.programme_fk?.PR_desc || '' },
       is_active: isActive,
     });
   };
@@ -65,6 +75,12 @@ const SiteModal = ({ site, onSave, onClose }) => {
   const handleOperateursChange = e => {
     const { value } = e.target;
     setFormData({ ...formData, Operateurs: value });
+  };
+  const handleDropdownChange = (field, subField, value) => {
+    setFormData({
+      ...formData,
+      [field]: { [subField]: value },
+    });
   };
   return (
     <div className={styles.modal}>
@@ -119,8 +135,8 @@ const SiteModal = ({ site, onSave, onClose }) => {
           >
             <Select
               name="priorite_fk"
-              value={formData.priorite_fk?.SP_desc || ''}
-              onChange={e => handleChange(e)}
+              value={formData.priorite_fk.SP_desc || ''}
+              onChange={e => handleDropdownChange('priorite_fk', 'SP_desc', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
               required
@@ -230,8 +246,8 @@ const SiteModal = ({ site, onSave, onClose }) => {
           >
             <Select
               name="programme_fk"
-              value={formData.programme_fk?.PR_desc || ''}
-              onChange={e => handleChange(e)}
+              value={formData.programme_fk.PR_desc || ''}
+              onChange={e => handleDropdownChange('programme_fk', 'PR_desc', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
               required
@@ -258,8 +274,8 @@ const SiteModal = ({ site, onSave, onClose }) => {
           {/* fetch active comapnies here !  */}
           <MDInput
             name="Acteur_ENEDIS_id"
-            value={formData.Acteur_ENEDIS_id || ''}
-            onChange={handleChange}
+            value={formData.Acteur_ENEDIS_id.nom || ''}
+            onChange={e => handleDropdownChange('Acteur_ENEDIS_id', 'nom', e.target.value)}
             placeholder="Acteur ENEDIS"
             style={{ marginBottom: '5px', width: '320px' }}
           ></MDInput>
@@ -307,8 +323,8 @@ const SiteModal = ({ site, onSave, onClose }) => {
           >
             <Select
               name="status_site_fk"
-              value={formData.status_site_fk?.SS_desc || ''}
-              onChange={e => handleChange(e)}
+              value={formData.status_site_fk.SS_desc || ''}
+              onChange={e => handleDropdownChange('status_site_fk', 'SS_desc', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
               required

@@ -199,6 +199,7 @@ const SiteList = () => {
 
   // Function to handle saving entity
   const handleSave = async data => {
+    console.log('Data being sent to createSite:', data);
     let result;
     let successMessage = '';
     if (selectedSite) {
@@ -210,22 +211,26 @@ const SiteList = () => {
       result = await SiteService.createSite(data);
       successMessage = 'site enregistrée avec succès !';
     }
-    // Handle the result with alert feedback
-    if (result.success) {
+    // Check if the operation was successful
+    if (result?.success) {
+      // Show success alert and reload active sites based on `isActive` status
       setAlert({ show: true, message: successMessage, type: 'success' });
-      fetchActivesites();
+      if (isActive) {
+        await fetchActivesites();
+      } else {
+        await fetchInactivesites();
+      }
+      // Reset the active state and close the modal
+      setIsActive(true); // Reset toggle state to Active
+      handleModalClose();
     } else {
-      setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
-      fetchActivesites();
+      // Show an error alert if saving failed
+      setAlert({
+        show: true,
+        message: `Erreur: ${result?.error || "Échec de l'opération"}`,
+        type: 'error',
+      });
     }
-    handleModalClose();
-    if (isActive) {
-      fetchActivesites(); // Fetch active Sites
-    } else {
-      fetchInactivesites(); // Fetch inactive Sites
-    }
-    fetchActivesites();
-    setIsActive(true); // Set the switch state to Active after modifying an entity
   };
 
   // Function to close the alert
@@ -544,7 +549,7 @@ const SiteList = () => {
         </MDBox>
       </Card>
       {showModal && (
-        <SiteModal Site={selectedSite} onSave={handleSave} onClose={handleModalClose} />
+        <SiteModal site={selectedSite} onSave={handleSave} onClose={handleModalClose} />
       )}
       {alert.show && (
         <MDAlert
