@@ -22,15 +22,13 @@ const getActiveCompanies = async () => {
         if (error) {
             throw new Error(`Error fetching active companies: ${error.message}`);
         }
-        // Log the fetched companies to ensure it's an array
-        // console.log('Fetched active companies:', data);
         return {success:true , data}; // Return active companies data (list of objects with ENTid and nom)
     } catch (error) {
         console.error(error);
         return []; // Return empty array if an error occurs
     }
 };
-//Create site 
+//Create site
 const createSite = async (data) => {
     try {
         // Fetch active companies list
@@ -290,7 +288,6 @@ const SearchSite = async (filters) => {
             acc[nom] = ENTid;
             return acc;
         }, {});
-
         // Initialize the query with the table 'Site'
         let query = supabase.from('Site').select('*');
 

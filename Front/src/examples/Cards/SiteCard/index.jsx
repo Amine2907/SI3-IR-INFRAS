@@ -49,9 +49,23 @@ import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import { useMaterialUIController } from '../../../context/index';
 import Card from '@mui/material/Card';
+import { program, Status_Site, priority, fetchCompanyNameById } from './SiteData';
+import { useState, useEffect } from 'react';
 const SiteCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
+  const [companyName, setCompanyName] = useState('N/A');
+
+  useEffect(() => {
+    // Fetch the company name for the current `Acteur_ENEDIS_id`
+    const fetchCompanyName = async () => {
+      const name = await fetchCompanyNameById(site.Acteur_ENEDIS_id);
+      setCompanyName(name);
+    };
+    if (site.Acteur_ENEDIS_id) {
+      fetchCompanyName();
+    }
+  }, [site.Acteur_ENEDIS_id]);
   console.log('Site data:', site);
   return (
     <Grid item xs={12}>
@@ -131,7 +145,7 @@ const SiteCard = ({ site, onEdit }) => {
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>business_center</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
-                    {site.Acteur_ENEDIS_id?.nom || 'N/A'}
+                    {companyName}
                   </MDTypography>
                 </MDBox>
                 {/* priorite_fk */}
@@ -139,7 +153,7 @@ const SiteCard = ({ site, onEdit }) => {
                   <Icon sx={{ mr: 1 }}>priority_high</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     <strong>Priorite:</strong>
-                    {site.priorite_fk?.SP_desc || 'N/A'}
+                    {priority[site.priorite_fk] || 'N/A'}
                   </MDTypography>
                 </MDBox>
                 {/* Operateurs */}
@@ -155,7 +169,7 @@ const SiteCard = ({ site, onEdit }) => {
                   <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
                     <strong>Status Site :</strong>
-                    {site.status_site_fk?.SS_desc || 'N/A'}
+                    {Status_Site[site.status_site_fk] || 'N/A'}
                   </MDTypography>
                 </MDBox>
                 {/* Status Site SFR  */}
@@ -171,7 +185,7 @@ const SiteCard = ({ site, onEdit }) => {
                   <Icon sx={{ mr: 1 }}>assignment</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
                     <strong>Programme :</strong>
-                    {site.programme_fk?.PR_desc || 'N/A'}
+                    {program[site.programme_fk] || 'N/A'}
                   </MDTypography>
                 </MDBox>
                 {/* Active Status */}
