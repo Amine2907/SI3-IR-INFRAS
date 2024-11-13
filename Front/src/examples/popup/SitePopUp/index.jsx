@@ -402,14 +402,14 @@ const SiteModal = ({ site, onSave, onClose }) => {
               {isActive ? 'Active' : 'Inactive'}
             </Switch>
           </div>
-          <div className={styles.buttonContainer}>
-            <MDButton onClick={handleSubmit} variant="gradient" color="dark">
-              Save
-            </MDButton>
-            <MDButton onClick={onClose} variant="gradient" color="dark">
-              Fermer
-            </MDButton>
-          </div>
+        </div>
+        <div className={styles.buttonContainer}>
+          <MDButton onClick={handleSubmit} variant="gradient" color="dark">
+            Save
+          </MDButton>
+          <MDButton onClick={onClose} variant="gradient" color="dark">
+            Fermer
+          </MDButton>
         </div>
       </div>
     </div>

@@ -40,8 +40,9 @@
     margin-right: 10px;
   }
   .buttonContainer {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+    gap: 350px;
     margin-top: 20px;
-    width: 100%;
+    width: 100%
   }
