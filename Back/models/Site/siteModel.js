@@ -279,7 +279,6 @@ const SearchSite = async (filters) => {
             "Inactif": 2, 
             "Terminé": 3,
         };
-
         // Query active company names and IDs from Acteur_ENEDIS table
         const { data: acteurData, error: acteurError } = await supabase
             .from('Entreprise')
