@@ -13,6 +13,18 @@
  * - getInactivesites: gets all the inactive sites in the database
  */
 import siteModel from "../../models/Site/siteModel.js";
+const fetchActiveCompanies = async (req, res) => {
+    try {
+        const result = await siteModel.getActiveCompanies();
+        if (result.success) {
+            return res.status(200).json(result.data);
+        } else {
+            return res.status(500).json({ success: false, message: result.error });
+        }
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
 //Create site controlller 
 const createsite = async (req, res) => {
     try {
@@ -189,19 +201,8 @@ const SearchSites = async(req,res) => {
     }
     return res.status(200).json(result.data);
 };
-const getActiveCompaniesForActeurEnedis = async (req, res) => {
-    try {
-        const result = await siteModel.getActiveCompaniesForActeurEnedis();
-        if (result.success) {
-            return res.status(200).json(result.data);
-        } else {
-            return res.status(500).json({ success: false, message: result.error });
-        }
-    } catch (error) {
-        return res.status(500).json({ success: false, message: error.message });
-    }
-};
 const siteController = {
+    fetchActiveCompanies,
     createsite,
     getAllsites,
     getsitesById,
@@ -211,6 +212,5 @@ const siteController = {
     SearchSites,
     getActivesites,
     getInactivesites,
-    getActiveCompaniesForActeurEnedis,
 }
 export default siteController ; 

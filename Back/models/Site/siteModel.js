@@ -13,13 +13,38 @@
  * - getInactivesites: gets all the inactive sites in the database
  */
 import { supabase } from "../../config/supabaseClient.js";
+const getActiveCompanies = async () => {
+    try {
+        const { data, error } = await supabase
+            .from('Entreprise')
+            .select('ENTid, nom')
+            .eq('is_active', true);
+        if (error) {
+            throw new Error(`Error fetching active companies: ${error.message}`);
+        }
+        // Log the fetched companies to ensure it's an array
+        console.log('Fetched active companies:', data);
+        return {success:true , data}; // Return active companies data (list of objects with ENTid and nom)
+    } catch (error) {
+        console.error(error);
+        return []; // Return empty array if an error occurs
+    }
+};
 //Create site 
 const createSite = async (data) => {
     try {
-        const  activeCompanies = await  fetchActiveCompanies();
-        // Log the active companies to ensure they are correctly returned as an array
-        console.log('Active Companies:', activeCompanies);
-        // Check if activeCompanies is an array and contains objects
+        // Fetch active companies list
+        const activeCompaniesResponse = await getActiveCompanies();
+
+        // Log the response to ensure it's correct
+        console.log('Active Companies Response:', activeCompaniesResponse);
+
+        // Check if the response is successful and if the data is an array
+        if (!activeCompaniesResponse.success) {
+            throw new Error('Failed to fetch active companies');
+        }
+
+        const activeCompanies = activeCompaniesResponse.data;
         if (!Array.isArray(activeCompanies)) {
             throw new Error('Active companies data is not an array.');
         }
@@ -27,42 +52,62 @@ const createSite = async (data) => {
         if (activeCompanies.length === 0) {
             throw new Error('No active companies found');
         }
+
+        // Log the incoming data to inspect Acteur_ENEDIS_id
+        console.log('Incoming data for createSite:', data);
+
+        // If Acteur_ENEDIS_id is a string (company name), convert it to the corresponding company ID
+        if (typeof data.Acteur_ENEDIS_id === 'string') {
+            const companyName = data.Acteur_ENEDIS_id;
+            console.warn('Converting company name to company ID:', companyName);
+
+            // Find the company in the activeCompanies list based on company name
+            const company = activeCompanies.find(company => company.nom === companyName);
+
+            if (company) {
+                // Replace the company name with the corresponding company ID
+                data.Acteur_ENEDIS_id = company.ENTid;
+            } else {
+                throw new Error(`No company found with name: ${companyName}`);
+            }
+        }
+
+        // Map priorite_fk, programme_fk, and status_site_fk to their corresponding IDs
         const priorityMapping = {
-            "P00" : 1 , 
-            "P0" : 2 , 
-            "P1" : 3 ,
-            "P2" : 4 ,
+            "P00": 1,
+            "P0": 2,
+            "P1": 3,
+            "P2": 4,
         };
         const programMapping = {
-            "4GFixe" : 1 , 
-            "DCC" : 2 , 
-            "ARP" : 3 , 
-            "DENSIF_CZ_RED" : 4 ,
-            "DENSIF_CZ" : 5 , 
-            "ZTD_RED" : 6 , 
-            "PAC-REMP" : 7 ,
-            "PAC" : 8 , 
-            "PAC-DUP" : 9 ,
-            "PAC-CONTINUITY-PLAN" : 10 ,
-            "FM" : 11 , 
-            "ORF" : 12 , 
-            "SFR TT" : 13 , 
-            "FM TT" : 14 ,
+            "4GFixe": 1,
+            "DCC": 2,
+            "ARP": 3,
+            "DENSIF_CZ_RED": 4,
+            "DENSIF_CZ": 5,
+            "ZTD_RED": 6,
+            "PAC-REMP": 7,
+            "PAC": 8,
+            "PAC-DUP": 9,
+            "PAC-CONTINUITY-PLAN": 10,
+            "FM": 11,
+            "ORF": 12,
+            "SFR TT": 13,
+            "FM TT": 14,
         };
-        const siteStatusMapping  = {
-            "Activé" : 1 ,
-            "Inactif" : 2 , 
-            "Terminé" : 3 ,
+        const siteStatusMapping = {
+            "Activé": 1,
+            "Inactif": 2,
+            "Terminé": 3,
         };
-         // Check and map priorite_fk, programme_fk, and status_site_fk to their corresponding IDs
-         if (data.priorite_fk) {
+        // Check and map priorite_fk, programme_fk, and status_site_fk to their corresponding IDs
+        if (data.priorite_fk) {
             const prioriteId = priorityMapping[data.priorite_fk];
             if (!prioriteId) {
                 throw new Error(`Invalid priority description: ${data.priorite_fk}`);
             }
             data.priorite_fk = prioriteId;
         }
-
         if (data.programme_fk) {
             const programId = programMapping[data.programme_fk];
             if (!programId) {
@@ -77,17 +122,7 @@ const createSite = async (data) => {
             }
             data.status_site_fk = statusId;
         }
-        // Step 4: Map Acteur_ENEDIS_id (company) dynamically to ENTid
-        if (data.Acteur_ENEDIS_id) {
-            const company = activeCompanies.find(company => company.nom === data.Acteur_ENEDIS_id);
-            if (company) {
-                data.Acteur_ENEDIS_id = company.ENTid; // Map to ENTid (numeric value only)
-            } else {
-                throw new Error(`Invalid Acteur_ENEDIS_id: ${data.Acteur_ENEDIS_id}`);
-            }
-        } else {
-            throw new Error('Acteur_ENEDIS_id is required');
-        }
+        // Insert data into the database
         const { data: result, error } = await supabase
             .from('Site')
             .insert([data]);
@@ -99,6 +134,7 @@ const createSite = async (data) => {
         return { success: false, error: error.message };
     }
 };
+
 //GetAllsites 
 const getAllSites = async() => {
     try {
@@ -119,27 +155,6 @@ const getAllSites = async() => {
         return {success:true , data};
     }catch(error){
         return {success:false , error:error.messsage};
-    }
-};
-// Get all active companies for the Acteur Enedis dropdown
-const fetchActiveCompanies = async () => {
-    try {
-        const { data, error } = await supabase
-            .from('Entreprise')
-            .select('ENTid, nom')
-            .eq('is_active', true);
-
-        if (error) {
-            throw new Error(`Error fetching active companies: ${error.message}`);
-        }
-
-        // Log the fetched companies to ensure it's an array
-        console.log('Fetched active companies:', data);
-
-        return data; // Return active companies data (list of objects with ENTid and nom)
-    } catch (error) {
-        console.error(error);
-        return []; // Return empty array if an error occurs
     }
 };
 // Get all active sites
@@ -348,10 +363,6 @@ const SearchSite = async (filters) => {
         if (error) {
             throw error;
         }
-        // const resultWithNames = data.map(item => ({
-        //     ...item,
-        //     Acteur_ENEDIS_name: idToNameMap[item.Acteur_ENEDIS_id] || null,  // Add company name based on the ID
-        // }));
         return { success: true, data  };
     } catch (error) {
         return { success: false, error: error.message };
@@ -367,6 +378,6 @@ const siteModel = {
     getAllActivesites,
     getAllInactivesites,
     SearchSite,
-    fetchActiveCompanies,
+    getActiveCompanies,
 }
 export default siteModel ; 

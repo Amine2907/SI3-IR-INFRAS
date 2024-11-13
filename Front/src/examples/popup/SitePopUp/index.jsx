@@ -59,7 +59,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
       try {
         const result = await SiteService.getActiveCompanies();
         if (result.success) {
-          setActiveCompanies(result.data); // Assuming result.data is an array of company objects
+          setActiveCompanies(result.data);
         } else {
           console.error('Error fetching active companies:', result.error);
           setActiveCompanies([]);
@@ -73,10 +73,10 @@ const SiteModal = ({ site, onSave, onClose }) => {
   }, []);
   const handleSubmit = () => {
     const newErrors = {};
-    if (!formData.nom) newErrors.nom = true;
-    if (!formData.priorite_fk.SP_desc) newErrors.priorite_fk = true;
-    if (!formData.programme_fk.PR_desc) newErrors.programme_fk = true;
-    if (!formData.status_site_fk.SS_desc) newErrors.status_site_fk = true;
+    // if (!formData.nom) newErrors.nom = true;
+    // if (!formData.priorite_fk.SP_desc) newErrors.priorite_fk = true;
+    // if (!formData.programme_fk.PR_desc) newErrors.programme_fk = true;
+    // if (!formData.status_site_fk.SS_desc) newErrors.status_site_fk = true;
     console.log('Validation errors:', newErrors);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -85,6 +85,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
     console.log('Form data submitted:', formData);
     onSave({
       ...formData,
+      Acteur_ENEDIS_id: formData.Acteur_ENEDIS_id.nom,
       is_active: isActive,
     });
   };
@@ -103,6 +104,21 @@ const SiteModal = ({ site, onSave, onClose }) => {
       [field]: { [subField]: value },
     });
   };
+  const handleCompaniesChnage = (field, subField, value) => {
+    if (field === 'Acteur_ENEDIS_id') {
+      // Directly set the numeric ID instead of an object
+      setFormData({
+        ...formData,
+        [field]: { ...formData[field], [subField]: value },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [field]: { [subField]: value },
+      });
+    }
+  };
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -303,7 +319,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
               name="Acteur_ENEDIS_id"
               value={formData.Acteur_ENEDIS_id.nom || ''}
               displayEmpty
-              onChange={e => handleDropdownChange('Acteur_ENEDIS_id', 'nom', e.target.value)}
+              onChange={e => handleCompaniesChnage('Acteur_ENEDIS_id', 'nom', e.target.value)}
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
               required
             >
@@ -312,7 +328,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
               </MenuItem>
               {activeCompanies.length > 0 ? (
                 activeCompanies.map(company => (
-                  <MenuItem key={company.ENTid} value={company.ENTid}>
+                  <MenuItem key={company.nom} value={company.ENTid}>
                     {company.nom}
                   </MenuItem>
                 ))

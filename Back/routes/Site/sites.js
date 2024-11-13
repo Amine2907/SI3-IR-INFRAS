@@ -20,7 +20,7 @@ router.get('/',siteController.getAllsites);
 router.get('/active',siteController.getActivesites);
 router.get('/inactive',siteController.getInactivesites);
 router.get('/search',siteController.SearchSites);
-router.get('/active-companies',siteController.getActiveCompaniesForActeurEnedis);
+router.get('/active-companies',siteController.fetchActiveCompanies);
 router.get('/:EB',siteController.getsitesById);
 router.put('/:EB',siteController.updatesite);
 router.patch('/:EB/desactivate',siteController.desactivateSite);
