@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui material components
 import Card from '@mui/material/Card';
 import Icon from '@mui/material/Icon';
@@ -36,7 +36,7 @@ const SiteList = () => {
     status_site_fk: '',
     Acteur_ENEDIS_id: '',
   });
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [noResultsMessage, setNoResultsMessage] = useState('');
   // Fetch active companies when the component mounts
   useEffect(() => {
@@ -167,9 +167,7 @@ const SiteList = () => {
     setShowModal(false); // Hide modal
     fetchActivesites(); // Refresh entity list after adding/editing
   };
-  // const handleEdit = () => {
-  //   navigate('/site-infos');
-  // };
+
   // Function to handle saving entity
   const handleSave = async data => {
     console.log('Data being sent to createSite:', data);
@@ -205,7 +203,9 @@ const SiteList = () => {
       });
     }
   };
-
+  const handleEdit = () => {
+    navigate('/site-infos');
+  };
   // Function to close the alert
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
@@ -507,8 +507,9 @@ const SiteList = () => {
                 <SiteCard
                   site={site}
                   onEdit={() => {
-                    setselectedSite(site);
-                    setShowModal(true);
+                    handleEdit();
+                    // setselectedSite(site);
+                    // setShowModal(true);
                   }}
                 />
               </Grid>
