@@ -1,35 +1,5 @@
-/**
- * SiteList component
- *
- * This component renders a list of Sites with search and filter capabilities.
- * Users can toggle between active and inactive Sites, search by multiple criteria,
- * and add or edit Sites via a modal form.
- *
- * State Variables:
- * - sites: Array of Sites to be displayed.
- * - showModal: Boolean indicating whether the entity modal is visible.
- * - selectedSite: The currently selected entity for editing, or null for adding a new entity.
- * - alert: Object containing alert visibility, message, and type.
- * - isActive: Boolean indicating whether active Sites are displayed.
- * - searchQuery: Object containing search fields for filtering Sites.
- * - noResultsMessage: Message displayed when no Sites match the search criteria.
- *
- * Functions:
- * - renderSearch: Filters Sites based on the search query.
- * - fetchActivesites: Fetches and updates the list of active Sites.
- * - fetchInactivesites: Fetches and updates the list of inactive Sites.
- * - handleAddSite: Opens the modal for adding a new entity.
- * - handleModalClose: Closes the modal and refreshes the entity list.
- * - handleSave: Saves a new or edited entity and updates the list.
- * - handleCloseAlert: Closes the alert notification.
- * - handleRoleChange: Updates search query based on role selection.
- * - handleSearchChange: Updates search query and fetches Sites based on input.
- * - handleSearchSites: Fetches Sites matching the search query.
- * - handleToggleActiveInactive: Toggles between displaying active and inactive Sites.
- *
- * The component uses Material Dashboard 2 React components and Material UI for styling.
- */
 import React, { useEffect, useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
 // @mui material components
 import Card from '@mui/material/Card';
 import Icon from '@mui/material/Icon';
@@ -66,6 +36,7 @@ const SiteList = () => {
     status_site_fk: '',
     Acteur_ENEDIS_id: '',
   });
+  // const navigate = useNavigate();
   const [noResultsMessage, setNoResultsMessage] = useState('');
   // Fetch active companies when the component mounts
   useEffect(() => {
@@ -170,6 +141,7 @@ const SiteList = () => {
       );
     }
   };
+  // fetch Inactive Sites
   const fetchInactivesites = async () => {
     const result = await SiteService.getInactiveSites();
     if (result.success) {
@@ -190,13 +162,14 @@ const SiteList = () => {
     setShowModal(true); // Show modal for adding a new entity
     fetchActivesites(); // Refresh entity list after adding/editing
   };
-
   // Function to close modal
   const handleModalClose = () => {
     setShowModal(false); // Hide modal
     fetchActivesites(); // Refresh entity list after adding/editing
   };
-
+  // const handleEdit = () => {
+  //   navigate('/site-infos');
+  // };
   // Function to handle saving entity
   const handleSave = async data => {
     console.log('Data being sent to createSite:', data);
@@ -267,6 +240,7 @@ const SiteList = () => {
       handleSearchSites(); // Otherwise, fetch Sites based on the search query
     }
   };
+  // handle Search Sites based on searchQuery
   const handleSearchSites = async () => {
     try {
       if (!searchQuery || typeof searchQuery !== 'object') {

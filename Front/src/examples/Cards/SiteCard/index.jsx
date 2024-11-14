@@ -3,16 +3,29 @@ import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
 import Icon from '@mui/material/Icon';
+import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
+import Collapse from '@mui/material/Collapse';
+import TextField from '@mui/material/TextField';
+import Card from '@mui/material/Card';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import { useMaterialUIController } from '../../../context/index';
-import Card from '@mui/material/Card';
 import { program, Status_Site, priority, fetchCompanyNameById } from './CardData';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 const SiteCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const [companyName, setCompanyName] = useState('N/A');
+  const [expanded, setExpanded] = useState(false); // State to control expansion
+  const [checkedValues, setCheckedValues] = useState({
+    drPg: true,
+    devisPg: true,
+    mesPg: true,
+  });
   useEffect(() => {
     const acteurId = site.Acteur_ENEDIS_id;
     const fetchCompanyName = async () => {
@@ -23,6 +36,16 @@ const SiteCard = ({ site, onEdit }) => {
     };
     fetchCompanyName();
   }, [site.Acteur_ENEDIS_id]);
+
+  const handleToggleExpand = () => {
+    setExpanded(!expanded);
+  };
+
+  const handleCheckboxChange = event => {
+    const { name, checked } = event.target;
+    setCheckedValues(prev => ({ ...prev, [name]: checked }));
+  };
+
   return (
     <Grid item xs={12}>
       <Card id="site_card">
@@ -41,12 +64,36 @@ const SiteCard = ({ site, onEdit }) => {
                     `${borderWidth[1]} solid ${borderColor}`,
                 }}
               >
-                {/* EB */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>business</Icon>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    {site.EB}
-                  </MDTypography>
+                {/* EB and Programme */}
+                <MDBox
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  {/* EB */}
+                  <MDBox display="flex" alignItems="center">
+                    <Icon sx={{ mr: 1 }}>business</Icon>
+                    <MDTypography variant="h6" fontWeight="medium">
+                      {site.EB}
+                    </MDTypography>
+                  </MDBox>
+                  {/* Programme with Colored Background */}
+                  <MDBox
+                    px={2}
+                    py={0.5}
+                    borderRadius="md"
+                    sx={{
+                      backgroundColor: '#89CFF0',
+                      color: 'black',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <MDTypography variant="h6" fontWeight="medium">
+                      {program[site.programme_fk] || 'N/A'}
+                    </MDTypography>
+                  </MDBox>
                 </MDBox>
                 {/* G2R */}
                 <MDBox display="flex" alignItems="center">
@@ -66,35 +113,7 @@ const SiteCard = ({ site, onEdit }) => {
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>location_city</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
-                    {site.Ville}
-                  </MDTypography>
-                </MDBox>
-                {/* lot */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>place</Icon>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    {site.lot}
-                  </MDTypography>
-                </MDBox>
-                {/* zone */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>area_chart</Icon>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    {site.zone}
-                  </MDTypography>
-                </MDBox>
-                {/* region */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>public</Icon>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    {site.region}
-                  </MDTypography>
-                </MDBox>
-                {/* code postal */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>mail</Icon>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    {site.code_postal}
+                    {site.Ville}, {site.code_postal}, {site.region}
                   </MDTypography>
                 </MDBox>
                 {/* Acteur ENEDIS */}
@@ -104,62 +123,110 @@ const SiteCard = ({ site, onEdit }) => {
                     {companyName}
                   </MDTypography>
                 </MDBox>
-                {/* priorite_fk */}
+                {/* Priorité */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>priority_high</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
-                    <strong>Priorite:</strong> {priority[site.priorite_fk] || 'N/A'}
+                    <strong>Priorité:</strong> {priority[site.priorite_fk] || 'N/A'}
                   </MDTypography>
                 </MDBox>
-                {/* Operateurs */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>engineering</Icon>
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Operateurs:</strong>{' '}
-                    {Array.isArray(site.Operateurs) ? site.Operateurs.join(', ') : site.Operateurs}
-                  </MDTypography>
-                </MDBox>
-                {/* Status Site  */}
+                {/* Status Site */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Status Site :</strong>
-                    {Status_Site[site.status_site_fk] || 'N/A'}
+                    <strong>Status Site:</strong> {Status_Site[site.status_site_fk] || 'N/A'}
                   </MDTypography>
                 </MDBox>
-                {/* Status Site SFR  */}
+                {/* Status Site SFR */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Status SFR:</strong>
-                    {site.status_site_SFR}
-                  </MDTypography>
-                </MDBox>
-                {/* Programme  */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>assignment</Icon>
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Programme :</strong>
-                    {program[site.programme_fk] || 'N/A'}
+                    <strong>Status SFR:</strong> {site.status_site_SFR}
                   </MDTypography>
                 </MDBox>
                 {/* Active Status */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>check_circle</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Status:</strong>
-                    {site.is_active ? 'Active' : 'Inactive'}
+                    <strong>Status:</strong> {site.is_active ? 'Active' : 'Inactive'}
                   </MDTypography>
                 </MDBox>
-                {/* Commentaires */}
+                {/* Checkbox Options */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>comment</Icon>
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Commentaires:</strong>
-                    {site.commentaires}
+                  <Checkbox
+                    checked={checkedValues.drPg}
+                    onChange={handleCheckboxChange}
+                    name="drPg"
+                  />
+                  <MDTypography variant="h6" fontWeight="medium">
+                    DR PG
+                  </MDTypography>
+                  <Checkbox
+                    checked={checkedValues.devisPg}
+                    onChange={handleCheckboxChange}
+                    name="devisPg"
+                  />
+                  <MDTypography variant="h6" fontWeight="medium">
+                    DEVIS PG
+                  </MDTypography>
+                  <Checkbox
+                    checked={checkedValues.mesPg}
+                    onChange={handleCheckboxChange}
+                    name="mesPg"
+                  />
+                  <MDTypography variant="h6" fontWeight="medium">
+                    MES PG
                   </MDTypography>
                 </MDBox>
+                {/* Collapsible Section for Extra Information */}
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                  <MDBox mt={2}>
+                    <MDBox>
+                      {/* Prospect Retenu */}
+                      <MDTypography variant="h6" fontWeight="medium">
+                        Prospect Retenu
+                      </MDTypography>
+                      <TextField fullWidth placeholder="Enter prospect retenu" />
+                    </MDBox>
+                    <MDBox>
+                      {/* Devis Reçus */}
+                      <MDTypography variant="h6" fontWeight="medium" mt={2}>
+                        Devis Reçus
+                      </MDTypography>
+                      <TextField fullWidth placeholder="Enter devis reçus" />
+                    </MDBox>
+                    {/* Date Fields with Date Picker */}
+                    <MDTypography variant="h6" fontWeight="medium" mt={2}>
+                      DR Date
+                    </MDTypography>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker fullWidth onChange={() => {}} />
+                    </LocalizationProvider>
+                    <MDTypography variant="h6" fontWeight="medium" mt={2}>
+                      Devis Reception Date
+                    </MDTypography>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker fullWidth onChange={() => {}} />
+                    </LocalizationProvider>
+                    <MDTypography variant="h6" fontWeight="medium" mt={2}>
+                      Règlement Date
+                    </MDTypography>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker fullWidth onChange={() => {}} />
+                    </LocalizationProvider>
+                    <MDTypography variant="h6" fontWeight="medium" mt={2}>
+                      MES (réel)
+                    </MDTypography>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker fullWidth onChange={() => {}} />
+                    </LocalizationProvider>
+                  </MDBox>
+                </Collapse>
+                {/* Edit Button */}
                 <MDBox ml="auto" lineHeight={0} color={darkMode ? 'white' : 'dark'}>
+                  <Button variant="subtitle2" onClick={handleToggleExpand}>
+                    Plus d&apos;informations
+                  </Button>
                   <Tooltip title="Edit site" placement="top">
                     <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={onEdit}>
                       edit
