@@ -63,9 +63,9 @@ function Header() {
                       </Icon>
                     }
                     sx={{
-                      minWidth: 120, // Sets a minimum width for each tab
-                      padding: '12px 16px', // Adds more padding inside each tab
-                      fontSize: '1rem', // Increases font size for better readability
+                      minWidth: 120,
+                      padding: '12px 16px',
+                      fontSize: '1rem',
                     }}
                   />
                   <Tab
@@ -141,9 +141,9 @@ function Header() {
                       </Icon>
                     }
                     sx={{
-                      minWidth: 120, // Sets a minimum width for each tab
-                      padding: '12px 16px', // Adds more padding inside each tab
-                      fontSize: '1rem', // Increases font size for better readability
+                      minWidth: 120,
+                      padding: '12px 16px',
+                      fontSize: '1rem',
                     }}
                   />
                 </Tabs>
