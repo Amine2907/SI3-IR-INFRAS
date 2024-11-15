@@ -114,7 +114,7 @@ const getAllsites = async(req,res)=>{
 };
 // Get site by its id controller 
 const getsitesById = async(req,res) => {
-  const siteId = req.params.EB.replace(':EB=', '');
+  const siteId = req.params.EB.replace(':', '');
     const result = await siteModel.GetsitesById(siteId);
     if(!result.success){
         return res.status(400).json({error:result.error});
