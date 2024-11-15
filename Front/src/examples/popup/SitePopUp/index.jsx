@@ -104,7 +104,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
       [field]: { [subField]: value },
     });
   };
-  const handleCompaniesChnage = (field, subField, value) => {
+  const handleCompanieschange = (field, subField, value) => {
     if (field === 'Acteur_ENEDIS_id') {
       // Directly set the numeric ID instead of an object
       setFormData({
@@ -319,7 +319,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
               name="Acteur_ENEDIS_id"
               value={formData.Acteur_ENEDIS_id.nom || ''}
               displayEmpty
-              onChange={e => handleCompaniesChnage('Acteur_ENEDIS_id', 'nom', e.target.value)}
+              onChange={e => handleCompanieschange('Acteur_ENEDIS_id', 'nom', e.target.value)}
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
               required
             >

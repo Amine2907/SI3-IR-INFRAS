@@ -1,3 +1,4 @@
+import contactService from 'services/contactsService';
 import SiteService from 'services/Site_Services/siteService';
 const program = {
   1: '4GFixe',
@@ -33,4 +34,19 @@ const fetchCompanyNameById = async acteurId => {
     return 'N/A';
   }
 };
-export { program, Status_Site, priority, fetchCompanyNameById };
+const fetchContactNameById = async contactId => {
+  try {
+    const result = await contactService.getActiveContacts();
+    if (result.success) {
+      const contact = result.data.find(contact => contact.id === contactId);
+      return contact ? contact.nom : 'N/A';
+    } else {
+      console.error('Error fetching active contacts:', result.error);
+      return 'N/A';
+    }
+  } catch (error) {
+    console.error('Error during fetch:', error.message);
+    return 'N/A';
+  }
+};
+export { program, Status_Site, priority, fetchCompanyNameById, fetchContactNameById };

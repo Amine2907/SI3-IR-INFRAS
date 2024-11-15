@@ -8,14 +8,80 @@ import Collapse from '@mui/material/Collapse';
 import Card from '@mui/material/Card';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
+import MDAlert from 'components/MDAlert';
 import MDTypography from 'components/MDTypography';
 import { useMaterialUIController } from '../../../context/index';
-import { program, Status_Site, priority, fetchCompanyNameById } from './SiteInfoData';
+import {
+  program,
+  Status_Site,
+  priority,
+  fetchCompanyNameById,
+  fetchContactNameById,
+} from './SiteInfoData';
+import { Select, MenuItem, FormControl } from '@mui/material';
+import contactService from 'services/contactsService';
+import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
 const SiteInfoCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const [companyName, setCompanyName] = useState('N/A');
   const [expanded, setExpanded] = useState(false); // State to control expansion
+  // eslint-disable-next-line no-unused-vars
+  const [contactName, setContactName] = useState('N/A');
+  const [activeContacts, setActiveContacts] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState(
+    site || {
+      contact_fk: '',
+    }
+  );
+  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+  const [showModal, setShowModal] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
+  useEffect(() => {
+    const fetchActiveConatcts = async () => {
+      try {
+        const result = await contactService.getActiveContacts();
+        if (result.success) {
+          setActiveContacts(result.data);
+        } else {
+          console.error('Error fetching active companies:', result.error);
+          setActiveContacts([]);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error.message);
+        setActiveContacts([]);
+      }
+    };
+    fetchActiveConatcts();
+  }, []);
+  // Function to fetch contact name
+  useEffect(() => {
+    const contactId = site.contact_fk;
+    const fetchContactByName = async () => {
+      if (contactId) {
+        const name = await fetchContactNameById(contactId);
+        setContactName(name);
+      }
+    };
+    fetchContactByName();
+  }, [site.contact_fk]);
+  const handleContactsChange = (field, subField, value) => {
+    if (field === 'contact_fk') {
+      // Directly set the numeric ID instead of an object
+      setFormData({
+        ...formData,
+        [field]: { ...formData[field], [subField]: value },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [field]: { [subField]: value },
+      });
+    }
+  };
+  // Function to fetch company name
   useEffect(() => {
     const acteurId = site.Acteur_ENEDIS_id;
     const fetchCompanyName = async () => {
@@ -28,6 +94,43 @@ const SiteInfoCard = ({ site, onEdit }) => {
   }, [site.Acteur_ENEDIS_id]);
   const handleToggleExpand = () => {
     setExpanded(!expanded);
+  };
+  const handleAddContact = () => {
+    setSelectedContact(null);
+    setShowModal(true);
+  };
+  const handleModalClose = () => {
+    setShowModal(false); // Hide modal
+  };
+  const handleSave = async data => {
+    let result;
+    let successMessage = '';
+    try {
+      result = await contactService.createContact(data);
+      successMessage = 'Entité enregistrée avec succès !';
+      // Check if result is not undefined and has a success property
+      if (result && result.success) {
+        console.log('Success:', result.success);
+        setAlert({ show: true, message: successMessage, type: 'success' });
+      } else {
+        // If result is not successful, show an error alert
+        console.error('Error:', result ? result.error : 'Unknown error');
+        setAlert({
+          show: true,
+          message: `Error: ${result ? result.error : 'Unknown error'}`,
+          type: 'error',
+        });
+      }
+    } catch (error) {
+      // If the asynchronous operation fails, handle the error
+      console.error('Error during save operation:', error.message);
+      setAlert({ show: true, message: `Error: ${error.message}`, type: 'error' });
+    } finally {
+      handleModalClose(); // Always close the modal, regardless of success or error
+    }
+  };
+  const handleCloseAlert = () => {
+    setAlert({ show: false, message: '', type: '' });
   };
   return (
     <Grid item xs={12}>
@@ -164,7 +267,54 @@ const SiteInfoCard = ({ site, onEdit }) => {
                 </MDBox>
                 {/* Collapsible Section for Extra Information */}
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
-                  <MDBox mt={2}></MDBox>
+                  <MDBox mt={2}>
+                    <MDBox display="flex" alignItems="center">
+                      <Icon sx={{ mr: 1 }}>person</Icon>
+                      <MDTypography variant="subtitle2" color="textSecondary">
+                        <strong>Contacts:</strong>{' '}
+                      </MDTypography>
+                    </MDBox>
+                    <FormControl
+                      fullWidth
+                      required
+                      style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+                    >
+                      <Select
+                        labelId="contact-select-label"
+                        name="contact_fk"
+                        value={formData.contact_fk || ''}
+                        displayEmpty
+                        onChange={e => handleContactsChange('contact_fk', e.target.value)}
+                        style={{
+                          padding: '10px',
+                          fontSize: '14px',
+                          borderColor: errors.prenom ? 'red' : '',
+                        }}
+                        required
+                      >
+                        <MenuItem value="" onClick={handleAddContact}>
+                          -- Ajouter un nouveau contact --
+                        </MenuItem>
+                        <MenuItem value="" disabled>
+                          -- Choisir un contact(s)--
+                        </MenuItem>
+                        {activeContacts.length > 0 ? (
+                          activeContacts.map(contact => (
+                            <MenuItem key={contact.nom} value={contact.Cid}>
+                              {contact.nom}
+                            </MenuItem>
+                          ))
+                        ) : (
+                          <MenuItem value="">No active companies available</MenuItem>
+                        )}
+                      </Select>
+                    </FormControl>
+                    <MDTypography variant="subtitle2" color="textSecondary">
+                      {Array.isArray(site.contact_fk) && site.contact_fk.length > 0
+                        ? site.contact_fk.join(', ')
+                        : 'No contacts available'}
+                    </MDTypography>
+                  </MDBox>
                 </Collapse>
                 {/* Edit Button */}
                 <MDBox ml="auto" lineHeight={0} color={darkMode ? 'white' : 'dark'}>
@@ -182,6 +332,19 @@ const SiteInfoCard = ({ site, onEdit }) => {
           </Grid>
         </MDBox>
       </Card>
+      {showModal && (
+        <ContactModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />
+      )}
+      {alert.show && (
+        <MDAlert
+          color={alert.type}
+          dismissible
+          onClose={handleCloseAlert}
+          style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
+        >
+          {alert.message}
+        </MDAlert>
+      )}
     </Grid>
   );
 };
@@ -200,6 +363,8 @@ SiteInfoCard.propTypes = {
     status_site_fk: PropTypes.string.isRequired,
     programme_fk: PropTypes.string.isRequired,
     Operateurs: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
+      .isRequired,
+    contact_fk: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
       .isRequired,
     commentaires: PropTypes.string.isRequired,
     status_site_SFR: PropTypes.string.isRequired,
