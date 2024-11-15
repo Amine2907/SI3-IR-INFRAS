@@ -25,6 +25,7 @@ import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import SiteService from 'services/Site_Services/siteService';
+import ContactModal from '../ContactPopUp/ContactPopUpl';
 const SiteModal = ({ site, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     site || {
@@ -412,6 +413,9 @@ const SiteModal = ({ site, onSave, onClose }) => {
           </MDButton>
         </div>
       </div>
+      {showModal && (
+        <ContactModal entite={selectedEntity} onSave={handleSave} onClose={handleModalClose} />
+      )}
     </div>
   );
 };
