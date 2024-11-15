@@ -96,6 +96,22 @@ const searchSites = async filters  => {
       return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
+const addContactSite = async (EB, contact_id) => {
+   try {
+    const response = await axios.post(`${API_URL}/add-contact-site`);
+    return { success: true, data: response.data };
+   } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+   }     
+};
+const deleteContactSite = async (EB, contact_id) => {
+    try {
+     const response = await axios.post(`${API_URL}/delete-contact-site`);
+     return { success: true, data: response.data };
+    } catch (error) {
+     return { success: false, error: error.response ? error.response.data.error : error.message };
+    }
+}
 // Exporting the Site service
 const SiteService = {
     createSite,
@@ -107,5 +123,7 @@ const SiteService = {
     getActiveSites,
     getInactiveSites,
     searchSites,
+    addContactSite,
+    deleteContactSite,
 };
 export default SiteService;

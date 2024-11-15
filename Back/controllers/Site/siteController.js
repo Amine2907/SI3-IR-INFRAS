@@ -13,6 +13,7 @@
  * - getInactivesites: gets all the inactive sites in the database
  */
 import siteModel from "../../models/Site/siteModel.js";
+import {priorityMapping, programMapping, siteStatusMapping} from './SiteData.js'
 const fetchActiveCompanies = async (req, res) => {
     try {
         const result = await siteModel.getActiveCompanies();
@@ -28,37 +29,6 @@ const fetchActiveCompanies = async (req, res) => {
 //Create site controlller 
 const createsite = async (req, res) => {
     try {
-      console.log("Received data:", req.body); // Log initial request data
-  
-      const priorityMapping = {
-        "P00": 1,
-        "P0": 2,
-        "P1": 3,
-        "P2": 4,
-      };
-  
-      const programMapping = {
-        "4GFixe": 1,
-        "DCC": 2,
-        "ARP": 3,
-        "DENSIF_CZ_RED": 4,
-        "DENSIF_CZ": 5,
-        "ZTD_RED": 6,
-        "PAC-REMP": 7,
-        "PAC": 8,
-        "PAC-DUP": 9,
-        "PAC-CONTINUITY-PLAN": 10,
-        "FM": 11,
-        "ORF": 12,
-        "SFR TT": 13,
-        "FM TT": 14,
-      };
-  
-      const siteStatusMapping = {
-        "Activé": 1,
-        "Inactif": 2,
-        "Terminé": 3,
-      };
       // Extract and map the fields if they contain descriptions instead of IDs
       let data = { ...req.body };
       console.log("Mapping process started");
@@ -104,6 +74,43 @@ const createsite = async (req, res) => {
       return res.status(400).json({ error: error.message });
     }
   };  
+// Add a contact to a site controller
+const addContactSite = async (req, res) => {
+  const siteId = req.params.id; // Site ID
+  const { contact_id } = req.body; // Contact ID from the request body
+  try {
+    const result = await siteModel.addSiteContact(siteId, contact_id);
+    if (!result) {
+      return res.status(400).json({ error: 'Failed to create site-contact association' });
+    }
+
+    return res.status(200).json({
+      message: 'Contact associated with site successfully',
+      data: result,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'An error occurred' });
+  }
+}
+// delete a contact from a site controller 
+const deleteContactSite = async (req, res) => {
+  const siteId = req.params.id; // Site ID
+  const { contact_id } = req.body; // Contact ID from the request body
+  try {
+    const result = await siteModel.deleteSiteContact(siteId, contact_id);
+    if (!result) {
+      return res.status(400).json({ error: 'Failed to delete site-contact association' });
+    } 
+    return res.status(200).json({
+      message: 'Contact deleted from site successfully',
+      data: result,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'An error occurred' });
+  }
+}
 // Get all active sites controller 
 const getAllsites = async(req,res)=>{
     const result = await siteModel.getAllSites();
@@ -212,5 +219,7 @@ const siteController = {
     SearchSites,
     getActivesites,
     getInactivesites,
+    deleteContactSite,
+    addContactSite,
 }
 export default siteController ; 

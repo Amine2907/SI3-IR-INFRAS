@@ -25,5 +25,6 @@ router.get('/:EB',siteController.getsitesById);
 router.put('/:EB',siteController.updatesite);
 router.patch('/:EB/desactivate',siteController.desactivateSite);
 router.patch('/:EB/activate',siteController.activateSite);
-
+router.post('/add-contact-site',siteController.addContactSite);
+router.delete('/delete-contact-site',siteController.deleteContactSite);
 export default router ; 

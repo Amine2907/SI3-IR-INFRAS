@@ -13,6 +13,7 @@
  * - getInactivesites: gets all the inactive sites in the database
  */
 import { supabase } from "../../config/supabaseClient.js";
+import {priorityMapping, programMapping, siteStatusMapping} from '../../controllers/Site/SiteData.js';
 const getActiveCompanies = async () => {
     try {
         const { data, error } = await supabase
@@ -64,35 +65,6 @@ const createSite = async (data) => {
                 throw new Error(`No company found with name: ${companyName}`);
             }
         }
-
-        // Map priorite_fk, programme_fk, and status_site_fk to their corresponding IDs
-        const priorityMapping = {
-            "P00": 1,
-            "P0": 2,
-            "P1": 3,
-            "P2": 4,
-        };
-        const programMapping = {
-            "4GFixe": 1,
-            "DCC": 2,
-            "ARP": 3,
-            "DENSIF_CZ_RED": 4,
-            "DENSIF_CZ": 5,
-            "ZTD_RED": 6,
-            "PAC-REMP": 7,
-            "PAC": 8,
-            "PAC-DUP": 9,
-            "PAC-CONTINUITY-PLAN": 10,
-            "FM": 11,
-            "ORF": 12,
-            "SFR TT": 13,
-            "FM TT": 14,
-        };
-        const siteStatusMapping = {
-            "Activé": 1,
-            "Inactif": 2,
-            "Terminé": 3,
-        };
         // Check and map priorite_fk, programme_fk, and status_site_fk to their corresponding IDs
         if (data.priorite_fk) {
             const prioriteId = priorityMapping[data.priorite_fk];
@@ -127,7 +99,29 @@ const createSite = async (data) => {
         return { success: false, error: error.message };
     }
 };
-
+// Add a contact to a site
+const addSiteContact = async (site_id,contact_id) => {
+    const { data, error } = await supabase
+        .from('Site-contact')
+        .insert([{ Sid: site_id, Cid: contact_id }]);
+        if (error) {
+            throw new Error('Error adding site-contact relationship');
+          }
+        
+          return data;
+        };
+// Delete a contact from a site 
+const deleteSiteContact = async (site_id,contact_id) => {
+    const { data, error } = await supabase
+        .from('Site-contact')
+        .delete()
+        .eq('Sid', site_id)
+        .eq('Cid', contact_id);
+        if (error) {
+            throw new Error('Error deleting site-contact relationship');
+          }
+          return data;
+};
 //GetAllsites 
 const getAllSites = async() => {
     try {
@@ -247,36 +241,6 @@ const desactivateSite = async(id) => {
 const SearchSite = async (filters) => {
     console.log("Received filters:", filters);
     try {
-        // Mappings for converting human-readable descriptions to IDs
-        const priorityMapping = {
-            "P00": 1, 
-            "P0": 2, 
-            "P1": 3,
-            "P2": 4,
-        };
-
-        const programMapping = {
-            "4GFixe": 1, 
-            "DCC": 2, 
-            "ARP": 3, 
-            "DENSIF_CZ_RED": 4,
-            "DENSIF_CZ": 5, 
-            "ZTD_RED": 6, 
-            "PAC-REMP": 7,
-            "PAC": 8, 
-            "PAC-DUP": 9,
-            "PAC-CONTINUITY-PLAN": 10,
-            "FM": 11, 
-            "ORF": 12, 
-            "SFR TT": 13, 
-            "FM TT": 14,
-        };
-        
-        const siteStatusMapping = {
-            "Activé": 1,
-            "Inactif": 2, 
-            "Terminé": 3,
-        };
         // Query active company names and IDs from Acteur_ENEDIS table
         const { data: acteurData, error: acteurError } = await supabase
             .from('Entreprise')
@@ -327,7 +291,6 @@ const SearchSite = async (filters) => {
                 query = query.eq('programme_fk', programId);  // Using numeric ID in the query
             }
         }
-        
         // Convert 'Acteur_ENEDIS_id' to company name if it is a numeric ID
         if (filters.Acteur_ENEDIS_id) {
             const acteurName = Object.keys(idToNameMap).find(name => idToNameMap[name] == filters.Acteur_ENEDIS_id);
@@ -378,5 +341,7 @@ const siteModel = {
     getAllInactivesites,
     SearchSite,
     getActiveCompanies,
+    addSiteContact,
+    deleteSiteContact,
 }
 export default siteModel ; 
