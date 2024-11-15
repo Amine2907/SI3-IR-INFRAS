@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 // Material Dashboard 2 React example components
@@ -11,10 +10,10 @@ import Header from './Components/Header';
 import { Grid } from '@mui/material';
 import SiteInfoCard from 'examples/Cards/SiteInfoCard';
 import SiteService from 'services/Site_Services/siteService';
+import { AlertDescription, Alert } from 'components/ui/alert';
 function SiteDetails() {
   const location = useLocation();
   const { EB } = location.state || {};
-  // eslint-disable-next-line no-unused-vars
   const [site, setSite] = useState(null);
 
   useEffect(() => {
@@ -27,26 +26,45 @@ function SiteDetails() {
     const result = await SiteService.getSiteById(EB);
     if (result.success) {
       console.log('Fetched site details:', result.data);
-      // Use `result.data` to populate the details page
+      setSite(result.data);
     } else {
       console.error('Failed to fetch site details:', result.error);
     }
   };
+
   const handleEditClick = () => {
-    null;
+    console.log('Edit button clicked');
   };
+
+  if (!EB) {
+    return (
+      <DashboardLayout>
+        <DashboardNavbar />
+        <MDBox mb={2} />
+        <MDBox px={3}>
+          <Alert variant="destructive" className="mt-4">
+            <AlertDescription>
+              Error: Site details are not available. Please navigate from the appropriate page.
+            </AlertDescription>
+          </Alert>
+        </MDBox>
+        <Footer />
+      </DashboardLayout>
+    );
+  }
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox mb={2} />
-      {/* Grid container to create a two-column layout */}
       <MDBox px={3}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
             {site ? (
               <SiteInfoCard site={site} onEdit={handleEditClick} />
             ) : (
-              <p>Loading site details...</p>
+              <Alert variant="destructive" className="mt-4">
+                <AlertDescription>Loading site details...</AlertDescription>
+              </Alert>
             )}
           </Grid>
           <Grid item xs={12} md={8}>
