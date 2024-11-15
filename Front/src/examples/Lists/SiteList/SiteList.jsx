@@ -203,8 +203,8 @@ const SiteList = () => {
       });
     }
   };
-  const handleEdit = () => {
-    navigate('/site-infos');
+  const handleEdit = site => {
+    navigate('/site-infos', { state: { EB: site.EB } });
   };
   // Function to close the alert
   const handleCloseAlert = () => {
@@ -507,9 +507,7 @@ const SiteList = () => {
                 <SiteCard
                   site={site}
                   onEdit={() => {
-                    handleEdit();
-                    // setselectedSite(site);
-                    // setShowModal(true);
+                    handleEdit(site);
                   }}
                 />
               </Grid>
