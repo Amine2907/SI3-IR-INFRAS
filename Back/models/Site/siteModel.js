@@ -183,7 +183,6 @@ const getAllInactivesites = async() => {
 };
 //GetsitesById 
 const GetsitesById = async(EB) => {
-    console.log(EB);
     try {
         const {data,error} = await supabase
         .from('Site')

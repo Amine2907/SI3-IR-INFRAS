@@ -92,18 +92,11 @@ const SiteInfoCard = ({ site, onEdit }) => {
                     {site.nom}
                   </MDTypography>
                 </MDBox>
-                {/* Ville */}
+                {/* Status Site SFR */}
                 <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>location_city</Icon>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    {site.Ville}, {site.code_postal}, {site.region}
-                  </MDTypography>
-                </MDBox>
-                {/* Acteur ENEDIS */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>business_center</Icon>
-                  <MDTypography variant="h6" fontWeight="medium">
-                    {companyName}
+                  <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
+                  <MDTypography variant="subtitle2" color="textSecondary">
+                    <strong>Status SFR:</strong> {site.status_site_SFR}
                   </MDTypography>
                 </MDBox>
                 {/* Priorité */}
@@ -113,18 +106,53 @@ const SiteInfoCard = ({ site, onEdit }) => {
                     <strong>Priorité:</strong> {priority[site.priorite_fk] || 'N/A'}
                   </MDTypography>
                 </MDBox>
+                {/* LOT */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>folder</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    <strong>Lot:</strong> {site.lot}
+                  </MDTypography>
+                </MDBox>
+                {/* Zone */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>location_on</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    <strong>Zone:</strong> {site.zone}
+                  </MDTypography>
+                </MDBox>
+                {/* Ville */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>place</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    <strong>Ville:</strong> {site.Ville}
+                  </MDTypography>
+                </MDBox>
+                {/* Code_postal */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>mail</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {site.code_postal}
+                  </MDTypography>
+                </MDBox>
+                {/* Region */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>public</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {site.region}
+                  </MDTypography>
+                </MDBox>
+                {/* Acteur ENEDIS */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>business_center</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {companyName}
+                  </MDTypography>
+                </MDBox>
                 {/* Status Site */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
                     <strong>Status Site:</strong> {Status_Site[site.status_site_fk] || 'N/A'}
-                  </MDTypography>
-                </MDBox>
-                {/* Status Site SFR */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Status SFR:</strong> {site.status_site_SFR}
                   </MDTypography>
                 </MDBox>
                 {/* Active Status */}

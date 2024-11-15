@@ -109,7 +109,7 @@ const SiteCard = ({ site, onEdit }) => {
                     {site.nom}
                   </MDTypography>
                 </MDBox>
-                {/* Ville */}
+                {/* Adresse */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>location_city</Icon>
                   <MDTypography variant="h6" fontWeight="medium">

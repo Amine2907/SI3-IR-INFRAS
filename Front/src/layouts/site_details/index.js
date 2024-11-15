@@ -26,12 +26,11 @@ function SiteDetails() {
     const result = await SiteService.getSiteById(EB);
     if (result.success) {
       console.log('Fetched site details:', result.data);
-      setSite(result.data);
+      setSite(result.data[0]);
     } else {
       console.error('Failed to fetch site details:', result.error);
     }
   };
-
   const handleEditClick = () => {
     console.log('Edit button clicked');
   };
