@@ -308,7 +308,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <MenuItem value="FM TT ">FM TT </MenuItem>
             </Select>
           </FormControl>
-          {/* fetch active comapnies here !  */}
           <FormControl
             fullWidth
             required

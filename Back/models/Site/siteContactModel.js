@@ -39,7 +39,7 @@ const displayContactsSite = async (Sid) => {
     const {data , error } = await supabase
     .from('Site-contact')
     .select(`Cid,
-        Contact:Contacts(nom,prenom,email,tel,mobile,mission)`)
+        Contact:Contacts(*)`)
     .eq('Sid',Sid);
     if(error){  
         throw error;

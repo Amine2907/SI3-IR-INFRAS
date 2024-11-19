@@ -53,7 +53,7 @@ const addContactSite = async (req, res) => {
     }
   };
   const displayContactsSite = async (req, res) => {
-    const Sid = req.params.EB.replace(':', '');
+    const Sid = req.params.Sid.replace(':', '');
       try {
         const result = await siteContactModel.displayContactsSite(Sid);
         if (!result.success) {

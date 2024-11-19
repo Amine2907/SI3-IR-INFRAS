@@ -28,6 +28,7 @@ import { Select, MenuItem, FormControl } from '@mui/material';
 import contactService from 'services/contactsService';
 import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
 import siteContactService from 'services/Site_Services/siteContactService';
+import ConatctStaticModal from 'examples/popup/ContactPopUp/ContactStaticPopUp';
 const SiteInfoCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -45,6 +46,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
   );
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [showModal, setShowModal] = useState(false);
+  const [showContactModel, setShowContactModel] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [contactSite, setContactSite] = useState([]);
   useEffect(() => {
@@ -115,7 +117,8 @@ const SiteInfoCard = ({ site, onEdit }) => {
     setShowModal(true);
   };
   const handleModalClose = () => {
-    setShowModal(false); // Hide modal
+    setShowModal(false);
+    setShowContactModel(false);
   };
   const handleSave = async data => {
     let result;
@@ -147,8 +150,38 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
   };
-  const handleEdit = () => {
-    return null;
+  const handleEdit = async contactId => {
+    try {
+      const response = await siteContactService.displayContactsSite(contactId);
+      console.log('Full Response:', response); // Log the entire response to see the structure
+      if (response.success) {
+        const contact = response.data[0]?.Contact; // Accessing the Contact object from the first item in the array
+        console.log('Received contact:', contact); // Verify that the contact data is correct
+        if (contact) {
+          setSelectedContact(contact); // Set the contact data in the state
+          setShowContactModel(true); // Open the modal
+        } else {
+          setAlert({
+            show: true,
+            type: 'error',
+            message: 'Contact data not found',
+          });
+        }
+      } else {
+        setAlert({
+          show: true,
+          type: 'error',
+          message: 'Failed to fetch contact data',
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching contact data:', error);
+      setAlert({
+        show: true,
+        type: 'error',
+        message: 'An error occurred',
+      });
+    }
   };
   const handleDelete = async Cid => {
     const Sid = site.EB;
@@ -372,7 +405,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
                               {/* Action Icons */}
                               <Box>
                                 <IconButton
-                                  onClick={() => handleEdit(contact.Contacts.Cid)}
+                                  onClick={() => handleEdit(contact?.Contacts?.Cid)}
                                   aria-label="Edit Contact"
                                 >
                                   <EditIcon />
@@ -411,6 +444,9 @@ const SiteInfoCard = ({ site, onEdit }) => {
       </Card>
       {showModal && (
         <ContactModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />
+      )}
+      {showContactModel && (
+        <ConatctStaticModal contact={selectedContact} onClose={handleModalClose} />
       )}
       {alert.show && (
         <MDAlert

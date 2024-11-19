@@ -26,9 +26,11 @@ const getContactsSite = async Sid => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
-const displayContactsSite = async Sid => {
+const displayContactsSite = async (Sid, Cid) => {
   try {
-    const response = await axios.get(`${API_URL}/${Sid}/contact`);
+    const response = await axios.get(`${API_URL}/${Sid}/contact`, {
+      data: { Cid },
+    });
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, error: error.response ? error.response.data.error : error.message };
