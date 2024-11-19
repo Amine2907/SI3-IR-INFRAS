@@ -99,29 +99,6 @@ const createSite = async (data) => {
         return { success: false, error: error.message };
     }
 };
-// Add a contact to a site
-const addSiteContact = async (site_id,contact_id) => {
-    const { data, error } = await supabase
-        .from('Site-contact')
-        .insert([{ Sid: site_id, Cid: contact_id }]);
-        if (error) {
-            throw new Error('Error adding site-contact relationship');
-          }
-        
-          return data;
-        };
-// Delete a contact from a site 
-const deleteSiteContact = async (site_id,contact_id) => {
-    const { data, error } = await supabase
-        .from('Site-contact')
-        .delete()
-        .eq('Sid', site_id)
-        .eq('Cid', contact_id);
-        if (error) {
-            throw new Error('Error deleting site-contact relationship');
-          }
-          return data;
-};
 //GetAllsites 
 const getAllSites = async() => {
     try {
@@ -341,7 +318,5 @@ const siteModel = {
     getAllInactivesites,
     SearchSite,
     getActiveCompanies,
-    addSiteContact,
-    deleteSiteContact,
 }
 export default siteModel ; 

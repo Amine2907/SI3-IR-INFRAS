@@ -6,6 +6,7 @@ import Icon from '@mui/material/Icon';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Card from '@mui/material/Card';
+import InputLabel from '@mui/material/InputLabel';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDAlert from 'components/MDAlert';
@@ -21,6 +22,7 @@ import {
 import { Select, MenuItem, FormControl } from '@mui/material';
 import contactService from 'services/contactsService';
 import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
+import siteContactService from 'services/Site_Services/siteContactService';
 const SiteInfoCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -39,22 +41,44 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [showModal, setShowModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
+  const [contactSite, setContactSite] = useState([]);
   useEffect(() => {
-    const fetchActiveConatcts = async () => {
+    const Sid = site.EB;
+    if (Sid) {
+      const fetchContactsSite = async Sid => {
+        try {
+          const result = await siteContactService.getContactsSite(Sid);
+          if (result.success) {
+            console.log(result.data);
+            setContactSite(result.data);
+          } else {
+            setContactSite([]);
+          }
+        } catch (error) {
+          setContactSite([]);
+        }
+      };
+      fetchContactsSite(Sid);
+    }
+  }, [site.EB]);
+
+  useEffect(() => {
+    const fetchActiveContacts = async () => {
+      // Fixed typo
       try {
         const result = await contactService.getActiveContacts();
         if (result.success) {
-          setActiveContacts(result.data);
+          setActiveContacts(result.data); // Assuming `activeContacts` is the state for active contacts
         } else {
           console.error('Error fetching active companies:', result.error);
-          setActiveContacts([]);
+          setActiveContacts([]); // Handle error
         }
       } catch (error) {
         console.error('Error during fetch:', error.message);
-        setActiveContacts([]);
+        setActiveContacts([]); // Handle error
       }
     };
-    fetchActiveConatcts();
+    fetchActiveContacts(); // Call the correct function
   }, []);
   // Function to fetch contact name
   useEffect(() => {
@@ -67,19 +91,9 @@ const SiteInfoCard = ({ site, onEdit }) => {
     };
     fetchContactByName();
   }, [site.contact_fk]);
-  const handleContactsChange = (field, subField, value) => {
-    if (field === 'contact_fk') {
-      // Directly set the numeric ID instead of an object
-      setFormData({
-        ...formData,
-        [field]: { ...formData[field], [subField]: value },
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [field]: { [subField]: value },
-      });
-    }
+  const handleContactsChange = e => {
+    const value = e.target.value;
+    setFormData({ ...formData, contact_fk: value });
   };
   // Function to fetch company name
   useEffect(() => {
@@ -276,27 +290,27 @@ const SiteInfoCard = ({ site, onEdit }) => {
                     </MDBox>
                     <FormControl
                       fullWidth
-                      required
                       style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
                     >
+                      <InputLabel id="conatcts-label">Choisir un contact(s)</InputLabel>
                       <Select
-                        labelId="contact-select-label"
+                        labelId="conatcts-label"
                         name="contact_fk"
-                        value={formData.contact_fk || ''}
-                        displayEmpty
-                        onChange={e => handleContactsChange('contact_fk', e.target.value)}
+                        multiple
+                        value={formData.contact_fk || []}
+                        onChange={handleContactsChange}
+                        renderValue={selected => selected.join(', ')}
                         style={{
                           padding: '10px',
                           fontSize: '14px',
                           borderColor: errors.prenom ? 'red' : '',
                         }}
-                        required
                       >
                         <MenuItem value="" onClick={handleAddContact}>
                           -- Ajouter un nouveau contact --
                         </MenuItem>
                         <MenuItem value="" disabled>
-                          -- Choisir un contact(s)--
+                          -- Choisir un contact(s) existant(s)--
                         </MenuItem>
                         {activeContacts.length > 0 ? (
                           activeContacts.map(contact => (
@@ -305,14 +319,20 @@ const SiteInfoCard = ({ site, onEdit }) => {
                             </MenuItem>
                           ))
                         ) : (
-                          <MenuItem value="">No active companies available</MenuItem>
+                          <MenuItem value="">No active contacts available</MenuItem>
                         )}
                       </Select>
                     </FormControl>
                     <MDTypography variant="subtitle2" color="textSecondary">
-                      {Array.isArray(site.contact_fk) && site.contact_fk.length > 0
-                        ? site.contact_fk.join(', ')
-                        : 'No contacts available'}
+                      {contactSite.length > 0 ? (
+                        contactSite.map(contact => (
+                          <MenuItem key={contact.Cid?.nom} value={contact.Cid?.nom}>
+                            {contact.Cid?.nom || 'Unknown Contact'}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem value="">No contacts related to this site</MenuItem>
+                      )}
                     </MDTypography>
                   </MDBox>
                 </Collapse>
