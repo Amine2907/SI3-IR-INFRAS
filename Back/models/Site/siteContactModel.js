@@ -27,7 +27,7 @@ const deleteSiteContact = async (Sid, Cid) => {
 const getSiteConatcts = async (Sid) => {
     const {data , error } = await supabase
     .from('Site-contact')
-    .select(`Cid:Contacts(nom)`)
+    .select(`Contacts(Cid,nom)`)
     .eq('Sid',Sid);
     if(error){  
         throw error;

@@ -1,4 +1,5 @@
 import contactService from 'services/contactsService';
+import siteContactService from 'services/Site_Services/siteContactService';
 import SiteService from 'services/Site_Services/siteService';
 const program = {
   1: '4GFixe',
@@ -49,4 +50,40 @@ const fetchContactNameById = async contactId => {
     return 'N/A';
   }
 };
-export { program, Status_Site, priority, fetchCompanyNameById, fetchContactNameById };
+const getContactsSite = async Sid => {
+  try {
+    const result = await siteContactService.getContactsSite(Sid);
+    if (result.success) {
+      return result.data;
+    } else {
+      console.error('Error fetching site contacts:', result.error);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error during fetch:', error.message);
+    return [];
+  }
+};
+const getAciveContacts = async () => {
+  try {
+    const result = await contactService.getActiveContacts();
+    if (result.success) {
+      return result.data;
+    } else {
+      console.error('Error fetching active contacts:', result.error);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error during fetch:', error.message);
+    return [];
+  }
+};
+export {
+  program,
+  Status_Site,
+  priority,
+  fetchCompanyNameById,
+  fetchContactNameById,
+  getContactsSite,
+  getAciveContacts,
+};

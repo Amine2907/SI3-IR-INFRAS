@@ -18,11 +18,12 @@ import {
   priority,
   fetchCompanyNameById,
   fetchContactNameById,
+  getContactsSite,
+  getAciveContacts,
 } from './SiteInfoData';
 import { Select, MenuItem, FormControl } from '@mui/material';
 import contactService from 'services/contactsService';
 import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
-import siteContactService from 'services/Site_Services/siteContactService';
 const SiteInfoCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -44,41 +45,37 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [contactSite, setContactSite] = useState([]);
   useEffect(() => {
     const Sid = site.EB;
-    if (Sid) {
-      const fetchContactsSite = async Sid => {
+    const fetchContactsSite = async () => {
+      if (Sid) {
         try {
-          const result = await siteContactService.getContactsSite(Sid);
-          if (result.success) {
-            console.log(result.data);
-            setContactSite(result.data);
+          const contactSite = await getContactsSite(Sid);
+          console.log('Fetched contactSite:', contactSite);
+          if (contactSite.contacts && Array.isArray(contactSite.contacts.data)) {
+            setContactSite(contactSite.contacts.data);
           } else {
             setContactSite([]);
           }
         } catch (error) {
+          console.error('Error fetching contacts:', error);
           setContactSite([]);
         }
-      };
-      fetchContactsSite(Sid);
-    }
-  }, [site.EB]);
-
-  useEffect(() => {
-    const fetchActiveContacts = async () => {
-      // Fixed typo
-      try {
-        const result = await contactService.getActiveContacts();
-        if (result.success) {
-          setActiveContacts(result.data); // Assuming `activeContacts` is the state for active contacts
-        } else {
-          console.error('Error fetching active companies:', result.error);
-          setActiveContacts([]); // Handle error
-        }
-      } catch (error) {
-        console.error('Error during fetch:', error.message);
-        setActiveContacts([]); // Handle error
+      } else {
+        setContactSite([]);
       }
     };
-    fetchActiveContacts(); // Call the correct function
+
+    fetchContactsSite();
+  }, [site.EB]);
+  useEffect(() => {
+    const fetchActiveContacts = async () => {
+      try {
+        const fetchedContacts = await getAciveContacts();
+        setActiveContacts(fetchedContacts);
+      } catch (error) {
+        console.error('Error fetching active contacts in useEffect:', error.message);
+      }
+    };
+    fetchActiveContacts();
   }, []);
   // Function to fetch contact name
   useEffect(() => {
@@ -324,10 +321,10 @@ const SiteInfoCard = ({ site, onEdit }) => {
                       </Select>
                     </FormControl>
                     <MDTypography variant="subtitle2" color="textSecondary">
-                      {contactSite.length > 0 ? (
+                      {contactSite && contactSite.length > 0 ? (
                         contactSite.map(contact => (
-                          <MenuItem key={contact.Cid?.nom} value={contact.Cid?.nom}>
-                            {contact.Cid?.nom || 'Unknown Contact'}
+                          <MenuItem key={contact.Contacts.Cid} value={contact.Contacts.Cid}>
+                            {contact.Contacts.nom || 'Unknown Contact'}
                           </MenuItem>
                         ))
                       ) : (
