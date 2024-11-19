@@ -7,6 +7,9 @@ import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Card from '@mui/material/Card';
 import InputLabel from '@mui/material/InputLabel';
+import Box from '@mui/material/Box';
+import { DeleteIcon, EditIcon } from 'lucide-react';
+import IconButton from '@mui/material/IconButton';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDAlert from 'components/MDAlert';
@@ -24,6 +27,7 @@ import {
 import { Select, MenuItem, FormControl } from '@mui/material';
 import contactService from 'services/contactsService';
 import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
+import siteContactService from 'services/Site_Services/siteContactService';
 const SiteInfoCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -49,7 +53,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
       if (Sid) {
         try {
           const contactSite = await getContactsSite(Sid);
-          console.log('Fetched contactSite:', contactSite);
+          // console.log('Fetched contactSite:', contactSite);
           if (contactSite.contacts && Array.isArray(contactSite.contacts.data)) {
             setContactSite(contactSite.contacts.data);
           } else {
@@ -142,6 +146,39 @@ const SiteInfoCard = ({ site, onEdit }) => {
   };
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
+  };
+  const handleEdit = () => {
+    return null;
+  };
+  const handleDelete = async Cid => {
+    const Sid = site.EB;
+    if (!Sid || !Cid) {
+      console.log('Error: Site ID and Contact ID are required');
+      setAlert({ show: true, message: 'Site ID and Contact ID are required', type: 'error' });
+      return;
+    }
+    let result;
+    let successMessage = '';
+    try {
+      result = await siteContactService.deleteContactSite(Sid, Cid);
+      if (result.success) {
+        successMessage = 'Entité supprimée avec succès !';
+        setContactSite(prevContacts =>
+          prevContacts.filter(contact => contact.Contacts.Cid !== Cid)
+        );
+        setAlert({ show: true, message: successMessage, type: 'success' });
+      } else {
+        console.error('Error:', result ? result.error : 'Unknown error');
+        setAlert({
+          show: true,
+          message: `Error: ${result ? result.error : 'Unknown error'}`,
+          type: 'error',
+        });
+      }
+    } catch (error) {
+      console.error('Error during delete operation:', error.message);
+      setAlert({ show: true, message: `Error: ${error.message}`, type: 'error' });
+    }
   };
   return (
     <Grid item xs={12}>
@@ -324,7 +361,30 @@ const SiteInfoCard = ({ site, onEdit }) => {
                       {contactSite && contactSite.length > 0 ? (
                         contactSite.map(contact => (
                           <MenuItem key={contact.Contacts.Cid} value={contact.Contacts.Cid}>
-                            {contact.Contacts.nom || 'Unknown Contact'}
+                            <Box
+                              display="flex"
+                              justifyContent="space-between"
+                              alignItems="center"
+                              width="100%"
+                            >
+                              {/* Contact Name */}
+                              <span>{contact.Contacts.nom || 'Unknown Contact'}</span>
+                              {/* Action Icons */}
+                              <Box>
+                                <IconButton
+                                  onClick={() => handleEdit(contact.Contacts.Cid)}
+                                  aria-label="Edit Contact"
+                                >
+                                  <EditIcon />
+                                </IconButton>
+                                <IconButton
+                                  onClick={() => handleDelete(contact?.Contacts?.Cid)}
+                                  aria-label="Delete Contact"
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </Box>
+                            </Box>
                           </MenuItem>
                         ))
                       ) : (
