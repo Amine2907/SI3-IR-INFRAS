@@ -23,12 +23,13 @@ import {
   fetchContactNameById,
   getContactsSite,
   getAciveContacts,
+  performSiteContactAction,
 } from './SiteInfoData';
 import { Select, MenuItem, FormControl } from '@mui/material';
 import contactService from 'services/contactsService';
 import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
-import siteContactService from 'services/Site_Services/siteContactService';
 import ConatctStaticModal from 'examples/popup/ContactPopUp/ContactStaticPopUp';
+import WarningPopUp from 'examples/popup/userPopUp/WariningPopUp';
 const SiteInfoCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -49,13 +50,14 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [showContactModel, setShowContactModel] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [contactSite, setContactSite] = useState([]);
+  const [showWarning, setShowWarning] = useState(false);
+  const [contactToDeleteCid, setContactToDeleteCid] = useState(null);
   useEffect(() => {
     const Sid = site.EB;
     const fetchContactsSite = async () => {
       if (Sid) {
         try {
           const contactSite = await getContactsSite(Sid);
-          // console.log('Fetched contactSite:', contactSite);
           if (contactSite.contacts && Array.isArray(contactSite.contacts.data)) {
             setContactSite(contactSite.contacts.data);
           } else {
@@ -119,6 +121,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const handleModalClose = () => {
     setShowModal(false);
     setShowContactModel(false);
+    setShowWarning(false);
   };
   const handleSave = async data => {
     let result;
@@ -150,15 +153,21 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
   };
+  const handleOpenDeleteModal = Cid => {
+    setContactToDeleteCid(Cid); // Store the Cid
+    setShowWarning(true); // Show the warning modal
+  };
   // Handle Edit for display contact details
   const handleEdit = async contactId => {
     try {
-      const response = await siteContactService.displayContactsSite(site.EB);
+      const Sid = site.EB; // Extract the site ID from context
+      const response = await performSiteContactAction('fetchContacts', Sid);
       if (response.success) {
         const contacts = response.data;
         // Find the specific contact by Cid
         const contact = contacts.find(c => c.Cid === contactId)?.Contact;
         console.log('Extracted contact:', contact);
+
         if (contact) {
           setSelectedContact(contact);
           setShowContactModel(true);
@@ -173,11 +182,11 @@ const SiteInfoCard = ({ site, onEdit }) => {
         setAlert({
           show: true,
           type: 'error',
-          message: 'Failed to fetch contacts for this site.',
+          message: response.error || 'Failed to fetch contacts for this site.',
         });
       }
     } catch (error) {
-      console.error('Error fetching contacts:', error);
+      console.error('Error in handleEdit:', error.message);
       setAlert({
         show: true,
         type: 'error',
@@ -187,32 +196,29 @@ const SiteInfoCard = ({ site, onEdit }) => {
   };
   // Handle Delete Contact realted to a site
   const handleDelete = async Cid => {
-    const Sid = site.EB;
-    if (!Sid || !Cid) {
-      console.log('Error: Site ID and Contact ID are required');
-      setAlert({ show: true, message: 'Site ID and Contact ID are required', type: 'error' });
+    setShowWarning(false);
+    const Sid = site.EB; // Extract the site ID from context
+    if (!Cid) {
+      setAlert({ show: true, message: 'Contact ID is required', type: 'error' });
       return;
     }
-    let result;
-    let successMessage = '';
     try {
-      result = await siteContactService.deleteContactSite(Sid, Cid);
-      if (result.success) {
-        successMessage = 'Entité supprimée avec succès !';
+      const response = await performSiteContactAction('deleteContact', Sid, { Cid });
+      if (response.success) {
         setContactSite(prevContacts =>
           prevContacts.filter(contact => contact.Contacts.Cid !== Cid)
         );
-        setAlert({ show: true, message: successMessage, type: 'success' });
+        setAlert({ show: true, message: 'Contact deleted successfully!', type: 'success' });
       } else {
-        console.error('Error:', result ? result.error : 'Unknown error');
+        console.error('Error:', response.error || 'Unknown error');
         setAlert({
           show: true,
-          message: `Error: ${result ? result.error : 'Unknown error'}`,
+          message: response.error || 'An error occurred during deletion.',
           type: 'error',
         });
       }
     } catch (error) {
-      console.error('Error during delete operation:', error.message);
+      console.error('Error in handleDelete:', error.message);
       setAlert({ show: true, message: `Error: ${error.message}`, type: 'error' });
     }
   };
@@ -414,7 +420,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
                                   <EditIcon />
                                 </IconButton>
                                 <IconButton
-                                  onClick={() => handleDelete(contact?.Contacts?.Cid)}
+                                  onClick={() => handleOpenDeleteModal(contact?.Contacts?.Cid)}
                                   aria-label="Delete Contact"
                                 >
                                   <DeleteIcon />
@@ -450,6 +456,13 @@ const SiteInfoCard = ({ site, onEdit }) => {
       )}
       {showContactModel && (
         <ConatctStaticModal contact={selectedContact} onClose={handleModalClose} />
+      )}
+      {showWarning && (
+        <WarningPopUp
+          message="Are you sure you want to delete this contact?"
+          onConfirm={() => handleDelete(contactToDeleteCid)}
+          onCancel={handleModalClose}
+        />
       )}
       {alert.show && (
         <MDAlert

@@ -78,6 +78,31 @@ const getAciveContacts = async () => {
     return [];
   }
 };
+const performSiteContactAction = async (action, Sid, params = {}) => {
+  if (!Sid) {
+    return { success: false, error: 'Site ID is required' };
+  }
+  try {
+    let response;
+    switch (action) {
+      case 'fetchContacts':
+        response = await siteContactService.displayContactsSite(Sid);
+        break;
+      case 'deleteContact':
+        if (!params.Cid) {
+          throw new Error('Contact ID is required for deletion');
+        }
+        response = await siteContactService.deleteContactSite(Sid, params.Cid);
+        break;
+      default:
+        throw new Error('Invalid action specified');
+    }
+    return response; // Return the response for further processing
+  } catch (error) {
+    console.error(`Error during ${action}:`, error.message);
+    return { success: false, error: error.message };
+  }
+};
 export {
   program,
   Status_Site,
@@ -86,4 +111,5 @@ export {
   fetchContactNameById,
   getContactsSite,
   getAciveContacts,
+  performSiteContactAction,
 };
