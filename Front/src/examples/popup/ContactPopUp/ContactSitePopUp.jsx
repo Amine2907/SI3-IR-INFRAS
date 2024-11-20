@@ -14,9 +14,9 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
     tel: '',
     mobile: '',
     mission: '',
-    is_active: true,
+    is_active: true, // Always set to true
   });
-  const [isActive, setIsActive] = useState(contact ? contact.is_active : true);
+  const [isActive, setIsActive] = useState(true); // Set to true by default
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -28,9 +28,9 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
         tel: contact.tel || '',
         mobile: contact.mobile || '',
         mission: contact.mission || '',
-        is_active: contact.is_active !== undefined ? contact.is_active : true,
+        is_active: true, // Always set to true
       });
-      setIsActive(contact.is_active !== undefined ? contact.is_active : true);
+      setIsActive(true); // Ensure it's always true
     }
   }, [contact]);
 
@@ -57,16 +57,13 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
         tel: formData.tel,
         mobile: formData.mobile,
         mission: formData.mission,
-        is_active: isActive,
+        is_active: true, // Always true
       };
-      // Check contactData before passing to onSave
       console.log('Contact Data:', contactData);
-      // Ensure Sid is also passed when calling onSave
       onSave({ Sid, contactData });
       return;
     }
 
-    // Create the contact data object
     const contactData = {
       nom: formData.nom,
       prenom: formData.prenom,
@@ -74,16 +71,12 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
       tel: formData.tel,
       mobile: formData.mobile,
       mission: formData.mission,
-      is_active: isActive,
+      is_active: true, // Always true
     };
 
-    // Call the onSave function passed from the parent
     onSave({ Sid, contactData });
   };
 
-  const handleToggleActive = () => {
-    setIsActive(!isActive);
-  };
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -152,10 +145,10 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
           style={{ marginBottom: '5px', width: '320px' }}
         />
 
-        {/* Switch for Active/Inactive */}
+        {/* Switch for Active (Always On) */}
         <div>
-          <label>{isActive ? 'Active' : 'Inactive'}</label>
-          <Switch checked={isActive} onChange={handleToggleActive} color="primary" />
+          <label>Active</label>
+          <Switch checked={isActive} onChange={() => setIsActive(true)} color="primary" />
         </div>
 
         {/* Action Buttons */}
@@ -175,7 +168,6 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
     </div>
   );
 };
-// PropTypes for contact and functions
 ContactSiteModal.propTypes = {
   Sid: PropTypes.string.isRequired,
   contact: PropTypes.shape({
@@ -190,5 +182,4 @@ ContactSiteModal.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-
 export default ContactSiteModal;
