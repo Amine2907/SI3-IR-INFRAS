@@ -1,16 +1,43 @@
 import { supabase } from "../../config/supabaseClient.js";
 // Add a contact to a site
-const addSiteContact = async (Sid, Cid) => {
-    const { data, error } = await supabase
-      .from('Site-contact')
-      .insert([{ Sid, Cid }]); // Use the exact column names
-  
-    if (error) {
-      throw error; // Throw the error for debugging
+const addExisitngSiteContact = async (Sid, Cid) => {
+  const { data, error } = await supabase
+    .from('Site-contact')
+    .insert([{ Sid, Cid }]); // Use the exact column names
+
+  if (error) {
+    throw error; // Throw the error for debugging
+  }
+
+  return data;
+};
+const addNewContactSite = async (Sid, contactData) => {
+  try {
+    // Insert the new contact
+    const { data: contact, error: contactError } = await supabase
+      .from('Contacts')
+      .insert([contactData])
+      .select();
+    if (contactError) {
+      throw contactError;
     }
-  
-    return data;
-  };
+    // Extract the new contact ID
+    const Cid = contact[0].Cid;
+    // Associate the new contact with the site
+    const { data: siteContact, error: siteContactError } = await supabase
+      .from('Site-contact')
+      .insert([{ Sid, Cid }]);
+
+    if (siteContactError) {
+      throw siteContactError;
+    }
+    // Return both contact and site contact data
+    return { contact: contact[0], siteContact };  // This is the data being returned
+  } catch (error) {
+    console.error('Error in addNewContactSite:', error.message);
+    throw error;
+  }
+};
 // Delete a contact from a site 
 const deleteSiteContact = async (Sid, Cid) => {
     const response  = await supabase
@@ -47,7 +74,8 @@ const displayContactsSite = async (Sid) => {
     return {success:true , data};
 };
 const siteContactModel = {
-    addSiteContact,
+    addNewContactSite,
+    addExisitngSiteContact,
     deleteSiteContact,
     getSiteConatcts,
     displayContactsSite,

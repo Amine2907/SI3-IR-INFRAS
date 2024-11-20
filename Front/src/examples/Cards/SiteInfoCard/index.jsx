@@ -26,10 +26,9 @@ import {
   performSiteContactAction,
 } from './SiteInfoData';
 import { Select, MenuItem, FormControl } from '@mui/material';
-import contactService from 'services/contactsService';
-import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
-import ConatctStaticModal from 'examples/popup/ContactPopUp/ContactStaticPopUp';
 import WarningPopUp from 'examples/popup/userPopUp/WariningPopUp';
+import siteContactService from 'services/Site_Services/siteContactService';
+import ContactSiteModal from 'examples/popup/ContactPopUp/ContactSitePopUp';
 const SiteInfoCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -115,39 +114,46 @@ const SiteInfoCard = ({ site, onEdit }) => {
     setExpanded(!expanded);
   };
   const handleAddContact = () => {
-    setSelectedContact(null);
+    setSelectedContact();
     setShowModal(true);
   };
   const handleModalClose = () => {
     setShowModal(false);
     setShowContactModel(false);
     setShowWarning(false);
+    setSelectedContact(null);
   };
   const handleSave = async data => {
-    let result;
-    let successMessage = '';
+    const { contactData } = data;
+    const Sid = site.EB;
+    console.log(Sid);
+    // Log to check values before making the API call
+    console.log('Saving contact with data:', { Sid, contactData });
     try {
-      result = await contactService.createContact(data);
-      successMessage = 'Entité enregistrée avec succès !';
-      // Check if result is not undefined and has a success property
-      if (result && result.success) {
-        console.log('Success:', result.success);
-        setAlert({ show: true, message: successMessage, type: 'success' });
-      } else {
-        // If result is not successful, show an error alert
-        console.error('Error:', result ? result.error : 'Unknown error');
+      const result = await siteContactService.addNewContactSite({ Sid, contactData });
+      if (result.success) {
         setAlert({
           show: true,
-          message: `Error: ${result ? result.error : 'Unknown error'}`,
+          message: 'Contact saved successfully!',
+          type: 'success',
+        });
+      } else {
+        console.error('Error response:', result);
+        setAlert({
+          show: true,
+          message: `Error: ${result.error || 'Unknown error'}`,
           type: 'error',
         });
       }
     } catch (error) {
-      // If the asynchronous operation fails, handle the error
-      console.error('Error during save operation:', error.message);
-      setAlert({ show: true, message: `Error: ${error.message}`, type: 'error' });
+      console.error('Error during save operation:', error);
+      setAlert({
+        show: true,
+        message: `Error: ${error.message}`,
+        type: 'error',
+      });
     } finally {
-      handleModalClose(); // Always close the modal, regardless of success or error
+      handleModalClose();
     }
   };
   const handleCloseAlert = () => {
@@ -167,7 +173,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
         // Find the specific contact by Cid
         const contact = contacts.find(c => c.Cid === contactId)?.Contact;
         console.log('Extracted contact:', contact);
-
         if (contact) {
           setSelectedContact(contact);
           setShowContactModel(true);
@@ -452,10 +457,19 @@ const SiteInfoCard = ({ site, onEdit }) => {
         </MDBox>
       </Card>
       {showModal && (
-        <ContactModal contact={selectedContact} onSave={handleSave} onClose={handleModalClose} />
+        <ContactSiteModal
+          contact={selectedContact}
+          onSave={handleSave}
+          onClose={handleModalClose}
+        />
       )}
       {showContactModel && (
-        <ConatctStaticModal contact={selectedContact} onClose={handleModalClose} />
+        <ContactSiteModal
+          Sid={site.EB}
+          contact={selectedContact}
+          onSave={handleSave}
+          onClose={handleModalClose}
+        />
       )}
       {showWarning && (
         <WarningPopUp

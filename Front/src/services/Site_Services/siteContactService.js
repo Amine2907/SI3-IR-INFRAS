@@ -8,6 +8,17 @@ const addContactSite = async () => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
+const addNewContactSite = async ({ Sid, contactData }) => {
+  try {
+    const response = await axios.post(`${API_URL}/add-new-contact-site`, {
+      Sid,
+      contactData,
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
+};
 const deleteContactSite = async (Sid, Cid) => {
   try {
     const response = await axios.delete(`${API_URL}/delete-contact-site`, {
@@ -38,6 +49,7 @@ const displayContactsSite = async (Sid, Cid) => {
 };
 const siteContactService = {
   addContactSite,
+  addNewContactSite,
   deleteContactSite,
   getContactsSite,
   displayContactsSite,
