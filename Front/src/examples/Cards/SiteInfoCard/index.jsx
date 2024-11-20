@@ -150,39 +150,42 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
   };
+  // Handle Edit for display contact details
   const handleEdit = async contactId => {
     try {
-      const response = await siteContactService.displayContactsSite(contactId);
-      console.log('Full Response:', response); // Log the entire response to see the structure
+      const response = await siteContactService.displayContactsSite(site.EB);
       if (response.success) {
-        const contact = response.data[0]?.Contact; // Accessing the Contact object from the first item in the array
-        console.log('Received contact:', contact); // Verify that the contact data is correct
+        const contacts = response.data;
+        // Find the specific contact by Cid
+        const contact = contacts.find(c => c.Cid === contactId)?.Contact;
+        console.log('Extracted contact:', contact);
         if (contact) {
-          setSelectedContact(contact); // Set the contact data in the state
-          setShowContactModel(true); // Open the modal
+          setSelectedContact(contact);
+          setShowContactModel(true);
         } else {
           setAlert({
             show: true,
             type: 'error',
-            message: 'Contact data not found',
+            message: 'No contact found for the given ID.',
           });
         }
       } else {
         setAlert({
           show: true,
           type: 'error',
-          message: 'Failed to fetch contact data',
+          message: 'Failed to fetch contacts for this site.',
         });
       }
     } catch (error) {
-      console.error('Error fetching contact data:', error);
+      console.error('Error fetching contacts:', error);
       setAlert({
         show: true,
         type: 'error',
-        message: 'An error occurred',
+        message: 'An error occurred while fetching the contacts.',
       });
     }
   };
+  // Handle Delete Contact realted to a site
   const handleDelete = async Cid => {
     const Sid = site.EB;
     if (!Sid || !Cid) {
