@@ -88,9 +88,8 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
-          {contact ? 'Edit Contact' : 'Add Contact'}
+          Add Contact
         </MDTypography>
-
         {/* Input Fields */}
         <MDInput
           name="nom"
@@ -106,7 +105,6 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
           required
         />
         {errors.nom && <p style={{ color: 'red' }}>Nom is required</p>}
-
         <MDInput
           name="prenom"
           value={formData.prenom || ''}
@@ -177,7 +175,6 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
     </div>
   );
 };
-
 // PropTypes for contact and functions
 ContactSiteModal.propTypes = {
   Sid: PropTypes.string.isRequired,

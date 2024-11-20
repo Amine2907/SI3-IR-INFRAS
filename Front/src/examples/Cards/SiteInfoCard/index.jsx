@@ -29,6 +29,7 @@ import { Select, MenuItem, FormControl } from '@mui/material';
 import WarningPopUp from 'examples/popup/userPopUp/WariningPopUp';
 import siteContactService from 'services/Site_Services/siteContactService';
 import ContactSiteModal from 'examples/popup/ContactPopUp/ContactSitePopUp';
+import ConatctStaticModal from 'examples/popup/ContactPopUp/ContactStaticPopUp';
 const SiteInfoCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -70,7 +71,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
         setContactSite([]);
       }
     };
-
     fetchContactsSite();
   }, [site.EB]);
   useEffect(() => {
@@ -110,6 +110,24 @@ const SiteInfoCard = ({ site, onEdit }) => {
     };
     fetchCompanyName();
   }, [site.Acteur_ENEDIS_id]);
+  const fetchContactsSite = async () => {
+    const Sid = site.EB;
+    if (Sid) {
+      try {
+        const contactSite = await getContactsSite(Sid);
+        if (contactSite.contacts && Array.isArray(contactSite.contacts.data)) {
+          setContactSite(contactSite.contacts.data);
+        } else {
+          setContactSite([]);
+        }
+      } catch (error) {
+        console.error('Error fetching contacts:', error);
+        setContactSite([]);
+      }
+    } else {
+      setContactSite([]);
+    }
+  };
   const handleToggleExpand = () => {
     setExpanded(!expanded);
   };
@@ -126,7 +144,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const handleSave = async data => {
     const { contactData } = data;
     const Sid = site.EB;
-    console.log(Sid);
     // Log to check values before making the API call
     console.log('Saving contact with data:', { Sid, contactData });
     try {
@@ -137,6 +154,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
           message: 'Contact saved successfully!',
           type: 'success',
         });
+        await fetchContactsSite();
       } else {
         console.error('Error response:', result);
         setAlert({
@@ -456,14 +474,8 @@ const SiteInfoCard = ({ site, onEdit }) => {
           </Grid>
         </MDBox>
       </Card>
+      {/* Add NEW CONTACT TO A SITE  */}
       {showModal && (
-        <ContactSiteModal
-          contact={selectedContact}
-          onSave={handleSave}
-          onClose={handleModalClose}
-        />
-      )}
-      {showContactModel && (
         <ContactSiteModal
           Sid={site.EB}
           contact={selectedContact}
@@ -471,6 +483,11 @@ const SiteInfoCard = ({ site, onEdit }) => {
           onClose={handleModalClose}
         />
       )}
+      {/* Display Contact details */}
+      {showContactModel && (
+        <ConatctStaticModal contact={selectedContact} onClose={handleModalClose} />
+      )}
+      {/* WARNING POPUP */}
       {showWarning && (
         <WarningPopUp
           message="Are you sure you want to delete this contact?"
@@ -478,6 +495,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
           onCancel={handleModalClose}
         />
       )}
+      {/* Alert */}
       {alert.show && (
         <MDAlert
           color={alert.type}
