@@ -8,7 +8,7 @@ import Collapse from '@mui/material/Collapse';
 import Card from '@mui/material/Card';
 import InputLabel from '@mui/material/InputLabel';
 import Box from '@mui/material/Box';
-import { DeleteIcon, EditIcon } from 'lucide-react';
+import { DeleteIcon, EditIcon, CirclePlus } from 'lucide-react';
 import IconButton from '@mui/material/IconButton';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
@@ -52,6 +52,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [contactSite, setContactSite] = useState([]);
   const [showWarning, setShowWarning] = useState(false);
   const [contactToDeleteCid, setContactToDeleteCid] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const siteId = site.EB;
   useEffect(() => {
     const Sid = site.EB;
@@ -252,31 +253,50 @@ const SiteInfoCard = ({ site, onEdit }) => {
   };
   // Handle Associate Contacts
   const handleAssociateContacts = async selectedContacts => {
-    console.log('Selected Contacts:', selectedContacts);
+    // console.log('Selected Contacts:', selectedContacts);
     const siteId = site.EB;
-    console.log('Site ID:', siteId);
-    if (!siteId || selectedContacts.length === 0) {
+    // console.log('Site ID:', siteId);
+    // Check if siteId and selectedContacts are valid
+    if (!selectedContacts || !Array.isArray(selectedContacts) || selectedContacts.length === 0) {
       setAlert({
         show: true,
-        message: 'Please select a site and at least one valid contact.',
+        message: 'Please select at least one valid contact.',
         type: 'error',
       });
       return;
     }
     try {
-      console.log('Payload:', { Sid: siteId, Cid: selectedContacts });
-      const response = await siteContactService.addExistingSiteContacts(siteId, selectedContacts);
-      console.log('Contacts successfully associated:', response.data);
-      setAlert({
-        show: true,
-        message: 'Contacts associated successfully!',
-        type: 'success',
-      });
+      // Prepare the payload to send to the backend
+      const payload = {
+        Sid: siteId, // Site ID (string)
+        Cids: selectedContacts, // Array of selected contact IDs
+      };
+      // console.log('Payload:', payload);
+      // Send request to backend
+      const response = await siteContactService.addExistingSiteContacts(payload); // Pass the payload as an object
+      // Handle the server response
+      if (response.success) {
+        console.log('Contacts successfully associated:', response.data);
+        setAlert({
+          show: true,
+          message: 'Contacts associated successfully!',
+          type: 'success',
+        });
+        // fetch conatcts realted to a site diretly after the addition
+        await fetchContactsSite();
+      } else {
+        console.error('Error associating contacts:', response.error);
+        setAlert({
+          show: true,
+          message: `Failed to associate contacts: ${response.error}`,
+          type: 'error',
+        });
+      }
     } catch (error) {
       console.error('Error associating contacts:', error);
       setAlert({
         show: true,
-        message: 'Failed to associate contacts',
+        message: 'Failed to associate contacts.',
         type: 'error',
       });
     }
@@ -427,7 +447,18 @@ const SiteInfoCard = ({ site, onEdit }) => {
                       fullWidth
                       style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
                     >
-                      <InputLabel id="contacts-label">Choisir un contact(s)</InputLabel>
+                      <IconButton
+                        onClick={() => handleAssociateContacts(formData.contact_fk)}
+                        aria-label="Edit Contact"
+                        style={{
+                          marginLeft: '8px',
+                        }}
+                      >
+                        <CirclePlus />
+                      </IconButton>
+                      <Box>
+                        <InputLabel id="contacts-label">Choisir un contact(s)</InputLabel>
+                      </Box>
                       <Select
                         labelId="contacts-label"
                         name="contact_fk"
@@ -463,13 +494,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
                         )}
                       </Select>
                     </FormControl>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleAssociateContacts(formData.contact_fk, siteId)}
-                    >
-                      Associer les contacts sélectionnés
-                    </Button>
                     <MDTypography variant="subtitle2" color="textSecondary">
                       {contactSite && contactSite.length > 0 ? (
                         contactSite.map(contact => (
