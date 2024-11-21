@@ -54,10 +54,12 @@ function SiteDetails() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox mb={2} />
-      <MDBox px={3}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={4}>
+      <MDBox px={1}>
+        <Grid container>
+          {' '}
+          {/* Reduced the spacing to make elements closer */}
+          <Grid item xs={12} md={3}>
+            {' '}
             {site ? (
               <SiteInfoCard site={site} onEdit={handleEditClick} />
             ) : (
@@ -66,7 +68,8 @@ function SiteDetails() {
               </Alert>
             )}
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={9}>
+            {' '}
             <Header />
           </Grid>
         </Grid>

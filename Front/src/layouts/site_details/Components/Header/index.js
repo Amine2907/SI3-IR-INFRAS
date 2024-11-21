@@ -56,7 +56,7 @@ function Header() {
                   }}
                 >
                   <Tab
-                    label="Paramètres"
+                    label="Prospects"
                     icon={
                       <Icon fontSize="small" sx={{ mt: -0.25 }}>
                         settings
@@ -69,7 +69,7 @@ function Header() {
                     }}
                   />
                   <Tab
-                    label="Utilisateur"
+                    label="PreEtude"
                     icon={
                       <Icon fontSize="small" sx={{ mt: -0.25 }}>
                         person
@@ -82,7 +82,7 @@ function Header() {
                     }}
                   />
                   <Tab
-                    label="Entreprises"
+                    label="DR"
                     icon={
                       <Icon fontSize="small" sx={{ mt: -0.25 }}>
                         business
@@ -95,7 +95,7 @@ function Header() {
                     }}
                   />
                   <Tab
-                    label="Paramètres"
+                    label="Devis"
                     icon={
                       <Icon fontSize="small" sx={{ mt: -0.25 }}>
                         settings
@@ -108,7 +108,7 @@ function Header() {
                     }}
                   />
                   <Tab
-                    label="Paramètres"
+                    label="Règlement"
                     icon={
                       <Icon fontSize="small" sx={{ mt: -0.25 }}>
                         settings
@@ -121,7 +121,7 @@ function Header() {
                     }}
                   />
                   <Tab
-                    label="Paramètres"
+                    label="Traveaux"
                     icon={
                       <Icon fontSize="small" sx={{ mt: -0.25 }}>
                         settings
@@ -134,7 +134,7 @@ function Header() {
                     }}
                   />
                   <Tab
-                    label="Paramètres"
+                    label="MES"
                     icon={
                       <Icon fontSize="small" sx={{ mt: -0.25 }}>
                         settings

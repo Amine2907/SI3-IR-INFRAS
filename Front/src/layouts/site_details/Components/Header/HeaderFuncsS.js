@@ -15,6 +15,12 @@
 import { useState, useEffect } from 'react';
 import breakpoints from 'assets/theme/base/breakpoints';
 import Prospect from '../Propect';
+import DR from '../DR';
+import PreEtude from '../PreEtude';
+import Reglement from '../Reglement';
+import Traveaux from '../Traveaux';
+import MES from '../MES';
+import Devis from '../Devis';
 
 function HeaderFunctions() {
   const [tabsOrientation, setTabsOrientation] = useState('horizontal');
@@ -38,22 +44,21 @@ function HeaderFunctions() {
       case 0:
         return <Prospect />;
       case 1:
-        return <Prospect />;
+        return <PreEtude />;
       case 2:
-        return <Prospect />;
+        return <DR />;
       case 3:
-        return <Prospect />;
+        return <Devis />;
       case 4:
-        return <Prospect />;
+        return <Reglement />;
       case 5:
-        return <Prospect />;
+        return <Traveaux />;
       case 6:
-        return <Prospect />;
+        return <MES />;
       default:
         return null;
     }
   };
-
   return {
     tabsOrientation,
     tabValue,

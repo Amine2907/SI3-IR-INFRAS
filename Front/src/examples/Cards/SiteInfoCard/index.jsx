@@ -284,6 +284,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
           message: 'Contacts associated successfully!',
           type: 'success',
         });
+        selectedContacts = [];
         // fetch conatcts realted to a site diretly after the addition
         await fetchContactsSite();
       } else {
@@ -445,23 +446,23 @@ const SiteInfoCard = ({ site, onEdit }) => {
                         <strong>Contacts:</strong>{' '}
                       </MDTypography>
                     </MDBox>
-                    {showDropDown && (
-                      <FormControl
-                        fullWidth
-                        style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-                      >
-                        <MenuItem value="">
-                          Choisir un contact(s)
-                          <IconButton
-                            onClick={() => handleAssociateContacts(formData.contact_fk)}
-                            aria-label="Edit Contact"
-                            style={{
-                              marginLeft: '8px',
-                            }}
-                          >
-                            <CirclePlus />
-                          </IconButton>
-                        </MenuItem>
+                    <FormControl
+                      fullWidth
+                      style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+                    >
+                      <MenuItem value="">
+                        Choisir un contact(s)
+                        <IconButton
+                          onClick={() => handleAssociateContacts(formData.contact_fk)}
+                          aria-label="Edit Contact"
+                          style={{
+                            marginLeft: '8px',
+                          }}
+                        >
+                          <CirclePlus />
+                        </IconButton>
+                      </MenuItem>
+                      {showDropDown && (
                         <Select
                           labelId="contacts-label"
                           name="contact_fk"
@@ -496,8 +497,8 @@ const SiteInfoCard = ({ site, onEdit }) => {
                             <MenuItem value="">No active contacts available</MenuItem>
                           )}
                         </Select>
-                      </FormControl>
-                    )}
+                      )}
+                    </FormControl>
                     <MDTypography variant="subtitle2" color="textSecondary">
                       {contactSite && contactSite.length > 0 ? (
                         contactSite.map(contact => (
