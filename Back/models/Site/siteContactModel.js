@@ -3,13 +3,14 @@ import { supabase } from "../../config/supabaseClient.js";
 const addExisitngSiteContact = async (Sid, Cid) => {
   const { data, error } = await supabase
     .from('Site-contact')
-    .insert([{ Sid, Cid }]); // Use the exact column names
-
+    .insert([{ Sid, Cid }])
+    .select('*');   // Insert each pair as a row
   if (error) {
-    throw error; // Throw the error for debugging
+    console.error('Supabase Error Details:', error); // Log detailed error
+    throw error;
   }
-
-  return data;
+  console.log('Returned Data:', data); // Log the returned data
+  return data; // Make sure data is properly returned
 };
 const addNewContactSite = async (Sid, contactData) => {
   try {

@@ -52,6 +52,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [contactSite, setContactSite] = useState([]);
   const [showWarning, setShowWarning] = useState(false);
   const [contactToDeleteCid, setContactToDeleteCid] = useState(null);
+  const siteId = site.EB;
   useEffect(() => {
     const Sid = site.EB;
     const fetchContactsSite = async () => {
@@ -95,9 +96,11 @@ const SiteInfoCard = ({ site, onEdit }) => {
     };
     fetchContactByName();
   }, [site.contact_fk]);
-  const handleContactsChange = e => {
-    const value = e.target.value;
-    setFormData({ ...formData, contact_fk: value });
+  const handleContactsChange = event => {
+    setFormData({
+      ...formData,
+      contact_fk: event.target.value,
+    });
   };
   // Function to fetch company name
   useEffect(() => {
@@ -174,9 +177,11 @@ const SiteInfoCard = ({ site, onEdit }) => {
       handleModalClose();
     }
   };
+  // Close Alert
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
   };
+  // handle Open delete modal( PopUp Confirmation )
   const handleOpenDeleteModal = Cid => {
     setContactToDeleteCid(Cid); // Store the Cid
     setShowWarning(true); // Show the warning modal
@@ -243,6 +248,37 @@ const SiteInfoCard = ({ site, onEdit }) => {
     } catch (error) {
       console.error('Error in handleDelete:', error.message);
       setAlert({ show: true, message: `Error: ${error.message}`, type: 'error' });
+    }
+  };
+  // Handle Associate Contacts
+  const handleAssociateContacts = async selectedContacts => {
+    console.log('Selected Contacts:', selectedContacts);
+    const siteId = site.EB;
+    console.log('Site ID:', siteId);
+    if (!siteId || selectedContacts.length === 0) {
+      setAlert({
+        show: true,
+        message: 'Please select a site and at least one valid contact.',
+        type: 'error',
+      });
+      return;
+    }
+    try {
+      console.log('Payload:', { Sid: siteId, Cid: selectedContacts });
+      const response = await siteContactService.addExistingSiteContacts(siteId, selectedContacts);
+      console.log('Contacts successfully associated:', response.data);
+      setAlert({
+        show: true,
+        message: 'Contacts associated successfully!',
+        type: 'success',
+      });
+    } catch (error) {
+      console.error('Error associating contacts:', error);
+      setAlert({
+        show: true,
+        message: 'Failed to associate contacts',
+        type: 'error',
+      });
     }
   };
   return (
@@ -391,14 +427,19 @@ const SiteInfoCard = ({ site, onEdit }) => {
                       fullWidth
                       style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
                     >
-                      <InputLabel id="conatcts-label">Choisir un contact(s)</InputLabel>
+                      <InputLabel id="contacts-label">Choisir un contact(s)</InputLabel>
                       <Select
-                        labelId="conatcts-label"
+                        labelId="contacts-label"
                         name="contact_fk"
                         multiple
                         value={formData.contact_fk || []}
                         onChange={handleContactsChange}
-                        renderValue={selected => selected.join(', ')}
+                        renderValue={selected =>
+                          activeContacts
+                            .filter(contact => selected.includes(contact.Cid))
+                            .map(contact => contact.nom)
+                            .join(', ')
+                        }
                         style={{
                           padding: '10px',
                           fontSize: '14px',
@@ -422,6 +463,13 @@ const SiteInfoCard = ({ site, onEdit }) => {
                         )}
                       </Select>
                     </FormControl>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleAssociateContacts(formData.contact_fk, siteId)}
+                    >
+                      Associer les contacts sélectionnés
+                    </Button>
                     <MDTypography variant="subtitle2" color="textSecondary">
                       {contactSite && contactSite.length > 0 ? (
                         contactSite.map(contact => (

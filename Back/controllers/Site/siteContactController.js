@@ -1,23 +1,26 @@
 import siteContactModel from "../../models/Site/siteContactModel.js";
 // Add an exisiting  contact to a site controller
 const addExisitngSiteContact = async (req, res) => {
-    const { Sid, Cid } = req.body;
-    // Validate input
-    if (!Sid || !Cid) {
-      return res.status(400).json({ error: 'Sid and Cid are required' });
-    }
-    try {
-      const data = await siteContactModel.addExisitngSiteContact(Sid, Cid);
-      return res.status(201).json({
-        message: 'Contact successfully associated with site',
-        data,
-      });
-    } catch (error) {
-      console.error('Error associating contact with site:', error);
-      return res.status(500).json({ error: 'An error occurred while associating contact with site' });
-    }
-  };
-  // add a new contact to a specified list 
+  const { Sid, Cids } = req.body;
+  if (!Sid || !Cids || !Array.isArray(Cids)) {
+    return res.status(400).json({ error: 'Sid and an array of Cids are required' });
+  }
+  try {
+    const data = await Promise.all(
+      Cids.map((Cid) => siteContactModel.addExisitngSiteContact(Sid, Cid))
+    );
+    // Log the data you get from Supabase
+    console.log('Inserted data:', data);
+    return res.status(201).json({
+      message: 'Contacts successfully associated with site',
+      data: data, // Return the inserted data
+    });
+  } catch (error) {
+    console.error('Error associating contacts with site:', error);
+    return res.status(500).json({ error: 'An error occurred while associating contacts with site' });
+  }
+};
+// add a new contact to a specified list 
   const addNewContactSite = async(req, res) => {
     const { Sid, contactData } = req.body;
     // Check for required fields
