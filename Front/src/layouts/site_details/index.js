@@ -10,7 +10,6 @@ import SiteService from 'services/Site_Services/siteService';
 import { AlertDescription, Alert } from 'components/ui/alert';
 import SiteModal from 'examples/popup/SitePopUp';
 import SiteInfoNavbar from 'examples/Navbars/SiteInfoNavbar';
-// import { ArrowLeft } from 'lucide-react';
 
 function SiteDetails() {
   const location = useLocation();
@@ -19,21 +18,13 @@ function SiteDetails() {
   const [site, setSite] = useState(null);
   const [showModal, setShowModal] = useState(false);
   // eslint-disable-next-line no-unused-vars
-  const [formData, setFormData] = useState(
-    site || {
-      priorite_fk: { SP_desc: '' },
-      status_site_fk: { SS_desc: '' },
-      programme_fk: { PR_desc: '' },
-      Acteur_ENEDIS_id: { nom: '' },
-    }
-  );
-
+  const [formData, setFormData] = useState(site);
+  // Fetch site details when the component mounts
   useEffect(() => {
     if (EB) {
       fetchSiteDetails(EB);
     }
   }, [EB]);
-
   const fetchSiteDetails = async EB => {
     const result = await SiteService.getSiteById(EB);
     if (result.success) {
@@ -43,24 +34,26 @@ function SiteDetails() {
       console.error('Failed to fetch site details:', result.error);
     }
   };
-
+  // Function to handle the "Edit" button click
   const handleEditClick = async () => {
     setShowModal(true);
   };
-
+  //  Function to close the modal
   const handleCloseModal = () => {
     setShowModal(false);
   };
-
-  const handleSave = async () => {
-    const Sid = site.EB;
-    const result = await SiteService.updateSite(Sid, formData);
-    if (result.success) {
-      console.log('Site updated successfully:', result.data);
-      fetchSiteDetails(EB);
-      setShowModal(false);
-    } else {
-      console.error('Failed to update site:', result.error);
+  const handleSave = async updatedSite => {
+    try {
+      const result = await SiteService.updateSite(updatedSite.EB, updatedSite);
+      if (result.success) {
+        setSite(updatedSite);
+        setShowModal(false);
+        console.log('Site updated successfully:', updatedSite);
+      } else {
+        console.error('Failed to update site:', result.error);
+      }
+    } catch (error) {
+      console.error('Error updating site:', error.message);
     }
   };
   if (!EB) {
@@ -79,7 +72,6 @@ function SiteDetails() {
       </DashboardLayout>
     );
   }
-
   return (
     <DashboardLayout>
       <SiteInfoNavbar />
@@ -105,5 +97,4 @@ function SiteDetails() {
     </DashboardLayout>
   );
 }
-
 export default SiteDetails;
