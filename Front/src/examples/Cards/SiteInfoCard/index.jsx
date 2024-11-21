@@ -530,7 +530,9 @@ const SiteInfoCard = ({ site, onEdit }) => {
                           </MenuItem>
                         ))
                       ) : (
-                        <MenuItem value="">No contacts related to this site</MenuItem>
+                        <MDTypography variant="subtitle2" color="textSecondary">
+                          No contacts related to this site
+                        </MDTypography>
                       )}
                     </MDTypography>
                   </MDBox>

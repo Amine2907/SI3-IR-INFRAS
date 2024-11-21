@@ -35,9 +35,7 @@ function HeaderFunctions() {
     handleTabsOrientation();
     return () => window.removeEventListener('resize', handleTabsOrientation);
   }, []);
-
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
-
   // Function to render the appropriate component based on tabValue
   const renderTabContent = () => {
     switch (tabValue) {
