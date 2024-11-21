@@ -1,19 +1,20 @@
 import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-// Material Dashboard 2 React example components
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
-import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 import Footer from 'examples/Footer';
 import MDBox from 'components/MDBox';
-// Overview page components
 import Header from './Components/Header';
 import { Grid } from '@mui/material';
 import SiteInfoCard from 'examples/Cards/SiteInfoCard';
 import SiteService from 'services/Site_Services/siteService';
 import { AlertDescription, Alert } from 'components/ui/alert';
 import SiteModal from 'examples/popup/SitePopUp';
+import SiteInfoNavbar from 'examples/Navbars/SiteInfoNavbar';
+// import { ArrowLeft } from 'lucide-react';
+
 function SiteDetails() {
   const location = useLocation();
+  // const navigate = useNavigate();
   const { EB } = location.state || {};
   const [site, setSite] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -42,12 +43,15 @@ function SiteDetails() {
       console.error('Failed to fetch site details:', result.error);
     }
   };
+
   const handleEditClick = async () => {
     setShowModal(true);
   };
+
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
   const handleSave = async () => {
     const Sid = site.EB;
     const result = await SiteService.updateSite(Sid, formData);
@@ -62,7 +66,7 @@ function SiteDetails() {
   if (!EB) {
     return (
       <DashboardLayout>
-        <DashboardNavbar />
+        <SiteInfoNavbar />
         <MDBox mb={2} />
         <MDBox px={3}>
           <Alert variant="destructive" className="mt-4">
@@ -75,15 +79,14 @@ function SiteDetails() {
       </DashboardLayout>
     );
   }
+
   return (
     <DashboardLayout>
-      <DashboardNavbar />
-      <MDBox px={1}>
-        <Grid container>
-          {' '}
-          {/* Reduced the spacing to make elements closer */}
+      <SiteInfoNavbar />
+      <MDBox px={3} py={2}>
+        <Grid container spacing={2} alignItems="flex-start">
+          <Grid item xs={12} style={{ marginBottom: '-20px' }}></Grid>
           <Grid item xs={12} md={3}>
-            {' '}
             {site ? (
               <SiteInfoCard site={site} onEdit={handleEditClick} />
             ) : (
@@ -93,7 +96,6 @@ function SiteDetails() {
             )}
           </Grid>
           <Grid item xs={12} md={9}>
-            {' '}
             <Header />
           </Grid>
         </Grid>
@@ -103,4 +105,5 @@ function SiteDetails() {
     </DashboardLayout>
   );
 }
+
 export default SiteDetails;

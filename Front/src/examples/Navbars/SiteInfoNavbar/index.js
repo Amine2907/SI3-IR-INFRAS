@@ -1,17 +1,7 @@
-/**
- * ConatctNavbar is a customized Material-UI AppBar component
- * that is used in the Material Dashboard 2 React.
- *
- * The below component uses @mui (Material-UI) core components
- * and Material Dashboard 2 React components.
- *
- * @see https://mui.com/core/
- * @see https://github.com/creativetim/material-dashboard/blob/main/README.md
- */
 import { useState, useEffect } from 'react';
 
 // react-router components
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 
 // prop-types is a library for typechecking of props.
 import PropTypes from 'prop-types';
@@ -20,13 +10,16 @@ import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
 import Icon from '@mui/material/Icon';
-
+import { Tooltip } from '@mui/material';
+import { ArrowLeft } from 'lucide-react';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 
 // Material Dashboard 2 React example components
 import Breadcrumbs from 'examples/Breadcrumbs';
+import NotificationItem from 'examples/Items/NotificationItem';
 
 // Custom styles for DashboardNavbar
 import {
@@ -44,13 +37,15 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from '../../../context/index';
-function ContactNavBar({ absolute, light, isMini }) {
-  //   const [isActive, setIsActive] = useState(contact ? contact.is_active : true);
+
+function SiteInfoNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
-  const [setOpenMenu] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split('/').slice(1);
+  const navigate = useNavigate();
+
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -58,23 +53,48 @@ function ContactNavBar({ absolute, light, isMini }) {
     } else {
       setNavbarType('static');
     }
+
     // A function that sets the transparent state of the navbar.
     function handleTransparentNavbar() {
       setTransparentNavbar(dispatch, (fixedNavbar && window.scrollY === 0) || !fixedNavbar);
     }
+
     /** 
      The event listener that's calling the handleTransparentNavbar function when 
      scrolling the window.
     */
     window.addEventListener('scroll', handleTransparentNavbar);
+
     // Call the handleTransparentNavbar function to set the state with the initial value.
     handleTransparentNavbar();
+
     // Remove event listener on cleanup
     return () => window.removeEventListener('scroll', handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
+
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
-  const handleOpenMenu = event => setOpenMenu(event.currentTarget);
+  const handleCloseMenu = () => setOpenMenu(false);
+
+  // Render the notifications menu
+  const renderMenu = () => (
+    <Menu
+      anchorEl={openMenu}
+      anchorReference={null}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+      }}
+      open={Boolean(openMenu)}
+      onClose={handleCloseMenu}
+      sx={{ mt: 2 }}
+    >
+      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
+      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
+      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
+    </Menu>
+  );
+
   // Styles for the navbar icons
   const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
     color: () => {
@@ -87,6 +107,10 @@ function ContactNavBar({ absolute, light, isMini }) {
       return colorValue;
     },
   });
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   return (
     <AppBar
       position={absolute ? 'absolute' : navbarType}
@@ -95,12 +119,17 @@ function ContactNavBar({ absolute, light, isMini }) {
     >
       <Toolbar sx={theme => navbarContainer(theme)}>
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={theme => navbarRow(theme, { isMini })}>
+          <Tooltip title="Return to previous page" arrow>
+            <IconButton onClick={handleGoBack} aria-label="go back" style={{ marginLeft: '-8px' }}>
+              <ArrowLeft />
+            </IconButton>
+          </Tooltip>
           <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
         </MDBox>
         {isMini ? null : (
           <MDBox sx={theme => navbarRow(theme, { isMini })}>
             <MDBox color={light ? 'white' : 'inherit'}>
-              <Link to="/settings">
+              <Link to="/authentication/sign-in/basic">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
                   <Icon sx={iconsStyle}>account_circle</Icon>
                 </IconButton>
@@ -125,16 +154,7 @@ function ContactNavBar({ absolute, light, isMini }) {
               >
                 <Icon sx={iconsStyle}>settings</Icon>
               </IconButton>
-              <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarIconButton}
-                aria-controls="notification-menu"
-                aria-haspopup="true"
-                variant="contained"
-                onClick={handleOpenMenu}
-              ></IconButton>
+              {renderMenu()}
             </MDBox>
           </MDBox>
         )}
@@ -143,24 +163,17 @@ function ContactNavBar({ absolute, light, isMini }) {
   );
 }
 // Setting default values for the props of DashboardNavbar
-ContactNavBar.defaultProps = {
+SiteInfoNavbar.defaultProps = {
   absolute: false,
   light: false,
   isMini: false,
 };
+
 // Typechecking props for the DashboardNavbar
-ContactNavBar.propTypes = {
-  contact: PropTypes.shape({
-    nom: PropTypes.string,
-    prenom: PropTypes.string,
-    email: PropTypes.string,
-    tel: PropTypes.string,
-    mobile: PropTypes.string,
-    mission: PropTypes.string,
-    is_active: PropTypes.bool,
-  }),
+SiteInfoNavbar.propTypes = {
   absolute: PropTypes.bool,
   light: PropTypes.bool,
   isMini: PropTypes.bool,
 };
-export default ContactNavBar;
+
+export default SiteInfoNavbar;

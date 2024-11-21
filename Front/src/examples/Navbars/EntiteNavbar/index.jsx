@@ -22,65 +22,12 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from '../../../context/index';
-// import entityService from 'services/entityService';
-// import EntiteCard from 'examples/Cards/EntiteCard/EntiteCard';
-// import { Grid } from '@mui/material';
 function EntiteNavBr({ absolute, light, isMini }) {
-  // const [entities, setEntities] = useState([]);
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [setOpenMenu] = useState(false);
   const route = useLocation().pathname.split('/').slice(1);
-  // const [searchQuery, setSearchQuery] = useState({
-  //   nom: '',
-  //   role: '',
-  //   email: '',
-  //   ville: '',
-  //   region: '',
-  //   code_postal: '',
-  // });
-  // const debounce = (func, delay) => {
-  //   let timeoutId;
-  //   return (...args) => {
-  //     if (timeoutId) {
-  //       clearTimeout(timeoutId);
-  //     }
-  //     timeoutId = setTimeout(() => {
-  //       func(...args);
-  //     }, delay);
-  //   };
-  // };
-  // const debouncedSearchEntities = useCallback(
-  //   debounce(async query => {
-  //     const filters = {
-  //       nom: query.nom,
-  //       role: query.role,
-  //       email: query.email,
-  //       ville: query.ville,
-  //       region: query.region,
-  //       code_postal: query.code_postal,
-  //     };
-  //     const result = await entityService.searchEntities(filters);
-  //     if (result.success) {
-  //       setEntities(result.data);
-  //     } else {
-  //       console.error(result.error);
-  //     }
-  //   }, 500),
-  //   []
-  // );
-  // const handleSearchChange = e => {
-  //   const { name, value } = e.target;
-
-  //   setSearchQuery(prev => ({ ...prev, [name]: value }));
-
-  //   if (value.trim() === '') {
-  //     setEntities([]); // Clear entities if search is cleared
-  //   } else {
-  //     debouncedSearchEntities({ ...searchQuery, [name]: value });
-  //   }
-  // };
   useEffect(() => {
     if (fixedNavbar) {
       setNavbarType('sticky');
@@ -100,21 +47,6 @@ function EntiteNavBr({ absolute, light, isMini }) {
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = event => setOpenMenu(event.currentTarget);
-  // const handleCloseMenu = () => setOpenMenu(false);
-
-  // const renderMenu = () => (
-  //   <Menu
-  //     anchorEl={openMenu}
-  //     anchorReference={null}
-  //     anchorOrigin={{
-  //       vertical: 'bottom',
-  //       horizontal: 'left',
-  //     }}
-  //     open={Boolean(openMenu)}
-  //     onClose={handleCloseMenu}
-  //     sx={{ mt: 2 }}
-  //   ></Menu>
-  // );
   const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
     color: () => {
       let colorValue = light || darkMode ? white.main : dark.main;
@@ -174,28 +106,10 @@ function EntiteNavBr({ absolute, light, isMini }) {
                 variant="contained"
                 onClick={handleOpenMenu}
               ></IconButton>
-              {/* {renderMenu()} */}
             </MDBox>
           </MDBox>
         )}
       </Toolbar>
-      {/* Render the search results below the navbar */}
-      {/* <Grid container spacing={3}>
-        {entities.length > 0 ? (
-          entities.map(entite => (
-            <Grid item xs={12} sm={8} md={4} key={entite.id}>
-              <EntiteCard entite={entite} />
-            </Grid>
-          ))
-        ) : searchQuery.nom.trim() === '' &&
-          searchQuery.role.trim() === '' &&
-          searchQuery.email.trim() === '' &&
-          searchQuery.ville.trim() === '' &&
-          searchQuery.region.trim() === '' &&
-          searchQuery.code_postal.trim() === '' ? null : ( // Don't show "No results found" when no search is made
-          <p>No results found</p>
-        )}
-      </Grid> */}
     </AppBar>
   );
 }
