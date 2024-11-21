@@ -11,10 +11,21 @@ import { Grid } from '@mui/material';
 import SiteInfoCard from 'examples/Cards/SiteInfoCard';
 import SiteService from 'services/Site_Services/siteService';
 import { AlertDescription, Alert } from 'components/ui/alert';
+import SiteModal from 'examples/popup/SitePopUp';
 function SiteDetails() {
   const location = useLocation();
   const { EB } = location.state || {};
   const [site, setSite] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [formData, setFormData] = useState(
+    site || {
+      priorite_fk: { SP_desc: '' },
+      status_site_fk: { SS_desc: '' },
+      programme_fk: { PR_desc: '' },
+      Acteur_ENEDIS_id: { nom: '' },
+    }
+  );
 
   useEffect(() => {
     if (EB) {
@@ -31,10 +42,23 @@ function SiteDetails() {
       console.error('Failed to fetch site details:', result.error);
     }
   };
-  const handleEditClick = () => {
-    console.log('Edit button clicked');
+  const handleEditClick = async () => {
+    setShowModal(true);
   };
-
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+  const handleSave = async () => {
+    const Sid = site.EB;
+    const result = await SiteService.updateSite(Sid, formData);
+    if (result.success) {
+      console.log('Site updated successfully:', result.data);
+      fetchSiteDetails(EB);
+      setShowModal(false);
+    } else {
+      console.error('Failed to update site:', result.error);
+    }
+  };
   if (!EB) {
     return (
       <DashboardLayout>
@@ -74,6 +98,7 @@ function SiteDetails() {
           </Grid>
         </Grid>
       </MDBox>
+      {showModal && <SiteModal site={site} onSave={handleSave} onClose={handleCloseModal} />}
       <Footer />
     </DashboardLayout>
   );
