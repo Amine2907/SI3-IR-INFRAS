@@ -73,10 +73,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
   }, []);
   const handleSubmit = () => {
     const newErrors = {};
-    // if (!formData.nom) newErrors.nom = true;
-    // if (!formData.priorite_fk.SP_desc) newErrors.priorite_fk = true;
-    // if (!formData.programme_fk.PR_desc) newErrors.programme_fk = true;
-    // if (!formData.status_site_fk.SS_desc) newErrors.status_site_fk = true;
     console.log('Validation errors:', newErrors);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);

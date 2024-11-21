@@ -10,7 +10,6 @@ import SiteService from 'services/Site_Services/siteService';
 import { AlertDescription, Alert } from 'components/ui/alert';
 import SiteModal from 'examples/popup/SitePopUp';
 import SiteInfoNavbar from 'examples/Navbars/SiteInfoNavbar';
-
 function SiteDetails() {
   const location = useLocation();
   // const navigate = useNavigate();

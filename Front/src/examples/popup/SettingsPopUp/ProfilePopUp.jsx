@@ -5,7 +5,7 @@
  * @param {Function} onClose A function that is called when the user clicks the close button.
  * @returns A JSX element representing the modal.
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../style.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
@@ -16,13 +16,32 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
+import SiteService from 'services/Site_Services/siteService';
 const ProfileModal = ({ userData, onSave, onClose }) => {
   const [formData, setFormData] = useState(userData || {});
   const [isActive] = useState(userData ? userData.is_active : true);
   const [errors, setErrors] = useState({});
+  const [activeCompanies, setActiveCompanies] = useState([]);
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  useEffect(() => {
+    const fetchActiveCompanies = async () => {
+      try {
+        const result = await SiteService.getActiveCompanies();
+        if (result.success) {
+          setActiveCompanies(result.data);
+        } else {
+          console.error('Error fetching active companies:', result.error);
+          setActiveCompanies([]);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error.message);
+        setActiveCompanies([]);
+      }
+    };
+    fetchActiveCompanies();
+  }, []);
   const handleSubmit = () => {
     const newErrors = {};
     if (!formData.firstname) newErrors.firstname = true;
@@ -31,7 +50,13 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
       setErrors(newErrors);
       return;
     }
-    onSave({ ...formData, is_active: isActive });
+    // Map the selected company ID back to its name
+    const selectedCompany = activeCompanies.find(company => company.ENTid === formData.entreprise);
+    onSave({
+      ...formData,
+      entreprise: selectedCompany ? selectedCompany.nom : '',
+      is_active: isActive,
+    });
   };
   return (
     <div className={styles.modal}>
@@ -105,13 +130,33 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
             style={{ marginBottom: '10px', width: '320px' }}
           />
         </LocalizationProvider>
-        <MDInput
-          name="entreprise"
-          value={formData.entreprise || ''}
-          onChange={handleChange}
-          placeholder="Entreprise"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
+        <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+          <Select
+            name="entreprise"
+            value={formData.entreprise || ''}
+            onChange={handleChange}
+            displayEmpty
+            style={{
+              padding: '10px',
+              fontSize: '14px',
+              borderColor: errors.department ? 'red' : '',
+            }}
+            required
+          >
+            <MenuItem value="" disabled>
+              -- Choisir une entreprise --
+            </MenuItem>
+            {activeCompanies.length > 0 ? (
+              activeCompanies.map(company => (
+                <MenuItem key={company.nom} value={company.ENTid}>
+                  {company.nom}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem value="">Pas des entreprises actives</MenuItem>
+            )}
+          </Select>
+        </FormControl>
         <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
           <Select
             name="department"
