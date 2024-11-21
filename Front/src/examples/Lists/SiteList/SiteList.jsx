@@ -173,15 +173,9 @@ const SiteList = () => {
     console.log('Data being sent to createSite:', data);
     let result;
     let successMessage = '';
-    if (selectedSite) {
-      // Update entity
-      result = await SiteService.updateSite(selectedSite.EB, data);
-      successMessage = 'site mise à jour avec succès !';
-    } else {
-      // Create new entity
-      result = await SiteService.createSite(data);
-      successMessage = 'site enregistrée avec succès !';
-    }
+    // Create new entity
+    result = await SiteService.createSite(data);
+    successMessage = 'site enregistrée avec succès !';
     // Check if the operation was successful
     if (result?.success) {
       // Show success alert and reload active sites based on `isActive` status

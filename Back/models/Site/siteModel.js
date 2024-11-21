@@ -170,18 +170,67 @@ const GetsitesById = async(EB) => {
 //Update sites 
 const updateSite = async (EB, updates) => {
     try {
+      // Fetch active companies list (if necessary for mapping)
+      const activeCompaniesResponse = await getActiveCompanies();
+      console.log('Active Companies Response:', activeCompaniesResponse);
+      if (!activeCompaniesResponse.success) {
+        throw new Error('Failed to fetch active companies');
+      }
+      const activeCompanies = activeCompaniesResponse.data;
+      if (!Array.isArray(activeCompanies)) {
+        throw new Error('Active companies data is not an array.');
+      }
+      console.log('Incoming updates for updateSite:', updates);
+      // If Acteur_ENEDIS_id is a string (company name), convert it to the corresponding company ID
+      if (updates.Acteur_ENEDIS_id && typeof updates.Acteur_ENEDIS_id === 'string') {
+        const companyName = updates.Acteur_ENEDIS_id;
+        // console.warn('Converting company name to company ID:', companyName);
+        // Find the company in the activeCompanies list based on company name
+        const company = activeCompanies.find(company => company.nom === companyName);
+        if (company) {
+          // Replace the company name with the corresponding company ID
+          updates.Acteur_ENEDIS_id = company.ENTid;
+        } else {
+          throw new Error(`No company found with name: ${companyName}`);
+        }
+      }
+      // Check and map `priorite_fk`, `programme_fk`, and `status_site_fk` to their corresponding IDs
+      if (updates.priorite_fk) {
+        const prioriteId = priorityMapping[updates.priorite_fk];
+        if (!prioriteId) {
+          throw new Error(`Invalid priority description: ${updates.priorite_fk}`);
+        }
+        updates.priorite_fk = prioriteId;
+      }
+      if (updates.programme_fk) {
+        const programId = programMapping[updates.programme_fk];
+        if (!programId) {
+          throw new Error(`Invalid program description: ${updates.programme_fk}`);
+        }
+        updates.programme_fk = programId;
+      }
+      if (updates.status_site_fk) {
+        const statusId = siteStatusMapping[updates.status_site_fk];
+        if (!statusId) {
+          throw new Error(`Invalid status description: ${updates.status_site_fk}`);
+        }
+        updates.status_site_fk = statusId;
+      }
+      console.log('Transformed updates ready for database operation:', updates);
+      // Perform the update operation in the database
       const { data, error } = await supabase
         .from('Site')
         .update(updates)
         .eq('EB', EB);
+  
       if (error) {
         console.error('Supabase Error:', error); // Log the error
-        return { success: false, error: error.message }; // Pass the actual error message
+        return { success: false, error: error.message }; // Return the error message
       }
-      return { success: true, data }; // Return success with data
+      return { success: true, data }; // Return success with updated data
     } catch (err) {
-      console.error('Catch Block Error:', err); // Log any unexpected errors
-      return { success: false, error: err.message }; // Return the caught error message
+      console.error('Catch Block Error:', err); // Log unexpected errors
+      return { success: false, error: err.message }; // Return the error message
     }
   };
 // Activate sites 
