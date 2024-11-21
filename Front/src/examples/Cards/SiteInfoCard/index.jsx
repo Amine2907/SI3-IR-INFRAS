@@ -6,7 +6,6 @@ import Icon from '@mui/material/Icon';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Card from '@mui/material/Card';
-import InputLabel from '@mui/material/InputLabel';
 import Box from '@mui/material/Box';
 import { DeleteIcon, EditIcon, CirclePlus } from 'lucide-react';
 import IconButton from '@mui/material/IconButton';
@@ -42,7 +41,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState(
     site || {
-      contact_fk: '',
+      contact_fk: [],
     }
   );
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
@@ -52,6 +51,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [contactSite, setContactSite] = useState([]);
   const [showWarning, setShowWarning] = useState(false);
   const [contactToDeleteCid, setContactToDeleteCid] = useState(null);
+  const [showDropDown, setShowDropDown] = useState(true);
   // eslint-disable-next-line no-unused-vars
   const siteId = site.EB;
   useEffect(() => {
@@ -138,12 +138,14 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const handleAddContact = () => {
     setSelectedContact();
     setShowModal(true);
+    setShowDropDown(false);
   };
   const handleModalClose = () => {
     setShowModal(false);
     setShowContactModel(false);
     setShowWarning(false);
     setSelectedContact(null);
+    setShowDropDown(true);
   };
   const handleSave = async data => {
     const { contactData } = data;
@@ -443,57 +445,59 @@ const SiteInfoCard = ({ site, onEdit }) => {
                         <strong>Contacts:</strong>{' '}
                       </MDTypography>
                     </MDBox>
-                    <FormControl
-                      fullWidth
-                      style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-                    >
-                      <IconButton
-                        onClick={() => handleAssociateContacts(formData.contact_fk)}
-                        aria-label="Edit Contact"
-                        style={{
-                          marginLeft: '8px',
-                        }}
+                    {showDropDown && (
+                      <FormControl
+                        fullWidth
+                        style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
                       >
-                        <CirclePlus />
-                      </IconButton>
-                      <Box>
-                        <InputLabel id="contacts-label">Choisir un contact(s)</InputLabel>
-                      </Box>
-                      <Select
-                        labelId="contacts-label"
-                        name="contact_fk"
-                        multiple
-                        value={formData.contact_fk || []}
-                        onChange={handleContactsChange}
-                        renderValue={selected =>
-                          activeContacts
-                            .filter(contact => selected.includes(contact.Cid))
-                            .map(contact => contact.nom)
-                            .join(', ')
-                        }
-                        style={{
-                          padding: '10px',
-                          fontSize: '14px',
-                          borderColor: errors.prenom ? 'red' : '',
-                        }}
-                      >
-                        <MenuItem value="" onClick={handleAddContact}>
-                          -- Ajouter un nouveau contact --
+                        <MenuItem value="">
+                          Choisir un contact(s)
+                          <IconButton
+                            onClick={() => handleAssociateContacts(formData.contact_fk)}
+                            aria-label="Edit Contact"
+                            style={{
+                              marginLeft: '8px',
+                            }}
+                          >
+                            <CirclePlus />
+                          </IconButton>
                         </MenuItem>
-                        <MenuItem value="" disabled>
-                          -- Choisir un contact(s) existant(s)--
-                        </MenuItem>
-                        {activeContacts.length > 0 ? (
-                          activeContacts.map(contact => (
-                            <MenuItem key={contact.nom} value={contact.Cid}>
-                              {contact.nom}
-                            </MenuItem>
-                          ))
-                        ) : (
-                          <MenuItem value="">No active contacts available</MenuItem>
-                        )}
-                      </Select>
-                    </FormControl>
+                        <Select
+                          labelId="contacts-label"
+                          name="contact_fk"
+                          multiple
+                          value={formData.contact_fk || []}
+                          onChange={handleContactsChange}
+                          renderValue={selected =>
+                            activeContacts
+                              .filter(contact => selected.includes(contact.Cid))
+                              .map(contact => contact.nom)
+                              .join(', ')
+                          }
+                          style={{
+                            padding: '10px',
+                            fontSize: '14px',
+                            borderColor: errors.prenom ? 'red' : '',
+                          }}
+                        >
+                          <MenuItem value="" onClick={handleAddContact}>
+                            -- Ajouter un nouveau contact --
+                          </MenuItem>
+                          <MenuItem value="" disabled>
+                            -- Choisir un contact(s) existant(s)--
+                          </MenuItem>
+                          {activeContacts.length > 0 ? (
+                            activeContacts.map(contact => (
+                              <MenuItem key={contact.nom} value={contact.Cid}>
+                                {contact.nom}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem value="">No active contacts available</MenuItem>
+                          )}
+                        </Select>
+                      </FormControl>
+                    )}
                     <MDTypography variant="subtitle2" color="textSecondary">
                       {contactSite && contactSite.length > 0 ? (
                         contactSite.map(contact => (
@@ -547,7 +551,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
         </MDBox>
       </Card>
       {/* Add NEW CONTACT TO A SITE  */}
-      {showModal && (
+      {showModal && !showDropDown && (
         <ContactSiteModal
           Sid={site.EB}
           contact={selectedContact}
