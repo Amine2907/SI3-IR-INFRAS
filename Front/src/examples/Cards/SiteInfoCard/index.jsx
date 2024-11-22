@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { React, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 import Tooltip from '@mui/material/Tooltip';
@@ -9,6 +9,7 @@ import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import { DeleteIcon, EditIcon, CirclePlus } from 'lucide-react';
 import IconButton from '@mui/material/IconButton';
+// Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDAlert from 'components/MDAlert';
 import MDTypography from 'components/MDTypography';
@@ -18,6 +19,7 @@ import {
   Status_Site,
   priority,
   fetchCompanyNameById,
+  fetchContactNameById,
   getContactsSite,
   getAciveContacts,
   performSiteContactAction,
@@ -27,13 +29,15 @@ import WarningPopUp from 'examples/popup/userPopUp/WariningPopUp';
 import siteContactService from 'services/Site_Services/siteContactService';
 import ContactSiteModal from 'examples/popup/ContactPopUp/ContactSitePopUp';
 import ConatctStaticModal from 'examples/popup/ContactPopUp/ContactStaticPopUp';
-
 const SiteInfoCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const [companyName, setCompanyName] = useState('N/A');
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false); // State to control expansion
+  // eslint-disable-next-line no-unused-vars
+  const [contactName, setContactName] = useState('N/A');
   const [activeContacts, setActiveContacts] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState(
     site || {
@@ -48,7 +52,8 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [showWarning, setShowWarning] = useState(false);
   const [contactToDeleteCid, setContactToDeleteCid] = useState(null);
   const [showDropDown, setShowDropDown] = useState(true);
-
+  // eslint-disable-next-line no-unused-vars
+  const siteId = site.EB;
   useEffect(() => {
     const Sid = site.EB;
     const fetchContactsSite = async () => {
@@ -70,7 +75,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
     };
     fetchContactsSite();
   }, [site.EB]);
-
   useEffect(() => {
     const fetchActiveContacts = async () => {
       try {
@@ -82,7 +86,24 @@ const SiteInfoCard = ({ site, onEdit }) => {
     };
     fetchActiveContacts();
   }, []);
-
+  // Function to fetch contact name
+  useEffect(() => {
+    const contactId = site.contact_fk;
+    const fetchContactByName = async () => {
+      if (contactId) {
+        const name = await fetchContactNameById(contactId);
+        setContactName(name);
+      }
+    };
+    fetchContactByName();
+  }, [site.contact_fk]);
+  const handleContactsChange = event => {
+    setFormData({
+      ...formData,
+      contact_fk: event.target.value,
+    });
+  };
+  // Function to fetch company name
   useEffect(() => {
     const acteurId = site.Acteur_ENEDIS_id;
     const fetchCompanyName = async () => {
@@ -93,68 +114,32 @@ const SiteInfoCard = ({ site, onEdit }) => {
     };
     fetchCompanyName();
   }, [site.Acteur_ENEDIS_id]);
-
-  const isValidProgramDescription = description => {
-    const validDescriptions = [
-      '4GFixe',
-      'DCC',
-      'ARP',
-      'DENSIF_CZ_RED',
-      'DENSIF_CZ',
-      'ZTD_RED',
-      'PAC-REMP',
-      'PAC',
-      'PAC-DUP',
-      'PAC-CONTINUITY-PLAN',
-      'FM',
-      'ORF',
-      'SFR TT',
-      'FM TT',
-    ];
-    return validDescriptions.includes(description);
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const handleChange = e => {
-    const { name, value } = e.target;
-    if (name === 'programme_fk') {
-      if (!isValidProgramDescription(value)) {
-        setErrors(prev => ({ ...prev, programme_fk: 'Invalid program description' }));
-        return;
+  const fetchContactsSite = async () => {
+    const Sid = site.EB;
+    if (Sid) {
+      try {
+        const contactSite = await getContactsSite(Sid);
+        if (contactSite.contacts && Array.isArray(contactSite.contacts.data)) {
+          setContactSite(contactSite.contacts.data);
+        } else {
+          setContactSite([]);
+        }
+      } catch (error) {
+        console.error('Error fetching contacts:', error);
+        setContactSite([]);
       }
-      setErrors(prev => ({ ...prev, programme_fk: null }));
+    } else {
+      setContactSite([]);
     }
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value,
-    }));
   };
-
-  // eslint-disable-next-line no-unused-vars
-  const handleNestedChange = (field, subField, value) => {
-    setFormData(prevData => ({
-      ...prevData,
-      [field]: { ...prevData[field], [subField]: value },
-    }));
-  };
-
-  const handleContactsChange = event => {
-    setFormData({
-      ...formData,
-      contact_fk: event.target.value,
-    });
-  };
-
   const handleToggleExpand = () => {
     setExpanded(!expanded);
   };
-
   const handleAddContact = () => {
     setSelectedContact();
     setShowModal(true);
     setShowDropDown(false);
   };
-
   const handleModalClose = () => {
     setShowModal(false);
     setShowContactModel(false);
@@ -162,24 +147,20 @@ const SiteInfoCard = ({ site, onEdit }) => {
     setSelectedContact(null);
     setShowDropDown(true);
   };
-
   const handleSave = async data => {
     const { contactData } = data;
     const Sid = site.EB;
+    // Log to check values before making the API call
     console.log('Saving contact with data:', { Sid, contactData });
     try {
-      const result = await siteContactService.updateSite({
-        Sid,
-        ...site,
-        ...contactData,
-      });
+      const result = await siteContactService.addNewContactSite({ Sid, contactData });
       if (result.success) {
         setAlert({
           show: true,
-          message: 'Site updated successfully!',
+          message: 'Contact saved successfully!',
           type: 'success',
         });
-        // Refresh site data here if necessary
+        await fetchContactsSite();
       } else {
         console.error('Error response:', result);
         setAlert({
@@ -199,22 +180,23 @@ const SiteInfoCard = ({ site, onEdit }) => {
       handleModalClose();
     }
   };
-
+  // Close Alert
   const handleCloseAlert = () => {
     setAlert({ show: false, message: '', type: '' });
   };
-
+  // handle Open delete modal( PopUp Confirmation )
   const handleOpenDeleteModal = Cid => {
-    setContactToDeleteCid(Cid);
-    setShowWarning(true);
+    setContactToDeleteCid(Cid); // Store the Cid
+    setShowWarning(true); // Show the warning modal
   };
-
+  // Handle Edit for display contact details
   const handleEdit = async contactId => {
     try {
-      const Sid = site.EB;
+      const Sid = site.EB; // Extract the site ID from context
       const response = await performSiteContactAction('fetchContacts', Sid);
       if (response.success) {
         const contacts = response.data;
+        // Find the specific contact by Cid
         const contact = contacts.find(c => c.Cid === contactId)?.Contact;
         console.log('Extracted contact:', contact);
         if (contact) {
@@ -243,10 +225,10 @@ const SiteInfoCard = ({ site, onEdit }) => {
       });
     }
   };
-
+  // Handle Delete Contact realted to a site
   const handleDelete = async Cid => {
     setShowWarning(false);
-    const Sid = site.EB;
+    const Sid = site.EB; // Extract the site ID from context
     if (!Cid) {
       setAlert({ show: true, message: 'Contact ID is required', type: 'error' });
       return;
@@ -271,9 +253,12 @@ const SiteInfoCard = ({ site, onEdit }) => {
       setAlert({ show: true, message: `Error: ${error.message}`, type: 'error' });
     }
   };
-
+  // Handle Associate Contacts
   const handleAssociateContacts = async selectedContacts => {
+    // console.log('Selected Contacts:', selectedContacts);
     const siteId = site.EB;
+    // console.log('Site ID:', siteId);
+    // Check if siteId and selectedContacts are valid
     if (!selectedContacts || !Array.isArray(selectedContacts) || selectedContacts.length === 0) {
       setAlert({
         show: true,
@@ -283,11 +268,15 @@ const SiteInfoCard = ({ site, onEdit }) => {
       return;
     }
     try {
+      // Prepare the payload to send to the backend
       const payload = {
-        Sid: siteId,
-        Cids: selectedContacts,
+        Sid: siteId, // Site ID (string)
+        Cids: selectedContacts, // Array of selected contact IDs
       };
-      const response = await siteContactService.addExistingSiteContacts(payload);
+      // console.log('Payload:', payload);
+      // Send request to backend
+      const response = await siteContactService.addExistingSiteContacts(payload); // Pass the payload as an object
+      // Handle the server response
       if (response.success) {
         console.log('Contacts successfully associated:', response.data);
         setAlert({
@@ -296,23 +285,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
           type: 'success',
         });
         selectedContacts = [];
-        const fetchContactsSite = async () => {
-          if (siteId) {
-            try {
-              const contactSite = await getContactsSite(siteId);
-              if (contactSite.contacts && Array.isArray(contactSite.contacts.data)) {
-                setContactSite(contactSite.contacts.data);
-              } else {
-                setContactSite([]);
-              }
-            } catch (error) {
-              console.error('Error fetching contacts:', error);
-              setContactSite([]);
-            }
-          } else {
-            setContactSite([]);
-          }
-        };
+        // fetch conatcts realted to a site diretly after the addition
         await fetchContactsSite();
       } else {
         console.error('Error associating contacts:', response.error);
@@ -331,7 +304,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
       });
     }
   };
-
   return (
     <Grid item xs={12}>
       <Card id="site_info_card">
@@ -350,18 +322,21 @@ const SiteInfoCard = ({ site, onEdit }) => {
                     `${borderWidth[1]} solid ${borderColor}`,
                 }}
               >
+                {/* EB and Programme */}
                 <MDBox
                   display="flex"
                   alignItems="center"
                   justifyContent="space-between"
                   width="100%"
                 >
+                  {/* EB */}
                   <MDBox display="flex" alignItems="center">
                     <Icon sx={{ mr: 1 }}>business</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
                       {site.EB}
                     </MDTypography>
                   </MDBox>
+                  {/* Programme with Colored Background */}
                   <MDBox
                     px={2}
                     py={0.5}
@@ -378,78 +353,91 @@ const SiteInfoCard = ({ site, onEdit }) => {
                     </MDTypography>
                   </MDBox>
                 </MDBox>
+                {/* G2R */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>map</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     {site.G2R}
                   </MDTypography>
                 </MDBox>
+                {/* Name */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>label</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     {site.nom}
                   </MDTypography>
                 </MDBox>
+                {/* Status Site SFR */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
                     <strong>Status SFR:</strong> {site.status_site_SFR}
                   </MDTypography>
                 </MDBox>
+                {/* Priorité */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>priority_high</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     <strong>Priorité:</strong> {priority[site.priorite_fk] || 'N/A'}
                   </MDTypography>
                 </MDBox>
+                {/* LOT */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>folder</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     <strong>Lot:</strong> {site.lot}
                   </MDTypography>
                 </MDBox>
+                {/* Zone */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>location_on</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     <strong>Zone:</strong> {site.zone}
                   </MDTypography>
                 </MDBox>
+                {/* Ville */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>place</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     <strong>Ville:</strong> {site.Ville}
                   </MDTypography>
                 </MDBox>
+                {/* Code_postal */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>mail</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     {site.code_postal}
                   </MDTypography>
                 </MDBox>
+                {/* Region */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>public</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     {site.region}
                   </MDTypography>
                 </MDBox>
+                {/* Acteur ENEDIS */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>business_center</Icon>
                   <MDTypography variant="h6" fontWeight="medium">
                     {companyName}
                   </MDTypography>
                 </MDBox>
+                {/* Status Site */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>signal_cellular_alt</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
                     <strong>Status Site:</strong> {Status_Site[site.status_site_fk] || 'N/A'}
                   </MDTypography>
                 </MDBox>
+                {/* Active Status */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>check_circle</Icon>
                   <MDTypography variant="subtitle2" color="textSecondary">
                     <strong>Status:</strong> {site.is_active ? 'Active' : 'Inactive'}
                   </MDTypography>
                 </MDBox>
+                {/* Collapsible Section for Extra Information */}
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                   <MDBox mt={2}>
                     <MDBox display="flex" alignItems="center">
@@ -521,7 +509,9 @@ const SiteInfoCard = ({ site, onEdit }) => {
                               alignItems="center"
                               width="100%"
                             >
+                              {/* Contact Name */}
                               <span>{contact.Contacts.nom || 'Unknown Contact'}</span>
+                              {/* Action Icons */}
                               <Box>
                                 <IconButton
                                   onClick={() => handleEdit(contact?.Contacts?.Cid)}
@@ -547,6 +537,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
                     </MDTypography>
                   </MDBox>
                 </Collapse>
+                {/* Edit Button */}
                 <MDBox ml="auto" lineHeight={0} color={darkMode ? 'white' : 'dark'}>
                   <Button variant="subtitle2" onClick={handleToggleExpand}>
                     Plus d&apos;informations
@@ -562,6 +553,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
           </Grid>
         </MDBox>
       </Card>
+      {/* Add NEW CONTACT TO A SITE  */}
       {showModal && !showDropDown && (
         <ContactSiteModal
           Sid={site.EB}
@@ -570,9 +562,11 @@ const SiteInfoCard = ({ site, onEdit }) => {
           onClose={handleModalClose}
         />
       )}
+      {/* Display Contact details */}
       {showContactModel && (
         <ConatctStaticModal contact={selectedContact} onClose={handleModalClose} />
       )}
+      {/* WARNING POPUP */}
       {showWarning && (
         <WarningPopUp
           message="Are you sure you want to delete this contact?"
@@ -580,6 +574,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
           onCancel={handleModalClose}
         />
       )}
+      {/* Alert */}
       {alert.show && (
         <MDAlert
           color={alert.type}
@@ -593,7 +588,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
     </Grid>
   );
 };
-
 SiteInfoCard.propTypes = {
   site: PropTypes.shape({
     EB: PropTypes.string.isRequired,
@@ -618,5 +612,4 @@ SiteInfoCard.propTypes = {
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
 };
-
 export default SiteInfoCard;
