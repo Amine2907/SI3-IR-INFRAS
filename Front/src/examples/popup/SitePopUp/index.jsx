@@ -100,6 +100,13 @@ const SiteModal = ({ site, onSave, onClose }) => {
       [field]: { [subField]: value },
     });
   };
+  const handlePrioriteChange = (field, subField, value) => {
+    const transformedValue = field === 'priorite_fk' ? Number(value) : value; // Ensure numeric value for priorite_fk
+    setFormData({
+      ...formData,
+      [field]: { [subField]: transformedValue },
+    });
+  };
   const handleCompanieschange = (field, subField, value) => {
     if (field === 'Acteur_ENEDIS_id') {
       // Directly set the numeric ID instead of an object
@@ -169,7 +176,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
             <Select
               name="priorite_fk"
               value={formData.priorite_fk.SP_desc || ''}
-              onChange={e => handleDropdownChange('priorite_fk', 'SP_desc', e.target.value)}
+              onChange={e => handlePrioriteChange('priorite_fk', 'SP_desc', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
               required
@@ -177,10 +184,10 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <MenuItem value="" disabled>
                 -- Choisir une priorite --
               </MenuItem>
-              <MenuItem value="P00">P00</MenuItem>
-              <MenuItem value="P0">P0</MenuItem>
-              <MenuItem value="P1">P1</MenuItem>
-              <MenuItem value="P2">P2</MenuItem>
+              <MenuItem value="0">P00</MenuItem>
+              <MenuItem value="1">P0</MenuItem>
+              <MenuItem value="2">P1</MenuItem>
+              <MenuItem value="3">P2</MenuItem>
             </Select>
           </FormControl>
           <MDInput
@@ -288,20 +295,20 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <MenuItem value="" disabled>
                 -- Choisir un Programme --
               </MenuItem>
-              <MenuItem value="4GFixe">4GFixe</MenuItem>
-              <MenuItem value="DCC">DCC</MenuItem>
-              <MenuItem value="ARP">ARP</MenuItem>
-              <MenuItem value="DENSIF_CZ_RED">DENSIF_CZ_RED</MenuItem>
-              <MenuItem value="DENSIF_CZ">DENSIF_CZ</MenuItem>
-              <MenuItem value="ZTD_RED">ZTD_RED</MenuItem>
-              <MenuItem value="PAC-REMP">PAC-REMP</MenuItem>
-              <MenuItem value="PAC">PAC</MenuItem>
-              <MenuItem value="PAC-DUP">PAC-DUP</MenuItem>
-              <MenuItem value="PAC-CONTINUITY-PLAN">PAC-CONTINUITY-PLAN</MenuItem>
-              <MenuItem value="FM">FM</MenuItem>
-              <MenuItem value="ORF">ORF</MenuItem>
-              <MenuItem value="SFR TT ">SFR TT </MenuItem>
-              <MenuItem value="FM TT ">FM TT </MenuItem>
+              <MenuItem value="0">4GFixe</MenuItem>
+              <MenuItem value="1">DCC</MenuItem>
+              <MenuItem value="2">ARP</MenuItem>
+              <MenuItem value="3">DENSIF_CZ_RED</MenuItem>
+              <MenuItem value="4">DENSIF_CZ</MenuItem>
+              <MenuItem value="5">ZTD_RED</MenuItem>
+              <MenuItem value="6">PAC-REMP</MenuItem>
+              <MenuItem value="7">PAC</MenuItem>
+              <MenuItem value="8">PAC-DUP</MenuItem>
+              <MenuItem value="9">PAC-CONTINUITY-PLAN</MenuItem>
+              <MenuItem value="10">FM</MenuItem>
+              <MenuItem value="11">ORF</MenuItem>
+              <MenuItem value="12">SFR TT </MenuItem>
+              <MenuItem value="13">FM TT </MenuItem>
             </Select>
           </FormControl>
           <FormControl
@@ -385,9 +392,9 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <MenuItem value="" disabled>
                 -- Choisir le status de site--
               </MenuItem>
-              <MenuItem value="Activé">Activé</MenuItem>
-              <MenuItem value="Inactif">Inactif</MenuItem>
-              <MenuItem value="Terminé">Terminé</MenuItem>
+              <MenuItem value="0">Activé</MenuItem>
+              <MenuItem value="1">Inactif</MenuItem>
+              <MenuItem value="2">Terminé</MenuItem>
             </Select>
           </FormControl>
           <div>

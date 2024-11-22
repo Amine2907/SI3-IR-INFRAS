@@ -542,7 +542,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
                   <Button variant="subtitle2" onClick={handleToggleExpand}>
                     Plus d&apos;informations
                   </Button>
-                  <Tooltip title="Edit site" placement="top">
+                  <Tooltip title="Modifier site" placement="top">
                     <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={onEdit}>
                       edit
                     </Icon>
