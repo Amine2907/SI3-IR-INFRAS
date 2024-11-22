@@ -101,7 +101,13 @@ function SiteDetails() {
             )}
           </Grid>
           <Grid item xs={12} md={9}>
-            <Header />
+            {site ? (
+              <Header />
+            ) : (
+              <Alert variant="destructive" className="mt-4">
+                <AlertDescription>Loading site details...</AlertDescription>
+              </Alert>
+            )}
           </Grid>
         </Grid>
       </MDBox>

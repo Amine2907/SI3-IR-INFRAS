@@ -448,7 +448,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
                     </MDBox>
                     <FormControl
                       fullWidth
-                      style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+                      style={{ marginBottom: '5px', marginTop: '2px', width: '190px' }}
                     >
                       <MenuItem value="">
                         Choisir un contact(s)
