@@ -108,7 +108,7 @@ function SiteInfoNavbar({ absolute, light, isMini }) {
     },
   });
   const handleGoBack = () => {
-    navigate(-1);
+    navigate('/sites');
   };
 
   return (

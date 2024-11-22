@@ -35,6 +35,7 @@ import Profile from 'layouts/profile';
 import Entites from 'layouts/entites';
 import SiteDetails from 'layouts/site_details';
 import SiteInfoCard from 'examples/Cards/SiteInfoCard';
+import Sites from 'layouts/sites';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
@@ -194,6 +195,14 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
               <SiteDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/sites"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Sites />
             </ProtectedRoute>
           }
         />
