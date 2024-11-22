@@ -41,6 +41,19 @@ function SiteDetails() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+  const fetchSiteInfoDetails = async () => {
+    try {
+      const result = await SiteService.getSiteById(EB);
+      if (result.success) {
+        console.log('Fetched site details:', result.data);
+        setSite(result.data[0]);
+      } else {
+        console.error('Failed to fetch site details:', result.error);
+      }
+    } catch (error) {
+      console.error('Error during fetch:', error.message);
+    }
+  };
   const handleSave = async updatedSite => {
     try {
       const result = await SiteService.updateSite(updatedSite.EB, updatedSite);
@@ -48,6 +61,7 @@ function SiteDetails() {
         setSite(updatedSite);
         setShowModal(false);
         console.log('Site updated successfully:', updatedSite);
+        await fetchSiteInfoDetails();
       } else {
         console.error('Failed to update site:', result.error);
       }
