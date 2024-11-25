@@ -25,32 +25,14 @@ import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import SiteService from 'services/Site_Services/siteService';
-import { program, Status_Site, priority } from './popUpData';
 const SiteModal = ({ site, onSave, onClose }) => {
   const [formData, setFormData] = useState(
-    site
-      ? {
-          ...site,
-          priorite_fk: site.priorite_fk || { SP_desc: '' },
-          status_site_fk: site.status_site_fk || { SS_desc: '' },
-          programme_fk: site.programme_fk || { PR_desc: '' },
-          Acteur_ENEDIS_id: site.Acteur_ENEDIS_id || { nom: '' },
-        }
-      : {
-          EB: '',
-          G2R: '',
-          nom: '',
-          lot: '',
-          Ville: '',
-          zone: '',
-          region: '',
-          code_postal: '',
-          priorite_fk: { SP_desc: '' },
-          programme_fk: { PR_desc: '' },
-          Acteur_ENEDIS_id: { nom: '' },
-          status_site_fk: { SS_desc: '' },
-          Operateurs: [],
-        }
+    site || {
+      priorite_fk: { SP_desc: '' },
+      status_site_fk: { SS_desc: '' },
+      programme_fk: { PR_desc: '' },
+      Acteur_ENEDIS_id: { nom: '' },
+    }
   );
   const [activeCompanies, setActiveCompanies] = useState([]);
   const [isActive, setIsActive] = useState(site ? site.is_active : true);
@@ -82,24 +64,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
         Acteur_ENEDIS_id: site.Acteur_ENEDIS_id || { nom: '' },
       });
       setIsActive(site.is_active);
-    } else {
-      // Reset formData when site is null
-      setFormData({
-        EB: '',
-        G2R: '',
-        nom: '',
-        lot: '',
-        Ville: '',
-        zone: '',
-        region: '',
-        code_postal: '',
-        priorite_fk: { SP_desc: '' },
-        programme_fk: { PR_desc: '' },
-        Acteur_ENEDIS_id: { nom: '' },
-        status_site_fk: { SS_desc: '' },
-        Operateurs: [],
-      });
-      setIsActive(true);
     }
   }, [site]);
   useEffect(() => {
@@ -220,7 +184,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
           >
             <Select
               name="priorite_fk"
-              value={priority[site?.priorite_fk] || 'N/A'}
+              value={formData.priorite_fk.SP_desc || ''}
               onChange={e => handleDropdownChange('priorite_fk', 'SP_desc', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
@@ -331,7 +295,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
           >
             <Select
               name="programme_fk"
-              value={program[site?.programme_fk] || 'N/A'}
+              value={formData.programme_fk.PR_desc || ''}
               onChange={e => handleDropdownChange('programme_fk', 'PR_desc', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
@@ -428,7 +392,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
           >
             <Select
               name="status_site_fk"
-              value={Status_Site[site?.status_site_fk] || 'N/A'}
+              value={formData.status_site_fk.SS_desc || ''}
               onChange={e => handleDropdownChange('status_site_fk', 'SS_desc', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
