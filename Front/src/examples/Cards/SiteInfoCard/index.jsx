@@ -284,7 +284,11 @@ const SiteInfoCard = ({ site, onEdit }) => {
           message: 'Contacts associated successfully!',
           type: 'success',
         });
-        selectedContacts = [];
+        // Clear the selected contacts in the dropdown
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          contact_fk: [], // Reset the dropdown value
+        }));
         // fetch conatcts realted to a site diretly after the addition
         await fetchContactsSite();
       } else {
