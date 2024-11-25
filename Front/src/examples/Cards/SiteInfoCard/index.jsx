@@ -52,6 +52,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [showWarning, setShowWarning] = useState(false);
   const [contactToDeleteCid, setContactToDeleteCid] = useState(null);
   const [showDropDown, setShowDropDown] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const siteId = site.EB;
   useEffect(() => {
@@ -133,6 +134,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
     }
   };
   const handleToggleExpand = () => {
+    setIsExpanded(prevState => !prevState);
     setExpanded(!expanded);
   };
   const handleAddContact = () => {
@@ -544,7 +546,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
                 {/* Edit Button */}
                 <MDBox ml="auto" lineHeight={0} color={darkMode ? 'white' : 'dark'}>
                   <Button variant="subtitle2" onClick={handleToggleExpand}>
-                    Plus d&apos;informations
+                    {isExpanded ? "Moins d'informations" : "Plus d'informations"}
                   </Button>
                   <Tooltip title="Modifier site" placement="top">
                     <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={onEdit}>

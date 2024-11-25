@@ -20,6 +20,7 @@ const SiteCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const [companyName, setCompanyName] = useState('N/A');
+  const [isExpanded, setIsExpanded] = useState(false);
   const [expanded, setExpanded] = useState(false); // State to control expansion
   const [checkedValues, setCheckedValues] = useState({
     drPg: true,
@@ -38,6 +39,7 @@ const SiteCard = ({ site, onEdit }) => {
   }, [site.Acteur_ENEDIS_id]);
 
   const handleToggleExpand = () => {
+    setIsExpanded(prevState => !prevState);
     setExpanded(!expanded);
   };
 
@@ -225,7 +227,7 @@ const SiteCard = ({ site, onEdit }) => {
                 {/* Edit Button */}
                 <MDBox ml="auto" lineHeight={0} color={darkMode ? 'white' : 'dark'}>
                   <Button variant="subtitle2" onClick={handleToggleExpand}>
-                    Plus d&apos;informations
+                    {isExpanded ? "Moins d'informations" : "Plus d'informations"}
                   </Button>
                   <Tooltip title="Edit site" placement="top">
                     <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={onEdit}>
