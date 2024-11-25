@@ -173,6 +173,7 @@ const updateSite = async (EB, updates) => {
       // Fetch active companies list (if necessary for mapping)
       const activeCompaniesResponse = await getActiveCompanies();
       console.log('Active Companies Response:', activeCompaniesResponse);
+  
       if (!activeCompaniesResponse.success) {
         throw new Error('Failed to fetch active companies');
       }
@@ -180,43 +181,67 @@ const updateSite = async (EB, updates) => {
       if (!Array.isArray(activeCompanies)) {
         throw new Error('Active companies data is not an array.');
       }
+  
       console.log('Incoming updates for updateSite:', updates);
-      // If Acteur_ENEDIS_id is a string (company name), convert it to the corresponding company ID
+  
+      // Handle Acteur_ENEDIS_id conversion (if provided as a name)
       if (updates.Acteur_ENEDIS_id && typeof updates.Acteur_ENEDIS_id === 'string') {
         const companyName = updates.Acteur_ENEDIS_id;
-        // console.warn('Converting company name to company ID:', companyName);
-        // Find the company in the activeCompanies list based on company name
         const company = activeCompanies.find(company => company.nom === companyName);
         if (company) {
-          // Replace the company name with the corresponding company ID
           updates.Acteur_ENEDIS_id = company.ENTid;
         } else {
           throw new Error(`No company found with name: ${companyName}`);
         }
       }
-      // Check and map `priorite_fk`, `programme_fk`, and `status_site_fk` to their corresponding IDs
+  
+      // Check and map `priorite_fk` only if it's not already a valid ID
       if (updates.priorite_fk) {
-        const prioriteId = priorityMapping[updates.priorite_fk];
-        if (!prioriteId) {
-          throw new Error(`Invalid priority description: ${updates.priorite_fk}`);
+        if (typeof updates.priorite_fk === 'string') {
+          const prioriteId = priorityMapping[updates.priorite_fk];
+          if (!prioriteId) {
+            throw new Error(`Invalid priority description: ${updates.priorite_fk}`);
+          }
+          updates.priorite_fk = prioriteId;
+        } else if (typeof updates.priorite_fk === 'number') {
+          console.log('priorite_fk is already an ID:', updates.priorite_fk);
+        } else {
+          throw new Error(`Invalid structure for priorite_fk: ${updates.priorite_fk}`);
         }
-        updates.priorite_fk = prioriteId;
       }
+  
+      // Check and map `programme_fk` only if it's not already a valid ID
       if (updates.programme_fk) {
-        const programId = programMapping[updates.programme_fk];
-        if (!programId) {
-          throw new Error(`Invalid program description: ${updates.programme_fk}`);
+        if (typeof updates.programme_fk === 'string') {
+          const programId = programMapping[updates.programme_fk];
+          if (!programId) {
+            throw new Error(`Invalid program description: ${updates.programme_fk}`);
+          }
+          updates.programme_fk = programId;
+        } else if (typeof updates.programme_fk === 'number') {
+          console.log('programme_fk is already an ID:', updates.programme_fk);
+        } else {
+          throw new Error(`Invalid structure for programme_fk: ${updates.programme_fk}`);
         }
-        updates.programme_fk = programId;
       }
+  
+      // Check and map `status_site_fk` only if it's not already a valid ID
       if (updates.status_site_fk) {
-        const statusId = siteStatusMapping[updates.status_site_fk];
-        if (!statusId) {
-          throw new Error(`Invalid status description: ${updates.status_site_fk}`);
+        if (typeof updates.status_site_fk === 'string') {
+          const statusId = siteStatusMapping[updates.status_site_fk];
+          if (!statusId) {
+            throw new Error(`Invalid status description: ${updates.status_site_fk}`);
+          }
+          updates.status_site_fk = statusId;
+        } else if (typeof updates.status_site_fk === 'number') {
+          console.log('status_site_fk is already an ID:', updates.status_site_fk);
+        } else {
+          throw new Error(`Invalid structure for status_site_fk: ${updates.status_site_fk}`);
         }
-        updates.status_site_fk = statusId;
       }
+  
       console.log('Transformed updates ready for database operation:', updates);
+  
       // Perform the update operation in the database
       const { data, error } = await supabase
         .from('Site')
@@ -227,6 +252,7 @@ const updateSite = async (EB, updates) => {
         console.error('Supabase Error:', error); // Log the error
         return { success: false, error: error.message }; // Return the error message
       }
+  
       return { success: true, data }; // Return success with updated data
     } catch (err) {
       console.error('Catch Block Error:', err); // Log unexpected errors
