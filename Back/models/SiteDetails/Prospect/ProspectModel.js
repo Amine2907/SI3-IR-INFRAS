@@ -12,13 +12,13 @@ const createProspect = async (EB, prospectData) => {
           prospectData.status_validation_fk = statusID; // Update the prospect data with the numeric ID
         }
       // First check if the Status_validation_fk is 25 (Prospect Validé) and if any similar prospects exist
-      if (Number(prospectData.status_validation_fk) === 25)  {
+      if (prospectData.status_validation_fk === 25)  {
         console.log('Prospect has status "Prospect Validé"');
         const { data: existingProspect, error: checkError } = await supabase
           .from('Prospect')
           .select('*')
           .eq('EB_fk', EB)  // Match using EB_fk (the site identifier)
-          .eq('Status_validation_fk', 25);  // Ensure no other prospect with status 'Prospect Validé' exists for this site
+          .eq('status_validation_fk', 25);  // Ensure no other prospect with status 'Prospect Validé' exists for this site
   
         if (checkError) {
           throw new Error(`Error fetching existing prospect: ${checkError.message}`);
