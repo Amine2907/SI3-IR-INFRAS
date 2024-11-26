@@ -1,53 +1,45 @@
 import { supabase } from "../../../config/supabaseClient.js";
 import { status_validation } from "./ProspectData.js";
-const createProspect = async (data) => {
+const createProspect = async (Sid, prospectData) => {
     try {
-        if (data.Status_validation_fk) {
-            const Status_validation_fk = status_validation[data.Status_validation_fk];
-            if (!Status_validation_fk) {
-                throw new Error(`Invalid status validation description: ${data.Status_validation_fk}`);
-            }
-            data.Status_validation_fk = Status_validation_fk;
-        }
-        const {EB , Status_validation_fk  } = data ; 
-        if ( Status_validation_fk === 25 ) {
-            const {data : exisitingPropect , error : checkError} = await supabase
-            .from('Prospect')
-            .select('*')
-            .eq('EB_fk',EB)
-            .eq('Status_validation_fk',25);
+        if (data.Status_validation_fk === 25) {
+            const { data: existingProspect, error: checkError } = await supabase
+              .from('Prospect')
+              .select('*')
+              .eq('EB_fk', EB)
+              .eq('Status_validation_fk', 25);
             if (checkError) {
-                throw new Error(`Error fetching existing prospect: ${checkError.message}`);
+              throw new Error(`Error fetching existing prospect: ${checkError.message}`);
             }
-            if(exisitingPropect && exisitingPropect.length > 0) {
-                throw new Error("Le prospect existe déjà et est en attente de validation.");
+            if (existingProspect && existingProspect.length > 0) {
+              throw new Error("A prospect with status 'Prospect Validé' already exists for this site.");
             }
         }
-        const result = await supabase
+      // Insert the new contact
+      const { data: prospect, error: contactError } = await supabase
         .from('Prospect')
-        .insert([data])
-        .select('*');
-        if (result.error) { 
-            throw result.error;
-        }
-        const siteProspectAssociation = {
-            site_fk : EB,
-            Prospect_fk : result.data[0].Proid,
-        };
-        const assoicationResult = await supabase
+        .insert([{EB_fk:EB ,...prospectData}])
+        .select();
+      if (contactError) {
+        throw contactError;
+      }
+      // Extract the new contact ID
+      const Proid = prospect[0].Proid;
+      // Associate the new contact with the site
+      const { data: siteProspect, error: siteProspectError } = await supabase
         .from('Site-Prospect')
-        .insert([siteProspectAssociation]);
-        if (assoicationResult.error) {
-            throw assoicationResult.error;
-        }
-        if (result.data && assoicationResult.data) {
-            return { success: true, data: result.data[0] };
-        }
-    }catch(error) {
-        return { success: false, error: error.message };
+        .insert([{ Sid, Proid }]);
+      if (siteProspectError) {
+        throw siteProspectError;
+      }
+      // Return both contact and site contact data
+      return { prospect: prospect[0], siteProspect };  // This is the data being returned
+    } catch (error) {
+      console.error('Error in addNewContactSite:', error.message);
+      throw error;
     }
-}
-const fetchAllProspects = async () => {
+  };
+const getAllProspects = async () => {
     try {
         const { data, error } = await supabase
         .from('Prospect')
@@ -59,6 +51,20 @@ const fetchAllProspects = async () => {
     }catch(error){
         return { success: false, error: error.message };
     }
+}
+const getProspectById = async (id) => {
+        try {
+            const { data, error } = await supabase 
+            .from('Prospect')
+            .select('*')
+            .eq('Proid', id);
+            if (error) {
+                throw error;    
+            }
+            return { success: true, data };
+        }catch(error){
+            return { success: false, error: error.message };
+        }
 }
 const fetchActiveProspect = async () => {
         try {
@@ -145,13 +151,14 @@ const desactivateProspect = async(id) => {
         return {success:false , error:error.messsage};
     }
 };
-const ProspectModel = {
+const prospectModel = {
     createProspect,
     fetchinactiveProspect,
     fetchActiveProspect,
     updateProspect,
-    fetchAllProspects,
+    getAllProspects,
     activateprospect,
     desactivateProspect,
+    getProspectById,
 }
-export default ProspectModel; 
+export default prospectModel; 
