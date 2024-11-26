@@ -10,5 +10,4 @@ router.get('/:id',prospectController.getprospectsById);
 router.put('/:id',prospectController.updateprospect);
 router.patch('/:id/desactivate',prospectController.desactivateProspect);
 router.patch('/:id/activate',prospectController.activateProspect);
-
 export default router ; 

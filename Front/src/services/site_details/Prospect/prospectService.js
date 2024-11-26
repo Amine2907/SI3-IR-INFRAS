@@ -11,17 +11,14 @@ const createProspect = async ({ Sid, prospectData }) => {
       return { success: false, error: error.response ? error.response.data.error : error.message };
     }
   };
-  const updateProspect = async ({ Sid, prospectData }) => {
+  const updateProspect = async (Proid, updates) => {
     try {
-      const response = await axios.put(`${API_URL}/update-prospect-site`, {
-        Sid,       
-        prospectData,
-      });
+      const response = await axios.put(`${API_URL}/${Proid}`, updates);
       return { success: true, data: response.data };
     } catch (error) {
       return { success: false, error: error.response ? error.response.data.error : error.message };
-    }   
-  }
+    }
+  };
 const deleteProspectSite = async (Sid, Proid) => {
   try {
     const response = await axios.delete(`${API_URL}/delete-prospect-site`, {

@@ -110,26 +110,32 @@ const fetchinactiveProspect = async (siteID) => {
         return { success: false, error: error.message };
     }
 }
-const updateProspect = async (id, updates) => {
+const updateProspect = async (prospectID, updates) => {
     try {
-         // Check and map `status_validation_fk` only if it's not already a valid ID
-      if (updates.Status_validation_fk) {
-        if (typeof updates.Status_validation_fk === 'string') {
-          const Status_validation_fk = status_validation[updates.Status_validation_fk];
-          if (!Status_validation_fk) {
-            throw new Error(`Invalid status description: ${updates.Status_validation_fk}`);
-          }
-          updates.Status_validation_fk = Status_validation_fk;
-        } else if (typeof updates.Status_validation_fk === 'number') {
-          console.log('status_validation is already an ID:', updates.Status_validation_fk);
-        } else {
-          throw new Error(`Invalid structure for status_validation: ${updates.Status_validation_fk}`);
+        // Ensure `status_validation_fk` is mapped correctly
+        if (updates.status_validation_fk) {
+            if (typeof updates.status_validation_fk === 'string') {
+                const statusID = status_validation[updates.status_validation_fk]; // Map string to ID
+                if (!statusID) {
+                    throw new Error(`Invalid status description: ${updates.status_validation_fk}`);
+                }
+                updates.status_validation_fk = statusID; // Replace with numeric ID
+            } else if (typeof updates.status_validation_fk === 'object' && updates.status_validation_fk.SV_desc) {
+                const statusID = status_validation[updates.status_validation_fk.SV_desc];
+                if (!statusID) {
+                    throw new Error(`Invalid status description: ${updates.status_validation_fk.SV_desc}`);
+                }
+                updates.status_validation_fk = statusID; // Replace with numeric ID
+            } else if (typeof updates.status_validation_fk === 'number') {
+                console.log('status_validation is already an ID:', updates.status_validation_fk);
+            } else {
+                throw new Error(`Invalid structure for status_validation: ${updates.status_validation_fk}`);
+            }
         }
-      }
         const { data, error } = await supabase
         .from('Prospect')
         .update(updates)
-        .eq('id', id);
+        .eq('Proid', prospectID);
         if (error) {
             throw error;
         }

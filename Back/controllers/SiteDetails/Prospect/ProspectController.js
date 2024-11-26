@@ -55,56 +55,45 @@ const getprospectsById = async(req,res) => {
 //Update prospect controller 
 const updateprospect = async (req, res) => {
   try {
-    // Extract prospect ID from URL parameters
-    const prospectId = req.params.Proid;
-    let updates = { ...req.body }; // Extract update fields from request body
-    console.log('--- Update prospect Request ---');
-    console.log('prospect ID:', prospectId);
-    console.log('Request Body:', updates);
-    // Validate prospect ID
-    if (!prospectId) {
-      console.error('Error: prospect ID not provided');
-      return res.status(400).json({ error: 'prospect ID is required.' });
-    }
-    // Validate update fields
-    if (!updates || Object.keys(updates).length === 0) {
-      console.error('Error: No update fields provided');
-      return res.status(400).json({ error: 'No update fields provided.' });
-    }
-    console.log('Mapping process started for update fields');
+      // Extract prospect ID from URL parameters
+      const prospectId = req.params.id;
+      const updates = { ...req.body };
 
-    // Handle mapping for `priorite_fk`
-    if (updates.status_validation_fk) {
-      if (typeof updates.status_validation_fk === 'object' && updates.status_validation_fk.SV_desc) {
-        const statusId = status_validation[updates.status_validation_fk.SV_desc];
-        if (!statusId) {
-          throw new Error(`Invalid priority description: ${updates.priorite_fk.SP_desc}`);
-        }
-        updates.status_validation_fk = statusId; // Map to ID
-      } else if (typeof updates.status_validation_fk === 'string' || typeof updates.status_validation_fk === 'number') {
-        console.log('status already mapped:', updates.status_validation_fk);
-      } else {
-        console.error('Invalid status_validation_fk structure:', updates.status_validation_fk);
-        throw new Error('Invalid status structure');
+      console.log('--- Update prospect Request ---');
+      console.log('prospect ID:', prospectId);
+      console.log('Request Body:', updates);
+
+      // Validate prospect ID
+      if (!prospectId) {
+          console.error('Error: prospect ID not provided');
+          return res.status(400).json({ error: 'prospect ID is required.' });
       }
-    }
-    console.log('Transformed update fields:', updates);
-    // Call the model to update the prospect
-    const result = await prospectModel.updateProspect(prospectId, updates);
-    console.log('--- Model Response ---');
-    console.log('Result:', result);
-    // Handle the result from the model
-    if (!result.success) {
-      console.error('Error from Model:', result.error);
-      return res.status(400).json({ error: result.error });
-    }
-    // Return the updated prospect data
-    console.log('Update Successful. Returning updated data:', result.data);
-    return res.status(200).json(result.data);
+
+      // Validate update fields
+      if (!updates || Object.keys(updates).length === 0) {
+          console.error('Error: No update fields provided');
+          return res.status(400).json({ error: 'No update fields provided.' });
+      }
+
+      console.log('Mapping process started for update fields');
+
+      // Call the model to update the prospect
+      const result = await prospectModel.updateProspect(prospectId, updates);
+      console.log('--- Model Response ---');
+      console.log('Result:', result);
+
+      // Handle the result from the model
+      if (!result.success) {
+          console.error('Error from Model:', result.error);
+          return res.status(400).json({ error: result.error });
+      }
+
+      // Return the updated prospect data
+      console.log('Update Successful. Returning updated data:', result.data);
+      return res.status(200).json(result.data);
   } catch (error) {
-    // Catch unexpected errors
-    console.error('Unexpected Error:', error.message);
-    return res.status(500).json({ error: 'Internal server error' });
+      console.error('Unexpected Error:', error.message);
+      return res.status(500).json({ error: 'Internal server error' });
   }
 };
 // Desactivate prospect controller 
