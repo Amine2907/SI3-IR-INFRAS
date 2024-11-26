@@ -4,7 +4,7 @@ const addExisitngSiteContact = async (Sid, Cid) => {
   const { data, error } = await supabase
     .from('Site-contact')
     .insert([{ Sid, Cid }])
-    .select('*');   // Insert each pair as a row
+    .select('*');
   if (error) {
     console.error('Supabase Error Details:', error); // Log detailed error
     throw error;
