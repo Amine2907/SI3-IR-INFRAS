@@ -35,8 +35,9 @@ const createProspect = async (req, res) => {
     return res.status(500).json({ error: 'An error occurred while creating the prospect.' });
   }
 };
+// Get all prospects for a site controller 
 const getAllProspects = async(req,res)=>{
-  const siteId = req.params.EB;
+  const siteId = req.params.Sid;
     const result = await prospectModel.getAllProspects(siteId);
     if(!result.success){
         return res.status(400).json({error:result.error});
@@ -45,7 +46,7 @@ const getAllProspects = async(req,res)=>{
 };
 // Get prospect by its id controller 
 const getprospectsById = async(req,res) => {
-  const prospectId = req.params.PRoid;
+  const prospectId = req.params.id;
     const result = await prospectModel.getProspectById(prospectId);
     if(!result.success){
         return res.status(400).json({error:result.error});
@@ -58,7 +59,6 @@ const updateprospect = async (req, res) => {
       // Extract prospect ID from URL parameters
       const prospectId = req.params.id;
       const updates = { ...req.body };
-
       console.log('--- Update prospect Request ---');
       console.log('prospect ID:', prospectId);
       console.log('Request Body:', updates);
@@ -114,6 +114,7 @@ const activateProspect = async(req,res)=> {
     }
     return res.status(200).json(result.data);
 };
+// Get active prospects controller
 const getActiveProspects = async(req,res) => {
     const result = await prospectModel.fetchActiveProspect();
     if(!result.success){
@@ -121,6 +122,7 @@ const getActiveProspects = async(req,res) => {
     }
     return res.status(200).json(result.data);
 };
+// Get inactive prospects controller
 const getInactiveProspects = async(req,res) => {
     const result = await prospectModel.fetchinactiveProspect();
     if(!result.success){
@@ -128,6 +130,7 @@ const getInactiveProspects = async(req,res) => {
     }
     return res.status(200).json(result.data);
 }
+// exporting all controller's functions
 const prospectController = {
     getAllProspects,
     createProspect,

@@ -1,5 +1,6 @@
 import { supabase } from "../../../config/supabaseClient.js";
 import { status_validation } from "./ProspectData.js";
+// create Prospect Model 
 const createProspect = async (EB, prospectData) => {
     try {
         console.log('Incoming data for createProspect:', prospectData);
@@ -52,6 +53,7 @@ const createProspect = async (EB, prospectData) => {
       throw error; // Rethrow error for higher-level handling
     }
   };
+// get all prospects
 const getAllProspects = async (EB) => {
     try {
         const { data, error } = await supabase
@@ -66,6 +68,7 @@ const getAllProspects = async (EB) => {
         return { success: false, error: error.message };
     }
 }
+// get Prospect by id
 const getProspectById = async (id) => {
         try {
             const { data, error } = await supabase 
@@ -80,6 +83,7 @@ const getProspectById = async (id) => {
             return { success: false, error: error.message };
         }
 }
+// get active prospects
 const fetchActiveProspect = async (siteID) => {
         try {
             const { data, error } = await supabase
@@ -95,6 +99,7 @@ const fetchActiveProspect = async (siteID) => {
             return { success: false, error: error.message };
         }
 }
+// get inactive prospects
 const fetchinactiveProspect = async (siteID) => {
     try {
         const { data, error } = await supabase
@@ -110,6 +115,7 @@ const fetchinactiveProspect = async (siteID) => {
         return { success: false, error: error.message };
     }
 }
+// update Prospect Model 
 const updateProspect = async (prospectID, updates) => {
     try {
         // Ensure `status_validation_fk` is mapped correctly
@@ -144,6 +150,7 @@ const updateProspect = async (prospectID, updates) => {
         return { success: false, error: error.message };
     }
 }
+// activate Prospect Model 
 const activateprospect = async(id) => {
     try {
         const {data,error} = await supabase
@@ -158,7 +165,7 @@ const activateprospect = async(id) => {
         return {success:false , error:error.messsage};
     }
 };
-// Desactivate Prospect
+// Desactivate Prospect Model 
 const desactivateProspect = async(id) => {
     try {
         const {data,error} = await supabase
@@ -173,6 +180,7 @@ const desactivateProspect = async(id) => {
         return {success:false , error:error.messsage};
     }
 };
+// exporting all model's functions 
 const prospectModel = {
     createProspect,
     fetchinactiveProspect,
