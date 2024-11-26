@@ -1,42 +1,52 @@
 import { supabase } from "../../../config/supabaseClient.js";
 import { status_validation } from "./ProspectData.js";
-const createProspect = async (Sid, prospectData) => {
+const createProspect = async (EB, prospectData) => {
     try {
-        if (data.Status_validation_fk === 25) {
-            const { data: existingProspect, error: checkError } = await supabase
-              .from('Prospect')
-              .select('*')
-              .eq('EB_fk', EB)
-              .eq('Status_validation_fk', 25);
-            if (checkError) {
-              throw new Error(`Error fetching existing prospect: ${checkError.message}`);
+        if (prospectData.Status_validation_fk) {
+            const statusID = status_validation[prospectData.Status_validation_fk];
+            if (!statusID) {
+                throw new Error(`Invalid status validation description: ${prospectData.Status_validation_fk}`);
             }
-            if (existingProspect && existingProspect.length > 0) {
-              throw new Error("A prospect with status 'Prospect Validé' already exists for this site.");
-            }
+            prospectData.Status_validation_fk = statusID;
         }
-      // Insert the new contact
+      // First check if the Status_validation_fk is 25 (Prospect Validé) and if any similar prospects exist
+      if (prospectData.Status_validation_fk === 25) {
+        const { data: existingProspect, error: checkError } = await supabase
+          .from('Prospect')
+          .select('*')
+          .eq('EB_fk', EB)  // Match using EB_fk (the site identifier)
+          .eq('Status_validation_fk', 25);  // Ensure no other prospect with status 'Prospect Validé' exists for this site
+  
+        if (checkError) {
+          throw new Error(`Error fetching existing prospect: ${checkError.message}`);
+        }
+  
+        if (existingProspect && existingProspect.length > 0) {
+          throw new Error("A prospect with status 'Prospect Validé' already exists for this site.");
+        }
+      }
+      // Now insert the new prospect into the 'Prospect' table, using the EB_fk field
       const { data: prospect, error: contactError } = await supabase
         .from('Prospect')
-        .insert([{EB_fk:EB ,...prospectData}])
+        .insert([{ EB_fk: EB, ...prospectData }])
         .select();
       if (contactError) {
         throw contactError;
       }
-      // Extract the new contact ID
-      const Proid = prospect[0].Proid;
-      // Associate the new contact with the site
+      // Extract the newly created Prospect ID (Proid)
+      const PRid_FK = prospect[0].Proid;
+      // Now associate the Prospect with the Site by inserting into 'Site-Prospect' association table
       const { data: siteProspect, error: siteProspectError } = await supabase
         .from('Site-Prospect')
-        .insert([{ Sid, Proid }]);
+        .insert([{ EB_FK: EB, PRid_FK }]);
       if (siteProspectError) {
         throw siteProspectError;
       }
-      // Return both contact and site contact data
-      return { prospect: prospect[0], siteProspect };  // This is the data being returned
+      // Return the successfully created prospect and the association details
+      return { success: true, data: { prospect: prospect[0], siteProspect } };
     } catch (error) {
-      console.error('Error in addNewContactSite:', error.message);
-      throw error;
+      console.error('Error in createProspect:', error.message);
+      throw error; // Rethrow error for higher-level handling
     }
   };
 const getAllProspects = async () => {

@@ -2,18 +2,21 @@ import prospectModel from "../../../models/SiteDetails/Prospect/ProspectModel.js
 import { status_validation } from "../../../models/SiteDetails/Prospect/ProspectData.js";
 //Create prospect controlller 
 const createProspect = async (req, res) => {
-  const { EB,  ...rest } = req.body;
+  const { Sid, prospectData } = req.body;
   // Validate required fields
-  if (!EB) {
+  if (!Sid) {
     return res.status(400).json({ error: 'EB (Site identifier) is required.' });
+  }
+  if (!prospectData) {
+    return res.status(400).json({ error: 'prospectData is required.' });
   }
   try {
     // Call the model function to create a new prospect
-    const result = await prospectModel.createProspect(EB, ...rest);
+    const result = await prospectModel.createProspect(Sid, prospectData);  // Pass Sid and prospectData to the model
     if (!result.success) {
       throw new Error(result.error);
     }
-    // Return a success response
+    // Return a success response with the created data
     return res.status(201).json({
       message: 'Prospect successfully created and associated with site.',
       data: result.data,

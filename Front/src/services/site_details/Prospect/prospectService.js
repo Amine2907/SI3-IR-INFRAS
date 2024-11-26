@@ -22,17 +22,17 @@ const API_URL = 'http://localhost:5000/api/prospect';
 //     };
 //   }
 // };
-const createProspect = async ({ Sid, prospectData }) => {Z
-  try {
-    const response = await axios.post(`${API_URL}/create-prospect-site`, {
-      Sid,
-      prospectData,
-    });
-    return { success: true, data: response.data };
-  } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
-  }
-};
+const createProspect = async ({ Sid, prospectData }) => {
+    try {
+      const response = await axios.post(`${API_URL}/create-prospect-site`, {
+        Sid,            // Pass Sid (site identifier)
+        prospectData,   // Pass the actual data for the prospect
+      });
+      return { success: true, data: response.data };
+    } catch (error) {
+      return { success: false, error: error.response ? error.response.data.error : error.message };
+    }
+  };
 // const deleteContactSite = async (Sid, Cid) => {
 //   try {
 //     const response = await axios.delete(`${API_URL}/delete-contact-site`, {
