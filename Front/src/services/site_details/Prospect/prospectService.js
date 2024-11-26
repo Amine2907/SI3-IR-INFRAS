@@ -19,6 +19,14 @@ const createProspect = async ({ Sid, prospectData }) => {
       return { success: false, error: error.response ? error.response.data.error : error.message };
     }
   };
+const getProspectById = async Proid => {
+    try {
+        const response = await axios.get(`${API_URL}/${Proid}`);
+        return { success: true, data: response.data };
+    } catch(error){
+        return { success: false, error: error.response ? error.response.data.error : error.message };
+    }
+}
 const deleteProspectSite = async (Sid, Proid) => {
   try {
     const response = await axios.delete(`${API_URL}/delete-prospect-site`, {
@@ -31,7 +39,7 @@ const deleteProspectSite = async (Sid, Proid) => {
 };
 const getProspectsSite = async Sid => {
   try {
-    const response = await axios.get(`${API_URL}/${Sid}/contacts`);
+    const response = await axios.get(`${API_URL}/${Sid}/prospects`);
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, error: error.response ? error.response.data.error : error.message };
@@ -39,7 +47,7 @@ const getProspectsSite = async Sid => {
 };
 const displayProspectsSite = async (Sid, Proid) => {
   try {
-    const response = await axios.get(`${API_URL}/${Sid}/contact`, {
+    const response = await axios.get(`${API_URL}/${Sid}/prospect`, {
       data: { Proid },
     });
     return { success: true, data: response.data };
@@ -53,5 +61,6 @@ const SiteProspectService = {
   deleteProspectSite,
   getProspectsSite,
   displayProspectsSite,
+  getProspectById,
 };
 export default SiteProspectService;
