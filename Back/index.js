@@ -18,6 +18,7 @@ import companiesRoutes from './routes/companies.js';
 import settingsRoutes from './routes/settings.js'
 import siteRoutes from './routes/Site/sites.js'
 import siteContactRoutes from './routes/Site/sitescontacts.js'
+import prospectRoutes from './routes/SiteDetails/Prospect/prospect.js'
 // import UsersRoutes from './Routes/getUsers.js';
 // Exports here 
 export { default as contactService } from './services/contactsService.js';
@@ -41,6 +42,7 @@ app.use('/api/companies',companiesRoutes);
 app.use('/api/settings',settingsRoutes);
 app.use('/api/site',siteRoutes);
 app.use('/api/siteContact',siteContactRoutes);
+app.use('/api/prospect',prospectRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });
