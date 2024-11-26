@@ -36,7 +36,8 @@ const createProspect = async (req, res) => {
   }
 };
 const getAllProspects = async(req,res)=>{
-    const result = await prospectModel.getAllProspects();
+  const siteId = req.params.EB;
+    const result = await prospectModel.getAllProspects(siteId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }

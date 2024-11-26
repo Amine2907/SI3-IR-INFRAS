@@ -12,7 +12,8 @@ const createProspect = async (EB, prospectData) => {
           prospectData.status_validation_fk = statusID; // Update the prospect data with the numeric ID
         }
       // First check if the Status_validation_fk is 25 (Prospect Validé) and if any similar prospects exist
-      if (prospectData.Status_validation_fk === 25) {
+      if (Number(prospectData.status_validation_fk) === 25)  {
+        console.log('Prospect has status "Prospect Validé"');
         const { data: existingProspect, error: checkError } = await supabase
           .from('Prospect')
           .select('*')
@@ -51,11 +52,12 @@ const createProspect = async (EB, prospectData) => {
       throw error; // Rethrow error for higher-level handling
     }
   };
-const getAllProspects = async () => {
+const getAllProspects = async (EB) => {
     try {
         const { data, error } = await supabase
         .from('Prospect')
-        .select('*');
+        .select('*')
+        .eq('EB_fk',EB);
         if (error) {
             throw error;
         }
@@ -78,12 +80,13 @@ const getProspectById = async (id) => {
             return { success: false, error: error.message };
         }
 }
-const fetchActiveProspect = async () => {
+const fetchActiveProspect = async (siteID) => {
         try {
             const { data, error } = await supabase
             .from('Prospect')
             .select('*')
-            .eq('is_active', true);
+            .eq('is_active', true)
+            .eq('EB_fk',siteID);
             if (error) {
                 throw error;
             }
@@ -92,12 +95,13 @@ const fetchActiveProspect = async () => {
             return { success: false, error: error.message };
         }
 }
-const fetchinactiveProspect = async () => {
+const fetchinactiveProspect = async (siteID) => {
     try {
         const { data, error } = await supabase
         .from('Prospect')
         .select('*')
-        .eq('is_active', false);
+        .eq('is_active', false)
+        .eq('EB_fk',siteID);
         if (error) {
             throw error;
         }
