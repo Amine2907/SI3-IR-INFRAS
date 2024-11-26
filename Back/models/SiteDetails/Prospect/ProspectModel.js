@@ -2,12 +2,14 @@ import { supabase } from "../../../config/supabaseClient.js";
 import { status_validation } from "./ProspectData.js";
 const createProspect = async (EB, prospectData) => {
     try {
-        if (prospectData.Status_validation_fk) {
-            const statusID = status_validation[prospectData.Status_validation_fk];
-            if (!statusID) {
-                throw new Error(`Invalid status validation description: ${prospectData.Status_validation_fk}`);
-            }
-            prospectData.Status_validation_fk = statusID;
+        console.log('Incoming data for createProspect:', prospectData);
+        // Ensure the status validation description is mapped to the numeric ID
+        if (prospectData.status_validation_fk) {
+          const statusID = status_validation[prospectData.status_validation_fk];
+          if (!statusID) {
+            throw new Error(`Invalid status validation description: ${prospectData.status_validation_fk}`);
+          }
+          prospectData.status_validation_fk = statusID; // Update the prospect data with the numeric ID
         }
       // First check if the Status_validation_fk is 25 (Prospect Validé) and if any similar prospects exist
       if (prospectData.Status_validation_fk === 25) {

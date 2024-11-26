@@ -3,6 +3,15 @@ import { status_validation } from "../../../models/SiteDetails/Prospect/Prospect
 //Create prospect controlller 
 const createProspect = async (req, res) => {
   const { Sid, prospectData } = req.body;
+  // Ensure that the 'status_validation_fk' is correctly mapped to an integer ID (if it's passed as description)
+  if (prospectData.status_validation_fk && typeof prospectData.status_validation_fk === 'object' && prospectData.status_validation_fk.SV_desc) {
+    const statusID = status_validation[prospectData.status_validation_fk.SV_desc];
+    console.log("Mapped program:", prospectData.status_validation_fk.SV_desc, "->", statusID);
+    if (!statusID) {
+      return res.status(400).json({ error: `Invalid status validation description: ${prospectData.status_validation_fk.SV_desc}` });
+    }
+    prospectData.status_validation_fk = statusID; // Update with numeric status ID
+  }
   // Validate required fields
   if (!Sid) {
     return res.status(400).json({ error: 'EB (Site identifier) is required.' });
