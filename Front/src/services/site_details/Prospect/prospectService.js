@@ -11,7 +11,7 @@ const API_URL = 'http://localhost:5000/api/prospect';
 //     // Handle the response from the backend
 //     if (response.data && response.data.data) {
 //       return { success: true, data: response.data.data };
-//     } else {
+//     } else {Z
 //       return { success: false, error: 'No response data received from server' };
 //     }
 //   } catch (error) {
@@ -22,9 +22,9 @@ const API_URL = 'http://localhost:5000/api/prospect';
 //     };
 //   }
 // };
-const createProspect = async ({ Sid, prospectData }) => {
+const createProspect = async ({ Sid, prospectData }) => {Z
   try {
-    const response = await axios.post(`${API_URL}`, {
+    const response = await axios.post(`${API_URL}/create-prospect-site`, {
       Sid,
       prospectData,
     });
