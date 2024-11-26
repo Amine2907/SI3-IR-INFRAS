@@ -91,6 +91,7 @@ const fetchActiveProspect = async (siteID) => {
             .select('*')
             .eq('is_active', true)
             .eq('EB_fk',siteID);
+            ;
             if (error) {
                 throw error;
             }

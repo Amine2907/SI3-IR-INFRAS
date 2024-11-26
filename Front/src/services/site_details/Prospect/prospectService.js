@@ -70,6 +70,22 @@ const getAllProspectsForSite = async Sid => {
         return { success: false, error: error.response ? error.response.data.error : error.message };
     }
 }
+const getActiveProspectsForSite = async Sid => {
+    try {
+        const response = await axios.get(`${API_URL}/${Sid}/active-prospects`);
+        return { success: true, data: response.data };
+    } catch(error){
+        return { success: false, error: error.response ? error.response.data.error : error.message };
+    }
+}
+const getInactiveProspectsForSite = async Sid => {
+    try {
+        const response = await axios.get(`${API_URL}/${Sid}/inactive-prospects`);
+        return { success: true, data: response.data };
+    } catch(error){
+        return { success: false, error: error.response ? error.response.data.error : error.message };
+    }
+}
 const SiteProspectService = {
   createProspect,
   updateProspect,
@@ -78,5 +94,7 @@ const SiteProspectService = {
   displayProspectsSite,
   getProspectById,
   getAllProspectsForSite,
+  getActiveProspectsForSite,
+  getInactiveProspectsForSite,
 };
 export default SiteProspectService;

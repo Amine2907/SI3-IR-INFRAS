@@ -62,32 +62,26 @@ const updateprospect = async (req, res) => {
       console.log('--- Update prospect Request ---');
       console.log('prospect ID:', prospectId);
       console.log('Request Body:', updates);
-
       // Validate prospect ID
       if (!prospectId) {
           console.error('Error: prospect ID not provided');
           return res.status(400).json({ error: 'prospect ID is required.' });
       }
-
       // Validate update fields
       if (!updates || Object.keys(updates).length === 0) {
           console.error('Error: No update fields provided');
           return res.status(400).json({ error: 'No update fields provided.' });
       }
-
       console.log('Mapping process started for update fields');
-
       // Call the model to update the prospect
       const result = await prospectModel.updateProspect(prospectId, updates);
       console.log('--- Model Response ---');
       console.log('Result:', result);
-
       // Handle the result from the model
       if (!result.success) {
           console.error('Error from Model:', result.error);
           return res.status(400).json({ error: result.error });
       }
-
       // Return the updated prospect data
       console.log('Update Successful. Returning updated data:', result.data);
       return res.status(200).json(result.data);
@@ -98,7 +92,7 @@ const updateprospect = async (req, res) => {
 };
 // Desactivate prospect controller 
 const desactivateProspect = async(req,res) =>{
-    const prospectid = req.params.Proid ; 
+    const prospectid = req.params.id ; 
     const result = await prospectModel.desactivateProspect(prospectid);
     if(!result.success){
         return res.status(400).json({error:result.error});
@@ -107,7 +101,7 @@ const desactivateProspect = async(req,res) =>{
 };
 // Activate prospect controller 
 const activateProspect = async(req,res)=> {
-    const prospectid = req.params.Proid ; 
+    const prospectid = req.params.id ; 
     const result = await prospectModel.activateprospect(prospectid);
     if(!result.success){
         return res.status(400).json({error:result.error});
@@ -116,7 +110,8 @@ const activateProspect = async(req,res)=> {
 };
 // Get active prospects controller
 const getActiveProspects = async(req,res) => {
-    const result = await prospectModel.fetchActiveProspect();
+  const siteId = req.params.Sid;
+    const result = await prospectModel.fetchActiveProspect(siteId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
@@ -124,7 +119,8 @@ const getActiveProspects = async(req,res) => {
 };
 // Get inactive prospects controller
 const getInactiveProspects = async(req,res) => {
-    const result = await prospectModel.fetchinactiveProspect();
+  const siteId = req.params.Sid;
+    const result = await prospectModel.fetchinactiveProspect(siteId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }

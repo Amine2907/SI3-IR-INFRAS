@@ -4,8 +4,8 @@ import prospectController from "../../../controllers/SiteDetails/Prospect/Prospe
 
 router.post('/create-prospect-site',prospectController.createProspect);
 router.get('/:Sid/prospects',prospectController.getAllProspects);
-router.get('/active',prospectController.getActiveProspects);
-router.get('/inactive',prospectController.getInactiveProspects);
+router.get('/:Sid/active-prospects',prospectController.getActiveProspects);
+router.get('/:Sid/inactive-prospects',prospectController.getInactiveProspects);
 router.get('/:id',prospectController.getprospectsById);
 router.put('/:id',prospectController.updateprospect);
 router.patch('/:id/desactivate',prospectController.desactivateProspect);
