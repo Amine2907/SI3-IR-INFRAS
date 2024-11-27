@@ -120,7 +120,7 @@ const getActiveProspects = async(req,res) => {
 // Get inactive prospects controller
 const getInactiveProspects = async(req,res) => {
   const siteId = req.params.Sid;
-    const result = await prospectModel.fetchinactiveProspect(siteId);
+    const result = await prospectModel.fetchInactiveProspect(siteId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }

@@ -101,7 +101,7 @@ const fetchActiveProspect = async (siteID) => {
         }
 }
 // get inactive prospects
-const fetchinactiveProspect = async (siteID) => {
+const fetchInactiveProspect = async (siteID) => {
     try {
         const { data, error } = await supabase
         .from('Prospect')
@@ -184,7 +184,7 @@ const desactivateProspect = async(id) => {
 // exporting all model's functions 
 const prospectModel = {
     createProspect,
-    fetchinactiveProspect,
+    fetchInactiveProspect,
     fetchActiveProspect,
     updateProspect,
     getAllProspects,

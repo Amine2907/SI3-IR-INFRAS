@@ -19,7 +19,7 @@ import settingsRoutes from './routes/settings.js'
 import siteRoutes from './routes/Site/sites.js'
 import siteContactRoutes from './routes/Site/sitescontacts.js'
 import prospectRoutes from './routes/SiteDetails/Prospect/prospect.js'
-// import UsersRoutes from './Routes/getUsers.js';
+import dpsRoutes from './routes/SiteDetails/DP/Dp.js';
 // Exports here 
 export { default as contactService } from './services/contactsService.js';
 export { default as AuthService } from './services/authService.js';
@@ -43,6 +43,7 @@ app.use('/api/settings',settingsRoutes);
 app.use('/api/site',siteRoutes);
 app.use('/api/siteContact',siteContactRoutes);
 app.use('/api/prospect',prospectRoutes);
+app.use('/api/dps',dpsRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });

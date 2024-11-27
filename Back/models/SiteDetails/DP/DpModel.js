@@ -101,7 +101,7 @@ const fetchInactiveDp = async (prospectID) => {
 // update Dp Model 
 const updateDp = async (DpID, updates) => {
     try {
-        // Ensure `status_validation_fk` is mapped correctly
+        // Ensure `etat_prerequis` is mapped correctly
         if (updates.etat_prerequis) {
             if (typeof updates.etat_prerequis === 'string') {
                 const etatID = status_validation[updates.etat_prerequis]; // Map string to ID
@@ -164,7 +164,7 @@ const desactivateDp = async(id) => {
     }
 };
 // exporting all model's functions 
-const DpModel = {
+const dpModel = {
     createDp,
     fetchInactiveDp,
     fetchActiveDp,
@@ -174,4 +174,4 @@ const DpModel = {
     desactivateDp,
     getDpById,
 }
-export default DpModel; 
+export default dpModel; 
