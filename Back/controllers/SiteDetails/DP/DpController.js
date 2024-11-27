@@ -1,4 +1,4 @@
-import dpModel from "../../../models/SiteDetails/DP/DpModel.js";
+import declarationPrealableModel from "../../../models/SiteDetails/DP/DpModel.js";
 import { etat } from "../../../models/SiteDetails/DP/DpData.js";
 //Create Dp controlller 
 const createDp = async (req, res) => {
@@ -21,7 +21,7 @@ const createDp = async (req, res) => {
   }
   try {
     // Call the model function to create a new Dp
-    const result = await dpModel.createDp(Proid, dpData);  // Pass Proid and dpData to the model
+    const result = await declarationPrealableModel.createDp(Proid, dpData);  // Pass Proid and dpData to the model
     if (!result.success) {
       throw new Error(result.error);
     }
@@ -38,7 +38,7 @@ const createDp = async (req, res) => {
 // Get all Dps for a site controller 
 const getAllDps = async(req,res)=>{
   const prospectId = req.params.Proid;
-    const result = await dpModel.getAllDps(prospectId);
+    const result = await declarationPrealableModel.getAllDps(prospectId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
@@ -47,7 +47,7 @@ const getAllDps = async(req,res)=>{
 // Get Dp by its id controller 
 const getDpsById = async(req,res) => {
   const DpId = req.params.id;
-    const result = await dpModel.getDpById(DpId);
+    const result = await declarationPrealableModel.getDpById(DpId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
@@ -74,7 +74,7 @@ const updateDp = async (req, res) => {
       }
       console.log('Mapping process started for update fields');
       // Call the model to update the Dp
-      const result = await dpModel.updateDp(DpId, updates);
+      const result = await declarationPrealableModel.updateDp(DpId, updates);
       console.log('--- Model Response ---');
       console.log('Result:', result);
       // Handle the result from the model
@@ -93,7 +93,7 @@ const updateDp = async (req, res) => {
 // Desactivate Dp controller 
 const desactivateDp = async(req,res) =>{
     const Dpid = req.params.id ; 
-    const result = await dpModel.desactivateDp(Dpid);
+    const result = await declarationPrealableModel.desactivateDp(Dpid);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
@@ -102,7 +102,7 @@ const desactivateDp = async(req,res) =>{
 // Activate Dp controller 
 const activateDp = async(req,res)=> {
     const Dpid = req.params.id ; 
-    const result = await dpModel.activateDp(Dpid);
+    const result = await declarationPrealableModel.activateDp(Dpid);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
@@ -111,7 +111,7 @@ const activateDp = async(req,res)=> {
 // Get active Dps controller
 const getActiveDps = async(req,res) => {
   const prospectId = req.params.Proid;
-    const result = await dpModel.fetchActiveDp(prospectId);
+    const result = await declarationPrealableModel.fetchActiveDp(prospectId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
@@ -120,14 +120,14 @@ const getActiveDps = async(req,res) => {
 // Get inactive Dps controller
 const getInactiveDps = async(req,res) => {
   const prospectId = req.params.Proid;
-    const result = await dpModel.fetchInactiveDp(prospectId);
+    const result = await declarationPrealableModel.fetchInactiveDp(prospectId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
     return res.status(200).json(result.data);
 }
 // exporting all controller's functions
-const DpController = {
+const declarationPrealableController = {
     getAllDps,
     createDp,
     getInactiveDps,
@@ -137,4 +137,4 @@ const DpController = {
     updateDp,
     getDpsById,
 }
-export default DpController ; 
+export default declarationPrealableController ; 
