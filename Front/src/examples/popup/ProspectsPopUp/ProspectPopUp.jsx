@@ -18,14 +18,14 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
     const { name, value } = e.target;
     // Special handling for nested fields
     if (name === 'status_validations_fk') {
-      setFormData({ ...formData, status_validations_fk: { SV_desc: value } });
+      setFormData({ ...formData, status_validation_fk: { SV_desc: value } });
     }
   };
   useEffect(() => {
     if (prospect) {
       setFormData({
         ...prospect,
-        status_validations_fk: prospect.status_validations_fk || { SV_desc: '' },
+        status_validation_fk: prospect.status_validation_fk || { SV_desc: '' },
       });
       setIsActive(prospect.is_active);
     }
@@ -193,6 +193,12 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
               {' '}
               {isActive ? 'Active' : 'Inactive'}
             </Switch>
+            <input
+              type="checkbox"
+              checked={formData.retenu}
+              readOnly
+              style={{ marginRight: '100px', cursor: 'pointer' }}
+            />
           </div>
         </div>
         <div className={styles.buttonContainer}>
@@ -211,28 +217,14 @@ ProspectModal.propTypes = {
   prospect: PropTypes.shape({
     nom: PropTypes.string,
     section: PropTypes.string,
-    nom: PropTypes.string,
-    lot: PropTypes.string,
-    Ville: PropTypes.string,
-    zone: PropTypes.string,
-    region: PropTypes.string,
-    code_postal: PropTypes.string,
-    priorite_fk: PropTypes.shape({
-      SP_desc: PropTypes.string.isRequired,
-    }).isRequired,
-    Operateurs: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)])
-      .isRequired,
-    programme_fk: PropTypes.shape({
-      PR_desc: PropTypes.string.isRequired,
-    }).isRequired,
-    Acteur_ENEDIS_id: PropTypes.shape({
-      nom: PropTypes.string.isRequired,
-    }).isRequired,
-    status_prospect_SFR: PropTypes.string,
-    status_prospect_fk: PropTypes.shape({
-      SS_desc: PropTypes.string.isRequired,
+    parcelle: PropTypes.string,
+    longitude: PropTypes.string,
+    latitude: PropTypes.string,
+    status_validation_fk: PropTypes.shape({
+      SV_desc: PropTypes.string.isRequired,
     }).isRequired,
     is_active: PropTypes.bool,
+    retenu: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

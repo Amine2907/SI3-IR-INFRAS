@@ -6,6 +6,7 @@ import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import { Switch } from '@mui/material';
+import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 // import MDAlert from 'components/MDAlert';
 // import CompanyModal from '../../popup/CompanyPopUp';
 // import {
@@ -17,10 +18,18 @@ import { Switch } from '@mui/material';
 // import { Alert, AlertDescription } from 'components/ui/alert';
 function Pheader() {
   const [isActive, setIsActive] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedprospect, setSelectedprospect] = useState(null);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   const handleChange = () => {
     null;
   };
-  const handleAddProspect = () => null;
+  const handleAddProspect = () => {
+    setShowModal(true);
+  };
   return (
     <div className="prospect-list">
       <Card id="prospect-card">
@@ -63,25 +72,14 @@ function Pheader() {
           )} */}
         </MDBox>
       </Card>
-      {/* {showModal && (
-        <prospectModal
+      {showModal && (
+        <ProspectModal
           prospect={selectedprospect}
-          onSave={data =>
-            handleSave(
-              data,
-              selectedprospect,
-              setAlert,
-              handleModalClose,
-              setIsActive,
-              isActive,
-              setCompanies,
-              setNoResultsMessage
-            )
-          }
-          onClose={handleModalClose}
+          onSave={handleAddProspect}
+          onClose={handleCloseModal}
         />
       )}
-      {alert.show && (
+      {/* {alert.show && (
         <MDAlert
           color={alert.type}
           dismissible
@@ -90,7 +88,7 @@ function Pheader() {
         >
           {alert.message}
         </MDAlert>
-      )} */}
+      )}  */}
     </div>
   );
 }
