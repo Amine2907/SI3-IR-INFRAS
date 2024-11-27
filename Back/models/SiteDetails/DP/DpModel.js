@@ -1,0 +1,177 @@
+import { supabase } from "../../../config/supabaseClient.js";
+import { etat_prerequis } from "./DpData.js";
+// create Dp Model 
+const createDp = async (Proid, DpData) => {
+    try {
+        console.log('Incoming data for createDp:', DpData);
+        if (prospectData.etat_prerequis) {
+            const etatID = etat_prerequis[prospectData.etat_prerequis];
+            if (!etatID) {
+              throw new Error(`Invalid status validation description: ${prospectData.etat_prerequis}`);
+            }
+            prospectData.etat_prerequis = etatID; // Update the DP data with the numeric ID
+          }
+      // Now insert the new Dp into the 'Dp' table, using the PRid_FK field
+      const { data: Dp, error: contactError } = await supabase
+        .from('Dp')
+        .insert([{ PRid_FK: Proid, ...DpData }])
+        .select();
+      if (contactError) {
+        throw contactError;
+      }
+      // Extract the newly created Dp ID (Proid)
+      const Dpfk = Dp[0].DPid;
+      // Now associate the Dp with the Site by inserting into 'Site-Dp' association table
+      const { data: siteDp, error: siteDpError } = await supabase
+        .from('Prospect-Dp')
+        .insert([{ PRfk: Proid, Dpfk }]);
+      if (siteDpError) {
+        throw siteDpError;
+      }
+      // Return the successfully created Dp and the association details
+      return { success: true, data: { Dp: Dp[0], siteDp } };
+    } catch (error) {
+      console.error('Error in createDp:', error.message);
+      throw error; // Rethrow error for higher-level handling
+    }
+  };
+// get all Dps
+const getAllDps = async (Proid) => {
+    try {
+        const { data, error } = await supabase
+        .from('Dp')
+        .select('*')
+        .eq('PRid_FK',Proid);
+        if (error) {
+            throw error;
+        }
+        return { success: true, data };
+    }catch(error){
+        return { success: false, error: error.message };
+    }
+}
+// get Dp by id
+const getDpById = async (id) => {
+        try {
+            const { data, error } = await supabase 
+            .from('Dp')
+            .select('*')
+            .eq('DPid', id);
+            if (error) {
+                throw error;    
+            }
+            return { success: true, data };
+        }catch(error){
+            return { success: false, error: error.message };
+        }
+}
+// get active Dps
+const fetchActiveDp = async (prospectID) => {
+        try {
+            const { data, error } = await supabase
+            .from('Dp')
+            .select('*')
+            .eq('is_active', true)
+            .eq('PRid_FK',prospectID);
+            ;
+            if (error) {
+                throw error;
+            }
+            return { success: true, data };
+        }catch(error){
+            return { success: false, error: error.message };
+        }
+}
+// get inactive Dps
+const fetchInactiveDp = async (prospectID) => {
+    try {
+        const { data, error } = await supabase
+        .from('Dp')
+        .select('*')
+        .eq('is_active', false)
+        .eq('PRid_FK',prospectID);
+        if (error) {
+            throw error;
+        }
+        return { success: true, data };
+    }catch(error){
+        return { success: false, error: error.message };
+    }
+}
+// update Dp Model 
+const updateDp = async (DpID, updates) => {
+    try {
+        // Ensure `status_validation_fk` is mapped correctly
+        if (updates.etat_prerequis) {
+            if (typeof updates.etat_prerequis === 'string') {
+                const etatID = status_validation[updates.etat_prerequis]; // Map string to ID
+                if (!etatID) {
+                    throw new Error(`Invalid status description: ${updates.etat_prerequis}`);
+                }
+                updates.etat_prerequis = etatID; // Replace with numeric ID
+            } else if (typeof updates.etat_prerequis === 'object' && updates.etat_prerequis.EP_desc) {
+                const etatID = status_validation[updates.etat_prerequis.EP_desc];
+                if (!etatID) {
+                    throw new Error(`Invalid status description: ${updates.etat_prerequis.EP_desc}`);
+                }
+                updates.etat_prerequis = etatID; // Replace with numeric ID
+            } else if (typeof updates.etat_prerequis === 'number') {
+                console.log('status_validation is already an ID:', updates.etat_prerequis);
+            } else {
+                throw new Error(`Invalid structure for status_validation: ${updates.etat_prerequis}`);
+            }
+        }
+        const { data, error } = await supabase
+        .from('Dp')
+        .update(updates)
+        .eq('DPid', DpID);
+        if (error) {
+            throw error;
+        }
+        return { success: true, data }; 
+    } catch(error) {
+        return { success: false, error: error.message };
+    }
+}
+// activate Dp Model 
+const activateDp = async(id) => {
+    try {
+        const {data,error} = await supabase
+        .from('Dp')
+        .update({is_active:true})
+        .eq('DPid',id);
+        if(error){
+            throw error ; 
+        }
+        return {success:true , data };
+    }catch(error){
+        return {success:false , error:error.messsage};
+    }
+};
+// Desactivate Dp Model 
+const desactivateDp = async(id) => {
+    try {
+        const {data,error} = await supabase
+        .from('Dp')
+        .update({is_active:false})
+        .eq('DPid',id);
+        if(error){
+            throw error ; 
+        }
+        return {success:true , data };
+    }catch(error){
+        return {success:false , error:error.messsage};
+    }
+};
+// exporting all model's functions 
+const DpModel = {
+    createDp,
+    fetchInactiveDp,
+    fetchActiveDp,
+    updateDp,
+    getAllDps,
+    activateDp,
+    desactivateDp,
+    getDpById,
+}
+export default DpModel; 
