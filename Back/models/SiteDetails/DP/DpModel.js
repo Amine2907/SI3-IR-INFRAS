@@ -11,6 +11,21 @@ const createDp = async (Proid, DpData) => {
             }
             DpData.etat_prerequis = statusID; // Update the prospect data with the numeric ID
           }
+                // First check if the Status_validation_fk is 25 (Prospect Validé) and if any similar prospects exist
+      if (DpData.is_active === true)  {
+        console.log('Prospect has active DP');
+        const { data: existingProspect, error: checkError } = await supabase
+          .from('DP')
+          .select('*')
+          .eq('PRid_fk', Proid)  // Match using PRid_fk (the prospect identifier)
+          .eq('is_active', true);  // Ensure no other DP with status active  exists for this prospect
+        if (checkError) {
+          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
+        }
+        if (existingProspect && existingProspect.length > 0) {
+          throw new Error("A DP with active status already exists for this site.");
+        }
+      }
       // Now insert the new Dp into the 'Dp' table, using the PRid_fk field
       const { data: Dp, error: contactError } = await supabase
         .from('DP')
