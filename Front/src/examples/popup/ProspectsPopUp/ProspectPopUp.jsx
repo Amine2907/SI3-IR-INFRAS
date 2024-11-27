@@ -9,18 +9,24 @@ import { statusSfrValues, statusValidationValues } from './ProspectData';
 const ProspectModal = ({ prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     prospect || {
+      nom: '',
+      section: '',
+      parcelle: '',
+      longitude: '',
+      latitude: '',
       status_validation_fk: { SV_desc: '' },
+      status_site_sfr: '',
+      retenu: false,
     }
   );
   const [isActive, setIsActive] = useState(prospect ? prospect.is_active : true);
   const [errors, setErrors] = useState({});
   const handleChange = e => {
-    // setFormData({ ...formData, [e.target.name]: e.target.value });*
     const { name, value } = e.target;
-    // Special handling for nested fields
-    if (name === 'status_validations_fk') {
-      setFormData({ ...formData, status_validation_fk: { SV_desc: value } });
-    }
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
   useEffect(() => {
     if (prospect) {
@@ -30,6 +36,7 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
       });
       setIsActive(prospect.is_active);
     }
+    console.log('Initialized formData:', formData);
   }, [prospect]);
   const handleSubmit = () => {
     const newErrors = {};
@@ -50,10 +57,13 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
     }
   };
   const handleDropdownChange = (field, subField, value) => {
-    setFormData({
-      ...formData,
-      [field]: { [subField]: value },
-    });
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [field]: {
+        ...prevFormData[field],
+        [subField]: value,
+      },
+    }));
   };
   return (
     <div className={styles.modal}>
@@ -134,7 +144,7 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
           >
             <Select
               name="status_validation_fk"
-              value={formData.status_validation_fk.SV_desc || ''}
+              value={formData.status_validation_fk?.SV_desc || ''}
               onChange={e =>
                 handleDropdownChange('status_validation_fk', 'SV_desc', e.target.value)
               }
@@ -147,7 +157,7 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir le status validations --
+                -- Choisir le status validation --
               </MenuItem>
               {statusValidationValues.map((status, index) => (
                 <MenuItem key={index} value={status}>

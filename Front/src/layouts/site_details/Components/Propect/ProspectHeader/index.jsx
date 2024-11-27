@@ -7,6 +7,7 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import { Switch } from '@mui/material';
 import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
+import SiteProspectService from 'services/site_details/Prospect/prospectService';
 // import MDAlert from 'components/MDAlert';
 // import { Alert, AlertDescription } from 'components/ui/alert';
 function Pheader() {
@@ -17,11 +18,31 @@ function Pheader() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+  const handleAddProspect = () => {
+    setShowModal(true);
+  };
   const handleChange = () => {
     null;
   };
-  const handleAddProspect = () => {
-    setShowModal(true);
+  const handleSave = async data => {
+    let result;
+    let successMessage = '';
+    if (selectedprospect) {
+      // Update entity
+      result = await SiteProspectService.updateProspect(selectedprospect.Proid, data);
+      successMessage = 'Entité mise à jour avec succès !';
+    } else {
+      // Create new entity
+      result = await entityService.createProspect(Sid, data);
+      successMessage = 'Entité enregistrée avec succès !';
+    }
+    // Handle the result with alert feedback
+    if (result.success) {
+      setAlert({ show: true, message: successMessage, type: 'success' });
+    } else {
+      setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
+    }
+    handleModalClose();
   };
   return (
     <div className="prospect-list">
@@ -66,11 +87,7 @@ function Pheader() {
         </MDBox>
       </Card>
       {showModal && (
-        <ProspectModal
-          prospect={selectedprospect}
-          onSave={handleAddProspect}
-          onClose={handleCloseModal}
-        />
+        <ProspectModal prospect={selectedprospect} onSave={handleSave} onClose={handleCloseModal} />
       )}
       {/* {alert.show && (
         <MDAlert
