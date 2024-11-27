@@ -1,6 +1,6 @@
-import MDTypography from 'components/MDTypography';
+import Pheader from './ProspectHeader';
 
 function Prospect() {
-  return <MDTypography>Prospect</MDTypography>;
+  return <Pheader></Pheader>;
 }
 export default Prospect;
