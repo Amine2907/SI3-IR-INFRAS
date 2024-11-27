@@ -1,5 +1,5 @@
 const etat = {
-    1: "Complet",
-    2: "Incomplet",
+"Complet" : 1 ,
+"Incomplet" : 2,
 }
 export {etat};

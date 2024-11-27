@@ -5,16 +5,16 @@ const createDp = async (Proid, DpData) => {
     try {
         console.log('Incoming data for createDp:', DpData);
         if (DpData.etat_prerequis) {
-            const etatID = etat[DpData.etat_prerequis];
-            if (!etatID) {
-              throw new Error(`Invalid etat prerequis description: ${DpData.etat_prerequis}`);
+            const statusID = etat[DpData.etat_prerequis];
+            if (!statusID) {
+              throw new Error(`Invalid status validation description: ${DpData.etat_prerequis}`);
             }
-            DpData.etat_prerequis = etatID; // Update the DP data with the numeric ID
+            DpData.etat_prerequis = statusID; // Update the prospect data with the numeric ID
           }
-      // Now insert the new Dp into the 'Dp' table, using the PRid_FK field
+      // Now insert the new Dp into the 'Dp' table, using the PRid_fk field
       const { data: Dp, error: contactError } = await supabase
-        .from('Dp')
-        .insert([{ PRid_FK: Proid, ...DpData }])
+        .from('DP')
+        .insert([{ PRid_fk: Proid, ...DpData }])
         .select();
       if (contactError) {
         throw contactError;
@@ -23,7 +23,7 @@ const createDp = async (Proid, DpData) => {
       const Dpfk = Dp[0].DPid;
       // Now associate the Dp with the Site by inserting into 'Site-Dp' association table
       const { data: siteDp, error: siteDpError } = await supabase
-        .from('Prospect-Dp')
+        .from('Prospect-DP')
         .insert([{ PRfk: Proid, Dpfk }]);
       if (siteDpError) {
         throw siteDpError;
@@ -39,9 +39,9 @@ const createDp = async (Proid, DpData) => {
 const getAllDps = async (Proid) => {
     try {
         const { data, error } = await supabase
-        .from('Dp')
+        .from('DP')
         .select('*')
-        .eq('PRid_FK',Proid);
+        .eq('PRid_fk',Proid);
         if (error) {
             throw error;
         }
@@ -54,7 +54,7 @@ const getAllDps = async (Proid) => {
 const getDpById = async (id) => {
         try {
             const { data, error } = await supabase 
-            .from('Dp')
+            .from('DP')
             .select('*')
             .eq('DPid', id);
             if (error) {
@@ -69,10 +69,10 @@ const getDpById = async (id) => {
 const fetchActiveDp = async (prospectID) => {
         try {
             const { data, error } = await supabase
-            .from('Dp')
+            .from('DP')
             .select('*')
             .eq('is_active', true)
-            .eq('PRid_FK',prospectID);
+            .eq('PRid_fk',prospectID);
             ;
             if (error) {
                 throw error;
@@ -86,10 +86,10 @@ const fetchActiveDp = async (prospectID) => {
 const fetchInactiveDp = async (prospectID) => {
     try {
         const { data, error } = await supabase
-        .from('Dp')
+        .from('DP')
         .select('*')
         .eq('is_active', false)
-        .eq('PRid_FK',prospectID);
+        .eq('PRid_fk',prospectID);
         if (error) {
             throw error;
         }
@@ -122,7 +122,7 @@ const updateDp = async (DpID, updates) => {
             }
         }
         const { data, error } = await supabase
-        .from('Dp')
+        .from('DP')
         .update(updates)
         .eq('DPid', DpID);
         if (error) {
@@ -137,7 +137,7 @@ const updateDp = async (DpID, updates) => {
 const activateDp = async(id) => {
     try {
         const {data,error} = await supabase
-        .from('Dp')
+        .from('DP')
         .update({is_active:true})
         .eq('DPid',id);
         if(error){
@@ -152,7 +152,7 @@ const activateDp = async(id) => {
 const desactivateDp = async(id) => {
     try {
         const {data,error} = await supabase
-        .from('Dp')
+        .from('DP')
         .update({is_active:false})
         .eq('DPid',id);
         if(error){
