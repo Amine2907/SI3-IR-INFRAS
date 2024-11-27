@@ -140,7 +140,7 @@
  */
 import express from "express";
 const router = express.Router();
-import contactController from "../controllers/contactsController.js";
+import contactController from "../../controllers/Contacts/contactsController.js";
 
 router.post('/',contactController.createContact);
 router.get('/',contactController.getAllContacts);

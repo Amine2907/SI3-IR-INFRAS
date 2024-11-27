@@ -13,7 +13,7 @@
  * - getActiveEntites: gets all the active entities from the database
  * - getInactiveEntites: gets all the inactive entities from the database
  */
-import entityModel from "../models/entiteModel.js";
+import entityModel from "../../models/Entites/entiteModel.js";
 
 // Create entity controller 
 const createEntite = async(req,res) => {

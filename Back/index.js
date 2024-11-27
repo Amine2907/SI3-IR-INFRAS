@@ -10,12 +10,12 @@ import express from "express";
 import cors from "cors"; 
 import bodyParser from "body-parser";
 // Routes
-import authRoutes from './routes/auth.js';
-import dashboardRoutes from './routes/dashboard.js';
-import entitesRoutes from './routes/entites.js';
-import contactsRoutes from './routes/contacts.js';
-import companiesRoutes from './routes/companies.js';
-import settingsRoutes from './routes/settings.js'
+import authRoutes from './routes/Auth/auth.js';
+import dashboardRoutes from './routes/Dashboard/dashboard.js';
+import entitesRoutes from './routes/Entites/entites.js';
+import contactsRoutes from './routes/Contacts/contacts.js';
+import companiesRoutes from './routes/Companies/companies.js';
+import settingsRoutes from './routes/Settings/settings.js'
 import siteRoutes from './routes/Site/sites.js'
 import siteContactRoutes from './routes/Site/sitescontacts.js'
 import prospectRoutes from './routes/SiteDetails/Prospect/prospect.js'

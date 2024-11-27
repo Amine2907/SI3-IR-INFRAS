@@ -9,9 +9,8 @@
  * - listCompanies: lists all the companies in the database
  * @module settingsController
  */
-import { supabase } from "../config/supabaseClient.js";
-import settingsModel from "../models/settingsModel.js";
-
+import { supabase } from "../../config/supabaseClient.js";
+import settingsModel from "../../models/Settings/settingsModel.js";
 // 1. Get Account Information
 const getAccountInfo = async (req, res) => {
     const userId = req.user.id;

@@ -12,8 +12,7 @@
  * - getActiveCompanys: gets all the active Companys in the database
  * - getInactiveCompanys: gets all the inactive Companys in the database
  */
-import companiesModel from "../models/companyModel.js";
-
+import companiesModel from "../../models/Company/companyModel.js";
 //Create Company controlller 
 const createCompany = async(req,res) =>{
     const newCompany = {...req.body,is_active:true};

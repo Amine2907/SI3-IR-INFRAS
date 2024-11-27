@@ -8,7 +8,7 @@
  * - `signOut`: signs out the user and removes the user from the session
  * @module authController
  */
-import { supabase } from "../config/supabaseClient.js";
+import { supabase } from "../../config/supabaseClient.js";
 import { configDotenv } from "dotenv";
 configDotenv();
 const FRONT_URL= process.env.FrontUrl;

@@ -12,7 +12,7 @@
  * - getActiveContacts: gets all the active contacts in the database
  * - getInactiveContacts: gets all the inactive contacts in the database
  */
-import { supabase } from "../config/supabaseClient.js";
+import { supabase } from "../../config/supabaseClient.js";
 //Create Contact 
 const createContact = async (data) => {
     try {

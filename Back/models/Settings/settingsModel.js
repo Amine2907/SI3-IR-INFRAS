@@ -6,7 +6,7 @@
  * - `listCompanies`: lists all the companies in the database
  * @module settingsModel
  */
-import { supabase } from "../config/supabaseClient.js";
+import { supabase } from "../../config/supabaseClient.js";
 
 //Get Account informations 
 const getAccountInfo = async(userId) => {

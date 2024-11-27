@@ -9,7 +9,7 @@
  * - POST /confirm-reset-password: Confirms a password reset
  */
 import express from 'express';
-import { signUp, signIn, signOut , resetPassword , handleUpdatePassword } from '../controllers/authController.js';
+import { signUp, signIn, signOut , resetPassword , handleUpdatePassword } from '../../controllers/Auth/authController.js';
 const router = express.Router();
 
 // Authentication Routes

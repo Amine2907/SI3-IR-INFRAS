@@ -12,8 +12,7 @@
  * - getActiveContacts: gets all the active contacts in the database
  * - getInactiveContacts: gets all the inactive contacts in the database
  */
-import contactsModel from "../models/contactsModel.js";
-
+import contactsModel from "../../models/Contacts/contactsModel.js";
 //Create contact controlller 
 const createContact = async(req,res) =>{
     const newContact = {...req.body,is_active:true};

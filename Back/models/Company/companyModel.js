@@ -12,7 +12,7 @@
  * - getActivecompanys: gets all the active companys in the database
  * - getInactivecompanys: gets all the inactive companys in the database
  */
-import { supabase } from "../config/supabaseClient.js";
+import { supabase } from "../../config/supabaseClient.js";
 //Create company 
 const createcompany = async (data) => {
     try {

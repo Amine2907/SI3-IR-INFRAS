@@ -13,7 +13,7 @@
  */
 import express from "express";
 const router = express.Router();
-import companyController from "../controllers/companyController.js";
+import companyController from "../../controllers/Company/companyController.js";
 
 router.post('/',companyController.createCompany);
 router.get('/',companyController.getAllCompanys);

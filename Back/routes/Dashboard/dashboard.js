@@ -4,7 +4,7 @@
  * before allowing access to the route
  */
 import express from 'express';
-import roleMiddleware from '../middleware/roleMiddleware.js';
+import roleMiddleware from '../../middleware/roleMiddleware.js'
 const router = express.Router();
 // Define routes based on user roles
 router.get('/system-admin', roleMiddleware(['system admin']), (req, res) => {
