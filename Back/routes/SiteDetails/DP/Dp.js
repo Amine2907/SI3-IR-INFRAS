@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import DpController from "../../../controllers/SiteDetails/DP/DpController";
+import DpController from "../../../controllers/SiteDetails/DP/DpController.js";
 
 router.post('/create-dp-prospect',DpController.createDp);
 router.get('/:Proid/dps',DpController.getAllDps);
