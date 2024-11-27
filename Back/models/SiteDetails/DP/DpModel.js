@@ -1,15 +1,15 @@
 import { supabase } from "../../../config/supabaseClient.js";
-import { etat_prerequis } from "./DpData.js";
+import { etat } from "./DpData.js";
 // create Dp Model 
 const createDp = async (Proid, DpData) => {
     try {
         console.log('Incoming data for createDp:', DpData);
-        if (prospectData.etat_prerequis) {
-            const etatID = etat_prerequis[prospectData.etat_prerequis];
+        if (DpData.etat_prerequis) {
+            const etatID = etat[DpData.etat_prerequis];
             if (!etatID) {
-              throw new Error(`Invalid status validation description: ${prospectData.etat_prerequis}`);
+              throw new Error(`Invalid etat prerequis description: ${DpData.etat_prerequis}`);
             }
-            prospectData.etat_prerequis = etatID; // Update the DP data with the numeric ID
+            DpData.etat_prerequis = etatID; // Update the DP data with the numeric ID
           }
       // Now insert the new Dp into the 'Dp' table, using the PRid_FK field
       const { data: Dp, error: contactError } = await supabase

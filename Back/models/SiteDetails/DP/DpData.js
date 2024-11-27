@@ -1,5 +1,5 @@
-const etat_prerequis = {
+const etat = {
     1: "Complet",
     2: "Incomplet",
 }
-export {etat_prerequis};
+export {etat};

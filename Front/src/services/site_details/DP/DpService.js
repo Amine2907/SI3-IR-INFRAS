@@ -1,10 +1,10 @@
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/dps';
 // Create Dp Service
-const createDp = async ({ DPid, DpData }) => {
+const createDp = async ({ PRid, DpData }) => {
     try {
       const response = await axios.post(`${API_URL}/create-dp-prospect`, {
-        DPid,
+        PRid,
         DpData,
       });
       return { success: true, data: response.data };

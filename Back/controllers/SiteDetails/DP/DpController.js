@@ -1,11 +1,11 @@
 import dpModel from "../../../models/SiteDetails/DP/DpModel.js";
-import { etat_prerequis } from "../../../models/SiteDetails/DP/DpData.js";
+import { etat } from "../../../models/SiteDetails/DP/DpData.js";
 //Create Dp controlller 
 const createDp = async (req, res) => {
   const { Proid, dpData } = req.body;
   // Ensure that the 'etat_prerequis' is correctly mapped to an integer ID (if it's passed as description)
   if (dpData.etat_prerequis && typeof dpData.etat_prerequis === 'object' && dpData.etat_prerequis.EP_desc) {
-    const etatID = etat_prerequis[dpData.etat_prerequis.EP_desc];
+    const etatID = etat[dpData.etat_prerequis.EP_desc];
     console.log("Mapped program:", dpData.etat_prerequis.EP_desc, "->", etatID);
     if (!etatID) {
       return res.status(400).json({ error: `Invalid status validation description: ${dpData.etat_prerequis.EP_desc}` });
