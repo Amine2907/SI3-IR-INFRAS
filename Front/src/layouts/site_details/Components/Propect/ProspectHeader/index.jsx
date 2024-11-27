@@ -8,13 +8,6 @@ import MDButton from 'components/MDButton';
 import { Switch } from '@mui/material';
 import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 // import MDAlert from 'components/MDAlert';
-// import CompanyModal from '../../popup/CompanyPopUp';
-// import {
-//   fetchActiveCompanies,
-//   handleSave,
-//   handleToggleActiveInactive,
-//   handleCloseAlert,
-// } from './companyFuncs';
 // import { Alert, AlertDescription } from 'components/ui/alert';
 function Pheader() {
   const [isActive, setIsActive] = useState(true);

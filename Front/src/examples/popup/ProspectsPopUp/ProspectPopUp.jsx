@@ -5,6 +5,7 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
+import { statusSfrValues, statusValidationValues } from './ProspectData';
 const ProspectModal = ({ prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     prospect || {
@@ -138,16 +139,21 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
                 handleDropdownChange('status_validation_fk', 'SV_desc', e.target.value)
               }
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.status_validation_fk ? 'red' : '',
+              }}
               required
             >
               <MenuItem value="" disabled>
                 -- Choisir le status validations --
               </MenuItem>
-              <MenuItem value="P00">P00</MenuItem>
-              <MenuItem value="P0">P0</MenuItem>
-              <MenuItem value="P1">P1</MenuItem>
-              <MenuItem value="P2">P2</MenuItem>
+              {statusValidationValues.map((status, index) => (
+                <MenuItem key={index} value={status}>
+                  {status}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl
@@ -166,25 +172,11 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
               <MenuItem value="" disabled>
                 --Choisir le status de site SFR--
               </MenuItem>
-              <MenuItem value="0.Bloquée/Suspendu MAD">0.Bloquée/Suspendu MAD</MenuItem>
-              <MenuItem value="0.Bloquée/Suspendu Conv">0.Bloquée/Suspendu Conv</MenuItem>
-              <MenuItem value="0.Bloquée/Suspendu DP">0.Bloquée/Suspendu DP</MenuItem>
-              <MenuItem value="1.En Recherche">1.En Recherche</MenuItem>
-              <MenuItem value="2.En validation">2.En validation</MenuItem>
-              <MenuItem value="3.Validé">3.Validé</MenuItem>
-              <MenuItem value="3.En Conception">3.En Conception</MenuItem>
-              <MenuItem value="4.En cours conception">4.En cours conception</MenuItem>
-              <MenuItem value="4.GO Constr. Anticipé">4.GO Constr. Anticipé</MenuItem>
-              <MenuItem value="5.En attente visées FH">5.En attente visées FH</MenuItem>
-              <MenuItem value="5.GO Constructibilité">5.GO Constructibilité</MenuItem>
-              <MenuItem value="6.GO Constructibilité">6.GO Constructibilité</MenuItem>
-              <MenuItem value="7.GO Constructibilité Anticipé">
-                7.GO Constructibilité Anticipé
-              </MenuItem>
-              <MenuItem value="7.MES">7.MES</MenuItem>
-              <MenuItem value="8.Annulé">8.Annulé</MenuItem>
-              <MenuItem value="8.PEM">8.PEM</MenuItem>
-              <MenuItem value="En service">En service</MenuItem>
+              {statusSfrValues.map((status, index) => (
+                <MenuItem key={index} value={status}>
+                  {status}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <div>
