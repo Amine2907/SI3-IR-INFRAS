@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { supabase } from '../Config/supabaseClient.js';
+import { supabase } from '../../Config/supabaseClient.js';
 const express = require('express');
 const app = express();
 
