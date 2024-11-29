@@ -1,5 +1,6 @@
 /* eslint-disable */
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import Icon from '@mui/material/Icon';
 import MDBox from 'components/MDBox';
@@ -8,12 +9,17 @@ import MDButton from 'components/MDButton';
 import { Switch } from '@mui/material';
 import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
+import siteContactService from 'services/Site_Services/siteContactService';
 // import MDAlert from 'components/MDAlert';
 // import { Alert, AlertDescription } from 'components/ui/alert';
 function Pheader() {
   const [isActive, setIsActive] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedprospect, setSelectedprospect] = useState(null);
+  const location = useLocation();
+  const [alert, setAlert] = useState(false);
+  // const navigate = useNavigate();
+  const { EB } = location.state || {};
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -24,16 +30,21 @@ function Pheader() {
   const handleChange = () => {
     null;
   };
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
   const handleSave = async data => {
+    const Sid = EB;
+    console.log(Sid);
     let result;
     let successMessage = '';
     if (selectedprospect) {
-      // Update entity
+      // Update prospect
       result = await SiteProspectService.updateProspect(selectedprospect.Proid, data);
       successMessage = 'Entité mise à jour avec succès !';
     } else {
-      // Create new entity
-      result = await entityService.createProspect(Sid, data);
+      // Create new prospect
+      result = await SiteProspectService.createProspect(Sid, data);
       successMessage = 'Entité enregistrée avec succès !';
     }
     // Handle the result with alert feedback
