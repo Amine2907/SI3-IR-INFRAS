@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch, Select, MenuItem, FormControl } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl, Input } from '@mui/material';
 import { statusSfrValues, statusValidationValues } from './ProspectData';
 import { useLocation } from 'react-router-dom';
 const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
@@ -49,8 +49,8 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
         status_validation_fk: formData.status_validation_fk,
         status_site_sfr: formData.status_site_sfr,
         cout_estime: formData.cout_estime,
-        is_active: true,
-        retenu: false, // Always true*
+        is_active: true, // Always true*
+        retenu: false,
       };
       console.log('prospect data :', prospectData);
       onSave({ Sid, prospectData });
@@ -66,7 +66,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
       status_site_sfr: formData.status_site_sfr,
       cout_estime: formData.cout_estime,
       is_active: true,
-      retenu: false, // Always true*
+      retenu: false,
     };
     onSave({ Sid, prospectData });
   };
@@ -167,7 +167,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
           >
             <Select
               name="status_validation_fk"
-              value={formData.status_validation_fk || ''} // Handle as a string directly
+              value={formData.status_validation_fk || ''}
               onChange={handleChange}
               displayEmpty
               style={{
@@ -216,13 +216,13 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
               {' '}
               {isActive ? 'Active' : 'Inactive'}
             </Switch>
-            <input
+            <MDTypography>Retenu</MDTypography>
+            <Input
               type="checkbox"
               checked={formData.retenu}
               readOnly
               style={{ marginRight: '8px', cursor: 'pointer' }}
             />
-            <span style={{ fontSize: '14px', color: '#333' }}>Retenu</span>
           </div>
         </div>
         <div className={styles.buttonContainer}>

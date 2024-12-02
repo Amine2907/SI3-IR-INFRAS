@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+/* eslint-disable */
+import React, { useEffect, useState } from 'react';
 import {
   TableContainer,
   TableCell,
@@ -13,22 +14,68 @@ import useProspectsData from './prospectService';
 import cellStyle from './styles';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-// import statusValidationValues from './ProspectData';
+import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
+import SiteProspectService from 'services/site_details/Prospect/prospectService';
 function ProspectList({ site }) {
   const { prospectsData, loading, error, fetchProspectsData } = useProspectsData(site);
+  const [showModal, setShowModal] = useState(false);
+  const [alert, setAlert] = useState(false);
   const location = useLocation();
   const { EB } = location.state || {};
+  const [selectedprospect, setSelectedprospect] = useState(null);
   const Sid = EB;
-  const handleEdit = () => {
-    null;
+  const handleEdit = prospect => {
+    setSelectedprospect(prospect);
+    setShowModal(true);
   };
-
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
   useEffect(() => {
     if (Sid) {
       fetchProspectsData();
     }
   }, [site, fetchProspectsData]);
-
+  const handleUpdate = async updates => {
+    const Proid = selectedprospect?.Proid;
+    console.log('Sending request with Proid:', Proid);
+    console.log('Form Data:', updates);
+    if (!Proid) {
+      console.error('Proid is missing, cannot update.');
+      setAlert({
+        show: true,
+        message: 'An error occurred: Proid is missing.',
+        type: 'error',
+      });
+      return;
+    }
+    try {
+      const result = await SiteProspectService.updateProspect({ Proid, updates });
+      console.log('API result:', result);
+      if (result.success) {
+        setAlert({
+          show: true,
+          message: 'Prospect enregistré avec succès !',
+          type: 'success',
+        });
+        fetchProspectsData(); // Refresh the prospects list
+      } else {
+        setAlert({
+          show: true,
+          message: `Error: ${result.error}`,
+          type: 'error',
+        });
+      }
+    } catch (error) {
+      console.error('Error while sending request:', error);
+      setAlert({
+        show: true,
+        message: 'An error occurred while saving the prospect.',
+        type: 'error',
+      });
+    }
+    handleCloseModal(); // Close the modal after save
+  };
   if (loading)
     return (
       <Alert variant="destructive" className="mt-4">
@@ -79,7 +126,11 @@ function ProspectList({ site }) {
                 <TableCell>{prospect.latitude || 'N/A'}</TableCell>
                 <TableCell>{prospect.retenu || 'N/A'}</TableCell>
                 <TableCell title="Modifier prospect" placement="top">
-                  <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={handleEdit}>
+                  <Icon
+                    sx={{ cursor: 'pointer' }}
+                    fontSize="small"
+                    onClick={() => handleEdit(prospect)} // Pass the current prospect
+                  >
                     edit
                   </Icon>
                 </TableCell>
@@ -88,6 +139,14 @@ function ProspectList({ site }) {
           })}
         </TableBody>
       </table>
+      {showModal && (
+        <ProspectModal
+          Sid={Sid}
+          prospect={selectedprospect}
+          onSave={handleUpdate}
+          onClose={handleCloseModal}
+        />
+      )}
     </TableContainer>
   );
 }
