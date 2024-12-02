@@ -3,6 +3,7 @@ const API_URL = 'http://localhost:5000/api/prospect';
 // Create Prospect Service
 const createProspect = async ({ Sid, prospectData }) => {
   try {
+    console.log('Sending request:', { Sid, prospectData });
     const response = await axios.post(`${API_URL}/create-prospect-site`, {
       Sid,
       prospectData,

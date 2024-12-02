@@ -5,22 +5,15 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
-import { statusSfrValues, statusValidationValues } from './ProspectData';
-const ProspectModal = ({ prospect, onSave, onClose }) => {
-  const [formData, setFormData] = useState(
-    prospect || {
-      nom: '',
-      section: '',
-      parcelle: '',
-      longitude: '',
-      latitude: '',
-      status_validation_fk: { SV_desc: '' },
-      status_site_sfr: '',
-      retenu: false,
-    }
-  );
+import { statusValidationValues } from './ProspectData';
+import { useLocation } from 'react-router-dom';
+const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
+  const [formData, setFormData] = useState(prospect || {});
   const [isActive, setIsActive] = useState(prospect ? prospect.is_active : true);
   const [errors, setErrors] = useState({});
+  const location = useLocation();
+  const { EB } = location.state || {};
+  console.log('EB Value:', EB);
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prevFormData => ({
@@ -32,39 +25,61 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
     if (prospect) {
       setFormData({
         ...prospect,
-        status_validation_fk: prospect.status_validation_fk || { SV_desc: '' },
       });
       setIsActive(prospect.is_active);
     }
     console.log('Initialized formData:', formData);
   }, [prospect]);
-  const handleSubmit = () => {
+  const validateForm = () => {
     const newErrors = {};
-    console.log('Validation errors:', newErrors);
+    if (!formData.nom) newErrors.nom = true;
+    if (!formData.latitude) newErrors.latitude = true;
+    return newErrors;
+  };
+  const handleSubmit = () => {
+    const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      const prospectData = {
+        nom: formData.nom,
+        section: formData.section,
+        parcelle: formData.parcelle,
+        longitude: formData.longitude,
+        latitude: formData.latitude,
+        status_validation_fk: formData.status_validation_fk,
+        is_active: true,
+        retenu: false, // Always true*
+      };
+      console.log('prospect data :', prospectData);
+      onSave({ Sid, prospectData });
       return;
     }
-    console.log('Form data submitted:', formData);
-    onSave({
-      ...formData,
-      is_active: isActive,
-    });
+    const prospectData = {
+      nom: formData.nom,
+      section: formData.section,
+      parcelle: formData.parcelle,
+      longitude: formData.longitude,
+      latitude: formData.latitude,
+      status_validation_fk: formData.status_validation_fk,
+      is_active: true,
+      retenu: false, // Always true*
+    };
+    onSave({ Sid, prospectData });
   };
   const handleToggleActive = () => {
     if (prospect) {
       setIsActive(!isActive);
     }
   };
-  const handleDropdownChange = (field, subField, value) => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [field]: {
-        ...prevFormData[field],
-        [subField]: value,
-      },
-    }));
-  };
+  //   const handleDropdownChange = (field, subField, value) => {
+  //     setFormData(prevFormData => ({
+  //       ...prevFormData,
+  //       [field]: {
+  //         ...prevFormData[field],
+  //         [subField]: value,
+  //       },
+  //     }));
+  //   };
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -144,10 +159,8 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
           >
             <Select
               name="status_validation_fk"
-              value={formData.status_validation_fk?.SV_desc || ''}
-              onChange={e =>
-                handleDropdownChange('status_validation_fk', 'SV_desc', e.target.value)
-              }
+              value={formData.status_validation_fk || ''} // Handle as a string directly
+              onChange={handleChange}
               displayEmpty
               style={{
                 padding: '10px',
@@ -166,7 +179,7 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
-          <FormControl
+          {/* <FormControl
             fullWidth
             style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
             required
@@ -188,7 +201,7 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>
+          </FormControl> */}
           <div>
             <label>{isActive ? 'Active' : 'Inactive'}</label>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
@@ -216,15 +229,14 @@ const ProspectModal = ({ prospect, onSave, onClose }) => {
   );
 };
 ProspectModal.propTypes = {
+  Sid: PropTypes.string.isRequired,
   prospect: PropTypes.shape({
     nom: PropTypes.string,
     section: PropTypes.string,
     parcelle: PropTypes.string,
     longitude: PropTypes.string,
     latitude: PropTypes.string,
-    status_validation_fk: PropTypes.shape({
-      SV_desc: PropTypes.string.isRequired,
-    }).isRequired,
+    status_validation_fk: PropTypes.string,
     is_active: PropTypes.bool,
     retenu: PropTypes.bool,
   }),

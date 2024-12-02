@@ -33,24 +33,30 @@ function Pheader() {
     setShowModal(false);
   };
   const handleSave = async data => {
+    const { prospectData } = data;
     const Sid = EB;
-    console.log(Sid);
-    let result;
-    let successMessage = '';
-    if (selectedprospect) {
-      // Update prospect
-      result = await SiteProspectService.updateProspect(selectedprospect.Proid, data);
-      successMessage = 'Entité mise à jour avec succès !';
-    } else {
+    console.log('Sending request with Sid:', Sid);
+    console.log('Form Data:', data); // Log all form data
+    try {
       // Create new prospect
-      result = await SiteProspectService.createProspect(Sid, data);
-      successMessage = 'Entité enregistrée avec succès !';
-    }
-    // Handle the result with alert feedback
-    if (result.success) {
-      setAlert({ show: true, message: successMessage, type: 'success' });
-    } else {
-      setAlert({ show: true, message: `Error: ${result.error}`, type: 'error' });
+      const result = await SiteProspectService.createProspect({ Sid, prospectData });
+      console.log('API result:', result);
+      let successMessage = '';
+      if (result.success) {
+        successMessage = 'Entité enregistrée avec succès !';
+        setAlert({ show: true, message: successMessage, type: 'success' });
+      } else {
+        const errorMessage = `Error: ${result.error}`;
+        console.error(errorMessage); // Log any errors from the API response
+        setAlert({ show: true, message: errorMessage, type: 'error' });
+      }
+    } catch (error) {
+      console.error('Error while sending request:', error);
+      setAlert({
+        show: true,
+        message: 'An error occurred while saving the prospect.',
+        type: 'error',
+      });
     }
     handleModalClose();
   };
