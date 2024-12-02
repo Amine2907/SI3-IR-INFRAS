@@ -25,10 +25,9 @@ const useProspectsData = site => {
       }
     } else {
       setLoading(false);
-      setError('Les informations sur le site ne sont pas disponibles');
+      setError('Les prospects de ce site ne sont pas disponibles');
     }
   }, [site]);
   return { prospectsData, loading, error, fetchProspectsData, setProspectsData };
 };
-
 export default useProspectsData;

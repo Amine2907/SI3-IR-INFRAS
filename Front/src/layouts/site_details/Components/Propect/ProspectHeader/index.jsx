@@ -6,7 +6,6 @@ import Icon from '@mui/material/Icon';
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
-import { Switch } from '@mui/material';
 import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 // import MDAlert from 'components/MDAlert';
@@ -26,11 +25,24 @@ function Pheader() {
   const handleAddProspect = () => {
     setShowModal(true);
   };
-  const handleChange = () => {
-    null;
-  };
   const handleModalClose = () => {
     setShowModal(false);
+  };
+  const fetchProspects = async () => {
+    try {
+      const response = await SiteProspectService.getProspectsSite(Sid);
+      if (response && response.success) {
+        setProspectsData(response.data);
+      } else {
+        setAlert({ show: true, message: errorMessage, type: 'error' });
+      }
+    } catch (err) {
+      setAlert({
+        show: true,
+        message: 'An error occurred while saving the prospect.',
+        type: 'error',
+      });
+    }
   };
   const handleSave = async data => {
     const { prospectData } = data;
@@ -45,6 +57,7 @@ function Pheader() {
       if (result.success) {
         successMessage = 'Entité enregistrée avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
+        fetchProspects();
       } else {
         const errorMessage = `Error: ${result.error}`;
         console.error(errorMessage); // Log any errors from the API response
@@ -72,14 +85,14 @@ function Pheader() {
           </MDButton>
         </MDBox>
         <MDBox p={2}>
-          <MDTypography variant="h6" fontWeight="medium">
+          {/* <MDTypography variant="h6" fontWeight="medium">
             {isActive ? 'Active' : 'Inactive'}
           </MDTypography>
           <Switch
             checked={isActive}
             onChange={() => handleChange}
             style={{ marginRight: '10px' }}
-          />
+          /> */}
           {/* <Grid container spacing={3}>
             {companies.map(prospect => (
               <Grid item xs={12} sm={8} md={4} key={prospect.id}>
