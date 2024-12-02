@@ -5,7 +5,7 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
-import { statusValidationValues } from './ProspectData';
+import { statusSfrValues, statusValidationValues } from './ProspectData';
 import { useLocation } from 'react-router-dom';
 const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
@@ -47,6 +47,8 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
         longitude: formData.longitude,
         latitude: formData.latitude,
         status_validation_fk: formData.status_validation_fk,
+        status_site_sfr: formData.status_site_sfr,
+        cout_estime: formData.cout_estime,
         is_active: true,
         retenu: false, // Always true*
       };
@@ -61,6 +63,8 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
       longitude: formData.longitude,
       latitude: formData.latitude,
       status_validation_fk: formData.status_validation_fk,
+      status_site_sfr: formData.status_site_sfr,
+      cout_estime: formData.cout_estime,
       is_active: true,
       retenu: false, // Always true*
     };
@@ -71,15 +75,6 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
       setIsActive(!isActive);
     }
   };
-  //   const handleDropdownChange = (field, subField, value) => {
-  //     setFormData(prevFormData => ({
-  //       ...prevFormData,
-  //       [field]: {
-  //         ...prevFormData[field],
-  //         [subField]: value,
-  //       },
-  //     }));
-  //   };
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -152,6 +147,19 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
             }}
             required
           />
+          <MDInput
+            name="cout_estime"
+            value={formData.cout_estime || ''}
+            onChange={handleChange}
+            placeholder="Cout Estime"
+            style={{
+              marginBottom: '5px',
+              width: '320px',
+              marginTop: '10px',
+              borderColor: errors.cout_estime ? 'red' : '',
+            }}
+            required
+          />
           <FormControl
             fullWidth
             style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
@@ -179,7 +187,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
-          {/* <FormControl
+          <FormControl
             fullWidth
             style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
             required
@@ -201,7 +209,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
                 </MenuItem>
               ))}
             </Select>
-          </FormControl> */}
+          </FormControl>
           <div>
             <label>{isActive ? 'Active' : 'Inactive'}</label>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
@@ -236,7 +244,9 @@ ProspectModal.propTypes = {
     parcelle: PropTypes.string,
     longitude: PropTypes.string,
     latitude: PropTypes.string,
+    cout_estime: PropTypes.string,
     status_validation_fk: PropTypes.string,
+    status_site_sfr: PropTypes.string,
     is_active: PropTypes.bool,
     retenu: PropTypes.bool,
   }),
