@@ -29,7 +29,6 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import ResetPasswordForm from 'layouts/authentification/ResetPasswordForm';
 import ConfirmSignup from 'layouts/authentification/ConfirmSignUp';
-import Billing from 'layouts/billing';
 import Contacts from 'layouts/contacts';
 import Profile from 'layouts/profile';
 import Entites from 'layouts/entites';
@@ -155,14 +154,6 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
               <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/billing"
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Billing />
             </ProtectedRoute>
           }
         />
