@@ -8,45 +8,30 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
-// import MDAlert from 'components/MDAlert';
-// import { Alert, AlertDescription } from 'components/ui/alert';
+import MDAlert from 'components/MDAlert';
 function Pheader() {
   const [isActive, setIsActive] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedprospect, setSelectedprospect] = useState(null);
-  const location = useLocation();
   const [alert, setAlert] = useState(false);
-  // const navigate = useNavigate();
+  const location = useLocation();
   const { EB } = location.state || {};
+  const Sid = EB;
 
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
   const handleAddProspect = () => {
     setShowModal(true);
   };
+
   const handleModalClose = () => {
     setShowModal(false);
   };
-  const fetchProspects = async () => {
-    try {
-      const response = await SiteProspectService.getProspectsSite(Sid);
-      if (response && response.success) {
-        setProspectsData(response.data);
-      } else {
-        setAlert({ show: true, message: errorMessage, type: 'error' });
-      }
-    } catch (err) {
-      setAlert({
-        show: true,
-        message: 'An error occurred while saving the prospect.',
-        type: 'error',
-      });
-    }
-  };
+
   const handleSave = async data => {
     const { prospectData } = data;
-    const Sid = EB;
     console.log('Sending request with Sid:', Sid);
     console.log('Form Data:', data); // Log all form data
     try {
@@ -55,9 +40,8 @@ function Pheader() {
       console.log('API result:', result);
       let successMessage = '';
       if (result.success) {
-        successMessage = 'Entité enregistrée avec succès !';
+        successMessage = 'Prospect enregistré avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
-        fetchProspects();
       } else {
         const errorMessage = `Error: ${result.error}`;
         console.error(errorMessage); // Log any errors from the API response
@@ -71,8 +55,9 @@ function Pheader() {
         type: 'error',
       });
     }
-    handleModalClose();
+    handleModalClose(); // Close the modal after save
   };
+
   return (
     <div className="prospect-list">
       <Card id="prospect-card">
@@ -84,50 +69,26 @@ function Pheader() {
             <Icon sx={{ fontWeight: 'bold' }}>add</Icon>&nbsp;Ajouter Prospect
           </MDButton>
         </MDBox>
-        <MDBox p={2}>
-          {/* <MDTypography variant="h6" fontWeight="medium">
-            {isActive ? 'Active' : 'Inactive'}
-          </MDTypography>
-          <Switch
-            checked={isActive}
-            onChange={() => handleChange}
-            style={{ marginRight: '10px' }}
-          /> */}
-          {/* <Grid container spacing={3}>
-            {companies.map(prospect => (
-              <Grid item xs={12} sm={8} md={4} key={prospect.id}>
-                <prospectCard
-                  prospect={prospect}
-                  onEdit={() => {
-                    setSelectedprospect(prospect);
-                    setShowModal(true);
-                    setNoResultsMessage('');
-                  }}
-                />
-              </Grid>
-            ))} */}
-          {/* </Grid> */}
-          {/* Conditionally render the no results alert */}
-          {/* {noResultsMessage && (
-            <Alert variant="destructive" className="mt-4">
-              <AlertDescription>{noResultsMessage}</AlertDescription>
-            </Alert>
-          )} */}
-        </MDBox>
+        <MDBox p={2}>{/* Your other code */}</MDBox>
       </Card>
       {showModal && (
-        <ProspectModal prospect={selectedprospect} onSave={handleSave} onClose={handleCloseModal} />
+        <ProspectModal
+          prospect={selectedprospect}
+          onSave={handleSave} // Pass handleSave to the modal so it can call it on save
+          onClose={handleCloseModal}
+        />
       )}
-      {/* {alert.show && (
+      {/* Display Alert if there's an error */}
+      {alert.show && (
         <MDAlert
           color={alert.type}
           dismissible
-          onClose={() => handleCloseAlert(setAlert)}
+          onClose={() => setAlert({ show: false })}
           style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
         >
           {alert.message}
         </MDAlert>
-      )}  */}
+      )}
     </div>
   );
 }

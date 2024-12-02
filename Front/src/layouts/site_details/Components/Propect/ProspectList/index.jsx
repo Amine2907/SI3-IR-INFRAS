@@ -74,7 +74,7 @@ function ProspectList({ site }) {
             return (
               <TableRow key={prospect.id}>
                 <TableCell>{prospect.nom || 'N/A'}</TableCell>
-                <TableCell>{prospect.status_validation_fk}</TableCell>
+                <TableCell>{prospect.status_validation_fk || 'N/A'}</TableCell>
                 <TableCell>{prospect.longitude || 'N/A'}</TableCell>
                 <TableCell>{prospect.latitude || 'N/A'}</TableCell>
                 <TableCell>{prospect.retenu || 'N/A'}</TableCell>
@@ -93,7 +93,5 @@ function ProspectList({ site }) {
 }
 ProspectList.propTypes = {
   site: PropTypes.string.isRequired,
-  // onSave: PropTypes.func.isRequired,
-  // onClose: PropTypes.func.isRequired,
 };
 export default ProspectList;

@@ -220,8 +220,9 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
               type="checkbox"
               checked={formData.retenu}
               readOnly
-              style={{ marginRight: '100px', cursor: 'pointer' }}
+              style={{ marginRight: '8px', cursor: 'pointer' }}
             />
+            <span style={{ fontSize: '14px', color: '#333' }}>Retenu</span>
           </div>
         </div>
         <div className={styles.buttonContainer}>
