@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from 'components/ui/tabs';
 import DpModal from './DpPopUp';
 import ProsUModal from './ProsPopUp';
 
-const CombinedModal = ({ prospect, dp, onSaveProspect, onSaveDp, onClose, open }) => {
+const CombinedModal = ({ prospect, Proid, dp, onSaveProspect, onSaveDp, onClose, open }) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-[800px]">
@@ -22,7 +22,7 @@ const CombinedModal = ({ prospect, dp, onSaveProspect, onSaveDp, onClose, open }
             </TabsContent>
             <TabsContent value="dp" className="mt-4">
               <DialogTitle>Ajouter Déclaration préalable</DialogTitle>
-              <DpModal dp={dp} onSave={onSaveDp} onClose={onClose} />
+              <DpModal Proid={Proid} dp={dp} onSave={onSaveDp} onClose={onClose} />
             </TabsContent>
           </Tabs>
         </DialogHeader>

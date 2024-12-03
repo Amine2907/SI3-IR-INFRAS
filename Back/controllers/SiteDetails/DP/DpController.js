@@ -3,6 +3,13 @@ import { etat } from "../../../models/SiteDetails/DP/DpData.js";
 //Create Dp controlller 
 const createDp = async (req, res) => {
   const { Proid, dpData } = req.body;
+    // Validate required fields
+    if (!Proid) {
+      return res.status(400).json({ error: 'Proid (Dp identifier) is required.' });
+    }
+    if (!dpData) {
+      return res.status(400).json({ error: 'dpData is required.' });
+    }
   // Ensure that the 'etat_prerequis' is correctly mapped to an integer ID (if it's passed as description)
   if (dpData.etat_prerequis && typeof dpData.etat_prerequis === 'object' && dpData.etat_prerequis.EP_desc) {
     const etatID = etat[dpData.etat_prerequis.EP_desc];
@@ -11,13 +18,6 @@ const createDp = async (req, res) => {
       return res.status(400).json({ error: `Invalid status validation description: ${dpData.etat_prerequis.EP_desc}` });
     }
     dpData.etat_prerequis = etatID; // Update with numeric status ID
-  }
-  // Validate required fields
-  if (!Proid) {
-    return res.status(400).json({ error: 'Proid (Dp identifier) is required.' });
-  }
-  if (!dpData) {
-    return res.status(400).json({ error: 'dpData is required.' });
   }
   try {
     // Call the model function to create a new Dp

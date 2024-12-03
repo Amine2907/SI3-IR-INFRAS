@@ -9,14 +9,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { Label } from '@radix-ui/react-label';
-import { useLocation } from 'react-router-dom';
-const DpModal = ({ dp, onSave, onClose }) => {
+const DpModal = ({ Proid, dp, onSave, onClose }) => {
   const [formData, setFormData] = useState(dp || {});
   const [isActive, setIsActive] = useState(dp ? dp.is_active : true);
   const [errors, setErrors] = useState({});
-  const location = useLocation();
-  const { Proid } = location.state || {};
-  console.log(Proid);
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -45,7 +41,7 @@ const DpModal = ({ dp, onSave, onClose }) => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      const DpData = {
+      const dpData = {
         ANO_certificat_tacite: formData.ANO_certificat_tacite,
         arrete_opposition: formData.arrete_opposition,
         derniere_verification: formData.derniere_verification,
@@ -59,11 +55,11 @@ const DpModal = ({ dp, onSave, onClose }) => {
         status_go_traveauxR: formData.status_go_traveauxR,
         is_active: true, // Always true*
       };
-      console.log('prospect data :', DpData);
-      onSave({ Proid, DpData });
+      console.log('prospect data :', dpData);
+      onSave({ Proid, dpData });
       return;
     }
-    const DpData = {
+    const dpData = {
       ANO_certificat_tacite: formData.ANO_certificat_tacite,
       arrete_opposition: formData.arrete_opposition,
       derniere_verification: formData.derniere_verification,
@@ -77,7 +73,7 @@ const DpModal = ({ dp, onSave, onClose }) => {
       status_go_traveauxR: formData.status_go_traveauxR,
       is_active: true, // Always true*
     };
-    onSave({ Proid, DpData });
+    onSave({ Proid, dpData });
   };
   const handleToggleActive = () => {
     if (dp) {
@@ -291,6 +287,7 @@ const DpModal = ({ dp, onSave, onClose }) => {
   );
 };
 DpModal.propTypes = {
+  Proid: PropTypes.string.isRequired,
   dp: PropTypes.shape({
     ANO_certificat_tacite: PropTypes.string,
     arrete_opposition: PropTypes.string,
