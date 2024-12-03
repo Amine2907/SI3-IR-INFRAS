@@ -16,6 +16,7 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
+import CombinedModal from 'examples/popup/PropsectDpPopUp/CombinedPopUp';
 function ProspectList({ site }) {
   const { prospectsData, loading, error, fetchProspectsData } = useProspectsData(site);
   const [showModal, setShowModal] = useState(false);
@@ -23,6 +24,7 @@ function ProspectList({ site }) {
   const location = useLocation();
   const { EB } = location.state || {};
   const [selectedprospect, setSelectedprospect] = useState(null);
+  const [selectedDp, setSelectedDp] = useState(null);
   const Sid = EB;
   const handleEdit = prospect => {
     setSelectedprospect(prospect);
@@ -140,10 +142,11 @@ function ProspectList({ site }) {
         </TableBody>
       </table>
       {showModal && (
-        <ProspectModal
-          Sid={Sid}
+        <CombinedModal
           prospect={selectedprospect}
-          onSave={handleUpdate}
+          dp={selectedDp}
+          onSaveProspect={handleUpdate}
+          onSaveDp={handleUpdate}
           onClose={handleCloseModal}
         />
       )}
