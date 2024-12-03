@@ -1,4 +1,4 @@
-const statusValidationValues = {
+const statusValidationMap = {
   1: '1. En recherche',
   2: '2. En relance recherche',
   3: '2.1 Bilan de zone',
@@ -26,4 +26,4 @@ const statusValidationValues = {
   25: 'Prospect Validé',
   26: 'GO CONSTR SFR',
 };
-export default { statusValidationValues };
+export default { statusValidationMap };
