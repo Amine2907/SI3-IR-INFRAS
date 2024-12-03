@@ -10,11 +10,20 @@ import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { Label } from '@radix-ui/react-label';
 const DpModal = ({ Proid, dp, onSave, onClose }) => {
-  const [formData, setFormData] = useState(dp || {});
+  const [formData, setFormData] = useState(
+    dp || {
+      etat_prerequis: '',
+      plans: '',
+    }
+  );
   const [isActive, setIsActive] = useState(dp ? dp.is_active : true);
   const [errors, setErrors] = useState({});
-  const handleChange = e => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = event => {
+    const { name, value } = event.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
   // const handleChange = e => {
   //   const { name, value } = e.target;
@@ -84,19 +93,34 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <div className={styles.formGrid}>
-          <MDInput
-            name="etat_prerequis"
-            value={formData.etat_prerequis || ''}
-            onChange={handleChange}
-            placeholder="Etat_prerequis*"
+          <FormControl
+            fullWidth
             style={{
-              marginBottom: '5px',
+              marginTop: '2px',
+              marginBottom: '10px',
               width: '350px',
-              marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
             }}
             required
-          />
+          >
+            <Select
+              name="etat_prerequis"
+              value={formData.etat_prerequis || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{
+                padding: '5px',
+                fontSize: '14px',
+                borderColor: errors.etat_prerequis ? 'red' : '',
+              }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir l&apos;etat prerequis --
+              </MenuItem>
+              <MenuItem value="Complet">Complet</MenuItem>
+              <MenuItem value="Incomplet">Incomplet</MenuItem>
+            </Select>
+          </FormControl>
           <MDInput
             name="numero_DP"
             value={formData.numero_DP || ''}
