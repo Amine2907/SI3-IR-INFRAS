@@ -9,10 +9,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { Label } from '@radix-ui/react-label';
+import { useLocation } from 'react-router-dom';
 const DpModal = ({ dp, onSave, onClose }) => {
   const [formData, setFormData] = useState(dp || {});
   const [isActive, setIsActive] = useState(dp ? dp.is_active : true);
   const [errors, setErrors] = useState({});
+  const location = useLocation();
+  const { Proid } = location.state || {};
+  console.log(Proid);
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -32,21 +36,48 @@ const DpModal = ({ dp, onSave, onClose }) => {
     }
     console.log('Initialized formData:', formData);
   }, [dp]);
-  //   const validateForm = () => {
-  //     const newErrors = {};
-  //     if (!formData.nom) newErrors.nom = true;
-  //     if (!formData.latitude) newErrors.latitude = true;
-  //     return newErrors;
-  //   };
-  const handleSubmit = () => {
+  const validateForm = () => {
     const newErrors = {};
-    // if (!formData.nom) newErrors.nom = true;
-    // if (!formData.prenom) newErrors.prenom = true;
+    if (!formData.nom) newErrors.nom = true;
+    return newErrors;
+  };
+  const handleSubmit = () => {
+    const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      const DpData = {
+        ANO_certificat_tacite: formData.ANO_certificat_tacite,
+        arrete_opposition: formData.arrete_opposition,
+        derniere_verification: formData.derniere_verification,
+        etat_prerequis: formData.etat_prerequis,
+        MJS: formData.MJS,
+        numero_DP: formData.numero_DP,
+        plans: formData.plans,
+        production_DP_PC: formData.production_DP_PC,
+        recipisse_depot_DP: formData.recipisse_depot_DP,
+        status_go_traveauxP: formData.status_go_traveauxP,
+        status_go_traveauxR: formData.status_go_traveauxR,
+        is_active: true, // Always true*
+      };
+      console.log('prospect data :', DpData);
+      onSave({ Proid, DpData });
       return;
     }
-    onSave({ ...formData, is_active: isActive });
+    const DpData = {
+      ANO_certificat_tacite: formData.ANO_certificat_tacite,
+      arrete_opposition: formData.arrete_opposition,
+      derniere_verification: formData.derniere_verification,
+      etat_prerequis: formData.etat_prerequis,
+      MJS: formData.MJS,
+      numero_DP: formData.numero_DP,
+      plans: formData.plans,
+      production_DP_PC: formData.production_DP_PC,
+      recipisse_depot_DP: formData.recipisse_depot_DP,
+      status_go_traveauxP: formData.status_go_traveauxP,
+      status_go_traveauxR: formData.status_go_traveauxR,
+      is_active: true, // Always true*
+    };
+    onSave({ Proid, DpData });
   };
   const handleToggleActive = () => {
     if (dp) {

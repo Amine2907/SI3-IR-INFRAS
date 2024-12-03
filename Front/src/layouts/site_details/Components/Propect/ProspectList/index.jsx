@@ -18,6 +18,7 @@ import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 import CombinedModal from 'examples/popup/PropsectDpPopUp/CombinedPopUp';
 import ProspectDpService from 'services/site_details/DP/DpService';
+import { useNavigate } from 'react-router-dom';
 function ProspectList({ site }) {
   const { prospectsData, loading, error, fetchProspectsData } = useProspectsData(site);
   const [showModal, setShowModal] = useState(false);
@@ -28,10 +29,15 @@ function ProspectList({ site }) {
   const [selectedprospect, setSelectedprospect] = useState(null);
   const [selectedDp, setSelectedDp] = useState(null);
   const Sid = EB;
+  const Proid = selectedprospect?.Proid;
+  const navigate = useNavigate();
   const handleEdit = prospect => {
     setSelectedprospect(prospect);
     setShowModal(true);
     setIsModalOpen(true);
+  };
+  const handleSendId = prospect => {
+    navigate('/site-prospect', { state: { Proid: prospect.Proid } });
   };
   const handleCloseModal = () => {
     setShowModal(false);
@@ -85,11 +91,12 @@ function ProspectList({ site }) {
   // handle add a DP to a Prospect
   const handleSaveDp = async data => {
     const { DpData } = data;
-    console.log('Sending request with Sid:', Sid);
+    // const Proid = selectedprospect?.Proid;
+    console.log('Sending request with Sid:', Proid);
     console.log('Form Data:', data); // Log all form data
     try {
       // Create new DP
-      const result = await ProspectDpService.createDp({ PRid, DpData });
+      const result = await ProspectDpService.createDp({ Proid, DpData });
       console.log('API result:', result);
       let successMessage = '';
       if (result.success) {
