@@ -15,7 +15,6 @@ const uploadDp = async (file) => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
-
 // Generate Signed URL for Dp File (Get a URL for secure access)
 const generateDpSignedUrl = async (filePath) => {
   try {
@@ -45,7 +44,6 @@ const downloadDp = async (filePath) => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
-
 const DpStorageService = {
   uploadDp,
   generateDpSignedUrl,
