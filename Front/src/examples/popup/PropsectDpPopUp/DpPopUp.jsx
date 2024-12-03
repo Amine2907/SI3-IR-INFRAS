@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import styles from './styles.module.css';
 import PropTypes from 'prop-types';
-import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch, Select, MenuItem, FormControl, Input } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import { DesktopDatePicker } from '@mui/x-date-pickers';
+import { Label } from '@radix-ui/react-label';
 const DpModal = ({ dp, onSave, onClose }) => {
   const [formData, setFormData] = useState(dp || {});
   const [isActive, setIsActive] = useState(dp ? dp.is_active : true);
   const [errors, setErrors] = useState({});
   const handleChange = e => {
-    const { name, value } = e.target;
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  // const handleChange = e => {
+  //   const { name, value } = e.target;
+  //   setFormData(prevFormData => ({
+  //     ...prevFormData,
+  //     [name]: value,
+  //   }));
+  // };
   useEffect(() => {
     if (dp) {
       setFormData({
@@ -51,65 +58,13 @@ const DpModal = ({ dp, onSave, onClose }) => {
       <div className={styles.modalContent}>
         <div className={styles.formGrid}>
           <MDInput
-            name="ANO_certificat_tacite"
-            value={formData.ANO_certificat_tacite || ''}
-            onChange={handleChange}
-            placeholder="ANO_certificat_tacite*"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
-            }}
-            required
-          />
-          <MDInput
-            name="arrete_opposition"
-            value={formData.arrete_opposition || ''}
-            onChange={handleChange}
-            placeholder="arrete_opposition*"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
-            }}
-            required
-          />
-          <MDInput
-            name="derniere_verification"
-            value={formData.derniere_verification || ''}
-            onChange={handleChange}
-            placeholder="derniere_verification*"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
-            }}
-            required
-          />
-          <MDInput
             name="etat_prerequis"
             value={formData.etat_prerequis || ''}
             onChange={handleChange}
-            placeholder="etat_prerequis*"
+            placeholder="Etat_prerequis*"
             style={{
               marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
-            }}
-            required
-          />
-          <MDInput
-            name="MJS"
-            value={formData.MJS || ''}
-            onChange={handleChange}
-            placeholder="MJS*"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
+              width: '350px',
               marginTop: '10px',
               borderColor: errors.nom ? 'red' : '',
             }}
@@ -119,18 +74,86 @@ const DpModal = ({ dp, onSave, onClose }) => {
             name="numero_DP"
             value={formData.numero_DP || ''}
             onChange={handleChange}
-            placeholder="numero_DP"
+            placeholder="Numero DP"
             style={{
               marginBottom: '5px',
-              width: '320px',
+              width: '350px',
               marginTop: '10px',
               borderColor: errors.cout_estime ? 'red' : '',
             }}
             required
           />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="ANO certificat tacite"
+              name="ANO_certificat_tacite"
+              value={formData.ANO_certificat_tacite ? dayjs(formData.ANO_certificat_tacite) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'ANO_certificat_tacite',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '320px' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Arrete opposition"
+              name="arrete_opposition"
+              value={formData.arrete_opposition ? dayjs(formData.arrete_opposition) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'arrete_opposition',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '320px' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Derniere verification"
+              name="derniere_verification"
+              value={formData.derniere_verification ? dayjs(formData.derniere_verification) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'derniere_verification',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '320px' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="MJS"
+              name="MJS"
+              value={formData.MJS ? dayjs(formData.MJS) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'MJS',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '300px' }}
+            />
+          </LocalizationProvider>
           <FormControl
             fullWidth
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+            style={{
+              marginTop: '2px',
+              marginBottom: '10px',
+              width: '350px',
+            }}
             required
           >
             <Select
@@ -139,7 +162,7 @@ const DpModal = ({ dp, onSave, onClose }) => {
               onChange={handleChange}
               displayEmpty
               style={{
-                padding: '10px',
+                padding: '5px',
                 fontSize: '14px',
                 borderColor: errors.plans ? 'red' : '',
               }}
@@ -148,76 +171,81 @@ const DpModal = ({ dp, onSave, onClose }) => {
               <MenuItem value="" disabled>
                 -- Choisir le status du plan --
               </MenuItem>
-              <MenuItem>OK</MenuItem>
-              <MenuItem>NOK</MenuItem>
+              <MenuItem value="OK">OK</MenuItem>
+              <MenuItem value="NOK">NOK</MenuItem>
             </Select>
           </FormControl>
-          <MDInput
-            name="production_DP_PC"
-            value={formData.production_DP_PC || ''}
-            onChange={handleChange}
-            placeholder="production_DP_PC"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.production_DP_PC ? 'red' : '',
-            }}
-            required
-          />
-          <MDInput
-            name="recipisse_depot_DP"
-            value={formData.recipisse_depot_DP || ''}
-            onChange={handleChange}
-            placeholder="recipisse_depot_DP"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.recipisse_depot_DP ? 'red' : '',
-            }}
-            required
-          />
-          <MDInput
-            name="status_go_traveauxP"
-            value={formData.status_go_traveauxP || ''}
-            onChange={handleChange}
-            placeholder="status_go_traveauxP"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.status_go_traveauxP ? 'red' : '',
-            }}
-            required
-          />
-          <MDInput
-            name="status_go_traveauxR"
-            value={formData.status_go_traveauxR || ''}
-            onChange={handleChange}
-            placeholder="status_go_traveauxR"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.status_go_traveauxR ? 'red' : '',
-            }}
-            required
-          />
-          <div>
-            <label>{isActive ? 'Active' : 'Inactive'}</label>
-            <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
-              {' '}
-              {isActive ? 'Active' : 'Inactive'}
-            </Switch>
-            <MDTypography>Relance</MDTypography>
-            <Input
-              type="checkbox"
-              checked={formData.relance}
-              readOnly
-              style={{ marginRight: '8px', cursor: 'pointer' }}
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Production DP PC"
+              name="production_DP_PC"
+              value={formData.production_DP_PC ? dayjs(formData.production_DP_PC) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'production_DP_PC',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '320px' }}
             />
-          </div>
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Recipisse depot DP"
+              name="recipisse_depot_DP"
+              value={formData.recipisse_depot_DP ? dayjs(formData.recipisse_depot_DP) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'recipisse_depot_DP',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '320px' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Status go traveaux (P)"
+              name="status_go_traveauxP"
+              value={formData.status_go_traveauxP ? dayjs(formData.status_go_traveauxP) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'status_go_traveauxP',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '320px' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Status go traveaux (R)"
+              name="status_go_traveauxR"
+              value={formData.status_go_traveauxR ? dayjs(formData.status_go_traveauxR) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'status_go_traveauxR',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '320px' }}
+            />
+          </LocalizationProvider>
+        </div>
+        <div>
+          <Label>{isActive ? 'Active' : 'Inactive'}</Label>
+          <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
+            {' '}
+            {isActive ? 'Active' : 'Inactive'}
+          </Switch>
         </div>
         <div className={styles.buttonContainer}>
           <MDButton onClick={handleSubmit} variant="gradient" color="dark">
@@ -244,7 +272,6 @@ DpModal.propTypes = {
     recipisse_depot_DP: PropTypes.string,
     status_go_traveauxP: PropTypes.string,
     status_go_traveauxR: PropTypes.string,
-    relance: PropTypes.bool,
     is_active: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,

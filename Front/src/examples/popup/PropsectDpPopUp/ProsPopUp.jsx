@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styles from './styles.module.css';
 import PropTypes from 'prop-types';
-import MDTypography from 'components/MDTypography';
+// import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch, Select, MenuItem, FormControl, Input } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 import { statusSfrValues, statusValidationValues } from '../ProspectsPopUp/ProspectData';
 const ProsUModal = ({ prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
@@ -185,13 +185,13 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               {' '}
               {isActive ? 'Active' : 'Inactive'}
             </Switch>
-            <MDTypography>Retenu</MDTypography>
+            {/* <MDTypography>Retenu</MDTypography>
             <Input
               type="checkbox"
               checked={formData.retenu}
               readOnly
               style={{ marginRight: '8px', cursor: 'pointer' }}
-            />
+            /> */}
           </div>
         </div>
         <div className={styles.buttonContainer}>

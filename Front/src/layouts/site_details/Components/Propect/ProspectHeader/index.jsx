@@ -17,19 +17,15 @@ function Pheader() {
   const location = useLocation();
   const { EB } = location.state || {};
   const Sid = EB;
-
   const handleCloseModal = () => {
     setShowModal(false);
   };
-
   const handleAddProspect = () => {
     setShowModal(true);
   };
-
-  const handleModalClose = () => {
-    setShowModal(false);
+  const handleUpload = () => {
+    null;
   };
-
   const handleSave = async data => {
     const { prospectData } = data;
     console.log('Sending request with Sid:', Sid);
@@ -55,9 +51,8 @@ function Pheader() {
         type: 'error',
       });
     }
-    handleModalClose(); // Close the modal after save
+    handleCloseModal();
   };
-
   return (
     <div className="prospect-list">
       <Card id="prospect-card">
@@ -67,6 +62,9 @@ function Pheader() {
           </MDTypography>
           <MDButton onClick={handleAddProspect} variant="gradient" color="dark">
             <Icon sx={{ fontWeight: 'bold' }}>add</Icon>&nbsp;Ajouter Prospect
+          </MDButton>
+          <MDButton onClick={handleUpload} variant="gradient" color="dark">
+            <Icon sx={{ fontWeight: 'bold' }}>upload</Icon>&nbsp;Telecharger
           </MDButton>
         </MDBox>
         <MDBox p={2}>{/* Your other code */}</MDBox>

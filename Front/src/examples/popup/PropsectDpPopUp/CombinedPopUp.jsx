@@ -1,9 +1,8 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from 'components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'components/ui/tabs';
-import { Button } from 'components/ui/button';
 import DpModal from './DpPopUp';
 import ProsUModal from './ProsPopUp';
 
@@ -15,19 +14,15 @@ const CombinedModal = ({ prospect, dp, onSaveProspect, onSaveDp, onClose, open }
           <Tabs defaultValue="prospect" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="prospect">Prospect</TabsTrigger>
-              <TabsTrigger value="dp">Declaration Prealable</TabsTrigger>
+              <TabsTrigger value="dp">Déclaration préalable</TabsTrigger>
             </TabsList>
             <TabsContent value="prospect" className="mt-4">
               <DialogTitle>Modifier Prospect</DialogTitle>
-              <div className="mt-4">
-                <ProsUModal prospect={prospect} onSave={onSaveProspect} onClose={onClose} />
-              </div>
+              <ProsUModal prospect={prospect} onSave={onSaveProspect} onClose={onClose} />
             </TabsContent>
             <TabsContent value="dp" className="mt-4">
-              <DialogTitle>Ajouter DP</DialogTitle>
-              <div className="mt-4">
-                <DpModal dp={dp} onSave={onSaveDp} onClose={onClose} />
-              </div>
+              <DialogTitle>Ajouter Déclaration préalable</DialogTitle>
+              <DpModal dp={dp} onSave={onSaveDp} onClose={onClose} />
             </TabsContent>
           </Tabs>
         </DialogHeader>

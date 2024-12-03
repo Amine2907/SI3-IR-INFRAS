@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 import CombinedModal from 'examples/popup/PropsectDpPopUp/CombinedPopUp';
+import ProspectDpService from 'services/site_details/DP/DpService';
 function ProspectList({ site }) {
   const { prospectsData, loading, error, fetchProspectsData } = useProspectsData(site);
   const [showModal, setShowModal] = useState(false);
@@ -40,6 +41,7 @@ function ProspectList({ site }) {
       fetchProspectsData();
     }
   }, [site, fetchProspectsData]);
+  // update a site's prospect
   const handleUpdate = async updates => {
     const Proid = selectedprospect?.Proid;
     console.log('Sending request with Proid:', Proid);
@@ -79,6 +81,34 @@ function ProspectList({ site }) {
       });
     }
     handleCloseModal(); // Close the modal after save
+  };
+  // handle add a DP to a Prospect
+  const handleSaveDp = async data => {
+    const { DpData } = data;
+    console.log('Sending request with Sid:', Sid);
+    console.log('Form Data:', data); // Log all form data
+    try {
+      // Create new DP
+      const result = await ProspectDpService.createDp({ PRid, DpData });
+      console.log('API result:', result);
+      let successMessage = '';
+      if (result.success) {
+        successMessage = 'Declaration Prealable enregistré avec succès !';
+        setAlert({ show: true, message: successMessage, type: 'success' });
+      } else {
+        const errorMessage = `Error: ${result.error}`;
+        console.error(errorMessage); // Log any errors from the API response
+        setAlert({ show: true, message: errorMessage, type: 'error' });
+      }
+    } catch (error) {
+      console.error('Error while sending request:', error);
+      setAlert({
+        show: true,
+        message: 'An error occurred while saving the prospect.',
+        type: 'error',
+      });
+    }
+    handleCloseModal();
   };
   if (loading)
     return (
@@ -133,7 +163,7 @@ function ProspectList({ site }) {
                   <Icon
                     sx={{ cursor: 'pointer' }}
                     fontSize="small"
-                    onClick={() => handleEdit(prospect)} // Pass the current prospect
+                    onClick={() => handleEdit(prospect)}
                   >
                     edit
                   </Icon>
@@ -149,7 +179,7 @@ function ProspectList({ site }) {
           prospect={selectedprospect}
           dp={selectedDp}
           onSaveProspect={handleUpdate}
-          onSaveDp={handleUpdate}
+          onSaveDp={handleSaveDp}
           onClose={() => setIsModalOpen(false)}
         />
       )}
