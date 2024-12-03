@@ -20,6 +20,7 @@ import CombinedModal from 'examples/popup/PropsectDpPopUp/CombinedPopUp';
 function ProspectList({ site }) {
   const { prospectsData, loading, error, fetchProspectsData } = useProspectsData(site);
   const [showModal, setShowModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [alert, setAlert] = useState(false);
   const location = useLocation();
   const { EB } = location.state || {};
@@ -29,6 +30,7 @@ function ProspectList({ site }) {
   const handleEdit = prospect => {
     setSelectedprospect(prospect);
     setShowModal(true);
+    setIsModalOpen(true);
   };
   const handleCloseModal = () => {
     setShowModal(false);
@@ -143,11 +145,12 @@ function ProspectList({ site }) {
       </table>
       {showModal && (
         <CombinedModal
+          open={isModalOpen}
           prospect={selectedprospect}
           dp={selectedDp}
           onSaveProspect={handleUpdate}
           onSaveDp={handleUpdate}
-          onClose={handleCloseModal}
+          onClose={() => setIsModalOpen(false)}
         />
       )}
     </TableContainer>

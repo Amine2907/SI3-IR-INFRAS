@@ -1,59 +1,59 @@
+/* eslint-disable */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styles from './styles.css';
-import MDTypography from 'components/MDTypography';
-import MDButton from 'components/MDButton';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from 'components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from 'components/ui/tabs';
+import { Button } from 'components/ui/button';
 import DpModal from './DpPopUp';
 import ProsUModal from './ProsPopUp';
 
-const CombinedModal = ({ prospect, dp, onSaveProspect, onSaveDp, onClose }) => {
-  const [activeTab, setActiveTab] = useState('prospect');
-
-  const handleTabSwitch = tab => {
-    setActiveTab(tab);
-  };
-
+const CombinedModal = ({ prospect, dp, onSaveProspect, onSaveDp, onClose, open }) => {
   return (
-    <div className={styles.modal}>
-      <div className={styles.modalContent}>
-        <div className={styles.modalHeader}>
-          <MDTypography
-            variant="h4"
-            className={`${styles.tab} ${activeTab === 'prospect' ? styles.activeTab : ''}`}
-            onClick={() => handleTabSwitch('prospect')}
-          >
-            Modifier Prospect
-          </MDTypography>
-          <MDTypography
-            variant="h4"
-            className={`${styles.tab} ${activeTab === 'dp' ? styles.activeTab : ''}`}
-            onClick={() => handleTabSwitch('dp')}
-          >
-            Ajouter DP
-          </MDTypography>
-        </div>
-        <div className={styles.modalBody}>
-          {activeTab === 'prospect' ? (
-            <ProsUModal prospect={prospect} onSave={onSaveProspect} onClose={onClose} />
-          ) : (
-            <DpModal dp={dp} onSave={onSaveDp} onClose={onClose} />
-          )}
-        </div>
-        <div className={styles.modalFooter}>
-          <MDButton onClick={onClose} variant="gradient" color="dark">
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-[800px]">
+        <DialogHeader>
+          <Tabs defaultValue="prospect" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="prospect">Modifier Prospect</TabsTrigger>
+              <TabsTrigger value="dp">Ajouter DP</TabsTrigger>
+            </TabsList>
+            <TabsContent value="prospect" className="mt-4">
+              <DialogTitle>Modifier Prospect</DialogTitle>
+              <div className="mt-4">
+                <ProsUModal prospect={prospect} onSave={onSaveProspect} onClose={onClose} />
+              </div>
+            </TabsContent>
+            <TabsContent value="dp" className="mt-4">
+              <DialogTitle>Ajouter DP</DialogTitle>
+              <div className="mt-4">
+                <DpModal dp={dp} onSave={onSaveDp} onClose={onClose} />
+              </div>
+            </TabsContent>
+          </Tabs>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
             Fermer
-          </MDButton>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
+
 CombinedModal.propTypes = {
   prospect: PropTypes.object,
   dp: PropTypes.object,
   onSaveProspect: PropTypes.func.isRequired,
   onSaveDp: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
 };
 
 export default CombinedModal;
