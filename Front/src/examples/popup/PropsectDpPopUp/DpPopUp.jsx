@@ -49,9 +49,6 @@ const DpModal = ({ dp, onSave, onClose }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <MDTypography variant="h3" fontWeight="medium" textAlign="center">
-          Ajouter dp
-        </MDTypography>
         <div className={styles.formGrid}>
           <MDInput
             name="ANO_certificat_tacite"

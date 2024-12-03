@@ -50,9 +50,6 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <MDTypography variant="h3" fontWeight="medium" textAlign="center">
-          Modifier prospect
-        </MDTypography>
         <div className={styles.formGrid}>
           <MDInput
             name="nom"
