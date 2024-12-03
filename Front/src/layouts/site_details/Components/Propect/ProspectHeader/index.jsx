@@ -9,7 +9,12 @@ import MDButton from 'components/MDButton';
 import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 import MDAlert from 'components/MDAlert';
+import DpStorageService from 'services/site_details/DP/dpStorageService';
 function Pheader() {
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [isActive, setIsActive] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedprospect, setSelectedprospect] = useState(null);
@@ -20,11 +25,38 @@ function Pheader() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+  const handleFileChange = event => {
+    const file = event.target.files[0]; // Get the first file selected
+    if (file) {
+      setFile(file);
+      setError('');
+    }
+  };
+  const handleUpload = async () => {
+    if (!file) {
+      setError('Please select a file first!');
+      return;
+    }
+
+    setUploading(true);
+    try {
+      // Call the upload service to upload the file
+      const response = await DpStorageService.uploadDp(file);
+
+      if (response.success) {
+        setSuccess('File uploaded successfully!');
+        setError('');
+      } else {
+        setError('Upload failed. Please try again!');
+      }
+    } catch (error) {
+      setError('An error occurred during upload.');
+    } finally {
+      setUploading(false);
+    }
+  };
   const handleAddProspect = () => {
     setShowModal(true);
-  };
-  const handleUpload = () => {
-    null;
   };
   const handleSave = async data => {
     const { prospectData } = data;
@@ -63,6 +95,7 @@ function Pheader() {
           <MDButton onClick={handleAddProspect} variant="gradient" color="dark">
             <Icon sx={{ fontWeight: 'bold' }}>add</Icon>&nbsp;Ajouter Prospect
           </MDButton>
+          <input type="file" onChange={handleFileChange} />
           <MDButton onClick={handleUpload} variant="gradient" color="dark">
             <Icon sx={{ fontWeight: 'bold' }}>upload</Icon>&nbsp;Telecharger
           </MDButton>
