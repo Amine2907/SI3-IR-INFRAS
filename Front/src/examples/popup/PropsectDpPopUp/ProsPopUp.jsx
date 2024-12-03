@@ -10,11 +10,12 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
   const [isActive, setIsActive] = useState(prospect ? prospect.is_active : true);
   const [errors, setErrors] = useState({});
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      [name]: value,
+  const handleChange = event => {
+    const { name, value } = event.target;
+    console.log('Dropdown Change:', { name, value }); // Verify name and value
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value, // Ensure 'name' matches the state key
     }));
   };
   useEffect(() => {
@@ -26,12 +27,6 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
     }
     console.log('Initialized formData:', formData);
   }, [prospect]);
-  // const validateForm = () => {
-  //   const newErrors = {};
-  //   if (!formData.nom) newErrors.nom = true;
-  //   if (!formData.latitude) newErrors.latitude = true;
-  //   return newErrors;
-  // };
   const handleSubmit = () => {
     const newErrors = {};
     // if (!formData.nom) newErrors.nom = true;
@@ -149,8 +144,8 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               <MenuItem value="" disabled>
                 -- Choisir le status validation --
               </MenuItem>
-              {statusValidationValues.map((status, index) => (
-                <MenuItem key={index} value={status}>
+              {statusValidationValues.map(status => (
+                <MenuItem key={status} value={status}>
                   {status}
                 </MenuItem>
               ))}

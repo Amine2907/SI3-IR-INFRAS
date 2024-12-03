@@ -15,9 +15,10 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
   const [errors, setErrors] = useState({});
   const handleChange = event => {
     const { name, value } = event.target;
+    console.log('Dropdown Change:', { name, value }); // Verify name and value
     setFormData(prevData => ({
       ...prevData,
-      [name]: value,
+      [name]: value, // Ensure 'name' matches the state key
     }));
   };
   useEffect(() => {

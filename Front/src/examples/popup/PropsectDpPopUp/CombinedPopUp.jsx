@@ -8,7 +8,7 @@ import ProsUModal from './ProsPopUp';
 
 const CombinedModal = ({ prospect, Proid, dp, onSaveProspect, onSaveDp, onClose, open }) => {
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onClose} focusLock={false}>
       <DialogContent className="max-w-[800px]">
         <DialogHeader>
           <Tabs defaultValue="prospect" className="w-full">
