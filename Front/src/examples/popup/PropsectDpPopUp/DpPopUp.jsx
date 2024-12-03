@@ -10,12 +10,7 @@ import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { Label } from '@radix-ui/react-label';
 const DpModal = ({ Proid, dp, onSave, onClose }) => {
-  const [formData, setFormData] = useState(
-    dp || {
-      etat_prerequis: '',
-      plans: '',
-    }
-  );
+  const [formData, setFormData] = useState(dp || {});
   const [isActive, setIsActive] = useState(dp ? dp.is_active : true);
   const [errors, setErrors] = useState({});
   const handleChange = event => {
@@ -25,18 +20,12 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
       [name]: value,
     }));
   };
-  // const handleChange = e => {
-  //   const { name, value } = e.target;
-  //   setFormData(prevFormData => ({
-  //     ...prevFormData,
-  //     [name]: value,
-  //   }));
-  // };
   useEffect(() => {
     if (dp) {
-      setFormData({
+      setFormData(prevData => ({
+        ...prevData,
         ...dp,
-      });
+      }));
       setIsActive(dp.is_active);
     }
     console.log('Initialized formData:', formData);
@@ -80,7 +69,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
       recipisse_depot_DP: formData.recipisse_depot_DP,
       status_go_traveauxP: formData.status_go_traveauxP,
       status_go_traveauxR: formData.status_go_traveauxR,
-      is_active: true, // Always true*
+      is_active: true, // Always true
     };
     onSave({ Proid, dpData });
   };
@@ -96,8 +85,8 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
           <FormControl
             fullWidth
             style={{
-              marginTop: '2px',
-              marginBottom: '10px',
+              marginTop: '12px',
+              marginBottom: '2px',
               width: '350px',
             }}
             required
@@ -108,7 +97,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
               onChange={handleChange}
               displayEmpty
               style={{
-                padding: '5px',
+                padding: '10px',
                 fontSize: '14px',
                 borderColor: errors.etat_prerequis ? 'red' : '',
               }}
@@ -202,7 +191,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
             fullWidth
             style={{
               marginTop: '2px',
-              marginBottom: '10px',
+              marginBottom: '2px',
               width: '350px',
             }}
             required
@@ -213,7 +202,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
               onChange={handleChange}
               displayEmpty
               style={{
-                padding: '5px',
+                padding: '10px',
                 fontSize: '14px',
                 borderColor: errors.plans ? 'red' : '',
               }}
