@@ -37,17 +37,18 @@ function Pheader() {
       setError('Please select a file first!');
       return;
     }
-
     setUploading(true);
     try {
+      const formData = new FormData();
+      formData.append('file', file); // Add the file to the form data
       // Call the upload service to upload the file
-      const response = await DpStorageService.uploadDp(file);
-
+      const response = await DpStorageService.uploadDp(formData);
+      console.log('API result:', response);
       if (response.success) {
         setSuccess('File uploaded successfully!');
         setError('');
       } else {
-        setError('Upload failed. Please try again!');
+        setError(response.error || 'Upload failed. Please try again!');
       }
     } catch (error) {
       setError('An error occurred during upload.');

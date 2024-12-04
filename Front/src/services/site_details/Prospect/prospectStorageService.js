@@ -3,9 +3,9 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/pros-storage';
 
 // Upload Prospect File (Store a file in Supabase)
-const uploadProspectFile = async (file) => {
+const uploadProspectFile = async (formData) => {
   try {
-    const response = await axios.post(`${API_URL}/upload-prospect`, file, {
+    const response = await axios.post(`${API_URL}/upload-prospect`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data', // For file upload
       },
@@ -15,7 +15,6 @@ const uploadProspectFile = async (file) => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
-
 // Generate Signed URL for Prospect File (Get a URL for secure access)
 const generateProspectSignedUrl = async (filePath) => {
   try {
