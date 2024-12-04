@@ -15,6 +15,7 @@ const createProspect = async ({ Sid, prospectData }) => {
 };
 // Update Prospect Service
 const updateProspect = async (Proid, updates) => {
+  console.log('Updates being sent:', updates);
   try {
     const response = await axios.put(`${API_URL}/${Proid}`, updates);
     return { success: true, data: response.data };

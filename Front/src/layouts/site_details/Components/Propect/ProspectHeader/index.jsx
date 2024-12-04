@@ -101,7 +101,6 @@ function Pheader() {
             <Icon sx={{ fontWeight: 'bold' }}>upload</Icon>&nbsp;Telecharger
           </MDButton>
         </MDBox>
-        <MDBox p={2}>{/* Your other code */}</MDBox>
       </Card>
       {showModal && (
         <ProspectModal
