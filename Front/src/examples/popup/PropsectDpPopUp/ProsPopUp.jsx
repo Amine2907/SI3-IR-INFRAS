@@ -18,7 +18,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
     console.log('Dropdown Change:', { name, value }); // Verify name and value
     setFormData(prevData => ({
       ...prevData,
-      [name]: value, // Ensure 'name' matches the state key
+      [name]: value,
     }));
   };
   useEffect(() => {
@@ -38,7 +38,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
       setErrors(newErrors);
       return;
     }
-    onSave({ ...formData, is_active: isActive });
+    onSave({ ...formData, is_active: isActive, retenu: isRetenu });
   };
   const handleToggleActive = () => {
     if (prospect) {

@@ -158,7 +158,7 @@ function ProspectList({ site }) {
                 <TableCell>{prospect.status_validation_fk || 'N/A'}</TableCell>
                 <TableCell>{prospect.longitude || 'N/A'}</TableCell>
                 <TableCell>{prospect.latitude || 'N/A'}</TableCell>
-                <TableCell>{prospect.retenu || 'N/A'}</TableCell>
+                <TableCell>{prospect.retenu ? 'Retenu' : 'Non retenu'}</TableCell>
                 <TableCell title="Modifier prospect" placement="top">
                   <Icon
                     sx={{ cursor: 'pointer' }}
