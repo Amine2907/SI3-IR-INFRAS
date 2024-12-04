@@ -1,15 +1,17 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import styles from './style.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch, Select, MenuItem, FormControl, Input } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 import { statusSfrValues, statusValidationValues } from './ProspectData';
 import { useLocation } from 'react-router-dom';
 const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
   const [isActive, setIsActive] = useState(prospect ? prospect.is_active : true);
+  const [isRetenu, setIsRetenu] = useState(prospect ? prospect.retenu : true);
   const [errors, setErrors] = useState({});
   const location = useLocation();
   const { EB } = location.state || {};
@@ -27,6 +29,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
         ...prospect,
       });
       setIsActive(prospect.is_active);
+      setIsRetenu(prospect.retenu);
     }
     console.log('Initialized formData:', formData);
   }, [prospect]);
@@ -50,7 +53,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
         status_site_sfr: formData.status_site_sfr,
         cout_estime: formData.cout_estime,
         is_active: true, // Always true*
-        retenu: false,
+        retenu: isRetenu,
       };
       console.log('prospect data :', prospectData);
       onSave({ Sid, prospectData });
@@ -66,7 +69,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
       status_site_sfr: formData.status_site_sfr,
       cout_estime: formData.cout_estime,
       is_active: true,
-      retenu: false,
+      retenu: isRetenu,
     };
     onSave({ Sid, prospectData });
   };
@@ -74,6 +77,10 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
     if (prospect) {
       setIsActive(!isActive);
     }
+  };
+  const handleToggleRetenu = () => {
+    console.log('Toggling Retenu:', !isRetenu);
+    setIsRetenu(!isRetenu);
   };
   return (
     <div className={styles.modal}>
@@ -216,13 +223,10 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
               {' '}
               {isActive ? 'Active' : 'Inactive'}
             </Switch>
-            <MDTypography>Retenu</MDTypography>
-            <Input
-              type="checkbox"
-              checked={formData.retenu}
-              readOnly
-              style={{ marginRight: '8px', cursor: 'pointer' }}
-            />
+            <label>{isRetenu ? 'Retenu' : 'Non Retenu'}</label>
+            <Switch type="checkbox" checked={isRetenu} onChange={handleToggleRetenu}>
+              {isRetenu ? 'Retenu' : 'Non Retenu'}
+            </Switch>
           </div>
         </div>
         <div className={styles.buttonContainer}>
@@ -249,7 +253,7 @@ ProspectModal.propTypes = {
     status_validation_fk: PropTypes.string,
     status_site_sfr: PropTypes.string,
     is_active: PropTypes.bool,
-    retenu: PropTypes.bool,
+    retenu: isRetenu,
   }),
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

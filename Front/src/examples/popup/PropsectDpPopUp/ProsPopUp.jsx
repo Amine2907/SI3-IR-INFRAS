@@ -10,6 +10,7 @@ import statusValidationMap from '../../../layouts/site_details/Components/Propec
 const ProsUModal = ({ prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
   const [isActive, setIsActive] = useState(prospect ? prospect.is_active : true);
+  const [isRetenu, setIsRetenu] = useState(prospect ? prospect.retenu : true);
   const [errors, setErrors] = useState({});
   const statusValidation = statusValidationMap[formData.status_validation_fk] || 'N/A';
   const handleChange = event => {
@@ -43,6 +44,10 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
     if (prospect) {
       setIsActive(!isActive);
     }
+  };
+  const handleToggleRetenu = () => {
+    console.log('Toggling Retenu:', !isRetenu);
+    setIsRetenu(!isRetenu);
   };
   return (
     <div className={styles.modal}>
@@ -182,13 +187,10 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               {' '}
               {isActive ? 'Active' : 'Inactive'}
             </Switch>
-            {/* <MDTypography>Retenu</MDTypography>
-            <Input
-              type="checkbox"
-              checked={formData.retenu}
-              readOnly
-              style={{ marginRight: '8px', cursor: 'pointer' }}
-            /> */}
+            <label>{isRetenu ? 'Retenu' : 'Non Retenu'}</label>
+            <Switch type="checkbox" checked={isRetenu} onChange={handleToggleRetenu}>
+              {isRetenu ? 'Retenu' : 'Non Retenu'}
+            </Switch>
           </div>
         </div>
         <div className={styles.buttonContainer}>
