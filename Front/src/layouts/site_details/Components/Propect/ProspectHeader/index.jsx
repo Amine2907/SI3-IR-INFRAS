@@ -26,7 +26,7 @@ function Pheader() {
     setShowModal(false);
   };
   const handleFileChange = event => {
-    const file = event.target.files[0]; // Get the first file selected
+    const file = event.target.files[0];
     if (file) {
       setFile(file);
       setError('');
