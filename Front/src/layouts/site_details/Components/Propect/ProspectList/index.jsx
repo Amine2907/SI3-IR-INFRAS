@@ -56,7 +56,7 @@ function ProspectList({ site }) {
       return;
     }
     try {
-      const result = await SiteProspectService.updateProspect({ Proid, updates });
+      const result = await SiteProspectService.updateProspect(Proid, updates);
       console.log('API result:', result);
       if (result.success) {
         setAlert({
