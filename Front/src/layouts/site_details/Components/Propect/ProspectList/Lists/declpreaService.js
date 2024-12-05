@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import ProspectDpService from 'services/site_details/DP/DpService';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
+import ProspectDpService from 'services/site_details/DP/DpService';
 import { useLocation } from 'react-router-dom';
 const useDpsForProspects = () => {
   const [loading, setLoading] = useState(true);
@@ -15,17 +15,14 @@ const useDpsForProspects = () => {
       try {
         setLoading(true);
         setError(null);
-
         // Step 1: Fetch Prospects for the Site
-        const prospectsResponse = await SiteProspectService.getProspectsBySite(siteId);
+        const prospectsResponse = await SiteProspectService.getProspectsSite(siteId);
         if (!prospectsResponse.success) throw new Error('Failed to fetch prospects');
-
         const prospects = prospectsResponse.data;
-
         // Step 2: Fetch DPs for Each Prospect
         const allDps = await Promise.all(
           prospects.map(async prospect => {
-            const dpsResponse = await ProspectDpService.getDpsByProspect(prospect.id);
+            const dpsResponse = await ProspectDpService.getDpsProspect(prospect.Proid);
             if (!dpsResponse.success) throw new Error('Failed to fetch DPs');
             return dpsResponse.data.map(dp => ({
               ...dp,
@@ -45,7 +42,6 @@ const useDpsForProspects = () => {
       fetchData();
     }
   }, [siteId]);
-
   return { dpsData, loading, error };
 };
 export default useDpsForProspects;
