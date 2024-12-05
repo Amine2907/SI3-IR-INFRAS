@@ -14,7 +14,6 @@ import cellStyle from '../Styles/styles';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import useDpsForProspects from './declpreaService';
-import DpModal from 'examples/popup/PropsectDpPopUp/DpPopUp';
 import ProspectDpService from 'services/site_details/DP/DpService';
 import DpUModal from 'examples/popup/DeclPreaPopUp/DpPopUp';
 function DeclPreaList({ prospect }) {
@@ -105,6 +104,7 @@ function DeclPreaList({ prospect }) {
       <table>
         <thead>
           <TableRow>
+            <TableCell sx={cellStyle}>Nom Prospect</TableCell>
             <TableCell sx={cellStyle}>Numero DP</TableCell>
             <TableCell sx={cellStyle}>ANO Certificat Tacite</TableCell>
             <TableCell sx={cellStyle}>Arrete Opposition</TableCell>
@@ -118,6 +118,7 @@ function DeclPreaList({ prospect }) {
           {dpsData.map(dp => {
             return (
               <TableRow key={dp.id}>
+                <TableCell>{dp.prospectName || 'N/A'}</TableCell>
                 <TableCell>{dp.numero_DP || 'N/A'}</TableCell>
                 <TableCell>{dp.ANO_certificat_tacite || 'N/A'}</TableCell>
                 <TableCell>{dp.arrete_opposition || 'N/A'}</TableCell>

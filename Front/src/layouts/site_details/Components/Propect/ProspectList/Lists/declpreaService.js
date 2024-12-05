@@ -9,7 +9,6 @@ const useDpsForProspects = () => {
   const location = useLocation();
   const { EB } = location.state || {};
   const siteId = EB;
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -26,11 +25,10 @@ const useDpsForProspects = () => {
             if (!dpsResponse.success) throw new Error('Failed to fetch DPs');
             return dpsResponse.data.map(dp => ({
               ...dp,
-              prospectName: prospect.nom, // Add prospect info for context
+              prospectName: prospect.nom,
             }));
           })
         );
-        // Flatten the array of arrays into a single array
         setDpsData(allDps.flat());
       } catch (err) {
         setError(err.message);
