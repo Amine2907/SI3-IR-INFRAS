@@ -253,7 +253,7 @@ ProspectModal.propTypes = {
     status_validation_fk: PropTypes.string,
     status_site_sfr: PropTypes.string,
     is_active: PropTypes.bool,
-    retenu: isRetenu,
+    retenu: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

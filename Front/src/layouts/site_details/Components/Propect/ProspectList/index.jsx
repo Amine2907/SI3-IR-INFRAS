@@ -64,7 +64,7 @@ function ProspectList({ site }) {
           message: 'Prospect enregistré avec succès !',
           type: 'success',
         });
-        fetchProspectsData(); // Refresh the prospects list
+        fetchProspectsData();
       } else {
         setAlert({
           show: true,
