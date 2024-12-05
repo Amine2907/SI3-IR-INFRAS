@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 import useDpsForProspects from './declpreaService';
 import DpModal from 'examples/popup/PropsectDpPopUp/DpPopUp';
 import ProspectDpService from 'services/site_details/DP/DpService';
+import DpUModal from 'examples/popup/DeclPreaPopUp/DpPopUp';
 function DeclPreaList({ prospect }) {
   const [showModal, setShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -133,14 +134,7 @@ function DeclPreaList({ prospect }) {
           })}
         </TableBody>
       </table>
-      {showModal && (
-        <DpModal
-          Proid={prospect?.Proid}
-          dp={selecteddp}
-          onSave={handleUpdate}
-          onClose={handleCloseModal}
-        />
-      )}
+      {showModal && <DpUModal dp={selecteddp} onSave={handleUpdate} onClose={handleCloseModal} />}
     </TableContainer>
   );
 }
