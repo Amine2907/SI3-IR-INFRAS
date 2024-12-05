@@ -12,7 +12,12 @@ import { Label } from '@radix-ui/react-label';
 const DpModal = ({ Proid, dp, onSave, onClose }) => {
   const [formData, setFormData] = useState(dp || {});
   const [isActive, setIsActive] = useState(dp ? dp.is_active : true);
+  const [isRelance, setIsRelance] = useState(dp ? dp.relance : true);
   const [errors, setErrors] = useState({});
+  const handleToggleRelance = () => {
+    console.log('Toggling Retenu:', !isRelance);
+    setIsRelance(!isRelance);
+  };
   const handleChange = event => {
     const { name, value } = event.target;
     console.log('Dropdown Change:', { name, value }); // Verify name and value
@@ -53,6 +58,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
         status_go_traveauxP: formData.status_go_traveauxP,
         status_go_traveauxR: formData.status_go_traveauxR,
         is_active: true, // Always true*
+        relance: isRelance,
       };
       console.log('prospect data :', dpData);
       onSave({ Proid, dpData });
@@ -71,6 +77,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
       status_go_traveauxP: formData.status_go_traveauxP,
       status_go_traveauxR: formData.status_go_traveauxR,
       is_active: true, // Always true
+      relance: isRelance,
     };
     onSave({ Proid, dpData });
   };
@@ -287,6 +294,10 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
             {' '}
             {isActive ? 'Active' : 'Inactive'}
           </Switch>
+          <label>{isRelance ? 'Relance' : 'Non Relance'}</label>
+          <Switch type="checkbox" checked={isRelance} onChange={handleToggleRelance}>
+            {isRelance ? 'Relance' : 'Non Relance'}
+          </Switch>
         </div>
         <div className={styles.buttonContainer}>
           <MDButton onClick={handleSubmit} variant="gradient" color="dark">
@@ -315,6 +326,7 @@ DpModal.propTypes = {
     status_go_traveauxP: PropTypes.string,
     status_go_traveauxR: PropTypes.string,
     is_active: PropTypes.bool,
+    relance: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
