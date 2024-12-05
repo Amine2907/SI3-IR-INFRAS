@@ -1,5 +1,5 @@
 import Pheader from './ProspectHeader';
-import ProspectList from './ProspectList';
+import HeaderList from './ProspectList/Header/Header';
 import Grid from '@mui/material/Grid';
 
 function Prospect() {
@@ -10,7 +10,7 @@ function Prospect() {
         <Pheader />
       </Grid>
       <Grid item>
-        <ProspectList />
+        <HeaderList />
       </Grid>
     </Grid>
   );

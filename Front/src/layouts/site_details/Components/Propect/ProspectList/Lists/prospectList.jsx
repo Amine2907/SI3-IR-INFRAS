@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { Alert, AlertDescription } from 'components/ui/alert';
 import useProspectsData from './prospectService';
-import cellStyle from './styles';
+import cellStyle from '../Styles/styles';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';

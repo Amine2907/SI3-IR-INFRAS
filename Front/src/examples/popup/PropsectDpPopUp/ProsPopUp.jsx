@@ -6,7 +6,7 @@ import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 import { statusSfrValues, statusValidationValues } from '../ProspectsPopUp/ProspectData';
-import statusValidationMap from '../../../layouts/site_details/Components/Propect/ProspectList/ProspectData';
+import statusValidationMap from '../../../layouts/site_details/Components/Propect/ProspectList/Lists/ProspectData';
 const ProsUModal = ({ prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
   const [isActive, setIsActive] = useState(prospect ? prospect.is_active : true);
