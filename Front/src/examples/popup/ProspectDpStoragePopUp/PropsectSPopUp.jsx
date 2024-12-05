@@ -3,12 +3,11 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 import MDButton from 'components/MDButton';
-
+import Typography from '@mui/material/Typography';
 const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
   const [files, setFiles] = useState([]); // List of files
   const [errors, setErrors] = useState({});
-
   // Form validation
   const validateForm = () => {
     const newErrors = {};
@@ -23,16 +22,6 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
     }
     onSave({ ...formData });
   };
-  // Fetch files
-  const handleFetchFiles = () => {
-    // Mock fetching files from an API
-    const mockFiles = [
-      { id: 1, name: 'document1.pdf', url: '/files/document1.pdf' },
-      { id: 2, name: 'document2.pdf', url: '/files/document2.pdf' },
-    ];
-    setFiles(mockFiles);
-  };
-
   // Add new file
   const handleAddFile = event => {
     const newFile = event.target.files[0];
@@ -55,13 +44,9 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h3>Prospect Fichiers</h3>
-        {/* Button to fetch files */}
-        <div className={styles.centerButton}>
-          <MDButton onClick={handleFetchFiles} variant="gradient" color="info">
-            Fetch Files
-          </MDButton>
-        </div>
+        <Typography variant="h6" gutterBottom align="center">
+          Prospect Fichiers
+        </Typography>
         {/* List of files */}
         <div className={styles.fileList}>
           {files.map(file => (

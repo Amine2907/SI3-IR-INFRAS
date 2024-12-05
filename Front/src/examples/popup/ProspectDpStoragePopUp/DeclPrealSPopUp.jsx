@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 import MDButton from 'components/MDButton';
-
+import Typography from '@mui/material/Typography';
 const DpStorageModal = ({ dp, onSave, onClose }) => {
   const [formData, setFormData] = useState(dp || {});
   const [files, setFiles] = useState([]); // List of files
@@ -22,15 +22,6 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
       return;
     }
     onSave({ ...formData });
-  };
-  // Fetch files
-  const handleFetchFiles = () => {
-    // Mock fetching files from an API
-    const mockFiles = [
-      { id: 1, name: 'file1.pdf', url: '/files/file1.pdf' },
-      { id: 2, name: 'file2.pdf', url: '/files/file2.pdf' },
-    ];
-    setFiles(mockFiles);
   };
   // Add new file
   const handleAddFile = event => {
@@ -57,13 +48,9 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h3>DPS Ficheirs</h3>
-        {/* Button to fetch files */}
-        <div className={styles.centerButton}>
-          <MDButton onClick={handleFetchFiles} variant="gradient" color="info">
-            Fetch Files
-          </MDButton>
-        </div>
+        <Typography variant="h6" gutterBottom align="center">
+          DPS Fichiers
+        </Typography>
         {/* List of files */}
         <div className={styles.fileList}>
           {files.map(file => (
