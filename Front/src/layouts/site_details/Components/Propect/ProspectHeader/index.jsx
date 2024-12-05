@@ -10,8 +10,10 @@ import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 import MDAlert from 'components/MDAlert';
 import DpStorageService from 'services/site_details/DP/dpStorageService';
+import CombinedStorageModal from 'examples/popup/ProspectDpStoragePopUp/CombinedSPopUp';
 function Pheader() {
   const [file, setFile] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -19,6 +21,7 @@ function Pheader() {
   const [showModal, setShowModal] = useState(false);
   const [showUploadModal, setshowUploadModal] = useState(false);
   const [selectedprospect, setSelectedprospect] = useState(null);
+  const [selecteddp, setSelecteddp] = useState(null);
   const [alert, setAlert] = useState(false);
   const location = useLocation();
   const { EB } = location.state || {};
@@ -26,15 +29,9 @@ function Pheader() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-  // const handleFileChange = event => {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     setFile(file);
-  //     setError('');
-  //   }
-  // };
   const handleUpload = async () => {
-    setshowUploadModal(false);
+    setshowUploadModal(true);
+    setIsModalOpen(true);
   };
   const handleAddProspect = () => {
     setShowModal(true);
@@ -85,6 +82,16 @@ function Pheader() {
       </Card>
       {showModal && (
         <ProspectModal prospect={selectedprospect} onSave={handleSave} onClose={handleCloseModal} />
+      )}
+      {showUploadModal && (
+        <CombinedStorageModal
+          prospect={selectedprospect}
+          dp={selecteddp}
+          onSaveProspect={handleSave}
+          onSaveDp={handleSave}
+          onClose={() => setIsModalOpen(false)}
+          open={isModalOpen}
+        />
       )}
       {/* Display Alert if there's an error */}
       {alert.show && (
