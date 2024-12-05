@@ -13,7 +13,7 @@ function HeaderList() {
         display="flex"
         alignItems="center"
         position="relative"
-        minHeight="16rem"
+        minHeight="3rem"
         borderRadius="xl"
         sx={{
           overflow: 'hidden',
