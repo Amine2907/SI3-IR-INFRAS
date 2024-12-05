@@ -92,10 +92,10 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
         {/* Form buttons */}
         <div className={styles.buttonContainer}>
           <MDButton onClick={handleSubmit} variant="gradient" color="dark">
-            Save
+            Enregistrer
           </MDButton>
           <MDButton onClick={onClose} variant="gradient" color="dark">
-            Close
+            Fermer
           </MDButton>
         </div>
       </div>

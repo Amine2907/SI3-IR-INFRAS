@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import useDpsForProspects from './declpreaService';
 import ProspectDpService from 'services/site_details/DP/DpService';
 import DpUModal from 'examples/popup/DeclPreaPopUp/DpPopUp';
-function DeclPreaList({ prospect }) {
+function DeclPreaList() {
   const [showModal, setShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alert, setAlert] = useState(false);
@@ -72,7 +72,7 @@ function DeclPreaList({ prospect }) {
         type: 'error',
       });
     }
-    handleCloseModal(); // Close the modal after save
+    handleCloseModal();
   };
   if (loading)
     return (

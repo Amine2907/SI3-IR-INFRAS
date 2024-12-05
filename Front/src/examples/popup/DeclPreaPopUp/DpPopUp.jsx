@@ -3,6 +3,7 @@ import styles from './styles.module.css';
 import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
+import MDTypography from 'components/MDTypography';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -57,6 +58,9 @@ const DpUModal = ({ dp, onSave, onClose }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
+        <MDTypography variant="h3" fontWeight="medium" textAlign="center">
+          Modifier DP
+        </MDTypography>
         <div className={styles.formGrid}>
           <FormControl
             fullWidth
