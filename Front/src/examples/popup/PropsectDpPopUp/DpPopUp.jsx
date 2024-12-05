@@ -88,7 +88,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
             style={{
               marginTop: '12px',
               marginBottom: '2px',
-              width: '350px',
+              width: '320px',
             }}
             required
           >
@@ -118,7 +118,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
             placeholder="Numero DP"
             style={{
               marginBottom: '5px',
-              width: '350px',
+              width: '300px',
               marginTop: '10px',
               borderColor: errors.cout_estime ? 'red' : '',
             }}
@@ -137,7 +137,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '320px' }}
+              style={{ marginBottom: '10px', width: '270px' }}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -153,7 +153,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '320px' }}
+              style={{ marginBottom: '10px', width: '270px' }}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -169,7 +169,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '320px' }}
+              style={{ marginBottom: '10px', width: '270px' }}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -193,7 +193,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
             style={{
               marginTop: '2px',
               marginBottom: '2px',
-              width: '350px',
+              width: '320px',
             }}
             required
           >
@@ -229,7 +229,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '320px' }}
+              style={{ marginBottom: '10px', width: '270px' }}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -245,7 +245,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '320px' }}
+              style={{ marginBottom: '10px', width: '270px' }}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -261,7 +261,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '320px' }}
+              style={{ marginBottom: '10px', width: '270px' }}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -277,7 +277,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '320px' }}
+              style={{ marginBottom: '10px', width: '270px' }}
             />
           </LocalizationProvider>
         </div>

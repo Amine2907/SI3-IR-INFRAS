@@ -1,12 +1,18 @@
 import Pheader from './ProspectHeader';
 import ProspectList from './ProspectList';
+import Grid from '@mui/material/Grid';
 
 function Prospect() {
   return (
-    <div>
-      <Pheader></Pheader>
-      <ProspectList></ProspectList>
-    </div>
+    <Grid container spacing={2} direction="column">
+      {' '}
+      <Grid item>
+        <Pheader />
+      </Grid>
+      <Grid item>
+        <ProspectList />
+      </Grid>
+    </Grid>
   );
 }
 export default Prospect;

@@ -15,7 +15,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
   const statusValidation = statusValidationMap[formData.status_validation_fk] || 'N/A';
   const handleChange = event => {
     const { name, value } = event.target;
-    console.log('Dropdown Change:', { name, value }); // Verify name and value
+    console.log('Dropdown Change:', { name, value });
     setFormData(prevData => ({
       ...prevData,
       [name]: value,
