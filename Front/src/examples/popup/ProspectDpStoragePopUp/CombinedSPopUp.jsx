@@ -25,7 +25,7 @@ const CombinedStorageModal = ({ prospect, dp, onSaveProspect, onSaveDp, onClose,
         bgcolor: 'background.paper',
         boxShadow: 24,
         p: 4,
-        width: '800px',
+        width: '600px',
         borderRadius: 2,
       }}
     >
