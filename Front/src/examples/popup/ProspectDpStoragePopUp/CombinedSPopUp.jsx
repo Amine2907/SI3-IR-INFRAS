@@ -39,7 +39,6 @@ const CombinedStorageModal = ({ prospect, dp, onSaveProspect, onSaveDp, onClose,
         <Tab label="Prospect" value="prospect" />
         <Tab label="Déclaration Préalable" value="dp" />
       </Tabs>
-
       <Paper
         elevation={0}
         sx={{

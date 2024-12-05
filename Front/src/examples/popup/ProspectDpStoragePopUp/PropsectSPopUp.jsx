@@ -1,33 +1,120 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import styles from './styles.module.css';
 import PropTypes from 'prop-types';
+import styles from './styles.module.css';
 import MDButton from 'components/MDButton';
+
 const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
+  const [files, setFiles] = useState([]); // List of files
   const [errors, setErrors] = useState({});
+
+  // Form validation
   const validateForm = () => {
     const newErrors = {};
     return newErrors;
   };
+  // Submit form
   const handleSubmit = () => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      onSave({});
       return;
     }
     onSave({ ...formData });
   };
+  // Fetch files
+  const handleFetchFiles = () => {
+    // Mock fetching files from an API
+    const mockFiles = [
+      { id: 1, name: 'document1.pdf', url: '/files/document1.pdf' },
+      { id: 2, name: 'document2.pdf', url: '/files/document2.pdf' },
+    ];
+    setFiles(mockFiles);
+  };
+
+  // Add new file
+  const handleAddFile = event => {
+    const newFile = event.target.files[0];
+    if (newFile) {
+      setFiles(prevFiles => [
+        ...prevFiles,
+        { id: Date.now(), name: newFile.name, url: URL.createObjectURL(newFile) },
+      ]);
+    }
+  };
+  const handleDownloadFile = file => {
+    const link = document.createElement('a');
+    link.href = file.url;
+    link.download = file.name;
+    link.click();
+  };
+  const handleDeleteFile = fileId => {
+    setFiles(prevFiles => prevFiles.filter(file => file.id !== fileId));
+  };
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
+        <h3>Prospect Files</h3>
+
+        {/* Button to fetch files */}
+        <div className={styles.centerButton}>
+          <MDButton onClick={handleFetchFiles} variant="gradient" color="info">
+            Fetch Files
+          </MDButton>
+        </div>
+
+        {/* List of files */}
+        <div className={styles.fileList}>
+          {files.map(file => (
+            <div key={file.id} className={styles.fileItem}>
+              <span>{file.name}</span>
+              <div>
+                <MDButton
+                  onClick={() => handleDownloadFile(file)}
+                  variant="gradient"
+                  color="success"
+                  size="small"
+                >
+                  Download
+                </MDButton>
+                <MDButton
+                  onClick={() => handleDeleteFile(file.id)}
+                  variant="gradient"
+                  color="error"
+                  size="small"
+                  style={{ marginLeft: '10px' }}
+                >
+                  Delete
+                </MDButton>
+              </div>
+            </div>
+          ))}
+          {files.length === 0 && <p>No files available. Fetch or add files.</p>}
+        </div>
+
+        {/* Button to add a new file */}
+        <div className={styles.addFile}>
+          <input
+            id="file-upload-prospect"
+            type="file"
+            style={{ display: 'none' }}
+            onChange={handleAddFile}
+          />
+          <label htmlFor="file-upload-prospect">
+            <MDButton variant="gradient" color="dark" component="span">
+              Add New File
+            </MDButton>
+          </label>
+        </div>
+
+        {/* Form buttons */}
         <div className={styles.buttonContainer}>
           <MDButton onClick={handleSubmit} variant="gradient" color="dark">
-            enregistrer
+            Save
           </MDButton>
           <MDButton onClick={onClose} variant="gradient" color="dark">
-            Fermer
+            Close
           </MDButton>
         </div>
       </div>
@@ -35,6 +122,7 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
   );
 };
 ProspectStorageModal.propTypes = {
+  prospect: PropTypes.object,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
