@@ -25,13 +25,13 @@ function Pheader() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-  const handleFileChange = event => {
-    const file = event.target.files[0];
-    if (file) {
-      setFile(file);
-      setError('');
-    }
-  };
+  // const handleFileChange = event => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     setFile(file);
+  //     setError('');
+  //   }
+  // };
   const handleUpload = async () => {
     if (!file) {
       setError('Please select a file first!');
@@ -93,21 +93,18 @@ function Pheader() {
           <MDTypography variant="h6" fontWeight="medium">
             Prospects
           </MDTypography>
-          <MDButton onClick={handleAddProspect} variant="gradient" color="dark">
-            <Icon sx={{ fontWeight: 'bold' }}>add</Icon>&nbsp;Ajouter Prospect
-          </MDButton>
-          <input type="file" onChange={handleFileChange} />
-          <MDButton onClick={handleUpload} variant="gradient" color="dark">
-            <Icon sx={{ fontWeight: 'bold' }}>upload</Icon>&nbsp;Telecharger
-          </MDButton>
+          <MDBox display="flex" gap={2}>
+            <MDButton onClick={handleAddProspect} variant="gradient" color="dark">
+              <Icon sx={{ fontWeight: 'bold' }}>add</Icon>&nbsp;Ajouter Prospect
+            </MDButton>
+            <MDButton onClick={handleUpload} variant="gradient" color="dark">
+              <Icon sx={{ fontWeight: 'bold' }}>upload</Icon>&nbsp;Telecharger
+            </MDButton>
+          </MDBox>
         </MDBox>
       </Card>
       {showModal && (
-        <ProspectModal
-          prospect={selectedprospect}
-          onSave={handleSave} // Pass handleSave to the modal so it can call it on save
-          onClose={handleCloseModal}
-        />
+        <ProspectModal prospect={selectedprospect} onSave={handleSave} onClose={handleCloseModal} />
       )}
       {/* Display Alert if there's an error */}
       {alert.show && (
