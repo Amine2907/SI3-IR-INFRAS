@@ -55,15 +55,13 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h3>Prospect Files</h3>
-
+        <h3>Prospect Fichiers</h3>
         {/* Button to fetch files */}
         <div className={styles.centerButton}>
           <MDButton onClick={handleFetchFiles} variant="gradient" color="info">
             Fetch Files
           </MDButton>
         </div>
-
         {/* List of files */}
         <div className={styles.fileList}>
           {files.map(file => (
@@ -92,7 +90,6 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
           ))}
           {files.length === 0 && <p>No files available. Fetch or add files.</p>}
         </div>
-
         {/* Button to add a new file */}
         <div className={styles.addFile}>
           <input
@@ -103,11 +100,10 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
           />
           <label htmlFor="file-upload-prospect">
             <MDButton variant="gradient" color="dark" component="span">
-              Add New File
+              Ajouter un neauveau fichier
             </MDButton>
           </label>
         </div>
-
         {/* Form buttons */}
         <div className={styles.buttonContainer}>
           <MDButton onClick={handleSubmit} variant="gradient" color="dark">

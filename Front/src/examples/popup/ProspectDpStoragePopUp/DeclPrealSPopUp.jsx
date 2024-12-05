@@ -57,7 +57,7 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h3>Manage Files</h3>
+        <h3>DPS Ficheirs</h3>
         {/* Button to fetch files */}
         <div className={styles.centerButton}>
           <MDButton onClick={handleFetchFiles} variant="gradient" color="info">
