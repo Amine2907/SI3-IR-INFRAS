@@ -231,7 +231,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
         </div>
         <div className={styles.buttonContainer}>
           <MDButton onClick={handleSubmit} variant="gradient" color="dark">
-            Save
+            Enregistrer
           </MDButton>
           <MDButton onClick={onClose} variant="gradient" color="dark">
             Fermer
