@@ -19,7 +19,10 @@ const useProspectsData = site => {
           setError(response.error?.message || 'Échec de la récupération des données des prospects');
         }
       } catch (err) {
-        setError('An error occurred while fetching prospects data: ' + err.message);
+        setError(
+          "Une erreur s'est produite lors de la récupération des données des prospects : " +
+            err.message
+        );
       } finally {
         setLoading(false);
       }

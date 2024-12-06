@@ -64,125 +64,127 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           Modifier profil
         </MDTypography>
-        <MDInput
-          name="firstname"
-          value={formData.firstname || ''}
-          onChange={handleChange}
-          placeholder="Prenom*"
-          style={{
-            marginBottom: '5px',
-            width: '320px',
-            marginTop: '10px',
-            borderColor: errors.firstname ? 'red' : '',
-          }}
-          required
-        />
-        <MDInput
-          name="lastname"
-          value={formData.lastname || ''}
-          onChange={handleChange}
-          placeholder="Nom*"
-          style={{
-            marginBottom: '5px',
-            width: '320px',
-            marginTop: '10px',
-            borderColor: errors.firstname ? 'red' : '',
-          }}
-          required
-        />
-        <FormControl
-          fullWidth
-          style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-          required
-        >
-          <Select
-            name="genre"
-            value={formData.genre || ''}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '320px' }}>
+          <MDInput
+            name="firstname"
+            value={formData.firstname || ''}
             onChange={handleChange}
-            displayEmpty
+            placeholder="Prenom*"
             style={{
-              padding: '10px',
-              fontSize: '14px',
-              borderColor: errors.genre ? 'red' : '',
+              marginBottom: '5px',
+              width: '320px',
+              marginTop: '10px',
+              borderColor: errors.firstname ? 'red' : '',
             }}
             required
-          >
-            <MenuItem value="" disabled>
-              -- Choisir genre --
-            </MenuItem>
-            <MenuItem value="Homme">Homme</MenuItem>
-            <MenuItem value="Femme">Femme</MenuItem>
-          </Select>
-        </FormControl>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DesktopDatePicker
-            label="Date de naissance"
-            name="Date de naissance"
-            value={formData.date_de_naissance ? dayjs(formData.date_de_naissance) : null}
-            onChange={newValue => {
-              handleChange({
-                target: {
-                  name: 'date_de_naissance',
-                  value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                },
-              });
-            }}
-            style={{ marginBottom: '10px', width: '320px' }}
           />
-        </LocalizationProvider>
-        <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
-          <Select
-            name="entreprise"
-            value={formData.entreprise || ''}
+          <MDInput
+            name="lastname"
+            value={formData.lastname || ''}
             onChange={handleChange}
-            displayEmpty
+            placeholder="Nom*"
             style={{
-              padding: '10px',
-              fontSize: '14px',
-              borderColor: errors.department ? 'red' : '',
+              marginBottom: '5px',
+              width: '320px',
+              marginTop: '10px',
+              borderColor: errors.firstname ? 'red' : '',
             }}
             required
-          >
-            <MenuItem value="" disabled>
-              -- Choisir une entreprise --
-            </MenuItem>
-            {activeCompanies.length > 0 ? (
-              activeCompanies.map(company => (
-                <MenuItem key={company.nom} value={company.ENTid}>
-                  {company.nom}
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem value="">Pas des entreprises actives</MenuItem>
-            )}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
-          <Select
-            name="department"
-            value={formData.department || ''}
-            onChange={handleChange}
-            displayEmpty
-            style={{
-              padding: '10px',
-              fontSize: '14px',
-              borderColor: errors.department ? 'red' : '',
-            }}
+          />
+          <FormControl
+            fullWidth
+            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
             required
           >
-            <MenuItem value="" disabled>
-              -- Choisir le département--
-            </MenuItem>
-            <MenuItem value="RH">RH</MenuItem>
-            <MenuItem value="Direction">Direction</MenuItem>
-            <MenuItem value="Contrôle De Gestion">Contrôle De Gestion</MenuItem>
-            <MenuItem value="Informatique">Informatique</MenuItem>
-            <MenuItem value="Conception">Conception</MenuItem>
-            <MenuItem value="Énergie">Énergie</MenuItem>
-            <MenuItem value="Finance">Finance</MenuItem>
-            <MenuItem value="Étude Prix">Étude Prix</MenuItem>
-          </Select>
-        </FormControl>
+            <Select
+              name="genre"
+              value={formData.genre || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.genre ? 'red' : '',
+              }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir genre --
+              </MenuItem>
+              <MenuItem value="Homme">Homme</MenuItem>
+              <MenuItem value="Femme">Femme</MenuItem>
+            </Select>
+          </FormControl>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Date de naissance"
+              name="Date de naissance"
+              value={formData.date_de_naissance ? dayjs(formData.date_de_naissance) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'date_de_naissance',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '100%' }} // Full width
+            />
+          </LocalizationProvider>
+          <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+            <Select
+              name="entreprise"
+              value={formData.entreprise || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.department ? 'red' : '',
+              }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir une entreprise --
+              </MenuItem>
+              {activeCompanies.length > 0 ? (
+                activeCompanies.map(company => (
+                  <MenuItem key={company.nom} value={company.ENTid}>
+                    {company.nom}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="">Pas des entreprises actives</MenuItem>
+              )}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+            <Select
+              name="department"
+              value={formData.department || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.department ? 'red' : '',
+              }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir le département--
+              </MenuItem>
+              <MenuItem value="RH">RH</MenuItem>
+              <MenuItem value="Direction">Direction</MenuItem>
+              <MenuItem value="Contrôle De Gestion">Contrôle De Gestion</MenuItem>
+              <MenuItem value="Informatique">Informatique</MenuItem>
+              <MenuItem value="Conception">Conception</MenuItem>
+              <MenuItem value="Énergie">Énergie</MenuItem>
+              <MenuItem value="Finance">Finance</MenuItem>
+              <MenuItem value="Étude Prix">Étude Prix</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
         <MDButton
           onClick={handleSubmit}
           variant="gradient"

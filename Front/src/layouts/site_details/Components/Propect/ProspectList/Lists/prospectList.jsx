@@ -10,6 +10,7 @@ import {
   Icon,
 } from '@mui/material';
 import { Alert, AlertDescription } from 'components/ui/alert';
+import MDAlert from 'components/MDAlert';
 import useProspectsData from './prospectService';
 import cellStyle from '../Styles/styles';
 import { useLocation } from 'react-router-dom';
@@ -22,7 +23,7 @@ function ProspectList({ site }) {
   const { prospectsData, loading, error, fetchProspectsData } = useProspectsData(site);
   const [showModal, setShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [alert, setAlert] = useState(false);
+  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
   const { EB } = location.state || {};
   const [selectedprospect, setSelectedprospect] = useState(null);
@@ -53,13 +54,13 @@ function ProspectList({ site }) {
   // update a site's prospect
   const handleUpdate = async updates => {
     const Proid = selectedprospect?.Proid;
-    console.log('Sending request with Proid:', Proid);
-    console.log('Form Data:', updates);
+    // console.log('Sending request with Proid:', Proid);
+    // console.log('Form Data:', updates);
     if (!Proid) {
-      console.error('Proid is missing, cannot update.');
+      console.error('Le Proid est manquant, impossible de mettre à jour.');
       setAlert({
         show: true,
-        message: 'An error occurred: Proid is missing.',
+        message: "Une erreur s'est produite : l'ID du prospect est manquant.",
         type: 'error',
       });
       return;
@@ -70,7 +71,7 @@ function ProspectList({ site }) {
       if (result.success) {
         setAlert({
           show: true,
-          message: 'Prospect enregistré avec succès !',
+          message: 'Prospect modifié avec succès !',
           type: 'success',
         });
         fetchProspectsData();
@@ -85,7 +86,7 @@ function ProspectList({ site }) {
       console.error('Error while sending request:', error);
       setAlert({
         show: true,
-        message: 'An error occurred while saving the prospect.',
+        message: "Une erreur s'est produite lors de l'enregistrement du prospect.",
         type: 'error',
       });
     }
@@ -95,8 +96,8 @@ function ProspectList({ site }) {
   const handleSaveDp = async data => {
     const { dpData } = data;
     // const Proid = selectedprospect?.Proid;
-    console.log('Sending request with Proid:', Proid);
-    console.log('Form Data:', data); // Log all form data
+    // console.log('Sending request with Proid:', Proid);
+    // console.log('Form Data:', data); // Log all form data
     try {
       // Create new DP
       const result = await ProspectDpService.createDp({ Proid, dpData });
@@ -114,7 +115,7 @@ function ProspectList({ site }) {
       console.error('Error while sending request:', error);
       setAlert({
         show: true,
-        message: 'An error occurred while saving the prospect.',
+        message: "Une erreur s'est produite lors de l'enregistrement de la déclaration préalable.",
         type: 'error',
       });
     }
@@ -192,6 +193,17 @@ function ProspectList({ site }) {
           onSaveDp={handleSaveDp}
           onClose={() => setIsModalOpen(false)}
         />
+      )}
+      {/* Display Alert if there's an error */}
+      {alert.show && (
+        <MDAlert
+          color={alert.type}
+          dismissible
+          onClose={() => setAlert({ show: false })}
+          style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
+        >
+          {alert.message}
+        </MDAlert>
       )}
     </TableContainer>
   );

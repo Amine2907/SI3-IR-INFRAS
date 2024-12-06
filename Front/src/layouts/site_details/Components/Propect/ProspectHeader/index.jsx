@@ -9,15 +9,9 @@ import MDButton from 'components/MDButton';
 import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 import MDAlert from 'components/MDAlert';
-import DpStorageService from 'services/site_details/DP/dpStorageService';
 import CombinedStorageModal from 'examples/popup/ProspectDpStoragePopUp/CombinedSPopUp';
 function Pheader() {
-  const [file, setFile] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [isActive, setIsActive] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showUploadModal, setshowUploadModal] = useState(false);
   const [selectedprospect, setSelectedprospect] = useState(null);
@@ -38,12 +32,12 @@ function Pheader() {
   };
   const handleSave = async data => {
     const { prospectData } = data;
-    console.log('Sending request with Sid:', Sid);
-    console.log('Form Data:', data); // Log all form data
+    // console.log('Sending request with Sid:', Sid);
+    // console.log('Form Data:', data); // Log all form data
     try {
       // Create new prospect
       const result = await SiteProspectService.createProspect({ Sid, prospectData });
-      console.log('API result:', result);
+      // console.log('API result:', result);
       let successMessage = '';
       if (result.success) {
         successMessage = 'Prospect enregistré avec succès !';

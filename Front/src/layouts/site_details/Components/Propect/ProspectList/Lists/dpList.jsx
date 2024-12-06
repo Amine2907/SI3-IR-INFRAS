@@ -16,17 +16,18 @@ import PropTypes from 'prop-types';
 import useDpsForProspects from './declpreaService';
 import ProspectDpService from 'services/site_details/DP/DpService';
 import DpUModal from 'examples/popup/DeclPreaPopUp/DpPopUp';
+import MDAlert from 'components/MDAlert';
 function DeclPreaList() {
   const [showModal, setShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [alert, setAlert] = useState(false);
+  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
   const { EB } = location.state || {};
   const [selecteddp, setSelecteddp] = useState(null);
   const siteId = EB;
-  const { dpsData, loading, error, fetchDpData } = useDpsForProspects(siteId);
+  const { dpsData, loading, error } = useDpsForProspects(siteId);
   const handleEdit = dp => {
-    console.log('Editing DP:', dp);
+    // console.log('Editing DP:', dp);
     setSelecteddp(dp);
     setShowModal(true);
     setIsModalOpen(true);
@@ -36,12 +37,12 @@ function DeclPreaList() {
   };
   const handleUpdate = async updates => {
     const DPid = selecteddp?.DPid;
-    console.log('Sending update for DPid:', DPid, 'Updates:', updates);
+    // console.log('Sending update for DPid:', DPid, 'Updates:', updates);
     if (!DPid) {
       console.error('DPid is missing, cannot update.');
       setAlert({
         show: true,
-        message: 'An error occurred: DPid is missing.',
+        message: "Une erreur s'est produite : l'ID de la DP est manquant.",
         type: 'error',
       });
       return;
@@ -49,13 +50,11 @@ function DeclPreaList() {
     const { prospectName, ...filteredUpdates } = updates;
     try {
       const result = await ProspectDpService.updateDp(DPid, filteredUpdates);
-      console.log('API result:', result);
+      // console.log('API result:', result);
+      let successMessage = '';
       if (result.success) {
-        setAlert({
-          show: true,
-          message: 'DP enregistré avec succès !',
-          type: 'success',
-        });
+        successMessage = 'DP modifiee avec succès !';
+        setAlert({ show: true, message: successMessage, type: 'success' });
         handleCloseModal();
       } else {
         setAlert({
@@ -68,7 +67,7 @@ function DeclPreaList() {
       console.error('Error while sending request:', error);
       setAlert({
         show: true,
-        message: 'An error occurred while updating the DP.',
+        message: "Une erreur s'est produite lors de la mise à jour de la DP.",
         type: 'error',
       });
     }
@@ -136,6 +135,17 @@ function DeclPreaList() {
         </TableBody>
       </table>
       {showModal && <DpUModal dp={selecteddp} onSave={handleUpdate} onClose={handleCloseModal} />}
+      {/* Display Alert if there's an error */}
+      {alert.show && (
+        <MDAlert
+          color={alert.type}
+          dismissible
+          onClose={() => setAlert({ show: false })}
+          style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
+        >
+          {alert.message}
+        </MDAlert>
+      )}
     </TableContainer>
   );
   5;
