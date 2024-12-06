@@ -6,13 +6,12 @@ import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 import { statusSfrValues, statusValidationValues } from '../ProspectsPopUp/ProspectData';
-import statusValidationMap from '../../../layouts/site_details/Components/Propect/ProspectList/Lists/ProspectData';
+import { mapValidationStatus } from './ProsData';
 const ProsUModal = ({ prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
   const [isActive, setIsActive] = useState(prospect ? prospect.is_active : true);
   const [isRetenu, setIsRetenu] = useState(prospect ? prospect.retenu : true);
   const [errors, setErrors] = useState({});
-  const statusValidation = statusValidationMap[formData.status_validation_fk] || 'N/A';
   const handleChange = event => {
     const { name, value } = event.target;
     console.log('Dropdown Change:', { name, value });
@@ -25,6 +24,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
     if (prospect) {
       setFormData({
         ...prospect,
+        status_validation_fk: mapValidationStatus(prospect.status_validation_fk),
       });
       setIsActive(prospect.is_active);
     }
@@ -137,14 +137,14 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
             required
           >
             <Select
-              name="statusValidation"
-              value={statusValidation || ''}
+              name="status_validation_fk"
+              value={formData.status_validation_fk || ''}
               onChange={handleChange}
               displayEmpty
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.statusValidation ? 'red' : '',
+                borderColor: errors.status_validation_fk ? 'red' : '',
               }}
               required
             >
