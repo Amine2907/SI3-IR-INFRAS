@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 import CombinedModal from 'examples/popup/PropsectDpPopUp/CombinedPopUp';
 import ProspectDpService from 'services/site_details/DP/DpService';
+import { statusValidationValues } from './ProspectData';
 function ProspectList({ site }) {
   const { prospectsData, loading, error, fetchProspectsData } = useProspectsData(site);
   const [showModal, setShowModal] = useState(false);
@@ -36,6 +37,14 @@ function ProspectList({ site }) {
   const handleCloseModal = () => {
     setShowModal(false);
   };
+  useEffect(() => {
+    if (prospectsData && prospectsData.length > 0) {
+      console.log('Prospects Data:', prospectsData);
+      prospectsData.forEach(prospect => {
+        console.log('Status Validation FK:', prospect.status_validation_fk);
+      });
+    }
+  }, [prospectsData]);
   useEffect(() => {
     if (Sid) {
       fetchProspectsData();
@@ -151,11 +160,11 @@ function ProspectList({ site }) {
         </thead>
         <TableBody>
           {prospectsData.map(prospect => {
-            // const statusValidation = statusValidationValues[prospect.status_validation_fk] || 'N/A';
+            const statusValidation = statusValidationValues[prospect.status_validation_fk] || 'N/A';
             return (
               <TableRow key={prospect.id}>
                 <TableCell>{prospect.nom || 'N/A'}</TableCell>
-                <TableCell>{prospect.status_validation_fk || 'N/A'}</TableCell>
+                <TableCell>{statusValidation}</TableCell>
                 <TableCell>{prospect.longitude || 'N/A'}</TableCell>
                 <TableCell>{prospect.latitude || 'N/A'}</TableCell>
                 <TableCell>{prospect.retenu ? 'Retenu' : 'Non retenu'}</TableCell>
