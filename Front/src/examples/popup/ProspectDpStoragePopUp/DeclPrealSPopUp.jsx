@@ -30,11 +30,6 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
     };
     fetchFiles();
   }, []);
-  //   useEffect(() => {
-  //     if (files.length === 0) {
-  //       fetchFiles();
-  //     }
-  //   }, [files]);
   // Form validation
   const validateForm = () => {
     const newErrors = {};
@@ -58,10 +53,7 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
   const handleAddFile = event => {
     const newFile = event.target.files[0];
     if (newFile) {
-      setFiles(prevFiles => [
-        ...prevFiles,
-        { id: Date.now(), name: newFile.name, url: URL.createObjectURL(newFile) },
-      ]);
+      setFiles([{ id: Date.now(), name: newFile.name, url: URL.createObjectURL(newFile) }]);
     }
   };
   // Download a file

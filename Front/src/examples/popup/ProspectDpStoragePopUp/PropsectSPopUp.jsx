@@ -35,11 +35,6 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
     };
     fetchFiles();
   }, []);
-  //   useEffect(() => {
-  //     if (files.length === 0) {
-  //       fetchFiles();
-  //     }
-  //   }, [files]);
   // Submit form
   const handleSubmit = () => {
     const newErrors = validateForm();
@@ -55,12 +50,9 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
   };
   // Add new file
   const handleAddFile = event => {
-    const newFile = event.target.files[0];
+    const newFile = event.target.files[0]; // Get the selected file
     if (newFile) {
-      setFiles(prevFiles => [
-        ...prevFiles,
-        { id: Date.now(), name: newFile.name, url: URL.createObjectURL(newFile) },
-      ]);
+      setFiles([{ id: Date.now(), name: newFile.name, url: URL.createObjectURL(newFile) }]);
     }
   };
   const handleDownloadFile = file => {
