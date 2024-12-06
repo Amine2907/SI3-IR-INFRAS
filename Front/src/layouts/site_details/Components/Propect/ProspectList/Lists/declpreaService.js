@@ -11,7 +11,7 @@ const useDpsForProspects = () => {
   const siteId = EB;
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDpData = async () => {
       try {
         setLoading(true);
         setError(null);
@@ -38,7 +38,7 @@ const useDpsForProspects = () => {
       }
     };
     if (siteId) {
-      fetchData();
+      fetchDpData();
     }
   }, [siteId]);
   return { dpsData, loading, error };
