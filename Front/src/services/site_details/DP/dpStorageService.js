@@ -4,7 +4,12 @@ const API_URL = 'http://localhost:5000/api/dp-storage';
 // Upload Dp File (Store a file in Supabase)
 const uploadDp = async file => {
   try {
-    const response = await axios.post(`${API_URL}/upload-dp`, file, {
+    // Create a new FormData object
+    const formData = new FormData();
+    // Append the file to the FormData object
+    formData.append('file', file);
+    // Send the form data as a POST request
+    const response = await axios.post(`${API_URL}/upload-dp`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

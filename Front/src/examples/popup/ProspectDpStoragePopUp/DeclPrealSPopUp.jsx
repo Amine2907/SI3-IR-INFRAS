@@ -37,7 +37,7 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
     return newErrors;
   };
   // Submit form
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -47,7 +47,16 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
       setErrors({ ...newErrors, file: 'Please upload a file' });
       return;
     }
-    onSave(files[0]); // Pass the first file
+    const file = files[0]; // Get the first file from the files array
+    // Call the uploadDp function
+    const result = await DpStorageService.uploadDp(file);
+    if (result.success) {
+      // Handle successful upload
+      console.log('File uploaded successfully:', result.data);
+    } else {
+      // Handle failed upload
+      console.error('Error uploading file:', result.error);
+    }
   };
   // Add new file
   const handleAddFile = event => {

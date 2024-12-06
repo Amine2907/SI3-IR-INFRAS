@@ -3,11 +3,16 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/pros-storage';
 
 // Upload Prospect File (Store a file in Supabase)
-const uploadProspectFile = async formData => {
+const uploadProspectFile = async file => {
   try {
+    // Create a new FormData object
+    const formData = new FormData();
+    // Append the file to the FormData object
+    formData.append('file', file); // 'file' is the key that your backend expects
+    // Send the form data as a POST request
     const response = await axios.post(`${API_URL}/upload-prospect`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data', // For file upload
+        'Content-Type': 'multipart/form-data', // Let axios handle this for file upload
       },
     });
     return { success: true, data: response.data };
