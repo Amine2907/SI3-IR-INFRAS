@@ -32,18 +32,19 @@ function Pheader() {
   };
   const handleSave = async data => {
     const { prospectData } = data;
-    // console.log('Sending request with Sid:', Sid);
-    // console.log('Form Data:', data); // Log all form data
     try {
       // Create new prospect
       const result = await SiteProspectService.createProspect({ Sid, prospectData });
-      // console.log('API result:', result);
       let successMessage = '';
       if (result.success) {
         successMessage = 'Prospect enregistré avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
       } else {
-        const errorMessage = `Error: ${result.error}`;
+        let errorMessage = `Error: ${result.error}`;
+        // Check if the error is related to a prospect already existing with status 'Prospect Validé'
+        if (result.error.includes("A prospect with status 'Prospect Validé' already exists")) {
+          errorMessage = 'Il y a déjà un prospect avec le statut "Prospect Validé" pour ce site.';
+        }
         console.error(errorMessage); // Log any errors from the API response
         setAlert({ show: true, message: errorMessage, type: 'error' });
       }
@@ -51,7 +52,7 @@ function Pheader() {
       console.error('Error while sending request:', error);
       setAlert({
         show: true,
-        message: 'An error occurred while saving the prospect.',
+        message: "Une erreur est survenue lors de l'enregistrement du prospect.",
         type: 'error',
       });
     }

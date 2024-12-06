@@ -128,7 +128,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '100%' }} // Full width
+              style={{ marginBottom: '10px', width: '100%' }}
             />
           </LocalizationProvider>
           <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>

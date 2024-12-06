@@ -108,6 +108,10 @@ function ProspectList({ site }) {
         setAlert({ show: true, message: successMessage, type: 'success' });
       } else {
         const errorMessage = `Error: ${result.error}`;
+        // Check if the error is related to a dp already active
+        if (result.error.includes('A DP with active status already exists for this site')) {
+          errorMessage = 'Il y a déjà une déclaration préalable active pour ce prospect.';
+        }
         console.error(errorMessage); // Log any errors from the API response
         setAlert({ show: true, message: errorMessage, type: 'error' });
       }

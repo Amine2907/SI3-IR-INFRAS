@@ -11,19 +11,18 @@ import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { Label } from '@radix-ui/react-label';
 const DpModal = ({ Proid, dp, onSave, onClose }) => {
   const [formData, setFormData] = useState(dp || {});
-  const [isActive, setIsActive] = useState(dp ? dp.is_active : true);
+  const [isActive, setIsActive] = useState(dp ? dp.is_active : false);
   const [isRelance, setIsRelance] = useState(dp ? dp.relance : true);
   const [errors, setErrors] = useState({});
   const handleToggleRelance = () => {
-    console.log('Toggling Retenu:', !isRelance);
     setIsRelance(!isRelance);
   };
   const handleChange = event => {
     const { name, value } = event.target;
-    console.log('Dropdown Change:', { name, value }); // Verify name and value
+    // console.log('Dropdown Change:', { name, value }); // Verify name and value
     setFormData(prevData => ({
       ...prevData,
-      [name]: value, // Ensure 'name' matches the state key
+      [name]: value,
     }));
   };
   useEffect(() => {
@@ -82,9 +81,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
     onSave({ Proid, dpData });
   };
   const handleToggleActive = () => {
-    if (dp) {
-      setIsActive(!isActive);
-    }
+    setIsActive(!isActive);
   };
   return (
     <div className={styles.modal}>
