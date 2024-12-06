@@ -38,7 +38,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
   }, [dp]);
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.nom) newErrors.nom = true;
+    if (!formData.numero_DP) newErrors.numero_DP = true;
     return newErrors;
   };
   const handleSubmit = () => {
@@ -127,10 +127,13 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
               marginBottom: '5px',
               width: '300px',
               marginTop: '10px',
-              borderColor: errors.cout_estime ? 'red' : '',
+              borderColor: errors.numero_DP ? 'red' : '',
             }}
             required
           />
+          {errors.numero_DP && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.numero_DP}</span>
+          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="ANO certificat tacite"

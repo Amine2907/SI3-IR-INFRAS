@@ -7,7 +7,6 @@ import DeclPreaList from '../Lists/dpList';
 function HeaderListFunctions() {
   const [tabsOrientation, setTabsOrientation] = useState('horizontal');
   const [tabValue, setTabValue] = useState(0);
-  const [userData, setUserData] = useState({ firstname: '', lastname: '' });
 
   // Adjust the orientation of tabs based on screen size
   useEffect(() => {
@@ -20,7 +19,6 @@ function HeaderListFunctions() {
   }, []);
 
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
-
   // Function to render the appropriate component based on tabValue
   const renderTabContent = () => {
     switch (tabValue) {
@@ -36,7 +34,6 @@ function HeaderListFunctions() {
     tabsOrientation,
     tabValue,
     handleSetTabValue,
-    userData,
     renderTabContent,
   };
 }

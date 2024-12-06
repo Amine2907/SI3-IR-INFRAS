@@ -9,7 +9,6 @@ const useDpsForProspects = () => {
   const location = useLocation();
   const { EB } = location.state || {};
   const siteId = EB;
-
   useEffect(() => {
     const fetchDpData = async () => {
       try {

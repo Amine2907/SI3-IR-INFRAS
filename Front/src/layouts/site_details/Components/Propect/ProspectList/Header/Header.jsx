@@ -40,7 +40,7 @@ function HeaderList() {
                   label="Prospects"
                   icon={
                     <Icon fontSize="small" sx={{ mt: -0.25 }}>
-                      person
+                      group
                     </Icon>
                   }
                 />
@@ -48,7 +48,7 @@ function HeaderList() {
                   label="Déclarations préalables"
                   icon={
                     <Icon fontSize="small" sx={{ mt: -0.25 }}>
-                      person
+                      receipt
                     </Icon>
                   }
                 />
@@ -61,5 +61,4 @@ function HeaderList() {
     </MDBox>
   );
 }
-
 export default HeaderList;
