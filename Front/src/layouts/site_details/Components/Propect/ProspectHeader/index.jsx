@@ -11,7 +11,6 @@ import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 import MDAlert from 'components/MDAlert';
 import CombinedStorageModal from 'examples/popup/ProspectDpStoragePopUp/CombinedSPopUp';
-
 function Pheader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
