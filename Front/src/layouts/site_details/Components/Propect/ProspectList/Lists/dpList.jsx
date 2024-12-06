@@ -24,9 +24,9 @@ function DeclPreaList() {
   const { EB } = location.state || {};
   const [selecteddp, setSelecteddp] = useState(null);
   const siteId = EB;
-  const { dpsData, loading, error } = useDpsForProspects(siteId);
-  const Proid = selecteddp?.Proid;
+  const { dpsData, loading, error, fetchDpData } = useDpsForProspects(siteId);
   const handleEdit = dp => {
+    console.log('Editing DP:', dp);
     setSelecteddp(dp);
     setShowModal(true);
     setIsModalOpen(true);
@@ -36,19 +36,19 @@ function DeclPreaList() {
   };
   const handleUpdate = async updates => {
     const DPid = selecteddp?.DPid;
-    console.log('Sending request with Proid:', DPid);
-    console.log('Form Data:', updates);
+    console.log('Sending update for DPid:', DPid, 'Updates:', updates);
     if (!DPid) {
       console.error('DPid is missing, cannot update.');
       setAlert({
         show: true,
-        message: 'An error occurred: Proid is missing.',
+        message: 'An error occurred: DPid is missing.',
         type: 'error',
       });
       return;
     }
+    const { prospectName, ...filteredUpdates } = updates;
     try {
-      const result = await ProspectDpService.updateDp(DPid, updates);
+      const result = await ProspectDpService.updateDp(DPid, filteredUpdates);
       console.log('API result:', result);
       if (result.success) {
         setAlert({
@@ -56,7 +56,7 @@ function DeclPreaList() {
           message: 'DP enregistré avec succès !',
           type: 'success',
         });
-        fetchProspectsData();
+        handleCloseModal();
       } else {
         setAlert({
           show: true,
@@ -68,7 +68,7 @@ function DeclPreaList() {
       console.error('Error while sending request:', error);
       setAlert({
         show: true,
-        message: 'An error occurred while updating the dp.',
+        message: 'An error occurred while updating the DP.',
         type: 'error',
       });
     }
@@ -138,6 +138,7 @@ function DeclPreaList() {
       {showModal && <DpUModal dp={selecteddp} onSave={handleUpdate} onClose={handleCloseModal} />}
     </TableContainer>
   );
+  5;
 }
 DeclPreaList.propTypes = {
   site: PropTypes.string.isRequired,

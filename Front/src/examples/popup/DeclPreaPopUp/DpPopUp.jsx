@@ -10,6 +10,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { Label } from '@radix-ui/react-label';
+import { mapEtatValues } from './DpData';
 const DpUModal = ({ dp, onSave, onClose }) => {
   const [formData, setFormData] = useState(dp || {});
   const [isActive, setIsActive] = useState(dp ? dp.is_active : true);
@@ -21,10 +22,10 @@ const DpUModal = ({ dp, onSave, onClose }) => {
   };
   const handleChange = event => {
     const { name, value } = event.target;
-    console.log('Dropdown Change:', { name, value });
+    console.log('Form input change:', name, value);
     setFormData(prevData => ({
       ...prevData,
-      [name]: value, // Ensure 'name' matches the state key
+      [name]: value,
     }));
   };
   useEffect(() => {
@@ -32,6 +33,7 @@ const DpUModal = ({ dp, onSave, onClose }) => {
       setFormData(prevData => ({
         ...prevData,
         ...dp,
+        etat_prerequis: mapEtatValues(dp.etat_prerequis),
       }));
       setIsActive(dp.is_active);
     }
@@ -39,15 +41,23 @@ const DpUModal = ({ dp, onSave, onClose }) => {
   }, [dp]);
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.nom) newErrors.nom = true;
+    // if (!formData.nom) newErrors.nom = true;
     return newErrors;
   };
   const handleSubmit = () => {
+    console.log('handleSubmit called');
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      console.log('Validation errors:', newErrors);
       return;
     }
+    console.log('Submitting form data:', {
+      ...formData,
+      is_active: isActive,
+      relance: isRelance,
+    });
+    // Trigger the onSave callback
     onSave({ ...formData, is_active: isActive, relance: isRelance });
   };
   const handleToggleActive = () => {

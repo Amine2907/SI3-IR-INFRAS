@@ -119,21 +119,21 @@ const updateDp = async (DpID, updates) => {
         // Ensure `etat_prerequis` is mapped correctly
         if (updates.etat_prerequis) {
             if (typeof updates.etat_prerequis === 'string') {
-                const etatID = status_validation[updates.etat_prerequis]; // Map string to ID
+                const etatID = etat[updates.etat_prerequis]; // Map string to ID
                 if (!etatID) {
-                    throw new Error(`Invalid status description: ${updates.etat_prerequis}`);
+                    throw new Error(`Invalid etat prerequis description: ${updates.etat_prerequis}`);
                 }
                 updates.etat_prerequis = etatID; // Replace with numeric ID
             } else if (typeof updates.etat_prerequis === 'object' && updates.etat_prerequis.EP_desc) {
-                const etatID = status_validation[updates.etat_prerequis.EP_desc];
+                const etatID = etat[updates.etat_prerequis.EP_desc];
                 if (!etatID) {
-                    throw new Error(`Invalid status description: ${updates.etat_prerequis.EP_desc}`);
+                    throw new Error(`Invalid etat prerequis  description: ${updates.etat_prerequis.EP_desc}`);
                 }
                 updates.etat_prerequis = etatID; // Replace with numeric ID
             } else if (typeof updates.etat_prerequis === 'number') {
-                console.log('status_validation is already an ID:', updates.etat_prerequis);
+                console.log('etat prerequis  is already an ID:', updates.etat_prerequis);
             } else {
-                throw new Error(`Invalid structure for status_validation: ${updates.etat_prerequis}`);
+                throw new Error(`Invalid structure for etat prerequis : ${updates.etat_prerequis}`);
             }
         }
         const { data, error } = await supabase
