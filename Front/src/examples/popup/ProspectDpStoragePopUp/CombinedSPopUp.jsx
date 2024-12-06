@@ -8,12 +8,16 @@ import Tab from '@mui/material/Tab';
 import Paper from '@mui/material/Paper';
 import ProspectStorageModal from './PropsectSPopUp';
 import DpStorageModal from './DeclPrealSPopUp';
+
 const CombinedStorageModal = ({ prospect, dp, onSaveProspect, onSaveDp, onClose, open }) => {
   const [currentTab, setCurrentTab] = React.useState('prospect');
+
   if (!open) return null;
+
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
   };
+
   return (
     <Box
       sx={{
@@ -29,7 +33,7 @@ const CombinedStorageModal = ({ prospect, dp, onSaveProspect, onSaveDp, onClose,
         borderRadius: 2,
       }}
     >
-      {/* Tabs */}
+      {/* Tabs for Prospect and DP */}
       <Tabs
         value={currentTab}
         onChange={handleTabChange}
@@ -50,20 +54,26 @@ const CombinedStorageModal = ({ prospect, dp, onSaveProspect, onSaveDp, onClose,
           justifyContent: 'center',
         }}
       >
+        {/* Conditional Rendering Based on Tab Selection */}
         {currentTab === 'prospect' && (
-          <>
-            <ProspectStorageModal prospect={prospect} onSave={onSaveProspect} onClose={onClose} />
-          </>
+          <ProspectStorageModal
+            prospect={prospect}
+            onSave={onSaveProspect} // Trigger file save for Prospect
+            onClose={onClose}
+          />
         )}
         {currentTab === 'dp' && (
-          <>
-            <DpStorageModal dp={dp} onSave={onSaveDp} onClose={onClose} />
-          </>
+          <DpStorageModal
+            dp={dp}
+            onSave={onSaveDp} // Trigger file save for DP
+            onClose={onClose}
+          />
         )}
       </Paper>
     </Box>
   );
 };
+
 CombinedStorageModal.propTypes = {
   prospect: PropTypes.object,
   dp: PropTypes.object,
@@ -72,4 +82,5 @@ CombinedStorageModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 };
+
 export default CombinedStorageModal;

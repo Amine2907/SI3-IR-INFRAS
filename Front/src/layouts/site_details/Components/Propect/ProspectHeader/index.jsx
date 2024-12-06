@@ -11,6 +11,8 @@ import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 import MDAlert from 'components/MDAlert';
 import CombinedStorageModal from 'examples/popup/ProspectDpStoragePopUp/CombinedSPopUp';
+import ProspectStorageService from 'services/site_details/Prospect/prospectStorageService';
+import DpStorageService from 'services/site_details/DP/dpStorageService';
 function Pheader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -93,6 +95,33 @@ function Pheader() {
     }
     handleCloseModal();
   };
+  const handleStore = async (fileType, file) => {
+    try {
+      let response;
+      if (fileType === 'prospect') {
+        response = await ProspectStorageService.uploadProspectFile(file);
+      } else if (fileType === 'dp') {
+        response = await DpStorageService.uploadDp(file);
+      }
+      if (response.success) {
+        setAlert({
+          show: true,
+          message: `${fileType === 'prospect' ? 'Prospect' : 'DP'} file uploaded successfully!`,
+          type: 'success',
+        });
+        fetchProspectsData();
+      } else {
+        throw new Error(response.error || 'Failed to upload file.');
+      }
+    } catch (error) {
+      console.error(`Error uploading ${fileType} file:`, error);
+      setAlert({
+        show: true,
+        message: `Failed to upload ${fileType === 'prospect' ? 'Prospect' : 'DP'} file.`,
+        type: 'error',
+      });
+    }
+  };
   return (
     <div className="prospect-list">
       <Card id="prospect-card">
@@ -117,8 +146,8 @@ function Pheader() {
         <CombinedStorageModal
           prospect={selectedprospect}
           dp={selecteddp}
-          onSaveProspect={handleSave}
-          onSaveDp={handleSave}
+          onSaveProspect={file => handleStore('prospect', file)}
+          onSaveDp={file => handleStore('dp', file)}
           onClose={() => setIsModalOpen(false)}
           open={isModalOpen}
         />

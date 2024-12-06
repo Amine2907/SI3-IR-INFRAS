@@ -3,7 +3,7 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/pros-storage';
 
 // Upload Prospect File (Store a file in Supabase)
-const uploadProspectFile = async (formData) => {
+const uploadProspectFile = async formData => {
   try {
     const response = await axios.post(`${API_URL}/upload-prospect`, formData, {
       headers: {
@@ -16,9 +16,11 @@ const uploadProspectFile = async (formData) => {
   }
 };
 // Generate Signed URL for Prospect File (Get a URL for secure access)
-const generateProspectSignedUrl = async (filePath) => {
+const generateProspectSignedUrl = async filePath => {
   try {
-    const response = await axios.get(`${API_URL}/generate-prospect-files`, { params: { filePath } });
+    const response = await axios.get(`${API_URL}/generate-prospect-files`, {
+      params: { filePath },
+    });
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, error: error.response ? error.response.data.error : error.message };
@@ -26,7 +28,7 @@ const generateProspectSignedUrl = async (filePath) => {
 };
 
 // Get Public URL for Prospect File (For publicly accessible files)
-const getProspectPublicUrl = async (filePath) => {
+const getProspectPublicUrl = async filePath => {
   try {
     const response = await axios.get(`${API_URL}/get-prospect-files`, { params: { filePath } });
     return { success: true, data: response.data };
@@ -36,9 +38,13 @@ const getProspectPublicUrl = async (filePath) => {
 };
 
 // Download Prospect File (Download a file from Supabase)
-const downloadProspectFile = async (filePath) => {
+const downloadProspectFile = async filePath => {
   try {
-    const response = await axios.post(`${API_URL}/download-prospect`, { filePath }, { responseType: 'blob' });
+    const response = await axios.post(
+      `${API_URL}/download-prospect`,
+      { filePath },
+      { responseType: 'blob' }
+    );
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, error: error.response ? error.response.data.error : error.message };

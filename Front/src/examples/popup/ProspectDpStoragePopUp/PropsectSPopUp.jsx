@@ -1,9 +1,10 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
+import ProspectStorageService from 'services/site_details/Prospect/prospectStorageService';
 const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
   const [files, setFiles] = useState([]); // List of files
@@ -13,6 +14,27 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
     const newErrors = {};
     return newErrors;
   };
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const response = await ProspectStorageService.generateProspectSignedUrl();
+        if (response.success) {
+          setFiles(
+            response.data.map(file => ({
+              id: file.id,
+              name: file.name,
+              url: file.signedUrl,
+            }))
+          );
+        } else {
+          console.error('Error fetching Prospect files:', response.error);
+        }
+      } catch (error) {
+        console.error('Error fetching Prospect files:', error);
+      }
+    };
+    fetchFiles();
+  }, []);
   // Submit form
   const handleSubmit = () => {
     const newErrors = validateForm();

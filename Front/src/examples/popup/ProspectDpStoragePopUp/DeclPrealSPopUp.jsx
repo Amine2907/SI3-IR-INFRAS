@@ -1,13 +1,36 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
+import DpStorageService from 'services/site_details/DP/dpStorageService';
 const DpStorageModal = ({ dp, onSave, onClose }) => {
   const [formData, setFormData] = useState(dp || {});
   const [files, setFiles] = useState([]); // List of files
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const response = await DpStorageService.generateDpSignedUrl();
+        if (response.success) {
+          setFiles(
+            response.data.map(file => ({
+              id: file.id,
+              name: file.name,
+              url: file.signedUrl,
+            }))
+          );
+        } else {
+          console.error('Error fetching DP files:', response.error);
+        }
+      } catch (error) {
+        console.error('Error fetching DP files:', error);
+      }
+    };
+    fetchFiles();
+  }, []);
   // Form validation
   const validateForm = () => {
     const newErrors = {};
