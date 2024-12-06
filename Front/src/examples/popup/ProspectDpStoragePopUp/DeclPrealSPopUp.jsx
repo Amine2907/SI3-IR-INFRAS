@@ -9,7 +9,6 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
   const [formData, setFormData] = useState(dp || {});
   const [files, setFiles] = useState([]); // List of files
   const [errors, setErrors] = useState({});
-
   useEffect(() => {
     const fetchFiles = async () => {
       try {
@@ -31,6 +30,11 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
     };
     fetchFiles();
   }, []);
+  //   useEffect(() => {
+  //     if (files.length === 0) {
+  //       fetchFiles();
+  //     }
+  //   }, [files]);
   // Form validation
   const validateForm = () => {
     const newErrors = {};
@@ -44,7 +48,11 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
       setErrors(newErrors);
       return;
     }
-    onSave({ ...formData });
+    if (files.length === 0) {
+      setErrors({ ...newErrors, file: 'Please upload a file' });
+      return;
+    }
+    onSave(files[0]); // Pass the first file
   };
   // Add new file
   const handleAddFile = event => {

@@ -35,6 +35,11 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
     };
     fetchFiles();
   }, []);
+  //   useEffect(() => {
+  //     if (files.length === 0) {
+  //       fetchFiles();
+  //     }
+  //   }, [files]);
   // Submit form
   const handleSubmit = () => {
     const newErrors = validateForm();
@@ -42,7 +47,11 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
       setErrors(newErrors);
       return;
     }
-    onSave({ ...formData });
+    if (files.length === 0) {
+      setErrors({ ...newErrors, file: 'Please upload a file' });
+      return;
+    }
+    onSave(files[0]); // Pass the first file
   };
   // Add new file
   const handleAddFile = event => {

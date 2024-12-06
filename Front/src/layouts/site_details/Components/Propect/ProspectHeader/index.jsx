@@ -96,6 +96,27 @@ function Pheader() {
     handleCloseModal();
   };
   const handleStore = async (fileType, file) => {
+    if (!file) {
+      setAlert({
+        show: true,
+        message: `Please select a file to upload for ${
+          fileType === 'prospect' ? 'Prospect' : 'DP'
+        }.`,
+        type: 'error',
+      });
+      return;
+    }
+
+    // Validate file size (e.g., <5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setAlert({
+        show: true,
+        message: `File size exceeds the 5MB limit.`,
+        type: 'error',
+      });
+      return;
+    }
+
     try {
       let response;
       if (fileType === 'prospect') {
@@ -103,6 +124,7 @@ function Pheader() {
       } else if (fileType === 'dp') {
         response = await DpStorageService.uploadDp(file);
       }
+
       if (response.success) {
         setAlert({
           show: true,
