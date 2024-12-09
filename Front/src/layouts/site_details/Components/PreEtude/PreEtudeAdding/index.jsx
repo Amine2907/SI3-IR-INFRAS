@@ -39,14 +39,13 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
     try {
       // Call the service method to fetch active prospects for the given Sid
       const result = await SiteProspectService.getActiveProspectsForSite(Sid);
-
       // Check if the result is successful
       if (result.success) {
         // Set the active prospects data if the response is successful
-        setActiveProspects(result.data); // Assuming `result.data` contains the array of active prospects
+        setActiveProspects(result.data);
       } else {
         console.error('Error fetching active prospects:', result.error);
-        setActiveProspects([]); // Set an empty array in case of error to handle gracefully
+        setActiveProspects([]);
       }
     } catch (error) {
       // Handle errors during the fetch
@@ -62,7 +61,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
     if (!formData.ZFA && !formData.ZFB) newErrors.ZFA_ZFB = true;
     return newErrors;
   };
-
   const handleSubmit = () => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
@@ -74,7 +72,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
       CRR: formData.CRR,
       CRP_HTABT: formData.CRP_HTABT,
       MM: formData.MM,
-      MJS: formData.MJS,
       ZFA: formData.ZFA,
       ZFB: formData.ZFB,
       cout: formData.cout,
@@ -84,10 +81,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
     console.log('prospect data :', preEtudeData);
     onSave({ Sid, preEtudeData });
   };
-  const handleToggleActive = () => {
-    setIsActive(!isActive);
-  };
-
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -169,10 +162,11 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
                   value={formData.ZFA || formData.ZFB || ''}
                   onChange={e => {
                     const value = e.target.value;
+                    // Set numeric values: 1 for ZFA, 2 for ZFB
                     setFormData(prevData => ({
                       ...prevData,
-                      ZFA: value === 'ZFA' ? true : '',
-                      ZFB: value === 'ZFB' ? true : '',
+                      ZFA: value === 'ZFA' ? 1 : null, // Set 1 for ZFA, else null
+                      ZFB: value === 'ZFB' ? 2 : null, // Set 2 for ZFB, else null
                     }));
                   }}
                   displayEmpty
@@ -271,7 +265,6 @@ PreEtudeAddingModal.propTypes = {
     CRR: PropTypes.string,
     CRP_HTABT: PropTypes.string,
     MM: PropTypes.string,
-    MJS: PropTypes.string,
     ZFA: PropTypes.string,
     ZFB: PropTypes.string,
     cout: PropTypes.string,
@@ -282,5 +275,4 @@ PreEtudeAddingModal.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-
 export default PreEtudeAddingModal;

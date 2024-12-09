@@ -8,14 +8,35 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDAlert from 'components/MDAlert';
 import PreEtudeAddingModal from '../PreEtudeAdding';
+import SitePreEtudeService from 'services/site_details/PreEtude/preEtudeService';
 function PreHeader() {
   const [alert, setAlert] = useState(false);
   const [selectedPreEtude, setSelectedPreEtude] = useState(null);
   const location = useLocation();
   const { EB } = location.state || {};
   const Sid = EB;
-  const handleAddPreEtude = () => {
-    null;
+  const handleAddPreEtude = async data => {
+    const { preEtudeData } = data;
+    try {
+      // Create new prospect
+      const result = await SitePreEtudeService.createPreEtude({ Sid, preEtudeData });
+      let successMessage = '';
+      if (result.success) {
+        successMessage = 'PreEtude enregistré avec succès !';
+        setAlert({ show: true, message: successMessage, type: 'success' });
+      } else {
+        let errorMessage = `Error: ${result.error}`;
+        console.error(errorMessage); // Log any errors from the API response
+        setAlert({ show: true, message: errorMessage, type: 'error' });
+      }
+    } catch (error) {
+      console.error('Error while sending request:', error);
+      setAlert({
+        show: true,
+        message: "Une erreur est survenue lors de l'enregistrement du pre-etude.",
+        type: 'error',
+      });
+    }
   };
   return (
     <div className="prospect-list">
