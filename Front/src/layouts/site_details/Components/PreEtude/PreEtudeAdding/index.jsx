@@ -6,17 +6,22 @@ import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 import { Label } from '@radix-ui/react-label';
-
+import SiteProspectService from 'services/site_details/Prospect/prospectService';
 const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
   const [formData, setFormData] = useState(preEtude || {});
   const [errors, setErrors] = useState({});
-
+  const [activeProspects, setActiveProspects] = useState([]);
+  const [selectedProspect, setSelectedProspect] = useState('');
   const handleChange = event => {
     const { name, value } = event.target;
     setFormData(prevData => ({
       ...prevData,
       [name]: value,
     }));
+  };
+  const handleProspectChange = event => {
+    const { value } = event.target;
+    setSelectedProspect(value);
   };
 
   useEffect(() => {
@@ -29,7 +34,29 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
     }
     console.log('Initialized formData:', formData);
   }, [preEtude]);
+  // Fetch active prospects
+  const fetchActiveProspects = async () => {
+    try {
+      // Call the service method to fetch active prospects for the given Sid
+      const result = await SiteProspectService.getActiveProspectsForSite(Sid);
 
+      // Check if the result is successful
+      if (result.success) {
+        // Set the active prospects data if the response is successful
+        setActiveProspects(result.data); // Assuming `result.data` contains the array of active prospects
+      } else {
+        console.error('Error fetching active prospects:', result.error);
+        setActiveProspects([]); // Set an empty array in case of error to handle gracefully
+      }
+    } catch (error) {
+      // Handle errors during the fetch
+      console.error('Error during fetch:', error.message);
+      setActiveProspects([]); // Set an empty array in case of error
+    }
+  };
+  useEffect(() => {
+    fetchActiveProspects();
+  }, [Sid, preEtude]);
   const validateForm = () => {
     const newErrors = {};
     if (!formData.ZFA && !formData.ZFB) newErrors.ZFA_ZFB = true;
@@ -57,7 +84,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
     console.log('prospect data :', preEtudeData);
     onSave({ Sid, preEtudeData });
   };
-
   const handleToggleActive = () => {
     setIsActive(!isActive);
   };
@@ -77,22 +103,23 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
             required
           >
             <Select
-              name="MM"
-              value={formData.MM || ''}
-              onChange={handleChange}
+              name="activeProspect"
+              value={selectedProspect || ''}
+              onChange={handleProspectChange}
               displayEmpty
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.MM ? 'red' : '',
               }}
-              required
             >
               <MenuItem value="" disabled>
                 -- Choisir le prospect --
               </MenuItem>
-              <MenuItem value="Complet">Complet</MenuItem>
-              <MenuItem value="Incomplet">Incomplet</MenuItem>
+              {activeProspects.map(prospect => (
+                <MenuItem key={prospect.id} value={prospect.nom}>
+                  {prospect.nom}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           {/* Dropdown for Type de Raccordement */}
@@ -127,18 +154,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
           {/* Conditionally render fields if type_rac is "Complexe" */}
           {formData.type_rac === 'Complexe' && (
             <>
-              <MDInput
-                name="MM"
-                value={formData.MM || ''}
-                onChange={handleChange}
-                placeholder="Moyenne metres"
-                style={{
-                  marginBottom: '5px',
-                  width: '300px',
-                  marginTop: '10px',
-                }}
-                required
-              />
               {/* Dropdown for ZFA/ZFB */}
               <FormControl
                 fullWidth
@@ -176,6 +191,18 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
                 </Select>
               </FormControl>
               {/* Additional Fields */}
+              <MDInput
+                name="MM"
+                value={formData.MM || ''}
+                onChange={handleChange}
+                placeholder="Moyenne metres"
+                style={{
+                  marginBottom: '5px',
+                  width: '300px',
+                  marginTop: '10px',
+                }}
+                required
+              />
               <MDInput
                 name="CRR"
                 value={formData.CRR || ''}
@@ -237,7 +264,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
     </div>
   );
 };
-
 PreEtudeAddingModal.propTypes = {
   Sid: PropTypes.string.isRequired,
   preEtude: PropTypes.shape({

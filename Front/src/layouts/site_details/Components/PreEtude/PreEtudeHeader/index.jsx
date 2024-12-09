@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import Icon from '@mui/material/Icon';
@@ -9,20 +9,11 @@ import MDButton from 'components/MDButton';
 import MDAlert from 'components/MDAlert';
 import PreEtudeAddingModal from '../PreEtudeAdding';
 function PreHeader() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [showUploadModal, setshowUploadModal] = useState(false);
   const [alert, setAlert] = useState(false);
   const [selectedPreEtude, setSelectedPreEtude] = useState(null);
   const location = useLocation();
   const { EB } = location.state || {};
   const Sid = EB;
-
-  const handleCloseModal = () => {
-    null;
-  };
   const handleAddPreEtude = () => {
     null;
   };
