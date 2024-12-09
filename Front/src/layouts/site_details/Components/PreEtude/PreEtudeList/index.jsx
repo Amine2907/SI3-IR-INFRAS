@@ -1,0 +1,164 @@
+/* eslint-disable */
+import React, { useState } from 'react';
+import {
+  TableContainer,
+  TableCell,
+  TableRow,
+  Box,
+  Typography,
+  TableBody,
+  Icon,
+} from '@mui/material';
+import { Alert, AlertDescription } from 'components/ui/alert';
+import cellStyle from '../Styles/styles';
+import { useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import usepreEtudesForProspects from './declpreaService';
+import ProspectpreEtudeService from 'services/site_details/preEtude/preEtudeService';
+import MDAlert from 'components/MDAlert';
+function PreEtudeList() {
+  const [showModal, setShowModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+  const location = useLocation();
+  const { EB } = location.state || {};
+  const [selectedpreEtude, setSelectedpreEtude] = useState(null);
+  const siteId = EB;
+  const { preEtudesData, loading, error } = usepreEtudesForProspects(siteId);
+  const handleEdit = preEtude => {
+    // console.log('Editing preEtude:', preEtude);
+    setSelectedpreEtude(preEtude);
+    setShowModal(true);
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+  const handleUpdate = async updates => {
+    const preEtudeid = selectedpreEtude?.preEtudeid;
+    // console.log('Sending update for preEtudeid:', preEtudeid, 'Updates:', updates);
+    if (!preEtudeid) {
+      console.error('preEtudeid is missing, cannot update.');
+      setAlert({
+        show: true,
+        message: "Une erreur s'est produite : l'ID de la preEtude est manquant.",
+        type: 'error',
+      });
+      return;
+    }
+    const { prospectName, ...filteredUpdates } = updates;
+    try {
+      const result = await ProspectpreEtudeService.updatepreEtude(preEtudeid, filteredUpdates);
+      // console.log('API result:', result);
+      let successMessage = '';
+      if (result.success) {
+        successMessage = 'preEtude modifiee avec succès !';
+        setAlert({ show: true, message: successMessage, type: 'success' });
+        handleCloseModal();
+      } else {
+        setAlert({
+          show: true,
+          message: `Error: ${result.error}`,
+          type: 'error',
+        });
+      }
+    } catch (error) {
+      console.error('Error while sending request:', error);
+      setAlert({
+        show: true,
+        message: "Une erreur s'est produite lors de la mise à jour de la preEtude.",
+        type: 'error',
+      });
+    }
+    handleCloseModal();
+  };
+  if (loading)
+    return (
+      <Alert variant="destructive" className="mt-4">
+        <AlertDescription>Chargement...</AlertDescription>
+      </Alert>
+    );
+  if (error)
+    return (
+      <Alert variant="destructive" className="mt-4">
+        <AlertDescription>Error: {String(error)}</AlertDescription>
+      </Alert>
+    );
+
+  if (!preEtudesData.length)
+    return (
+      <Alert variant="destructive" className="mt-4">
+        <AlertDescription>
+          Aucune donnée des déclarations préalables pour ce site sont disponibles.
+        </AlertDescription>
+      </Alert>
+    );
+
+  return (
+    <TableContainer>
+      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+        <Typography variant="h6">{preEtudesData.length} Résultat(s)</Typography>
+      </Box>
+      <table>
+        <thead>
+          <TableRow>
+            <TableCell sx={cellStyle}>Nom Prospect</TableCell>
+            <TableCell sx={cellStyle}>Type de raccordement</TableCell>
+            <TableCell sx={cellStyle}>Cout</TableCell>
+          </TableRow>
+        </thead>
+        <TableBody>
+          {preEtudesData.map(preEtude => {
+            return (
+              <TableRow key={preEtude.id}>
+                <TableCell>{preEtude.prospectName || 'N/A'}</TableCell>
+                <TableCell>{preEtude.type_rac || 'N/A'}</TableCell>
+                <TableCell>{preEtude.cout || 'N/A'}</TableCell>
+                <TableCell title="Modifier preEtude" placement="top">
+                  <Icon
+                    sx={{ cursor: 'pointer' }}
+                    fontSize="small"
+                    onClick={() => handleEdit(preEtude)}
+                  >
+                    edit
+                  </Icon>
+                </TableCell>
+                <TableCell title="Ajouter preEtude" placement="top">
+                  <Icon
+                    sx={{ cursor: 'pointer' }}
+                    fontSize="small"
+                    onClick={() => handleEdit(preEtude)}
+                  >
+                    add
+                  </Icon>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </table>
+      {showModal && (
+        <preEtudeUModal
+          preEtude={selectedpreEtude}
+          onSave={handleUpdate}
+          onClose={handleCloseModal}
+        />
+      )}
+      {/* Display Alert if there's an error */}
+      {alert.show && (
+        <MDAlert
+          color={alert.type}
+          dismissible
+          onClose={() => setAlert({ show: false })}
+          style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
+        >
+          {alert.message}
+        </MDAlert>
+      )}
+    </TableContainer>
+  );
+}
+PreEtudeList.propTypes = {
+  site: PropTypes.string.isRequired,
+};
+export default PreEtudeList;
