@@ -5,16 +5,12 @@ import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
-import { DesktopDatePicker } from '@mui/x-date-pickers';
 import { Label } from '@radix-ui/react-label';
-const PreEtudeAddingModal = ({ Sid, preEtude, onSave, onClose }) => {
+
+const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
   const [formData, setFormData] = useState(preEtude || {});
-  const [isActive, setIsActive] = useState(preEtude ? preEtude.is_active : false);
-  const [selectedpreEtude, setSelectedpreEtude] = useState(null);
   const [errors, setErrors] = useState({});
+
   const handleChange = event => {
     const { name, value } = event.target;
     setFormData(prevData => ({
@@ -22,6 +18,7 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave, onClose }) => {
       [name]: value,
     }));
   };
+
   useEffect(() => {
     if (preEtude) {
       setFormData(prevData => ({
@@ -32,34 +29,21 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave, onClose }) => {
     }
     console.log('Initialized formData:', formData);
   }, [preEtude]);
+
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.ZFA) newErrors.ZFA = true;
+    if (!formData.ZFA && !formData.ZFB) newErrors.ZFA_ZFB = true;
     return newErrors;
   };
+
   const handleSubmit = () => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      const preEtudeData = {
-        ApreEtudeDT: formData.ApreEtudeDT,
-        CRR: formData.CRR,
-        CRP_HTABT: formData.CRP_HTABT,
-        MM: formData.MM,
-        MJS: formData.MJS,
-        ZFA: formData.ZFA,
-        ZFB: formData.ZFB,
-        cout: formData.cout,
-        type_rac: formData.type_rac,
-        CRRBTA: formData.CRRBTA,
-        is_active: true,
-      };
-      console.log('prospect data :', preEtudeData);
-      onSave({ Sid, preEtudeData });
       return;
     }
     const preEtudeData = {
-      ApreEtudeDT: formData.ApreEtudeDT,
+      ADPDT: formData.ADPDT,
       CRR: formData.CRR,
       CRP_HTABT: formData.CRP_HTABT,
       MM: formData.MM,
@@ -69,17 +53,20 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave, onClose }) => {
       cout: formData.cout,
       type_rac: formData.type_rac,
       CRRBTA: formData.CRRBTA,
-      is_active: true, // Always true
     };
+    console.log('prospect data :', preEtudeData);
     onSave({ Sid, preEtudeData });
   };
+
   const handleToggleActive = () => {
     setIsActive(!isActive);
   };
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <div className={styles.formGrid}>
+          {/* Dropdown for Moyenne Metres */}
           <FormControl
             fullWidth
             style={{
@@ -102,206 +89,159 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave, onClose }) => {
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir l&apos;etat prerequis --
+                -- Choisir le prospect --
               </MenuItem>
               <MenuItem value="Complet">Complet</MenuItem>
               <MenuItem value="Incomplet">Incomplet</MenuItem>
             </Select>
           </FormControl>
-          <MDInput
-            name="ZFA"
-            value={formData.ZFA || ''}
-            onChange={handleChange}
-            placeholder="Numero preEtude"
-            style={{
-              marginBottom: '5px',
-              width: '300px',
-              marginTop: '10px',
-              borderColor: errors.ZFA ? 'red' : '',
-            }}
-            required
-          />
-          {errors.ZFA && <span style={{ color: 'red', fontSize: '12px' }}>{errors.ZFA}</span>}
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              label="ANO certificat tacite"
-              name="ApreEtudeDT"
-              value={formData.ApreEtudeDT ? dayjs(formData.ApreEtudeDT) : null}
-              onChange={newValue => {
-                handleChange({
-                  target: {
-                    name: 'ApreEtudeDT',
-                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  },
-                });
-              }}
-              style={{ marginBottom: '10px', width: '270px' }}
-            />
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              label="Arrete opposition"
-              name="CRR"
-              value={formData.CRR ? dayjs(formData.CRR) : null}
-              onChange={newValue => {
-                handleChange({
-                  target: {
-                    name: 'CRR',
-                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  },
-                });
-              }}
-              style={{ marginBottom: '10px', width: '270px' }}
-            />
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              label="Derniere verification"
-              name="CRP_HTABT"
-              value={formData.CRP_HTABT ? dayjs(formData.CRP_HTABT) : null}
-              onChange={newValue => {
-                handleChange({
-                  target: {
-                    name: 'CRP_HTABT',
-                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  },
-                });
-              }}
-              style={{ marginBottom: '10px', width: '270px' }}
-            />
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              label="MJS"
-              name="MJS"
-              value={formData.MJS ? dayjs(formData.MJS) : null}
-              onChange={newValue => {
-                handleChange({
-                  target: {
-                    name: 'MJS',
-                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  },
-                });
-              }}
-              style={{ marginBottom: '10px', width: '300px' }}
-            />
-          </LocalizationProvider>
+          {/* Dropdown for Type de Raccordement */}
           <FormControl
             fullWidth
             style={{
-              marginTop: '2px',
+              marginTop: '12px',
               marginBottom: '2px',
               width: '320px',
             }}
             required
           >
             <Select
-              name="ZFB"
-              value={formData.ZFB || ''}
+              name="type_rac"
+              value={formData.type_rac || ''}
               onChange={handleChange}
               displayEmpty
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.ZFB ? 'red' : '',
+                borderColor: errors.type_rac ? 'red' : '',
               }}
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir le status du plan --
+                -- Choisir le type de raccordement --
               </MenuItem>
-              <MenuItem value="OK">OK</MenuItem>
-              <MenuItem value="NOK">NOK</MenuItem>
+              <MenuItem value="Simple">Simple</MenuItem>
+              <MenuItem value="Complexe">Complexe</MenuItem>
             </Select>
           </FormControl>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              label="Production preEtude PC"
-              name="cout"
-              value={formData.cout ? dayjs(formData.cout) : null}
-              onChange={newValue => {
-                handleChange({
-                  target: {
-                    name: 'cout',
-                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  },
-                });
-              }}
-              style={{ marginBottom: '10px', width: '270px' }}
-            />
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              label="Recipisse depot preEtude"
-              name="type_rac"
-              value={formData.type_rac ? dayjs(formData.type_rac) : null}
-              onChange={newValue => {
-                handleChange({
-                  target: {
-                    name: 'type_rac',
-                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  },
-                });
-              }}
-              style={{ marginBottom: '10px', width: '270px' }}
-            />
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              label="Status go traveaux (P)"
-              name="CRP_HTABT"
-              value={formData.CRP_HTABT ? dayjs(formData.CRP_HTABT) : null}
-              onChange={newValue => {
-                handleChange({
-                  target: {
-                    name: 'CRP_HTABT',
-                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  },
-                });
-              }}
-              style={{ marginBottom: '10px', width: '270px' }}
-            />
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              label="Status go traveaux (R)"
-              name="CRRBTA"
-              value={formData.CRRBTA ? dayjs(formData.CRRBTA) : null}
-              onChange={newValue => {
-                handleChange({
-                  target: {
-                    name: 'CRRBTA',
-                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  },
-                });
-              }}
-              style={{ marginBottom: '10px', width: '270px' }}
-            />
-          </LocalizationProvider>
+          {/* Conditionally render fields if type_rac is "Complexe" */}
+          {formData.type_rac === 'Complexe' && (
+            <>
+              <MDInput
+                name="MM"
+                value={formData.MM || ''}
+                onChange={handleChange}
+                placeholder="Moyenne metres"
+                style={{
+                  marginBottom: '5px',
+                  width: '300px',
+                  marginTop: '10px',
+                }}
+                required
+              />
+              {/* Dropdown for ZFA/ZFB */}
+              <FormControl
+                fullWidth
+                style={{
+                  marginTop: '12px',
+                  marginBottom: '2px',
+                  width: '320px',
+                }}
+                required
+              >
+                <Select
+                  name="ZFA_ZFB"
+                  value={formData.ZFA || formData.ZFB || ''}
+                  onChange={e => {
+                    const value = e.target.value;
+                    setFormData(prevData => ({
+                      ...prevData,
+                      ZFA: value === 'ZFA' ? true : '',
+                      ZFB: value === 'ZFB' ? true : '',
+                    }));
+                  }}
+                  displayEmpty
+                  style={{
+                    padding: '10px',
+                    fontSize: '14px',
+                    borderColor: errors.ZFA_ZFB ? 'red' : '',
+                  }}
+                  required
+                >
+                  <MenuItem value="" disabled>
+                    -- Choisir ZFA/ZFB --
+                  </MenuItem>
+                  <MenuItem value="ZFA">ZFA</MenuItem>
+                  <MenuItem value="ZFB">ZFB</MenuItem>
+                </Select>
+              </FormControl>
+              {/* Additional Fields */}
+              <MDInput
+                name="CRR"
+                value={formData.CRR || ''}
+                onChange={handleChange}
+                placeholder="Création ou remplacement d'un réseau BT"
+                style={{
+                  marginBottom: '5px',
+                  width: '300px',
+                  marginTop: '10px',
+                }}
+                required
+              />
+              <MDInput
+                name="ADPDT"
+                value={formData.ADPDT || ''}
+                onChange={handleChange}
+                placeholder="Augmentation de puissance du transformateur"
+                style={{
+                  marginBottom: '5px',
+                  width: '300px',
+                  marginTop: '10px',
+                }}
+                required
+              />
+              <MDInput
+                name="CRRBTA"
+                value={formData.CRRBTA || ''}
+                onChange={handleChange}
+                placeholder="Création réseau BT et augmentation"
+                style={{
+                  marginBottom: '5px',
+                  width: '300px',
+                  marginTop: '10px',
+                }}
+                required
+              />
+              <MDInput
+                name="CRP_HTABT"
+                value={formData.CRP_HTABT || ''}
+                onChange={handleChange}
+                placeholder="Création poste HTA/BT"
+                style={{
+                  marginBottom: '5px',
+                  width: '300px',
+                  marginTop: '10px',
+                }}
+                required
+              />
+            </>
+          )}
         </div>
-        <div>
-          <Label>{isActive ? 'Active' : 'Inactive'}</Label>
-          <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
-            {' '}
-            {isActive ? 'Active' : 'Inactive'}
-          </Switch>
-        </div>
+        {/* Buttons */}
         <div className={styles.buttonContainer}>
           <MDButton onClick={handleSubmit} variant="gradient" color="dark">
-            enregistrer
-          </MDButton>
-          <MDButton onClick={onClose} variant="gradient" color="dark">
-            Fermer
+            Creer
           </MDButton>
         </div>
       </div>
     </div>
   );
 };
+
 PreEtudeAddingModal.propTypes = {
   Sid: PropTypes.string.isRequired,
   preEtude: PropTypes.shape({
-    ApreEtudeDT: PropTypes.string,
+    ADPDT: PropTypes.string,
     CRR: PropTypes.string,
     CRP_HTABT: PropTypes.string,
     MM: PropTypes.string,
@@ -312,9 +252,9 @@ PreEtudeAddingModal.propTypes = {
     type_rac: PropTypes.string,
     CRRBTA: PropTypes.string,
     is_active: PropTypes.bool,
-    relance: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
+
 export default PreEtudeAddingModal;
