@@ -11,7 +11,6 @@ const createDp = async (Proid, DpData) => {
             }
             DpData.etat_prerequis = statusID; // Update the prospect data with the numeric ID
           }
-      // First check if the Status_validation_fk is 25 (Prospect Validé) and if any similar prospects exist
       if (DpData.is_active === true)  {
         console.log('Prospect has active DP');
         const { data: existingProspect, error: checkError } = await supabase

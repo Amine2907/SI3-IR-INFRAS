@@ -1,6 +1,5 @@
 /* eslint-disable */
-import React, { useState, useEffect } from 'react';
-import { useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import Icon from '@mui/material/Icon';
@@ -147,7 +146,7 @@ function PreHeader() {
       <Card id="prospect-card">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
-            PreEtdude
+            PreEtude
           </MDTypography>
           <MDBox display="flex" gap={2}>
             <MDButton onClick={handleAddProspect} variant="gradient" color="dark">

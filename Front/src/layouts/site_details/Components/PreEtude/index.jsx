@@ -1,6 +1,15 @@
-import MDTypography from 'components/MDTypography';
+import PreHeader from './PreEtudeHeader';
+import Grid from '@mui/material/Grid';
 
 function PreEtude() {
-  return <MDTypography>PreEtude</MDTypography>;
+  return (
+    <Grid container spacing={2} direction="column">
+      {' '}
+      <Grid item>
+        <PreHeader />
+      </Grid>
+      <Grid item></Grid>
+    </Grid>
+  );
 }
 export default PreEtude;

@@ -10,7 +10,7 @@ import { statusSfrValues, statusValidationValues } from './ProspectData';
 import { useLocation } from 'react-router-dom';
 const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
-  const [isActive, setIsActive] = useState(prospect ? prospect.is_active : true);
+  const [isActive, setIsActive] = useState(prospect ? prospect.is_active : false);
   const [isRetenu, setIsRetenu] = useState(prospect ? prospect.retenu : true);
   const [errors, setErrors] = useState({});
   const location = useLocation();
@@ -74,9 +74,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
     onSave({ Sid, prospectData });
   };
   const handleToggleActive = () => {
-    if (prospect) {
-      setIsActive(!isActive);
-    }
+    setIsActive(!isActive);
   };
   const handleToggleRetenu = () => {
     console.log('Toggling Retenu:', !isRetenu);

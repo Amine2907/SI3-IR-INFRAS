@@ -29,6 +29,21 @@ const createProspect = async (EB, prospectData) => {
           throw new Error("A prospect with status 'Prospect Validé' already exists for this site.");
         }
       }
+      // User can add only one prospect which colunm is_active equal to True ! 
+      if (prospectData.is_active === true)  {
+        console.log('Prospect has active DP');
+        const { data: existingProspect, error: checkError } = await supabase
+          .from('Prospect')
+          .select('*')
+          .eq('EB_fk', EB)  // Match using EB_fk  (the site identifier)
+          .eq('is_active', true);  // Ensure we have only one prospect which have is_active = True 
+        if (checkError) {
+          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
+        }
+        if (existingProspect && existingProspect.length > 0) {
+          throw new Error("This Site have already one prospect with active status already exists for this site.");
+        }
+      }
       // Now insert the new prospect into the 'Prospect' table, using the EB_fk field
       const { data: prospect, error: contactError } = await supabase
         .from('Prospect')
