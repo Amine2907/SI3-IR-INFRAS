@@ -22,6 +22,7 @@ import prospectRoutes from './routes/SiteDetails/Prospect/prospect.js'
 import dpsRoutes from './routes/SiteDetails/DP/Dp.js';
 import prospectStorageRoutes from './routes/SiteDetails/Prospect/prospectStorage.js'
 import dpStorageRoutes from './routes/SiteDetails/DP/DpStorage.js';
+import preEtudeRoutes from './routes/SiteDetails/PreEtude/preEtude.js'
 // Exports here 
 export { default as contactService } from './services/contactsService.js';
 export { default as AuthService } from './services/authService.js';
@@ -48,6 +49,7 @@ app.use('/api/prospect',prospectRoutes);
 app.use('/api/dps',dpsRoutes);
 app.use('/api/dp-storage',dpStorageRoutes);
 app.use('/api/pros-storage',prospectStorageRoutes);
+app.use('/api/preEtude',preEtudeRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });
