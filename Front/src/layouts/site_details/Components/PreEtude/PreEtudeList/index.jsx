@@ -13,8 +13,8 @@ import { Alert, AlertDescription } from 'components/ui/alert';
 import cellStyle from '../Styles/styles';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import usepreEtudesForProspects from './declpreaService';
 import ProspectpreEtudeService from 'services/site_details/preEtude/preEtudeService';
+import SitePreEtudeService from 'services/site_details/PreEtude/preEtudeService';
 import MDAlert from 'components/MDAlert';
 function PreEtudeList() {
   const [showModal, setShowModal] = useState(false);
@@ -48,7 +48,7 @@ function PreEtudeList() {
     }
     const { prospectName, ...filteredUpdates } = updates;
     try {
-      const result = await ProspectpreEtudeService.updatepreEtude(preEtudeid, filteredUpdates);
+      const result = await SitePreEtudeService.updatePreEtude(preEtudeid, filteredUpdates);
       // console.log('API result:', result);
       let successMessage = '';
       if (result.success) {

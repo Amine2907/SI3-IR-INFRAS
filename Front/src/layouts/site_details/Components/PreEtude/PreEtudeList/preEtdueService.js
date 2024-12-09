@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useEffect, useState } from 'react';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 import ProspectDpService from 'services/site_details/DP/DpService';

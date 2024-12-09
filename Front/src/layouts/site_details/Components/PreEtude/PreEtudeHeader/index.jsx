@@ -7,6 +7,7 @@ import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDAlert from 'components/MDAlert';
+import PreEtudeAddingModal from '../PreEtudeAdding';
 function PreHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -14,12 +15,13 @@ function PreHeader() {
   const [error, setError] = useState(null);
   const [showUploadModal, setshowUploadModal] = useState(false);
   const [alert, setAlert] = useState(false);
+  const [selectedPreEtude, setSelectedPreEtude] = useState(null);
   const location = useLocation();
   const { EB } = location.state || {};
   const Sid = EB;
 
   const handleCloseModal = () => {
-    setShowModal(false);
+    null;
   };
 
   const handleUpload = async () => {
@@ -29,6 +31,9 @@ function PreHeader() {
 
   const handleAddProspect = () => {
     setShowModal(true);
+  };
+  const handleSave = () => {
+    null;
   };
   //   const fetchPreEtudeData = useCallback(async () => {
   //     if (Sid) {
@@ -141,6 +146,12 @@ function PreHeader() {
           </MDTypography>
           <MDBox display="flex" gap={2}></MDBox>
         </MDBox>
+        <PreEtudeAddingModal
+          Sid={Sid}
+          preEtude={selectedPreEtude}
+          onSave={handleSave}
+          onClose={handleCloseModal}
+        />
       </Card>
       {/* Display Alert if there's an error */}
       {alert.show && (
