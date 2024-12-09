@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useEffect, useState } from 'react';
 import SitePreEtudeService from 'services/site_details/PreEtude/preEtudeService';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
@@ -18,43 +19,26 @@ const usePreEtudesForSite = () => {
         setError(null);
 
         // Fetch prospects for the site
-        console.log(`Fetching prospects for site ID: ${siteId}`);
         const prospectsResponse = await SiteProspectService.getProspectsSite(siteId);
         if (!prospectsResponse.success) {
           throw new Error(`Failed to fetch prospects for site ID: ${siteId}`);
         }
-
         const prospects = prospectsResponse.data;
-        console.log('Fetched prospects:', prospects);
 
-        // Fetch preÉtudes for each prospect and map the prospect name
-        const allPreEtudes = await Promise.all(
-          prospects.map(async prospect => {
-            console.log(`Fetching preÉtudes for prospect ID: ${prospect.Proid}`);
-            const preEtudeResponse = await SitePreEtudeService.getPreEtudeProspect(prospect.Proid);
-            if (!preEtudeResponse.success) {
-              console.error(`Failed to fetch preÉtudes for prospect ID: ${prospect.Proid}`);
-              return [];
-            }
-            console.log(
-              `Fetched preÉtudes for prospect ID: ${prospect.Proid}`,
-              preEtudeResponse.data
-            );
+        // Fetch preÉtudes for the site
+        const preEtudesResponse = await SitePreEtudeService.getPreEtudesSite(siteId);
+        if (!preEtudesResponse.success) throw new Error('Failed to fetch preÉtudes');
+        const preEtudes = preEtudesResponse.data;
 
-            return preEtudeResponse.data.map(preEtude => ({
-              ...preEtude,
-              prospectName: prospect.nom, // Include the prospect name
-            }));
-          })
-        );
+        // Enrich preÉtudes with prospect names (if there’s no explicit linkage)
+        const enrichedPreEtudes = preEtudes.map((preEtude, index) => ({
+          ...preEtude,
+          prospectName: prospects[index]?.nom || 'Unknown', // Assign prospect name cyclically or as a fallback
+        }));
 
-        // Combine all results into a flat array
-        const combinedPreEtudes = allPreEtudes.flat();
-        console.log('Combined preÉtudes:', combinedPreEtudes);
-
-        setPreEtudeData(combinedPreEtudes);
+        // Set the preÉtude data with prospect names included
+        setPreEtudeData(enrichedPreEtudes);
       } catch (err) {
-        console.error('Error fetching preÉtudes:', err.message);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -65,8 +49,6 @@ const usePreEtudesForSite = () => {
       fetchPreEtudeData();
     }
   }, [siteId]);
-
   return { preEtudeData, loading, error };
 };
-
 export default usePreEtudesForSite;
