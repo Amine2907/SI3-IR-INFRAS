@@ -40,6 +40,20 @@ const getAllPreEtude = async (EB) => {
         return { success: false, error: error.message };
     }
 }
+const getAllPreEtudeT = async (Proid) => {
+    try {
+        const { data, error } = await supabase
+        .from('PreEtude')
+        .select('*')
+        .eq('PRid_fk',Proid);
+        if (error) {
+            throw error;
+        }
+        return { success: true, data };
+    }catch(error){
+        return { success: false, error: error.message };
+    }
+}
 // get PreEtude by id
 const getPreEtudeById = async (id) => {
         try {
@@ -143,5 +157,6 @@ const preEtudeModel = {
     activatePreEtude,
     desactivatePreEtude,
     getPreEtudeById,
+    getAllPreEtudeT,
 }
 export default preEtudeModel; 

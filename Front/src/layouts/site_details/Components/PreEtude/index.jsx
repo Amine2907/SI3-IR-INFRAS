@@ -1,7 +1,6 @@
 import PreHeader from './PreEtudeHeader';
 import Grid from '@mui/material/Grid';
 import PreEtudeList from './PreEtudeList';
-
 function PreEtude() {
   return (
     <Grid container spacing={2} direction="column">
@@ -9,8 +8,9 @@ function PreEtude() {
       <Grid item>
         <PreHeader />
       </Grid>
-      <Grid item></Grid>
-      <PreEtudeList />
+      <Grid item>
+        <PreEtudeList />
+      </Grid>
     </Grid>
   );
 }

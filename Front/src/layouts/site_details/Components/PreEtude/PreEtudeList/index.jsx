@@ -81,7 +81,7 @@ function PreEtudeList() {
   if (error)
     return (
       <Alert variant="destructive" className="mt-4">
-        <AlertDescription>Error: {String(error)}</AlertDescription>
+        <AlertDescription>Erreur: {String(error)}</AlertDescription>
       </Alert>
     );
 
@@ -89,7 +89,7 @@ function PreEtudeList() {
     return (
       <Alert variant="destructive" className="mt-4">
         <AlertDescription>
-          Aucune donnée des déclarations préalables pour ce site sont disponibles.
+          Aucune donnée des pre-etude pour ce site sont disponibles.
         </AlertDescription>
       </Alert>
     );

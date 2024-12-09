@@ -41,6 +41,14 @@ const getPreEtudesSite = async Sid => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
+const getPreEtudeProspect = async Proid => {
+  try {
+    const response = await axios.get(`${API_URL}/${Proid}/preetude`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
+};
 // Display a PreEtude for a site Service
 const displayPreEtudesSite = async (Sid, PREid) => {
   try {
@@ -81,6 +89,7 @@ const SitePreEtudeService = {
   createPreEtude,
   updatePreEtude,
   getPreEtudesSite,
+  getPreEtudeProspect,
   displayPreEtudesSite,
   getPreEtudeById,
   getAllPreEtudesForSite,

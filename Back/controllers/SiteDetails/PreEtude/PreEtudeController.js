@@ -35,6 +35,14 @@ const getAllPreEtudes = async(req,res)=>{
     }
     return res.status(200).json(result.data);
 };
+const getAllPreEtudeT = async(req,res)=>{
+    const proid = req.params.Proid;
+      const result = await preEtudeModel.getAllPreEtudeT(proid);
+      if(!result.success){
+          return res.status(400).json({error:result.error});
+      }
+      return res.status(200).json(result.data);
+  };
 // Get PreEtude by its id controller 
 const getPreEtudesById = async(req,res) => {
   const PreEtudeId = req.params.id;
@@ -127,5 +135,6 @@ const PreEtudeController = {
     desactivatePreEtude,
     updatePreEtude,
     getPreEtudesById,
+    getAllPreEtudeT,
 }
 export default PreEtudeController ; 

@@ -59,7 +59,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
         is_active: true, // Always true*
         relance: isRelance,
       };
-      console.log('prospect data :', dpData);
+      console.log('Decl preal data :', dpData);
       onSave({ Proid, dpData });
       return;
     }
