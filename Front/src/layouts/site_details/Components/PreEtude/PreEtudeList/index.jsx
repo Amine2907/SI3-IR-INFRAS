@@ -17,8 +17,10 @@ import MDAlert from 'components/MDAlert';
 import cellStyle from './styles/styles';
 import usepreEtudesForSite from './preEtdueService';
 import PreEtModal from 'examples/popup/PreEtudePopUp';
+import PreEtudeStorageModal from 'examples/popup/PreEtudeStoragePopUp';
 function PreEtudeList() {
   const [showModal, setShowModal] = useState(false);
+  const [showStorageModal, setShowStorageModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
@@ -27,13 +29,17 @@ function PreEtudeList() {
   const siteId = EB;
   const { preEtudeData, loading, error } = usepreEtudesForSite(siteId);
   const handleEdit = preEtude => {
-    // console.log('Editing preEtude:', preEtude);
     setSelectedpreEtude(preEtude);
     setShowModal(true);
     setIsModalOpen(true);
   };
+  const handleUpload = preEtude => {
+    setSelectedpreEtude(preEtude);
+    setShowStorageModal(true);
+  };
   const handleCloseModal = () => {
     setShowModal(false);
+    setShowStorageModal(false);
   };
   const handleUpdate = async updates => {
     const preEtudeid = selectedpreEtude?.preEtudeid;
@@ -127,7 +133,7 @@ function PreEtudeList() {
                   <Icon
                     sx={{ cursor: 'pointer' }}
                     fontSize="small"
-                    onClick={() => handleEdit(preEtude)}
+                    onClick={() => handleUpload(preEtude)}
                   >
                     add
                   </Icon>
@@ -139,6 +145,13 @@ function PreEtudeList() {
       </table>
       {showModal && (
         <PreEtModal preEtude={selectedpreEtude} onSave={handleUpdate} onClose={handleCloseModal} />
+      )}
+      {showStorageModal && (
+        <PreEtudeStorageModal
+          preEtude={selectedpreEtude}
+          onSave={handleUpdate}
+          onClose={handleCloseModal}
+        />
       )}
       {/* Display Alert if there's an error */}
       {alert.show && (
