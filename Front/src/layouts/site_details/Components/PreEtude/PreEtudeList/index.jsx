@@ -10,12 +10,12 @@ import {
   Icon,
 } from '@mui/material';
 import { Alert, AlertDescription } from 'components/ui/alert';
-import cellStyle from '../Styles/styles';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import ProspectpreEtudeService from 'services/site_details/preEtude/preEtudeService';
 import SitePreEtudeService from 'services/site_details/PreEtude/preEtudeService';
 import MDAlert from 'components/MDAlert';
+import cellStyle from './styles/styles';
+import usepreEtudesForSite from './preEtdueService';
 function PreEtudeList() {
   const [showModal, setShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,7 +24,7 @@ function PreEtudeList() {
   const { EB } = location.state || {};
   const [selectedpreEtude, setSelectedpreEtude] = useState(null);
   const siteId = EB;
-  const { preEtudesData, loading, error } = usepreEtudesForProspects(siteId);
+  const { preEtudeData, loading, error } = usepreEtudesForSite(siteId);
   const handleEdit = preEtude => {
     // console.log('Editing preEtude:', preEtude);
     setSelectedpreEtude(preEtude);
@@ -85,7 +85,7 @@ function PreEtudeList() {
       </Alert>
     );
 
-  if (!preEtudesData.length)
+  if (!preEtudeData.length)
     return (
       <Alert variant="destructive" className="mt-4">
         <AlertDescription>
@@ -97,7 +97,7 @@ function PreEtudeList() {
   return (
     <TableContainer>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-        <Typography variant="h6">{preEtudesData.length} Résultat(s)</Typography>
+        <Typography variant="h6">{preEtudeData.length} Résultat(s)</Typography>
       </Box>
       <table>
         <thead>
@@ -108,7 +108,7 @@ function PreEtudeList() {
           </TableRow>
         </thead>
         <TableBody>
-          {preEtudesData.map(preEtude => {
+          {preEtudeData.map(preEtude => {
             return (
               <TableRow key={preEtude.id}>
                 <TableCell>{preEtude.prospectName || 'N/A'}</TableCell>

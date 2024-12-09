@@ -1,5 +1,6 @@
 import PreHeader from './PreEtudeHeader';
 import Grid from '@mui/material/Grid';
+import PreEtudeList from './PreEtudeList';
 
 function PreEtude() {
   return (
@@ -9,6 +10,7 @@ function PreEtude() {
         <PreHeader />
       </Grid>
       <Grid item></Grid>
+      <PreEtudeList />
     </Grid>
   );
 }

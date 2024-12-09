@@ -1,36 +1,27 @@
-/* eslint-disable */
 import { useEffect, useState } from 'react';
-import SiteProspectService from 'services/site_details/Prospect/prospectService';
-import ProspectDpService from 'services/site_details/DP/DpService';
+import SitePreEtudeService from 'services/site_details/PreEtude/preEtudeService';
 import { useLocation } from 'react-router-dom';
-const useDpsForProspects = () => {
+
+const usePreEtudesForSite = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [dpsData, setDpsData] = useState([]);
+  const [preEtudeData, setPreEtudeData] = useState([]);
   const location = useLocation();
-  const { EB } = location.state || {};
+  const { EB } = location.state || {}; // Assuming the site ID is passed here
   const siteId = EB;
+
   useEffect(() => {
-    const fetchDpData = async () => {
+    const fetchPreEtudeData = async () => {
       try {
         setLoading(true);
         setError(null);
-        // Step 1: Fetch Prospects for the Site
-        const prospectsResponse = await SiteProspectService.getProspectsSite(siteId);
-        if (!prospectsResponse.success) throw new Error('Failed to fetch prospects');
-        const prospects = prospectsResponse.data;
-        // Step 2: Fetch DPs for Each Prospect
-        const allDps = await Promise.all(
-          prospects.map(async prospect => {
-            const dpsResponse = await ProspectDpService.getDpsProspect(prospect.Proid);
-            if (!dpsResponse.success) throw new Error('Failed to fetch DPs');
-            return dpsResponse.data.map(dp => ({
-              ...dp,
-              prospectName: prospect.nom,
-            }));
-          })
-        );
-        setDpsData(allDps.flat());
+        // Fetch preEtudes for the site (you might need to modify the method if it requires specific params)
+        const preEtudesResponse = await SitePreEtudeService.getPreEtudesSite(siteId);
+        if (!preEtudesResponse.success) throw new Error('Failed to fetch preEtudes');
+        // Assuming the API returns an array of preEtudes
+        const preEtudes = preEtudesResponse.data;
+        // Set the preEtude data
+        setPreEtudeData(preEtudes);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -38,9 +29,10 @@ const useDpsForProspects = () => {
       }
     };
     if (siteId) {
-      fetchDpData();
+      fetchPreEtudeData();
     }
   }, [siteId]);
-  return { dpsData, loading, error };
+
+  return { preEtudeData, loading, error };
 };
-export default useDpsForProspects;
+export default usePreEtudesForSite;
