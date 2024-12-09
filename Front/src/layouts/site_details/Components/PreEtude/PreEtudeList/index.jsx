@@ -16,6 +16,7 @@ import SitePreEtudeService from 'services/site_details/PreEtude/preEtudeService'
 import MDAlert from 'components/MDAlert';
 import cellStyle from './styles/styles';
 import usepreEtudesForSite from './preEtdueService';
+import PreEtModal from 'examples/popup/PreEtudePopUp';
 function PreEtudeList() {
   const [showModal, setShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,7 +50,6 @@ function PreEtudeList() {
     const { prospectName, ...filteredUpdates } = updates;
     try {
       const result = await SitePreEtudeService.updatePreEtude(preEtudeid, filteredUpdates);
-      // console.log('API result:', result);
       let successMessage = '';
       if (result.success) {
         successMessage = 'preEtude modifiee avec succès !';
@@ -138,11 +138,7 @@ function PreEtudeList() {
         </TableBody>
       </table>
       {showModal && (
-        <preEtudeUModal
-          preEtude={selectedpreEtude}
-          onSave={handleUpdate}
-          onClose={handleCloseModal}
-        />
+        <PreEtModal preEtude={selectedpreEtude} onSave={handleUpdate} onClose={handleCloseModal} />
       )}
       {/* Display Alert if there's an error */}
       {alert.show && (
