@@ -1,10 +1,3 @@
-/**
- * Main file for the Node.js server.
- * This file is the entry point for the server.
- * It imports the different routes and services, and sets up the Express app.
- * @license MIT
- * @fileoverview Main file for the Node.js server.
- */
 // Imports here 
 import express from "express"; 
 import cors from "cors"; 
