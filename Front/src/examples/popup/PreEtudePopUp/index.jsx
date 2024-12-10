@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
-import { Switch, Select, MenuItem, FormControl } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl, Icon } from '@mui/material';
 import { Label } from '@radix-ui/react-label';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
@@ -14,7 +14,16 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
   const [activeProspects, setActiveProspects] = useState([]);
   const [selectedProspect, setSelectedProspect] = useState('');
   const [errors, setErrors] = useState({});
-
+  const calculateCout = (ZFA, ZFB, MM, CRR, ADAPT, CRRBTA, CRP_HTABT) => {
+    let baseValue = 2210 + MM * 99 + ADAPT * 2708 + CRRBTA * 7668;
+    if (ZFA) {
+      return 0.6 * (baseValue + CRR * 2407 + CRP_HTABT * 15180);
+    }
+    if (ZFB) {
+      return 0.6 * (baseValue + CRR * 3113 + CRP_HTABT * 25579);
+    }
+    return 0;
+  };
   const handleChange = event => {
     const { name, value } = event.target;
     setFormData(prevData => {
@@ -22,23 +31,22 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
         ...prevData,
         [name]: value,
       };
-      if (name === 'ZFA' || name === 'ZFB') {
-        let ZFA = updatedData.ZFA || 0;
-        let ZFB = updatedData.ZFB || 0;
-        let MM = updatedData.MM || 0;
-        let CRR = updatedData.CRR || 0;
-        let ADAPT = updatedData.ADPDT || 0;
-        let CRRBTA = updatedData.CRRBTA || 0;
-        let CRP_HTABT = updatedData.CRP_HTABT || 0;
-        // Calculate ZFA or ZFB based on the selected value
-        if (ZFA === 1) {
-          ZFA = 2210 + MM * 99 + CRR * 2407 + ADAPT * 2708 + CRRBTA * 7668 + CRP_HTABT * 15180;
-          updatedData.cout = (0.6 * ZFA).toFixed(2);
-        } else if (ZFB === 2) {
-          ZFB = 2210 + MM * 99 + CRR * 3113 + ADAPT * 2708 + CRRBTA * 7668 + CRP_HTABT * 25579;
-          updatedData.cout = (0.6 * ZFB).toFixed(2);
-        }
+      if (name === 'ZFA_ZFB') {
+        updatedData.ZFA = value === 'ZFA';
+        updatedData.ZFB = value === 'ZFB';
       }
+      ['MM', 'CRR', 'ADPDT', 'CRRBTA', 'CRP_HTABT'].forEach(field => {
+        updatedData[field] = Number(updatedData[field]) || 0;
+      });
+      updatedData.cout = calculateCout(
+        updatedData.ZFA,
+        updatedData.ZFB,
+        updatedData.MM,
+        updatedData.CRR,
+        updatedData.ADPDT,
+        updatedData.CRRBTA,
+        updatedData.CRP_HTABT
+      );
       return updatedData;
     });
   };
@@ -50,6 +58,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
     if (preEtude) {
       setFormData({
         ...preEtude,
+        ZFA_ZFB: preEtude.ZFA ? 'ZFA' : preEtude.ZFB ? 'ZFB' : '',
       });
       setSelectedProspect(preEtude.prospectName || '');
       setIsActive(preEtude.is_active);
@@ -78,6 +87,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
   }, [Sid, preEtude]);
   const validateForm = () => {
     const newErrors = {};
+    if (formData.type_rac === 'Complexe' && !formData.ZFA_ZFB) newErrors.ZFA_ZFB = true;
     // if (!formData.nom) newErrors.nom = true;
     return newErrors;
   };
@@ -92,7 +102,11 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
     console.log('Submitting form data:', {
       ...formData,
       is_active: isActive,
+      ZFA: formData.ZFA_ZFB === 'ZFA',
+      ZFB: formData.ZFA_ZFB === 'ZFB',
+      cout: Number(formData.cout.toFixed(2)),
     });
+    delete formData.ZFA_ZFB;
     onSave({ ...formData, is_active: isActive });
   };
   const handleToggleActive = () => {
@@ -114,7 +128,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
             style={{
               marginTop: '12px',
               marginBottom: '2px',
-              width: '320px',
+              width: '300px',
             }}
             required
           >
@@ -138,54 +152,19 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
-          {/* <FormControl
-            fullWidth
-            style={{
-              marginTop: '12px',
-              marginBottom: '2px',
-              width: '320px',
-            }}
-            required
-          >
-            <Select
-              name="type_rac"
-              value={formData.type_rac || ''}
-              onChange={handleChange}
-              displayEmpty
-              style={{
-                padding: '10px',
-                fontSize: '14px',
-                borderColor: errors.type_rac ? 'red' : '',
-              }}
-              required
-            >
-              <MenuItem value="" disabled>
-                -- Type de raccordement --
-              </MenuItem>
-              <MenuItem value="Simple">Simple</MenuItem>
-              <MenuItem value="Complexe">Complexe</MenuItem>
-            </Select>
-          </FormControl> */}
           <FormControl
             fullWidth
             style={{
               marginTop: '12px',
               marginBottom: '2px',
-              width: '320px',
+              width: '300px',
             }}
             required
           >
             <Select
               name="ZFA_ZFB"
-              value={formData.ZFA === 1 ? 'ZFA' : formData.ZFB === 2 ? 'ZFB' : ''}
-              onChange={e => {
-                const value = e.target.value;
-                setFormData(prevData => ({
-                  ...prevData,
-                  ZFA: value === 'ZFA' ? true : null, // Update ZFA if selected
-                  ZFB: value === 'ZFB' ? true : null, // Update ZFB if selected
-                }));
-              }}
+              value={formData.ZFA_ZFB || '-- Choisir ZFA/ZFB --'}
+              onChange={handleChange}
               displayEmpty
               style={{
                 padding: '10px',
@@ -266,19 +245,32 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
             }}
             required
           />
-          <MDInput
-            name="cout"
-            value={formData.cout || ''}
-            onChange={handleChange}
-            placeholder="Cout"
-            style={{
-              marginBottom: '5px',
-              width: '300px',
-              marginTop: '10px',
-              borderColor: errors.cout ? 'red' : '',
-            }}
-            disabled
-          />
+          <div style={{ position: 'relative', width: '300px' }}>
+            <MDInput
+              name="cout"
+              value={formData.cout ? `${formData.cout.toFixed(2)}` : ''}
+              onChange={handleChange}
+              placeholder="Cout"
+              style={{
+                marginBottom: '5px',
+                width: '100%',
+                marginTop: '10px',
+                borderColor: errors.cout ? 'red' : '',
+              }}
+              disabled
+            />
+            <Icon
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                pointerEvents: 'none',
+              }}
+            >
+              euro
+            </Icon>
+          </div>
         </div>
         <div>
           <Label>{isActive ? 'Active' : 'Inactive'}</Label>
@@ -302,15 +294,15 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
 PreEtModal.propTypes = {
   Sid: PropTypes.string.isRequired,
   preEtude: PropTypes.shape({
-    ADPDT: PropTypes.string,
-    CRR: PropTypes.string,
-    CRP_HTABT: PropTypes.string,
-    MM: PropTypes.string,
-    ZFA: PropTypes.string,
-    ZFB: PropTypes.string,
-    cout: PropTypes.string,
+    ADPDT: PropTypes.number,
+    CRR: PropTypes.number,
+    CRP_HTABT: PropTypes.number,
+    MM: PropTypes.number,
+    ZFA: PropTypes.bool,
+    ZFB: PropTypes.bool,
+    cout: PropTypes.number,
     type_rac: PropTypes.string,
-    CRRBTA: PropTypes.string,
+    CRRBTA: PropTypes.number,
     is_active: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,

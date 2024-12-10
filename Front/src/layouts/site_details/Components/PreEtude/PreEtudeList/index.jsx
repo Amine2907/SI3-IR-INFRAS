@@ -119,7 +119,14 @@ function PreEtudeList() {
               <TableRow key={preEtude.id}>
                 <TableCell>{preEtude.prospectName || 'N/A'}</TableCell>
                 <TableCell>{preEtude.type_rac || 'N/A'}</TableCell>
-                <TableCell>{preEtude.cout || 'N/A'}</TableCell>
+                <TableCell>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="body2" sx={{ fontWeight: 'normal' }}>
+                      {preEtude.cout ? parseFloat(preEtude.cout).toFixed(2) : 'N/A'}
+                    </Typography>
+                    <Icon sx={{ fontSize: 'inherit', ml: 0.5 }}>euro</Icon>
+                  </Box>
+                </TableCell>
                 <TableCell title="Modifier preEtude" placement="top">
                   <Icon
                     sx={{ cursor: 'pointer' }}
