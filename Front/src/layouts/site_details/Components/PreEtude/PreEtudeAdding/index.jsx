@@ -132,7 +132,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
               ))}
             </Select>
           </FormControl>
-
           <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
             <Select
               name="type_rac"
@@ -159,7 +158,7 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
               <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
                 <Select
                   name="ZFA_ZFB"
-                  value={formData.ZFA_ZFB}
+                  value={formData.ZFA_ZFB || ''}
                   onChange={handleChange}
                   displayEmpty
                   style={{
@@ -176,7 +175,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
                   <MenuItem value="ZFB">ZFB</MenuItem>
                 </Select>
               </FormControl>
-
               <MDInput
                 name="MM"
                 value={formData.MM || ''}
