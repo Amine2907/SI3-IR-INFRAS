@@ -8,7 +8,7 @@ import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 import { Label } from '@radix-ui/react-label';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
-  const [formData, setFormData] = useState(preEtude || {});
+  const [formData, setFormData] = useState(preEtude || { type_rac: '' });
   const [errors, setErrors] = useState({});
   const [activeProspects, setActiveProspects] = useState([]);
   const [selectedProspect, setSelectedProspect] = useState('');
@@ -25,14 +25,22 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
   };
   const handleChange = event => {
     const { name, value } = event.target;
-    // Update formData state
     setFormData(prevData => {
       const updatedData = {
         ...prevData,
         [name]: value,
       };
-      // Calculate cout after any change in ZFA or ZFB
+      // Handle ZFA/ZFB specific calculations for "Complexe" only
       if (name === 'ZFA' || name === 'ZFB') {
+        // Ensure only one is true
+        if (name === 'ZFA') {
+          updatedData.ZFA = value === 'ZFA' ? 1 : null; // Set ZFA as numeric value 1
+          updatedData.ZFB = null; // Reset ZFB
+        } else if (name === 'ZFB') {
+          updatedData.ZFB = value === 'ZFB' ? 1 : null; // Set ZFB as numeric value 1
+          updatedData.ZFA = null; // Reset ZFA
+        }
+        // Perform the cout calculation based on ZFA/ZFB
         updatedData.cout = calculateCout(
           updatedData.ZFA,
           updatedData.ZFB,
@@ -43,6 +51,7 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
           updatedData.CRP_HTABT
         );
       }
+      console.log(updatedData.cout);
       return updatedData;
     });
   };
@@ -84,7 +93,7 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
   }, [Sid, preEtude]);
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.ZFA && !formData.ZFB) newErrors.ZFA_ZFB = true;
+    // if (!formData.ZFA && !formData.ZFB) newErrors.ZFA_ZFB = true;
     return newErrors;
   };
   const handleSubmit = () => {
@@ -98,20 +107,14 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
       CRR: formData.CRR,
       CRP_HTABT: formData.CRP_HTABT,
       MM: formData.MM,
-      ZFA: formData.ZFA,
-      ZFB: formData.ZFB,
-      cout: formData.cout,
+      ZFA: formData.ZFA, // Now ZFA is numeric (1 or null)
+      ZFB: formData.ZFB, // Now ZFB is numeric (1 or null)
+      cout: formData.cout, // Send the calculated cout value to the backend
       type_rac: formData.type_rac,
       CRRBTA: formData.CRRBTA,
     };
-    console.log('prospect data :', preEtudeData);
+    console.log('preEtude data :', preEtudeData);
     onSave({ Sid, preEtudeData });
-    // Ensure the dropdown updates correctly after submission
-    setFormData(prevData => ({
-      ...prevData,
-      ZFA: formData.ZFA || null, // Set null or keep the selected value
-      ZFB: formData.ZFB || null, // Same as above
-    }));
   };
   return (
     <div className={styles.modal}>
@@ -159,7 +162,7 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
           >
             <Select
               name="type_rac"
-              value={formData.type_rac || ''}
+              value={formData.type_rac}
               onChange={handleChange}
               displayEmpty
               style={{
@@ -191,16 +194,8 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
               >
                 <Select
                   name="ZFA_ZFB"
-                  value={formData.ZFA || formData.ZFB || ''}
-                  onChange={e => {
-                    const value = e.target.value;
-                    // Set numeric values: 1 for ZFA, 2 for ZFB
-                    setFormData(prevData => ({
-                      ...prevData,
-                      ZFA: value === 'ZFA' ? 1 : null, // Set 1 for ZFA, else null
-                      ZFB: value === 'ZFB' ? 2 : null, // Set 2 for ZFB, else null
-                    }));
-                  }}
+                  value={formData.ZFA ? 'ZFA' : formData.ZFB ? 'ZFB' : ''}
+                  onChange={handleChange} // Use handleChange to calculate the cout
                   displayEmpty
                   style={{
                     padding: '10px',
