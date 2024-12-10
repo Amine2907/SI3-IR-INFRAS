@@ -25,7 +25,7 @@ function DeclPreaList() {
   const { EB } = location.state || {};
   const [selecteddp, setSelecteddp] = useState(null);
   const siteId = EB;
-  const { dpsData, loading, error } = useDpsForProspects(siteId);
+  const { dpsData, loading, error, fetchDpData } = useDpsForProspects(siteId);
   const handleEdit = dp => {
     // console.log('Editing DP:', dp);
     setSelecteddp(dp);
@@ -55,6 +55,7 @@ function DeclPreaList() {
       if (result.success) {
         successMessage = 'DP modifiee avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
+        fetchDpData();
         handleCloseModal();
       } else {
         setAlert({

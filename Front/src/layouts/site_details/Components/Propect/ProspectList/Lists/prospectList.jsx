@@ -30,6 +30,7 @@ function ProspectList({ site }) {
   const [selectedDp, setSelectedDp] = useState(null);
   const Sid = EB;
   const Proid = selectedprospect?.Proid;
+  const { fetchDpData } = useDpsForProspects(Sid);
   const handleEdit = prospect => {
     setSelectedprospect(prospect);
     setShowModal(true);
@@ -98,18 +99,16 @@ function ProspectList({ site }) {
     try {
       // Create new DP
       const result = await ProspectDpService.createDp({ Proid, dpData });
-      console.log('API result:', result); // Log the API response for debugging
-
+      // console.log('API result:', result); // Log the API response for debugging
       let successMessage = '';
       if (result.success) {
         successMessage = 'Déclaration Préalable enregistrée avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
+        fetchDpData();
       } else {
         let errorMessage = `Error: ${result.error}`;
-
         // Log the error to ensure the message format is as expected
-        console.log('API Error:', result.error);
-
+        // console.log('API Error:', result.error);
         // Check if the error is related to an active DP
         if (result.error.includes('A DP with active status already exists for this site')) {
           errorMessage = 'Il y a déjà une déclaration préalable active pour ce prospect.';
