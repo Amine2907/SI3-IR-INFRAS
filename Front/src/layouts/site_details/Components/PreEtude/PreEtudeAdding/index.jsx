@@ -83,7 +83,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
 
     fetchActiveProspects();
   }, [Sid]);
-
   const handleSubmit = () => {
     const newErrors = {};
     if (!formData.type_rac) newErrors.type_rac = true;
@@ -93,7 +92,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
       setErrors(newErrors);
       return;
     }
-
     const preEtudeData = {
       ADPDT: formData.ADPDT,
       CRR: formData.CRR,

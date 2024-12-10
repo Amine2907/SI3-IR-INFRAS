@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styles from '../style.module.css';
+import styles from './styles.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
 import SitePreEtudeService from 'services/site_details/PreEtude/preEtudeService';
