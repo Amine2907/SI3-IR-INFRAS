@@ -106,6 +106,12 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
     };
     console.log('prospect data :', preEtudeData);
     onSave({ Sid, preEtudeData });
+    // Ensure the dropdown updates correctly after submission
+    setFormData(prevData => ({
+      ...prevData,
+      ZFA: formData.ZFA || null, // Set null or keep the selected value
+      ZFB: formData.ZFB || null, // Same as above
+    }));
   };
   return (
     <div className={styles.modal}>
