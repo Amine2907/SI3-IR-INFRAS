@@ -182,8 +182,8 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
                 const value = e.target.value;
                 setFormData(prevData => ({
                   ...prevData,
-                  ZFA: value === 'ZFA' ? 1 : null, // Update ZFA if selected
-                  ZFB: value === 'ZFB' ? 2 : null, // Update ZFB if selected
+                  ZFA: value === 'ZFA' ? true : null, // Update ZFA if selected
+                  ZFB: value === 'ZFB' ? true : null, // Update ZFB if selected
                 }));
               }}
               displayEmpty

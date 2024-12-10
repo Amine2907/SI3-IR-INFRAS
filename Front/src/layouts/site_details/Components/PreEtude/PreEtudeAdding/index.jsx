@@ -21,7 +21,10 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
     if (ZFB) {
       ZFBValue = 2210 + MM * 99 + CRR * 3113 + ADAPT * 2708 + CRRBTA * 7668 + CRP_HTABT * 25579;
     }
-    return ZFA ? 0.6 * ZFAValue : ZFB ? 0.6 * ZFBValue : 0;
+    // Return the correct value based on ZFA or ZFB
+    if (ZFA) return 0.6 * ZFAValue;
+    if (ZFB) return 0.6 * ZFBValue;
+    return 0;
   };
   const handleChange = event => {
     const { name, value } = event.target;
@@ -32,29 +35,39 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
       };
       // Handle ZFA/ZFB specific calculations for "Complexe" only
       if (name === 'ZFA' || name === 'ZFB') {
-        // Ensure only one is true
+        // Set ZFA or ZFB as boolean based on the selected value
         if (name === 'ZFA') {
-          updatedData.ZFA = value === 'ZFA' ? 1 : null; // Set ZFA as numeric value 1
-          updatedData.ZFB = null; // Reset ZFB
+          updatedData.ZFA = value === 'true'; // Set ZFA to true when selected, otherwise false
+          updatedData.ZFB = false; // Reset ZFB when ZFA is selected
         } else if (name === 'ZFB') {
-          updatedData.ZFB = value === 'ZFB' ? 1 : null; // Set ZFB as numeric value 1
-          updatedData.ZFA = null; // Reset ZFA
+          updatedData.ZFB = value === 'true'; // Set ZFB to true when selected, otherwise false
+          updatedData.ZFA = false; // Reset ZFA when ZFB is selected
         }
-        // Perform the cout calculation based on ZFA/ZFB
-        updatedData.cout = calculateCout(
-          updatedData.ZFA,
-          updatedData.ZFB,
-          updatedData.MM,
-          updatedData.CRR,
-          updatedData.ADPDT,
-          updatedData.CRRBTA,
-          updatedData.CRP_HTABT
-        );
       }
-      console.log(updatedData.cout);
+      // Ensure fields are numeric before using them in calculation
+      updatedData.MM = Number(updatedData.MM);
+      updatedData.CRR = Number(updatedData.CRR);
+      updatedData.ADPDT = Number(updatedData.ADPDT);
+      updatedData.CRRBTA = Number(updatedData.CRRBTA);
+      updatedData.CRP_HTABT = Number(updatedData.CRP_HTABT);
+      // Calculate cout based on the selected ZFA or ZFB
+      updatedData.cout = calculateCout(
+        updatedData.ZFA,
+        updatedData.ZFB,
+        updatedData.MM,
+        updatedData.CRR,
+        updatedData.ADPDT,
+        updatedData.CRRBTA,
+        updatedData.CRP_HTABT
+      );
+      console.log('Updated Data:', updatedData); // Log the updated data for debugging
+
       return updatedData;
     });
   };
+  useEffect(() => {
+    console.log('Cout value updated:', formData.cout); // This will log whenever formData.cout changes
+  }, [formData.cout]);
   const handleProspectChange = event => {
     const { value } = event.target;
     setSelectedProspect(value);
@@ -194,8 +207,8 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
               >
                 <Select
                   name="ZFA_ZFB"
-                  value={formData.ZFA ? 'ZFA' : formData.ZFB ? 'ZFB' : ''}
-                  onChange={handleChange} // Use handleChange to calculate the cout
+                  value={formData.ZFA ? 'true' : formData.ZFB ? 'false' : ''}
+                  onChange={handleChange}
                   displayEmpty
                   style={{
                     padding: '10px',
@@ -207,8 +220,8 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
                   <MenuItem value="" disabled>
                     -- Choisir ZFA/ZFB --
                   </MenuItem>
-                  <MenuItem value="ZFA">ZFA</MenuItem>
-                  <MenuItem value="ZFB">ZFB</MenuItem>
+                  <MenuItem value="true">ZFA</MenuItem>
+                  <MenuItem value="false">ZFB</MenuItem>
                 </Select>
               </FormControl>
               {/* Additional Fields */}
