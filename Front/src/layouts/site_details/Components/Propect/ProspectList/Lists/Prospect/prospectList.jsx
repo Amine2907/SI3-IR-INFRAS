@@ -12,14 +12,14 @@ import {
 import { Alert, AlertDescription } from 'components/ui/alert';
 import MDAlert from 'components/MDAlert';
 import useProspectsData from './prospectService';
-import cellStyle from '../Styles/styles';
+import cellStyle from '../../Styles/styles';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 import CombinedModal from 'examples/popup/PropsectDpPopUp/CombinedPopUp';
 import ProspectDpService from 'services/site_details/DP/DpService';
 import { statusValidationValues } from './ProspectData';
-import useDpsForProspects from './declpreaService';
+import useDpsForProspects from '../DeclPreal/declpreaService';
 function ProspectList({ site }) {
   const { prospectsData, loading, error, fetchProspectsData } = useProspectsData(site);
   const [showModal, setShowModal] = useState(false);

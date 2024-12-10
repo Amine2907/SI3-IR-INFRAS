@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useState, useEffect } from 'react';
 import breakpoints from 'assets/theme/base/breakpoints';
-import ProspectList from '../Lists/prospectList';
+import ProspectList from '../Lists/Prospect/prospectList';
 import DeclPreaList from '../Lists/dpList';
 
 function HeaderListFunctions() {
