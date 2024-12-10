@@ -97,7 +97,7 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
           >
             <Select
               name="activeProspect"
-              value={selectedProspect || ''}
+              value={activeProspects.find(p => p.nom === selectedProspect) ? selectedProspect : ''}
               onChange={handleProspectChange}
               displayEmpty
               style={{

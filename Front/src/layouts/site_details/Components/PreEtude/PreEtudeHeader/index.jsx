@@ -9,12 +9,15 @@ import MDButton from 'components/MDButton';
 import MDAlert from 'components/MDAlert';
 import PreEtudeAddingModal from '../PreEtudeAdding';
 import SitePreEtudeService from 'services/site_details/PreEtude/preEtudeService';
+import usePreEtudesForSite from '../PreEtudeList/preEtdueService';
 function PreHeader() {
   const [alert, setAlert] = useState(false);
   const [selectedPreEtude, setSelectedPreEtude] = useState(null);
   const location = useLocation();
   const { EB } = location.state || {};
   const Sid = EB;
+  const { fetchPreEtudeData } = usePreEtudesForSite(Sid);
+
   const handleAddPreEtude = async data => {
     const { preEtudeData } = data;
     try {
@@ -24,6 +27,7 @@ function PreHeader() {
       if (result.success) {
         successMessage = 'PreEtude enregistré avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
+        fetchPreEtudeData();
       } else {
         let errorMessage = `Error: ${result.error}`;
         console.error(errorMessage); // Log any errors from the API response

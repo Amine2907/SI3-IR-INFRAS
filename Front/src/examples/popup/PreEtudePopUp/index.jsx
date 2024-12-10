@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import styles from './style.module.css';
 import PropTypes from 'prop-types';
@@ -6,28 +7,61 @@ import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
 import { Switch, Select, MenuItem, FormControl } from '@mui/material';
 import { Label } from '@radix-ui/react-label';
-const PreEtModal = ({ preEtude, onSave, onClose }) => {
+import SiteProspectService from 'services/site_details/Prospect/prospectService';
+const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
   const [formData, setFormData] = useState(preEtude || {});
   const [isActive, setIsActive] = useState(preEtude ? preEtude.is_active : true);
+  const [activeProspects, setActiveProspects] = useState([]);
+  const [selectedProspect, setSelectedProspect] = useState('');
   const [errors, setErrors] = useState({});
+
   const handleChange = event => {
     const { name, value } = event.target;
-    console.log('Form input change:', name, value);
     setFormData(prevData => ({
       ...prevData,
       [name]: value,
     }));
+    if (name === 'type_rac') {
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+  const handleProspectChange = event => {
+    const { value } = event.target;
+    setSelectedProspect(value);
   };
   useEffect(() => {
     if (preEtude) {
-      setFormData(prevData => ({
-        ...prevData,
+      setFormData({
         ...preEtude,
-      }));
+      });
+      setSelectedProspect(preEtude.prospectName || '');
       setIsActive(preEtude.is_active);
     }
-    console.log('Initialized formData:', formData);
   }, [preEtude]);
+  const fetchActiveProspects = async () => {
+    try {
+      // Call the service method to fetch active prospects for the given Sid
+      const result = await SiteProspectService.getActiveProspectsForSite(Sid);
+      // Check if the result is successful
+      if (result.success) {
+        // Set the active prospects data if the response is successful
+        setActiveProspects(result.data);
+      } else {
+        console.error('Error fetching active prospects:', result.error);
+        setActiveProspects([]);
+      }
+    } catch (error) {
+      // Handle errors during the fetch
+      console.error('Error during fetch:', error.message);
+      setActiveProspects([]); // Set an empty array in case of error
+    }
+  };
+  useEffect(() => {
+    fetchActiveProspects();
+  }, [Sid, preEtude]);
   const validateForm = () => {
     const newErrors = {};
     // if (!formData.nom) newErrors.nom = true;
@@ -48,9 +82,11 @@ const PreEtModal = ({ preEtude, onSave, onClose }) => {
     onSave({ ...formData, is_active: isActive });
   };
   const handleToggleActive = () => {
-    if (preEtude) {
-      setIsActive(!isActive);
-    }
+    setIsActive(prevState => !prevState);
+    setFormData(prevData => ({
+      ...prevData,
+      is_active: !isActive,
+    }));
   };
   return (
     <div className={styles.modal}>
@@ -69,25 +105,26 @@ const PreEtModal = ({ preEtude, onSave, onClose }) => {
             required
           >
             <Select
-              name="type_rac"
-              value={formData.type_rac || ''}
-              onChange={handleChange}
+              name="activeProspect"
+              value={activeProspects.find(p => p.nom === selectedProspect) ? selectedProspect : ''}
+              onChange={handleProspectChange}
               displayEmpty
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.type_rac ? 'red' : '',
               }}
-              required
             >
               <MenuItem value="" disabled>
-                -- Choisir l&apos;etat prerequis --
+                -- Choisir le prospect --
               </MenuItem>
-              <MenuItem value="Complet">Complet</MenuItem>
-              <MenuItem value="Incomplet">Incomplet</MenuItem>
+              {activeProspects.map(prospect => (
+                <MenuItem key={prospect.id} value={prospect.nom}>
+                  {prospect.nom}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
-          <FormControl
+          {/* <FormControl
             fullWidth
             style={{
               marginTop: '12px',
@@ -111,36 +148,10 @@ const PreEtModal = ({ preEtude, onSave, onClose }) => {
               <MenuItem value="" disabled>
                 -- Type de raccordement --
               </MenuItem>
-              <MenuItem value="Complet">Simple</MenuItem>
-              <MenuItem value="Incomplet">Complexe</MenuItem>
+              <MenuItem value="Simple">Simple</MenuItem>
+              <MenuItem value="Complexe">Complexe</MenuItem>
             </Select>
-          </FormControl>
-          <MDInput
-            name="MM"
-            value={formData.MM || ''}
-            onChange={handleChange}
-            placeholder="Moyenne metres"
-            style={{
-              marginBottom: '5px',
-              width: '300px',
-              marginTop: '10px',
-              borderColor: errors.MM ? 'red' : '',
-            }}
-            required
-          />
-          <MDInput
-            name="MM"
-            value={formData.MM || ''}
-            onChange={handleChange}
-            placeholder="Moyenne metres"
-            style={{
-              marginBottom: '5px',
-              width: '300px',
-              marginTop: '10px',
-              borderColor: errors.MM ? 'red' : '',
-            }}
-            required
-          />
+          </FormControl> */}
           <FormControl
             fullWidth
             style={{
@@ -152,14 +163,13 @@ const PreEtModal = ({ preEtude, onSave, onClose }) => {
           >
             <Select
               name="ZFA_ZFB"
-              value={formData.ZFA || formData.ZFB || ''}
+              value={formData.ZFA === 1 ? 'ZFA' : formData.ZFB === 2 ? 'ZFB' : ''}
               onChange={e => {
                 const value = e.target.value;
-                // Set numeric values: 1 for ZFA, 2 for ZFB
                 setFormData(prevData => ({
                   ...prevData,
-                  ZFA: value === 'ZFA' ? 1 : null, // Set 1 for ZFA, else null
-                  ZFB: value === 'ZFB' ? 2 : null, // Set 2 for ZFB, else null
+                  ZFA: value === 'ZFA' ? 1 : null, // Update ZFA if selected
+                  ZFB: value === 'ZFB' ? 2 : null, // Update ZFB if selected
                 }));
               }}
               displayEmpty
@@ -177,6 +187,19 @@ const PreEtModal = ({ preEtude, onSave, onClose }) => {
               <MenuItem value="ZFB">ZFB</MenuItem>
             </Select>
           </FormControl>
+          <MDInput
+            name="MM"
+            value={formData.MM || ''}
+            onChange={handleChange}
+            placeholder="Moyenne metres"
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              marginTop: '10px',
+              borderColor: errors.MM ? 'red' : '',
+            }}
+            required
+          />
           <MDInput
             name="CRR"
             value={formData.CRR || ''}
@@ -263,6 +286,7 @@ const PreEtModal = ({ preEtude, onSave, onClose }) => {
   );
 };
 PreEtModal.propTypes = {
+  Sid: PropTypes.string.isRequired,
   preEtude: PropTypes.shape({
     ADPDT: PropTypes.string,
     CRR: PropTypes.string,

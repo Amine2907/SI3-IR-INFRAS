@@ -27,7 +27,7 @@ function PreEtudeList() {
   const { EB } = location.state || {};
   const [selectedpreEtude, setSelectedpreEtude] = useState(null);
   const siteId = EB;
-  const { preEtudeData, loading, error } = usepreEtudesForSite(siteId);
+  const { preEtudeData, loading, error, fetchPreEtudeData } = usepreEtudesForSite(siteId);
   const handleEdit = preEtude => {
     setSelectedpreEtude(preEtude);
     setShowModal(true);
@@ -42,8 +42,8 @@ function PreEtudeList() {
     setShowStorageModal(false);
   };
   const handleUpdate = async updates => {
-    const preEtudeid = selectedpreEtude?.preEtudeid;
-    // console.log('Sending update for preEtudeid:', preEtudeid, 'Updates:', updates);
+    const preEtudeid = selectedpreEtude?.PREid;
+    console.log('Sending update for preEtudeid:', preEtudeid, 'Updates:', updates);
     if (!preEtudeid) {
       console.error('preEtudeid is missing, cannot update.');
       setAlert({
@@ -60,6 +60,7 @@ function PreEtudeList() {
       if (result.success) {
         successMessage = 'preEtude modifiee avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
+        fetchPreEtudeData();
         handleCloseModal();
       } else {
         setAlert({
@@ -99,7 +100,6 @@ function PreEtudeList() {
         </AlertDescription>
       </Alert>
     );
-
   return (
     <TableContainer>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
@@ -144,7 +144,12 @@ function PreEtudeList() {
         </TableBody>
       </table>
       {showModal && (
-        <PreEtModal preEtude={selectedpreEtude} onSave={handleUpdate} onClose={handleCloseModal} />
+        <PreEtModal
+          Sid={siteId}
+          preEtude={selectedpreEtude}
+          onSave={handleUpdate}
+          onClose={handleCloseModal}
+        />
       )}
       {showStorageModal && (
         <PreEtudeStorageModal
