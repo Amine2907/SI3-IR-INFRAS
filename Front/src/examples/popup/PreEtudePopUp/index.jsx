@@ -17,16 +17,30 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
 
   const handleChange = event => {
     const { name, value } = event.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value,
-    }));
-    if (name === 'type_rac') {
-      setFormData(prevData => ({
+    setFormData(prevData => {
+      const updatedData = {
         ...prevData,
         [name]: value,
-      }));
-    }
+      };
+      if (name === 'ZFA' || name === 'ZFB') {
+        let ZFA = updatedData.ZFA || 0;
+        let ZFB = updatedData.ZFB || 0;
+        let MM = updatedData.MM || 0;
+        let CRR = updatedData.CRR || 0;
+        let ADAPT = updatedData.ADPDT || 0;
+        let CRRBTA = updatedData.CRRBTA || 0;
+        let CRP_HTABT = updatedData.CRP_HTABT || 0;
+        // Calculate ZFA or ZFB based on the selected value
+        if (ZFA === 1) {
+          ZFA = 2210 + MM * 99 + CRR * 2407 + ADAPT * 2708 + CRRBTA * 7668 + CRP_HTABT * 15180;
+          updatedData.cout = (0.6 * ZFA).toFixed(2);
+        } else if (ZFB === 2) {
+          ZFB = 2210 + MM * 99 + CRR * 3113 + ADAPT * 2708 + CRRBTA * 7668 + CRP_HTABT * 25579;
+          updatedData.cout = (0.6 * ZFB).toFixed(2);
+        }
+      }
+      return updatedData;
+    });
   };
   const handleProspectChange = event => {
     const { value } = event.target;

@@ -12,18 +12,44 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
   const [errors, setErrors] = useState({});
   const [activeProspects, setActiveProspects] = useState([]);
   const [selectedProspect, setSelectedProspect] = useState('');
+  const calculateCout = (ZFA, ZFB, MM, CRR, ADAPT, CRRBTA, CRP_HTABT) => {
+    let ZFAValue = 0;
+    let ZFBValue = 0;
+    if (ZFA) {
+      ZFAValue = 2210 + MM * 99 + CRR * 2407 + ADAPT * 2708 + CRRBTA * 7668 + CRP_HTABT * 15180;
+    }
+    if (ZFB) {
+      ZFBValue = 2210 + MM * 99 + CRR * 3113 + ADAPT * 2708 + CRRBTA * 7668 + CRP_HTABT * 25579;
+    }
+    return ZFA ? 0.6 * ZFAValue : ZFB ? 0.6 * ZFBValue : 0;
+  };
   const handleChange = event => {
     const { name, value } = event.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value,
-    }));
+    // Update formData state
+    setFormData(prevData => {
+      const updatedData = {
+        ...prevData,
+        [name]: value,
+      };
+      // Calculate cout after any change in ZFA or ZFB
+      if (name === 'ZFA' || name === 'ZFB') {
+        updatedData.cout = calculateCout(
+          updatedData.ZFA,
+          updatedData.ZFB,
+          updatedData.MM,
+          updatedData.CRR,
+          updatedData.ADPDT,
+          updatedData.CRRBTA,
+          updatedData.CRP_HTABT
+        );
+      }
+      return updatedData;
+    });
   };
   const handleProspectChange = event => {
     const { value } = event.target;
     setSelectedProspect(value);
   };
-
   useEffect(() => {
     if (preEtude) {
       setFormData(prevData => ({
