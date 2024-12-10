@@ -15,14 +15,15 @@ import dashboardRoutes from './routes/Dashboard/dashboard.js';
 import entitesRoutes from './routes/Entites/entites.js';
 import contactsRoutes from './routes/Contacts/contacts.js';
 import companiesRoutes from './routes/Companies/companies.js';
-import settingsRoutes from './routes/Settings/settings.js'
-import siteRoutes from './routes/Site/sites.js'
-import siteContactRoutes from './routes/Site/sitescontacts.js'
-import prospectRoutes from './routes/SiteDetails/Prospect/prospect.js'
+import settingsRoutes from './routes/Settings/settings.js';
+import siteRoutes from './routes/Site/sites.js';
+import siteContactRoutes from './routes/Site/sitescontacts.js';
+import prospectRoutes from './routes/SiteDetails/Prospect/prospect.js';
 import dpsRoutes from './routes/SiteDetails/DP/Dp.js';
-import prospectStorageRoutes from './routes/SiteDetails/Prospect/prospectStorage.js'
+import prospectStorageRoutes from './routes/SiteDetails/Prospect/prospectStorage.js';
 import dpStorageRoutes from './routes/SiteDetails/DP/DpStorage.js';
-import preEtudeRoutes from './routes/SiteDetails/PreEtude/preEtude.js'
+import preEtudeRoutes from './routes/SiteDetails/PreEtude/preEtude.js';
+import preEtudeStorageRoutes from './routes/SiteDetails/PreEtude/preEtudeStorage.js';
 // Exports here 
 export { default as contactService } from './services/contactsService.js';
 export { default as AuthService } from './services/authService.js';
@@ -50,6 +51,7 @@ app.use('/api/dps',dpsRoutes);
 app.use('/api/dp-storage',dpStorageRoutes);
 app.use('/api/pros-storage',prospectStorageRoutes);
 app.use('/api/preEtude',preEtudeRoutes);
+app.use('/api/pre-storage',preEtudeStorageRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });

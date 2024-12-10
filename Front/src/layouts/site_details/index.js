@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
@@ -12,12 +13,9 @@ import SiteModal from 'examples/popup/SitePopUp';
 import SiteInfoNavbar from 'examples/Navbars/SiteInfoNavbar';
 function SiteDetails() {
   const location = useLocation();
-  // const navigate = useNavigate();
   const { EB } = location.state || {};
   const [site, setSite] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [formData, setFormData] = useState(site);
   // Fetch site details when the component mounts
   useEffect(() => {
     if (EB) {
