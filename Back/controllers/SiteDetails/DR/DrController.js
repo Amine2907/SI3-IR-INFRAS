@@ -38,6 +38,18 @@ const fetchActiveProspects = async (req,res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
+const fetchActiveDevis = async (req,res) => {
+    try {
+        const result = await drModel.getActiveDevis();
+        if (result.success) {
+            return res.status(200).json(result.data);
+        } else {
+            return res.status(500).json({ success: false, message: result.error });
+        }
+    } catch(error){
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
 //Create dr controlller 
 const createDr = async (req, res) => {
     try {
@@ -78,7 +90,7 @@ const getAlldrs = async(req,res)=>{
 };
 // Get dr by its id controller 
 const getdrsById = async(req,res) => {
-  const drId = req.params.EB.replace(':', '');
+  const drId = req.params.id;
     const result = await drModel.GetdrsById(drId);
     if(!result.success){
         return res.status(400).json({error:result.error});
@@ -89,26 +101,22 @@ const getdrsById = async(req,res) => {
 const updatedr = async (req, res) => {
   try {
     // Extract dr ID from URL parameters
-    const drId = req.params.EB.replace(':EB=', '');
+    const drId = req.params.id;
     let updates = { ...req.body }; // Extract update fields from request body
     console.log('--- Update dr Request ---');
     console.log('dr ID:', drId);
     console.log('Request Body:', updates);
-
     // Validate dr ID
     if (!drId) {
       console.error('Error: dr ID not provided');
       return res.status(400).json({ error: 'dr ID is required.' });
     }
-
     // Validate update fields
     if (!updates || Object.keys(updates).length === 0) {
       console.error('Error: No update fields provided');
       return res.status(400).json({ error: 'No update fields provided.' });
     }
-
     console.log('Mapping process started for update fields');
-
     // Handle mapping for `SPRid_FK`
     if (updates.SPRid_FK) {
       if (typeof updates.SPRid_FK === 'object' && updates.SPRid_FK.SPR_desc) {
@@ -124,39 +132,6 @@ const updatedr = async (req, res) => {
         throw new Error('Invalid status prop _fk structure');
       }
     }
-
-    // Handle mapping for `programme_fk`
-    if (updates.programme_fk) {
-      if (typeof updates.programme_fk === 'object' && updates.programme_fk.PR_desc) {
-        const programId = programMapping[updates.programme_fk.PR_desc];
-        if (!programId) {
-          throw new Error(`Invalid program description: ${updates.programme_fk.PR_desc}`);
-        }
-        updates.programme_fk = programId; // Map to ID
-      } else if (typeof updates.programme_fk === 'string' || typeof updates.programme_fk === 'number') {
-        console.log('Program already mapped:', updates.programme_fk);
-      } else {
-        console.error('Invalid programme_fk structure:', updates.programme_fk);
-        throw new Error('Invalid programme_fk structure');
-      }
-    }
-
-    // Handle mapping for `status_dr_fk`
-    if (updates.status_dr_fk) {
-      if (typeof updates.status_dr_fk === 'object' && updates.status_dr_fk.SS_desc) {
-        const statusId = drStatusMapping[updates.status_dr_fk.SS_desc];
-        if (!statusId) {
-          throw new Error(`Invalid status description: ${updates.status_dr_fk.SS_desc}`);
-        }
-        updates.status_dr_fk = statusId; // Map to ID
-      } else if (typeof updates.status_dr_fk === 'string' || typeof updates.status_dr_fk === 'number') {
-        console.log('Status already mapped:', updates.status_dr_fk);
-      } else {
-        console.error('Invalid status_dr_fk structure:', updates.status_dr_fk);
-        throw new Error('Invalid status_dr_fk structure');
-      }
-    }
-
     console.log('Transformed update fields:', updates);
 
     // Call the model to update the dr
@@ -181,57 +156,49 @@ const updatedr = async (req, res) => {
   }
 };
 // Desactivate dr controller 
-const desactivatedr = async(req,res) =>{
+const desactivateDr = async(req,res) =>{
     const drId = req.params.id ; 
-    const result = await drModel.desactivatedr(drId);
+    const result = await drModel.desactivateDr(drId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
     return res.status(200).json(result.data);
 };
 // Activate dr controller 
-const activatedr = async(req,res)=> {
+const activateDr = async(req,res)=> {
     const drId = req.params.id ; 
-    const result = await drModel.activatedr(drId);
+    const result = await drModel.activateDr(drId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
     return res.status(200).json(result.data);
 };
-const getActivedrs = async(req,res) => {
-    const result = await drModel.getAllActivedrs();
+const getAllActiveDrs = async(req,res) => {
+    const result = await drModel.getAllActiveDrs();
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
     return res.status(200).json(result.data);
 };
-const getInactivedrs = async(req,res) => {
-    const result = await drModel.getAllInactivedrs();
+const getAllInactiveDrs = async(req,res) => {
+    const result = await drModel.getAllInactiveDrs();
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
     return res.status(200).json(result.data);
 }
 // Search drs controller 
-const Searchdrs = async(req,res) => {
-    const filters = req.query ;
-    const result = await drModel.Searchdr(filters); 
-    if(!result.success){
-        return res.status(400).json({error:result.error});
-    }
-    return res.status(200).json(result.data);
-};
 const demRacController = {
     fetchActiveEntites,
     fetchActiveProspects,
+    fetchActiveDevis,
     createDr,
     getAlldrs,
     getdrsById,
     updatedr,
-    desactivatedr,
-    activatedr,
-    Searchdrs,
-    getActivedrs,
-    getInactivedrs,
+    desactivateDr,
+    activateDr,
+    getAllActiveDrs,
+    getAllInactiveDrs
 }
 export default demRacController ; 

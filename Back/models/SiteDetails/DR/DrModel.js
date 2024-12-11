@@ -44,6 +44,21 @@ const getActiveProspects = async () => {
         return []; // Return empty array if an error occurs
     }
 };
+const getActiveDevis = async () => {
+    try {
+        const { data, error } = await supabase
+            .from('Devis')
+            .select('ND')
+            .eq('is_active', true);
+        if (error) {
+            throw new Error(`Error fetching active Devis: ${error.message}`);
+        }
+        return {success:true , data}; // Return active entites data (list of objects with Eid and nom)
+    } catch (error) {
+        console.error(error);
+        return []; // Return empty array if an error occurs
+    }
+};
 //Create Dr
 const createDr = async (data) => {
     try {
@@ -114,6 +129,39 @@ const createDr = async (data) => {
                         throw new Error(`No prospect found with name: ${prospectName}`);
                     }
                 }
+        // ///////////////////////////////////////////////////////////////////////////////
+                // Fetch active entites list
+                const activedevisResponse = await getActiveDevis();
+                // Log the response to ensure it's correct
+                console.log('Active entites Response:', activedevisResponse);
+                // Check if the response is successful and if the data is an array
+                if (!activedevisResponse.success) {
+                    throw new Error('Failed to fetch active entites');
+                }
+                const activeDevis = activedevisResponse.data;
+                if (!Array.isArray(activeDevis)) {
+                    throw new Error('Active entites data is not an array.');
+                }
+                if (activeDevis.length === 0) {
+                    throw new Error('No active entites found');
+                }
+                // Log the incoming data to inspect gestionnaire_de_reseau
+                console.log('Incoming data for createDr:', data);
+                // If gestionnaire_de_reseau is a string (entite name), convert it to the corresponding entite ID
+                if (typeof data.no_devis === 'string') {
+                    const devisName = data.no_devis;
+                    console.warn('Converting entite name to entite ID:', devisName);
+        
+                    // Find the entite in the activeentites list based on entite name
+                    const devis = activeDevis.find(devis => devis.nom === devisName);
+        
+                    if (devis) {
+                        // Replace the entite name with the corresponding entite ID
+                        data.no_devis = devis.ND;
+                    } else {
+                        throw new Error(`No entite found with name: ${devisName}`);
+                    }
+                }
         // Check and map SPRid_FK, programme_fk, and status_Dr_fk to their corresponding IDs
         if (data.SPRid_FK) {
             const statpropId = statusPropmapping[data.SPRid_FK];
@@ -134,7 +182,7 @@ const createDr = async (data) => {
         return { success: false, error: error.message };
     }
 };
-//GetAllDrs 
+//GetAllDrs
 const getAllDrs = async() => {
     try {
         const {data,error} = await supabase
@@ -145,9 +193,11 @@ const getAllDrs = async() => {
             SPRid_FK:SPR(SPR_desc),
             gestionnaire_de_reseau:Entite(nom)
             Pro_fk:Propsect(nom)
+            no_devis:Devis(ND)
             `)
             .eq('Entite.is_active', true)
-            .eq('Prospect.is_active', true);
+            .eq('Prospect.is_active', true)
+            .eq('Devis.is_active',true);
         if(error){
             throw error;
         }
@@ -250,6 +300,28 @@ const updateDr = async (NDRid, updates) => {
          throw new Error(`No prospects found with name: ${prospectName}`);
        }
      }
+        //Active Devis
+      // Fetch active devis list (if necessary for mapping)
+      const activedevisResponse = await getActiveDevis();
+      console.log('Active devis Response:', activedevisResponse);
+      if (!activedevisResponse.success) {
+        throw new Error('Failed to fetch active devis');
+      }
+      const activedevis = activedevisResponse.data;
+      if (!Array.isArray(activedevis)) {
+        throw new Error('Active devis data is not an array.');
+      }
+      console.log('Incoming updates for updateDr:', updates);
+      // Handle no_devis conversion (if provided as a name)
+      if (updates.no_devis && typeof updates.no_devis === 'string') {
+        const devisName = updates.no_devis;
+        const devis = activedevis.find(devis => devis.ND === devisName);
+        if (devis) {
+          updates.no_devis = devis.ND;
+        } else {
+          throw new Error(`No devis found with name: ${devisName}`);
+        }
+      }
       // Check and map `SPRid_FK` only if it's not already a valid ID
       if (updates.SPRid_FK) {
         if (typeof updates.SPRid_FK === 'string') {
@@ -267,7 +339,7 @@ const updateDr = async (NDRid, updates) => {
       console.log('Transformed updates ready for database operation:', updates);
       // Perform the update operation in the database
       const { data, error } = await supabase
-        .from('Dr')
+        .from('DR')
         .update(updates)
         .eq('NDRid', NDRid);
       if (error) {
@@ -284,7 +356,7 @@ const updateDr = async (NDRid, updates) => {
 const activateDr = async(id) => {
     try {
         const {data,error} = await supabase
-        .from('Dr')
+        .from('DR')
         .update({is_active:true})
         .eq('NDRid',id);
         if(error){
@@ -299,7 +371,7 @@ const activateDr = async(id) => {
 const desactivateDr = async(id) => {
     try {
         const {data,error} = await supabase
-        .from('Dr')
+        .from('DR')
         .update({is_active:false})
         .eq('NDRid',id);
         if(error){
@@ -321,5 +393,6 @@ const drModel = {
     getAllInactiveDrs,
     getActiveEntites,
     getActiveProspects,
+    getActiveDevis,
 }
 export default drModel ; 
