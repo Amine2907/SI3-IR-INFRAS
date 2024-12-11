@@ -122,23 +122,9 @@ const createDr = async (data) => {
             }
             data.SPRid_FK = statpropId;
         }
-        if (data.programme_fk) {
-            const programId = programMapping[data.programme_fk];
-            if (!programId) {
-                throw new Error(`Invalid program description: ${data.programme_fk}`);
-            }
-            data.programme_fk = programId;
-        }
-        if (data.status_Dr_fk) {
-            const statusId = DrStatusMapping[data.status_Dr_fk];
-            if (!statusId) {
-                throw new Error(`Invalid status description: ${data.status_Dr_fk}`);
-            }
-            data.status_Dr_fk = statusId;
-        }
         // Insert data into the database
         const { data: result, error } = await supabase
-            .from('Dr')
+            .from('DR')
             .insert([data]);
         if (error) {
             throw error;
@@ -152,16 +138,16 @@ const createDr = async (data) => {
 const getAllDrs = async() => {
     try {
         const {data,error} = await supabase
-        .from('Dr')
+        .from('DR')
         // depends on use i will decide if im gonna use the query or not 
         .select(`
             * ,
-            SPRid_FK:Dr-priorite(SP_desc),
-            programme_fk:Programme(PR_desc),
-            status_Dr_fk:Dr-status(SS_desc),
-            gestionnaire_de_reseau:Entreprise(nom)
+            SPRid_FK:SPR(SPR_desc),
+            gestionnaire_de_reseau:Entite(nom)
+            Pro_fk:Propsect(nom)
             `)
-            .eq('Entreprise.is_active', true);
+            .eq('Entite.is_active', true)
+            .eq('Prospect.is_active', true);
         if(error){
             throw error;
         }
@@ -174,7 +160,7 @@ const getAllDrs = async() => {
 const getAllActiveDrs = async() => {
     try {
         const {data,error} = await supabase
-        .from('Dr')
+        .from('DR')
         .select('*')
         .eq('is_active',true);
 
@@ -189,7 +175,7 @@ const getAllActiveDrs = async() => {
 const getAllInactiveDrs = async() => {
     try {
         const {data,error} = await supabase
-        .from('Dr')
+        .from('DR')
         .select('*')
         .eq('is_active',false);
 
@@ -202,12 +188,12 @@ const getAllInactiveDrs = async() => {
     }
 };
 //GetDrsById 
-const GetDrsById = async(EB) => {
+const GetDrsById = async(NDRid) => {
     try {
         const {data,error} = await supabase
-        .from('Dr')
+        .from('DR')
         .select('*')
-        .eq('EB',EB);
+        .eq('NDRid',NDRid);
         if(error){
             throw error ;
         }
@@ -217,12 +203,12 @@ const GetDrsById = async(EB) => {
     }
 };
 //Update Drs 
-const updateDr = async (EB, updates) => {
+const updateDr = async (NDRid, updates) => {
     try {
+        //Active ENtites
       // Fetch active entites list (if necessary for mapping)
       const activeentitesResponse = await getActiveEntites();
       console.log('Active entites Response:', activeentitesResponse);
-  
       if (!activeentitesResponse.success) {
         throw new Error('Failed to fetch active entites');
       }
@@ -230,7 +216,6 @@ const updateDr = async (EB, updates) => {
       if (!Array.isArray(activeentites)) {
         throw new Error('Active entites data is not an array.');
       }
-  
       console.log('Incoming updates for updateDr:', updates);
   
       // Handle gestionnaire_de_reseau conversion (if provided as a name)
@@ -243,13 +228,34 @@ const updateDr = async (EB, updates) => {
           throw new Error(`No entite found with name: ${entiteName}`);
         }
       }
-  
+    //   Active Propspecs 
+     // Fetch active prospects list (if necessary for mapping)
+     const activepropsectsResponse = await getActiveEntites();
+     console.log('Active entites Response:', activepropsectsResponse);
+     if (!activepropsectsResponse.success) {
+       throw new Error('Failed to fetch active entites');
+     }
+     const activePropsects = activepropsectsResponse.data;
+     if (!Array.isArray(activePropsects)) {
+       throw new Error('Active prospects data is not an array.');
+     }
+     console.log('Incoming updates for updateDr:', updates);
+     // Handle Pro_fk conversion (if provided as a name)
+     if (updates.Pro_fk && typeof updates.Pro_fk === 'string') {
+       const prospectName = updates.Pro_fk;
+       const prospect = activePropsects.find(prospect => prospect.nom === prospectName);
+       if (prospect) {
+         updates.Pro_fk = prospect.Proid;
+       } else {
+         throw new Error(`No prospects found with name: ${prospectName}`);
+       }
+     }
       // Check and map `SPRid_FK` only if it's not already a valid ID
       if (updates.SPRid_FK) {
         if (typeof updates.SPRid_FK === 'string') {
           const statpropId = statusPropmapping[updates.SPRid_FK];
           if (!statpropId) {
-            throw new Error(`Invalid priority description: ${updates.SPRid_FK}`);
+            throw new Error(`Invalid status prop  description: ${updates.SPRid_FK}`);
           }
           updates.SPRid_FK = statpropId;
         } else if (typeof updates.SPRid_FK === 'number') {
@@ -258,50 +264,16 @@ const updateDr = async (EB, updates) => {
           throw new Error(`Invalid structure for SPRid_FK: ${updates.SPRid_FK}`);
         }
       }
-  
-      // Check and map `programme_fk` only if it's not already a valid ID
-      if (updates.programme_fk) {
-        if (typeof updates.programme_fk === 'string') {
-          const programId = programMapping[updates.programme_fk];
-          if (!programId) {
-            throw new Error(`Invalid program description: ${updates.programme_fk}`);
-          }
-          updates.programme_fk = programId;
-        } else if (typeof updates.programme_fk === 'number') {
-          console.log('programme_fk is already an ID:', updates.programme_fk);
-        } else {
-          throw new Error(`Invalid structure for programme_fk: ${updates.programme_fk}`);
-        }
-      }
-  
-      // Check and map `status_Dr_fk` only if it's not already a valid ID
-      if (updates.status_Dr_fk) {
-        if (typeof updates.status_Dr_fk === 'string') {
-          const statusId = DrStatusMapping[updates.status_Dr_fk];
-          if (!statusId) {
-            throw new Error(`Invalid status description: ${updates.status_Dr_fk}`);
-          }
-          updates.status_Dr_fk = statusId;
-        } else if (typeof updates.status_Dr_fk === 'number') {
-          console.log('status_Dr_fk is already an ID:', updates.status_Dr_fk);
-        } else {
-          throw new Error(`Invalid structure for status_Dr_fk: ${updates.status_Dr_fk}`);
-        }
-      }
-  
       console.log('Transformed updates ready for database operation:', updates);
-  
       // Perform the update operation in the database
       const { data, error } = await supabase
         .from('Dr')
         .update(updates)
-        .eq('EB', EB);
-  
+        .eq('NDRid', NDRid);
       if (error) {
         console.error('Supabase Error:', error); // Log the error
         return { success: false, error: error.message }; // Return the error message
       }
-  
       return { success: true, data }; // Return success with updated data
     } catch (err) {
       console.error('Catch Block Error:', err); // Log unexpected errors
@@ -314,7 +286,7 @@ const activateDr = async(id) => {
         const {data,error} = await supabase
         .from('Dr')
         .update({is_active:true})
-        .eq('EB',id);
+        .eq('NDRid',id);
         if(error){
             throw error ; 
         }
@@ -329,106 +301,13 @@ const desactivateDr = async(id) => {
         const {data,error} = await supabase
         .from('Dr')
         .update({is_active:false})
-        .eq('EB',id);
+        .eq('NDRid',id);
         if(error){
             throw error ; 
         }
         return {success:true , data };
     }catch(error){
         return {success:false , error:error.messsage};
-    }
-};
-// Search Drs 
-const SearchDr = async (filters) => {
-    console.log("Received filters:", filters);
-    try {
-        // Query active entite names and IDs from Acteur_ENEDIS table
-        const { data: acteurData, error: acteurError } = await supabase
-            .from('Entreprise')
-            .select('Eid, nom');
-        if (acteurError) throw acteurError;
-
-        // Create a mapping from ID to entite name
-        const idToNameMap = acteurData.reduce((acc, { Eid, nom }) => {
-            acc[nom] = Eid;
-            return acc;
-        }, {});
-        // Initialize the query with the table 'Dr'
-        let query = supabase.from('Dr').select('*');
-
-        // Filter by EB
-        if (filters.EB) {
-            query = query.ilike('EB', `%${filters.EB}%`);
-        }
-        // Filter by G2R
-        if (filters.G2R) {
-            query = query.ilike('G2R', filters.G2R);
-        }
-        // Filter by nom (name of the Dr)
-        if (filters.nom) {
-            query = query.ilike('nom', `%${filters.nom}%`);
-        }
-        // Filter by code_postal
-        if (filters.code_postal) {
-            query = query.eq('code_postal', filters.code_postal);
-        }
-        // Filter by Ville (City)
-        if (filters.Ville) {
-            query = query.ilike('Ville', `%${filters.Ville}%`);
-        }
-        // Filter by region
-        if (filters.region) {
-            query = query.ilike('region', `%${filters.region}%`);
-        }
-        // Filter by Operateurs
-        if (filters.Operateurs) {
-            query = query
-                .filter('Operateurs', 'cs', `{${filters.Operateurs}}`);
-        }
-        // Convert the 'programme_fk' description to its numeric ID if provided
-        if (filters.programme_fk) {
-            const programId = programMapping[filters.programme_fk];
-            if (programId) {
-                query = query.eq('programme_fk', programId);  // Using numeric ID in the query
-            }
-        }
-        // Convert 'gestionnaire_de_reseau' to entite name if it is a numeric ID
-        if (filters.gestionnaire_de_reseau) {
-            const acteurName = Object.keys(idToNameMap).find(name => idToNameMap[name] == filters.gestionnaire_de_reseau);
-            if (acteurName) {
-                // Filter the query by the entite name
-                query = query.eq('gestionnaire_de_reseau', idToNameMap[acteurName]);
-            } else {
-                return { success: false, error: "No active entite found with this ID." };  // If no matching name
-            }
-        }
-        // Convert the 'status_Dr_fk' description to its numeric ID if provided
-        if (filters.status_Dr_fk) {
-            const statusId = DrStatusMapping[filters.status_Dr_fk];
-            if (statusId) {
-                query = query.eq('status_Dr_fk', statusId);  // Using numeric ID in the query
-            }
-        }
-        // Convert the 'SPRid_FK' description to its numeric ID if provided
-        if (filters.SPRid_FK) {
-            const priorityId = statusPropmapping[filters.SPRid_FK];
-            if (priorityId) {
-                query = query.eq('SPRid_FK', priorityId);  // Using numeric ID in the query
-            }
-        }
-        // Filter by status_Dr_SFR
-        if (filters.status_Dr_SFR) {
-            query = query.ilike('status_Dr_SFR', `%${filters.status_Dr_SFR}%`);
-        }
-        // Execute the query and handle the result
-        const { data, error } = await query;
-        if (error) {
-            throw error;
-        }
-        return { success: true, data };
-
-    } catch (error) {
-        return { success: false, error: error.message };
     }
 };
 const drModel = {
@@ -440,7 +319,7 @@ const drModel = {
     desactivateDr,
     getAllActiveDrs,
     getAllInactiveDrs,
-    SearchDr,
     getActiveEntites,
+    getActiveProspects,
 }
 export default drModel ; 
