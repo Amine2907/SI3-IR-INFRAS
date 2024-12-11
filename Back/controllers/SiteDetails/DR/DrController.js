@@ -12,8 +12,8 @@
  * - getActivedrs: gets all the active drs in the database
  * - getInactivedrs: gets all the inactive drs in the database
  */
-import drModel from "../../../models/drDetails/DR/DrModel.js";
-import { statusPropmapping } from "../../../models/drDetails/DR/DrData.js";
+import drModel from "../../../models/SiteDetails/DR/DrModel.js";
+import { statusPropmapping } from "../../../models/SiteDetails/DR/DrData.js";
 const fetchActiveEntites = async (req, res) => {
     try {
         const result = await drModel.getActiveEntites();

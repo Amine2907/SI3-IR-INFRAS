@@ -12,7 +12,7 @@
  * - getActiveDrs: gets all the active Drs in the database
  * - getInactiveDrs: gets all the inactive Drs in the database
  */
-import { supabase } from "../../config/supabaseClient.js";
+import { supabase } from "../../../config/supabaseClient.js";
 import { statusPropmapping } from "./DrData.js";
 const getActiveEntites = async () => {
     try {
