@@ -73,9 +73,9 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
   }, []);
   //   fetch Active Entites
   useEffect(() => {
-    const fetchActiveEntites = async Sid => {
+    const fetchActiveEntites = async () => {
       try {
-        const result = await SiteDemracService.getActiveEntitesForDemrac(Sid);
+        const result = await SiteDemracService.getActiveEntitesForDemrac();
         if (result.success) {
           setActiveEntites(result.data);
         } else {

@@ -20,7 +20,6 @@ const getActiveEntites = async () => {
             .from('Entite')
             .select('Eid, nom')
             .eq('is_active', true);
-            ;
         if (error) {
             throw new Error(`Error fetching active entites: ${error.message}`);
         }
