@@ -61,8 +61,9 @@ function DemRacList({ site }) {
       });
       return;
     }
+    const { prospectName, ...filteredUpdates } = updates;
     try {
-      const result = await SiteDemracService.updateDemRac(NDRid, updates);
+      const result = await SiteDemracService.updateDemRac(NDRid, filteredUpdates);
       console.log('API result:', result);
       if (result.success) {
         setAlert({

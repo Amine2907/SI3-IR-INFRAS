@@ -20,6 +20,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
       no_devis: { ND: '' },
     }
   );
+  const [selectedDemrac, setSelectedDemrac] = useState('');
   const [activeDevis, setActiveDevis] = useState([]);
   const [activeProspects, setActivePropescts] = useState([]);
   const [activeEntites, setActiveEntites] = useState([]);
@@ -51,6 +52,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
         SPRid_FK: demrac.SPRid_FK || { SPR_desc: '' },
       });
       setIsActive(demrac.is_active);
+      setSelectedDemrac(demrac.prospectName || '');
     }
   }, [demrac]);
   //   fetch Active propsects
