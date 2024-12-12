@@ -1,6 +1,17 @@
-import MDTypography from 'components/MDTypography';
-
+import Grid from '@mui/material/Grid';
+import DemRacList from './DrList';
+import DemRacHeader from './DrHeader/index';
 function DR() {
-  return <MDTypography>Demande de raccordement</MDTypography>;
+  return (
+    <Grid container spacing={2} direction="column">
+      {' '}
+      <Grid item>
+        <DemRacHeader />
+      </Grid>
+      <Grid item>
+        <DemRacList />
+      </Grid>
+    </Grid>
+  );
 }
 export default DR;

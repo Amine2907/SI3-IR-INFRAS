@@ -53,7 +53,7 @@ const displayDemRacSite = async (Sid, NDRid) => {
   }
 };
 // Get all active prospects's site for a dem rac  Service
-const getActiveProspectsForDemrac= async Sid => {
+const getActiveProspectsForDemrac = async Sid => {
   try {
     const response = await axios.get(`${API_URL}/${Sid}/active-prospects`);
     return { success: true, data: response.data };
@@ -62,23 +62,23 @@ const getActiveProspectsForDemrac= async Sid => {
   }
 };
 // Get all active entites's site for a dem rac  Service
-const getActiveEntitesForDemrac= async Sid => {
-    try {
-      const response = await axios.get(`${API_URL}/${Sid}/active-entites`);
-      return { success: true, data: response.data };
-    } catch (error) {
-      return { success: false, error: error.response ? error.response.data.error : error.message };
-    }
-  };
-  // Get all active devis's site for a dem rac  Service
-const getActiveDevisForDemrac= async Sid => {
-    try {
-      const response = await axios.get(`${API_URL}/${Sid}/active-devis`);
-      return { success: true, data: response.data };
-    } catch (error) {
-      return { success: false, error: error.response ? error.response.data.error : error.message };
-    }
-  };
+const getActiveEntitesForDemrac = async Sid => {
+  try {
+    const response = await axios.get(`${API_URL}/${Sid}/active-entites`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
+};
+// Get all active devis's site for a dem rac  Service
+const getActiveDevisForDemrac = async Sid => {
+  try {
+    const response = await axios.get(`${API_URL}/${Sid}/active-devis`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
+};
 const getActiveDemracForSite = async Sid => {
   try {
     const response = await axios.get(`${API_URL}/${Sid}/active-demracs`);
