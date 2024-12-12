@@ -14,12 +14,14 @@
  */
 import { supabase } from "../../../config/supabaseClient.js";
 import { statusPropmapping } from "./DrData.js";
-const getActiveEntites = async () => {
+const getActiveEntites = async (Sid) => {
     try {
         const { data, error } = await supabase
             .from('Entite')
             .select('Eid, nom')
-            .eq('is_active', true);
+            .eq('is_active', true)
+            .eq('EB_fk',Sid)
+            ;
         if (error) {
             throw new Error(`Error fetching active entites: ${error.message}`);
         }
@@ -29,12 +31,13 @@ const getActiveEntites = async () => {
         return []; // Return empty array if an error occurs
     }
 };
-const getActiveProspects = async () => {
+const getActiveProspects = async (Sid) => {
     try {
         const { data, error } = await supabase
             .from('Prospect')
             .select('Proid, nom')
-            .eq('is_active', true);
+            .eq('is_active', true)
+            .eq('EB_fk',Sid);
         if (error) {
             throw new Error(`Error fetching active entites: ${error.message}`);
         }
@@ -44,12 +47,13 @@ const getActiveProspects = async () => {
         return []; // Return empty array if an error occurs
     }
 };
-const getActiveDevis = async () => {
+const getActiveDevis = async (Sid) => {
     try {
         const { data, error } = await supabase
             .from('Devis')
             .select('ND')
-            .eq('is_active', true);
+            .eq('is_active', true)
+            .eq('EB_fk',Sid);
         if (error) {
             throw new Error(`Error fetching active Devis: ${error.message}`);
         }
