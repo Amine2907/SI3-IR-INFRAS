@@ -143,7 +143,7 @@ const updatedr = async (req, res) => {
     console.log('Transformed update fields:', updates);
 
     // Call the model to update the dr
-    const result = await drModel.updatedr(drId, updates);
+    const result = await drModel.updateDr(drId, updates);
     console.log('--- Model Response ---');
     console.log('Result:', result);
 
@@ -152,7 +152,6 @@ const updatedr = async (req, res) => {
       console.error('Error from Model:', result.error);
       return res.status(400).json({ error: result.error });
     }
-
     // Return the updated dr data
     console.log('Update Successful. Returning updated data:', result.data);
     return res.status(200).json(result.data);

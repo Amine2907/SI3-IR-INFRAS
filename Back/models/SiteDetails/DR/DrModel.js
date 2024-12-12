@@ -168,17 +168,7 @@ const getAllDrs = async(EB) => {
     try {
         const {data,error} = await supabase
         .from('DR')
-        // depends on use i will decide if im gonna use the query or not 
-        .select(`
-            * ,
-            SPRid_FK:SPR(SPR_desc),
-            gestionnaire_de_reseau:Entite(nom)
-            Pro_fk:Propsect(nom)
-            no_devis:Devis(ND)
-            `)
-            .eq('Entite.is_active', true)
-            .eq('Prospect.is_active', true)
-            .eq('Devis.is_active',true)
+            .select('*')
             .eq('EB_fk',EB);
         if(error){
             throw error;
