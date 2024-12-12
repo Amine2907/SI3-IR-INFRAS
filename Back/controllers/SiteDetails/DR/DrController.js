@@ -55,23 +55,25 @@ const fetchActiveDevis = async (req,res) => {
 };
 //Create dr controlller 
 const createDr = async (req, res) => {
-    try {
-      // Extract and map the fields if they contain descriptions instead of IDs
-      let data = { ...req.body };
-      console.log("Mapping process started");
-      // Map `SPRid_FK` if it's an object with `SPR_desc`
-      if (data.SPRid_FK && typeof data.SPRid_FK === 'object' && data.SPRid_FK.SPR_desc) {
-        const statusPropId = statusPropmapping[data.SPRid_FK.SPR_desc];
-        console.log("Mapped status prop :", data.SPRid_FK.SPR_desc, "->", statusPropId);
-        if (!statusPropId) {
-          throw new Error(`Invalid status prop  description: ${data.SPRid_FK.SPR_desc}`);
-        }
-        data.SPRid_FK = data.SPRid_FK.SPR_desc; // Map back to description
+    const { Sid, demracData } = req.body;
+    // Validate required fields
+    if (!Sid) {
+        return res.status(400).json({ error: 'EB (Site identifier) is required.' });
       }
-      console.log("Transformed data ready for insertion:", data);
-      // Proceed to create the dr with transformed data
-      const newdr = { ...data, is_active: true };
-      const result = await drModel.createDr(newdr);
+      if (!demracData) {
+        return res.status(400).json({ error: 'demRacData is required.' });
+      }
+        // Map `SPRid_FK` if it's an object with `SPR_desc`
+        if (demracData.SPRid_FK && typeof demracData.SPRid_FK === 'object' && demracData.SPRid_FK.SPR_desc) {
+            const statusPropId = statusPropmapping[demracData.SPRid_FK.SPR_desc];
+            console.log("Mapped status prop :", demracData.SPRid_FK.SPR_desc, "->", statusPropId);
+            if (!statusPropId) {
+              throw new Error(`Invalid status prop  description: ${demracData.SPRid_FK.SPR_desc}`);
+            }
+            demracData.SPRid_FK = statusPropId; // Map back to description
+          }
+    try {
+        const result = await drModel.createDr(Sid,demracData)     // Extract and map the fields if they contain descriptions instead of IDs
       if (!result.success) {
         console.error("Error in model operation:", result.error);
         return res.status(400).json({ error: result.error });
@@ -85,7 +87,8 @@ const createDr = async (req, res) => {
   };
 // Get all active drs controller 
 const getAlldrs = async(req,res)=>{
-    const result = await drModel.getAllDrs();
+    const siteId = req.params.Sid;
+    const result = await drModel.getAllDrs(siteId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
@@ -177,14 +180,16 @@ const activateDr = async(req,res)=> {
     return res.status(200).json(result.data);
 };
 const getAllActiveDrs = async(req,res) => {
-    const result = await drModel.getAllActiveDrs();
+    const siteId = req.params.Sid ; 
+    const result = await drModel.getAllActiveDrs(siteId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
     return res.status(200).json(result.data);
 };
 const getAllInactiveDrs = async(req,res) => {
-    const result = await drModel.getAllInactiveDrs();
+    const siteId = req.params.Sid ; 
+    const result = await drModel.getAllInactiveDrs(siteId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }
