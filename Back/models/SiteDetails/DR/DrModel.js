@@ -296,6 +296,9 @@ const updateDr = async (NDRid, updates) => {
           throw new Error(`No devis found with name: ${devisName}`);
         }
       }
+      if (!updates.no_devis || !updates.no_devis.ND) {
+        delete updates.no_devis;
+    }
       // Check and map `SPRid_FK` only if it's not already a valid ID
       if (updates.SPRid_FK) {
         if (typeof updates.SPRid_FK === 'string') {
