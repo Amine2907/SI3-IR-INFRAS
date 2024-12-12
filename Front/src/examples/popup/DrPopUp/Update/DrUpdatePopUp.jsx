@@ -204,11 +204,11 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
             <DesktopDatePicker
               label="KO DP "
               name="KO DP "
-              value={formData.KO_DP ? dayjs(formData.KO_DP) : null}
+              value={formData.Ko_Dp ? dayjs(formData.Ko_Dp) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'KO_DP',
+                    name: 'Ko_Dp',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -365,7 +365,7 @@ DrUpdateModal.propTypes = {
   Sid: PropTypes.string.isRequired,
   demrac: PropTypes.shape({
     NDRid: PropTypes.string,
-    KO_DP: PropTypes.string,
+    Ko_Dp: PropTypes.string,
     date_dr: PropTypes.string,
     drdc: PropTypes.string,
     type_rac: PropTypes.string,

@@ -119,7 +119,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
       setErrors(newErrors);
       const demracData = {
         NDRid: formData.NDRid,
-        KO_DP: formData.KO_DP,
+        Ko_Dp: formData.Ko_Dp,
         date_dr: formData.date_dr,
         drdc: formData.drdc,
         type_rac: formData.type_rac,
@@ -135,7 +135,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
     }
     const demracData = {
       NDRid: formData.NDRid,
-      KO_DP: formData.KO_DP,
+      Ko_Dp: formData.Ko_Dp,
       date_dr: formData.date_dr,
       drdc: formData.drdc,
       type_rac: formData.type_rac,
@@ -227,11 +227,11 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
             <DesktopDatePicker
               label="KO DP "
               name="KO DP "
-              value={formData.KO_DP ? dayjs(formData.KO_DP) : null}
+              value={formData.Ko_Dp ? dayjs(formData.Ko_Dp) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'KO_DP',
+                    name: 'Ko_Dp',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -388,7 +388,7 @@ DrAddModal.propTypes = {
   Sid: PropTypes.string.isRequired,
   demrac: PropTypes.shape({
     NDRid: PropTypes.string,
-    KO_DP: PropTypes.string,
+    Ko_Dp: PropTypes.string,
     date_dr: PropTypes.string,
     drdc: PropTypes.string,
     type_rac: PropTypes.string,

@@ -34,7 +34,6 @@ const usePreEtudesForSite = () => {
         ...preEtude,
         prospectName: prospects[index]?.nom || 'Unknown', // Assign prospect name cyclically or as a fallback
       }));
-
       // Set the preÉtude data with prospect names included
       setPreEtudeData(enrichedPreEtudes);
     } catch (err) {

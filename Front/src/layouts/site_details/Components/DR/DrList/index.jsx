@@ -134,11 +134,14 @@ function DemRacList({ site }) {
             return (
               <TableRow key={demrac.id}>
                 <TableCell>{demrac.NDRid || 'N/A'}</TableCell>
+                <TableCell>{demrac.prospectName || 'N/A'}</TableCell>
                 <TableCell>{demrac.date_dr || 'N/A'}</TableCell>
-                <TableCell>{demrac.KO_DP || 'N/A'}</TableCell>
+                <TableCell>{demrac.Ko_Dp || 'N/A'}</TableCell>
                 <TableCell>{demrac.type_rac || 'N/A'}</TableCell>
                 <TableCell>{statusProp}</TableCell>
-                <TableCell>{demrac.operator || 'N/A'}</TableCell>
+                <TableCell>
+                  {Array.isArray(demrac.operators) ? demrac.operators.join(', ') : 'N/A'}
+                </TableCell>
                 <TableCell title="Modifier demrac" placement="top">
                   <Icon
                     sx={{ cursor: 'pointer' }}
