@@ -7,7 +7,7 @@ router.get('/:id',demRacController.getdrsById);
 router.get('/:Sid/demracs',demRacController.getAlldrs);
 router.get('/:Sid/active-demracs',demRacController.getAllActiveDrs);
 router.get('/:Sid/inactive-demracs',demRacController.getAllInactiveDrs);
-router.get('/:Sid/active-entites',demRacController.fetchActiveEntites);
+router.get('/active-entites',demRacController.fetchActiveEntites);
 router.get('/:Sid/active-prospects',demRacController.fetchActiveProspects);
 router.get('/:Sid/active-devis',demRacController.fetchActiveDevis);
 router.patch('/:id/desactivate',demRacController.desactivateDr);

@@ -18,21 +18,19 @@ import SiteDemracService from 'services/site_details/DR/DrService';
 import CombinedModal from 'examples/popup/PropsectDpPopUp/CombinedPopUp';
 import usedemracData from './DrService';
 import statusPropValues from './DrData';
+import DrUpdateModal from 'examples/popup/DrPopUp/Update/DrUpdatePopUp';
 function DemRacList({ site }) {
   const { demracData, loading, error, fetchDemracData } = usedemracData(site);
   const [showModal, setShowModal] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
   const { EB } = location.state || {};
   const [selecteddemrac, setSelecteddemrac] = useState(null);
-  const [selectedDp, setSelectedDp] = useState(null);
   const Sid = EB;
   const NDRid = selecteddemrac?.NDRid;
   const handleEdit = demrac => {
     setSelecteddemrac(demrac);
     setShowModal(true);
-    setIsModalOpen(true);
   };
   const handleCloseModal = () => {
     setShowModal(false);
@@ -157,14 +155,11 @@ function DemRacList({ site }) {
         </TableBody>
       </table>
       {showModal && (
-        <CombinedModal
-          open={isModalOpen}
+        <DrUpdateModal
+          Sid={Sid}
           demrac={selecteddemrac}
-          NDRid={selecteddemrac.NDRid}
-          dp={selectedDp}
-          onSavedemrac={handleUpdate}
-          onSaveDp={handleSaveDp}
-          onClose={() => setIsModalOpen(false)}
+          onSave={handleUpdate}
+          onClose={handleCloseModal}
         />
       )}
       {/* Display Alert if there's an error */}

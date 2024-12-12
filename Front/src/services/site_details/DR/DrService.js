@@ -62,9 +62,9 @@ const getActiveProspectsForDemrac = async Sid => {
   }
 };
 // Get all active entites's site for a dem rac  Service
-const getActiveEntitesForDemrac = async Sid => {
+const getActiveEntitesForDemrac = async () => {
   try {
-    const response = await axios.get(`${API_URL}/${Sid}/active-entites`);
+    const response = await axios.get(`${API_URL}/active-entites`);
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, error: error.response ? error.response.data.error : error.message };

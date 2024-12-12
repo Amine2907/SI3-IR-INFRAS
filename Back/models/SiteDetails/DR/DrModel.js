@@ -14,13 +14,12 @@
  */
 import { supabase } from "../../../config/supabaseClient.js";
 import { statusPropmapping } from "./DrData.js";
-const getActiveEntites = async (Sid) => {
+const getActiveEntites = async () => {
     try {
         const { data, error } = await supabase
             .from('Entite')
             .select('Eid, nom')
-            .eq('is_active', true)
-            .eq('EB_fk',Sid)
+            .eq('is_active', true);
             ;
         if (error) {
             throw new Error(`Error fetching active entites: ${error.message}`);

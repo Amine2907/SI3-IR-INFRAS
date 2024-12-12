@@ -15,9 +15,8 @@
 import drModel from "../../../models/SiteDetails/DR/DrModel.js";
 import { statusPropmapping } from "../../../models/SiteDetails/DR/DrData.js";
 const fetchActiveEntites = async (req, res) => {
-    const siteId = req.params.Sid;
     try {
-        const result = await drModel.getActiveEntites(siteId);
+        const result = await drModel.getActiveEntites();
         if (result.success) {
             return res.status(200).json(result.data);
         } else {

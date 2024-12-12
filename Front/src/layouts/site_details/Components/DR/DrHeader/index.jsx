@@ -10,18 +10,18 @@ import MDButton from 'components/MDButton';
 import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteDemracService from 'services/site_details/DR/DrService';
 import MDAlert from 'components/MDAlert';
+import DrAddModal from 'examples/popup/DrPopUp/Add/DrAddPopUp';
 function DemRacHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showUploadModal, setshowUploadModal] = useState(false);
-  const [selectedprospect, setSelectedprospect] = useState(null);
   const [alert, setAlert] = useState(false);
+  const [selecteddemrac, setSelecteddemrac] = useState(null);
   const location = useLocation();
   const { EB } = location.state || {};
   const Sid = EB;
-
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -31,7 +31,7 @@ function DemRacHeader() {
     setIsModalOpen(true);
   };
 
-  const handleAddProspect = () => {
+  const handleAddDr = () => {
     setShowModal(true);
   };
   const fetchDemRacData = useCallback(async () => {
@@ -100,7 +100,7 @@ function DemRacHeader() {
             Demandes de raccordements
           </MDTypography>
           <MDBox display="flex" gap={2}>
-            <MDButton onClick={handleAddProspect} variant="gradient" color="dark">
+            <MDButton onClick={handleAddDr} variant="gradient" color="dark">
               <Icon sx={{ fontWeight: 'bold' }}>add</Icon>&nbsp;Ajouter DR
             </MDButton>
             <MDButton onClick={handleUpload} variant="gradient" color="dark">
@@ -110,7 +110,12 @@ function DemRacHeader() {
         </MDBox>
       </Card>
       {showModal && (
-        <ProspectModal prospect={selectedprospect} onSave={handleSave} onClose={handleCloseModal} />
+        <DrAddModal
+          Sid={Sid}
+          demrac={selecteddemrac}
+          onSave={handleSave}
+          onClose={handleCloseModal}
+        />
       )}
       {/* Display Alert if there's an error */}
       {alert.show && (
