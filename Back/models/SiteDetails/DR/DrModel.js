@@ -66,132 +66,98 @@ const createDr = async (EB, demracData) => {
     try {
         // Fetch active entites list
         const activeentitesResponse = await getActiveEntites();
-        // Log the response to ensure it's correct
         console.log('Active entites Response:', activeentitesResponse);
-        // Check if the response is successful and if the data is an array
-        if (!activeentitesResponse.success) {
-            throw new Error('Failed to fetch active entites');
-        }
-        const activeentites = activeentitesResponse.demracData;
-        if (!Array.isArray(activeentites)) {
+
+        if (!activeentitesResponse.success || !Array.isArray(activeentitesResponse.data)) {
             throw new Error('Active entites data is not an array.');
         }
+        const activeentites = activeentitesResponse.data;
         if (activeentites.length === 0) {
-            throw new Error('No active entites found');
+            throw new Error('No active entites found.');
         }
-        // Log the incoming data to inspect gestionnaire_de_reseau
-        console.log('Incoming data for createDr:', demracData);
 
-        // If gestionnaire_de_reseau is a string (entite name), convert it to the corresponding entite ID
-        if (typeof demracData.gestionnaire_de_reseau === 'string') {
-            const entiteName = demracData.gestionnaire_de_reseau;
+        // Convert gestionnaire_de_reseau name to Eid
+        if (typeof demracData.gestionnaire_de_reseau === 'object' && demracData.gestionnaire_de_reseau.nom) {
+            const entiteName = demracData.gestionnaire_de_reseau.nom;
             console.warn('Converting entite name to entite ID:', entiteName);
 
-            // Find the entite in the activeentites list based on entite name
-            const entite = activeentites.find(entite => entite.nom === entiteName);
-
+            const entite = activeentites.find(e => e.nom === entiteName);
             if (entite) {
-                // Replace the entite name with the corresponding entite ID
                 demracData.gestionnaire_de_reseau = entite.Eid;
             } else {
                 throw new Error(`No entite found with name: ${entiteName}`);
             }
         }
-        // /////////////////////////////////////////////////////////////////////////////////
-                // Fetch active prospetcs list
-                const activeprospectsResponse = await getActiveProspects();
-                // Log the response to ensure it's correct
-                console.log('Active prospects Response:', activeprospectsResponse);
-                // Check if the response is successful and if the data is an array
-                if (!activeprospectsResponse.success) {
-                    throw new Error('Failed to fetch active prospects');
-                }
-                const activeProspects = activeprospectsResponse.demracData;
-                if (!Array.isArray(activeProspects)) {
-                    throw new Error('Active prospects data is not an array.');
-                }
-                if (activeentites.length === 0) {
-                    throw new Error('No active prospects found');
-                }
-                // Log the incoming data to inspect Pro_fk
-                console.log('Incoming data for createDr:', demracData);
-        
-                // If Pro_fk is a string (prospect name), convert it to the corresponding entite ID
-                if (typeof data.Pro_fk === 'string') {
-                    const prospectName = demracData.Pro_fk;
-                    console.warn('Converting entite name to entite ID:', prospectName);
-        
-                    // Find the prospect in the activeentites list based on entite name
-                    const prospect = activeentites.find(prospect => prospect.nom === prospectName);
-        
-                    if (prospect) {
-                        // Replace the prospect name with the corresponding entite ID
-                        demracData.Pro_fk = prospect.Proid;
-                    } else {
-                        throw new Error(`No prospect found with name: ${prospectName}`);
-                    }
-                }
-        // ///////////////////////////////////////////////////////////////////////////////
-                // Fetch active entites list
-                const activedevisResponse = await getActiveDevis();
-                // Log the response to ensure it's correct
-                console.log('Active entites Response:', activedevisResponse);
-                // Check if the response is successful and if the data is an array
-                if (!activedevisResponse.success) {
-                    throw new Error('Failed to fetch active entites');
-                }
-                const activeDevis = activedevisResponse.demracData;
-                if (!Array.isArray(activeDevis)) {
-                    throw new Error('Active entites data is not an array.');
-                }
-                if (activeDevis.length === 0) {
-                    throw new Error('No active entites found');
-                }
-                // Log the incoming data to inspect gestionnaire_de_reseau
-                console.log('Incoming data for createDr:', demracData);
-                // If gestionnaire_de_reseau is a string (entite name), convert it to the corresponding entite ID
-                if (typeof demracData.no_devis === 'string') {
-                    const devisName = demracData.no_devis;
-                    console.warn('Converting entite name to entite ID:', devisName);
-        
-                    // Find the entite in the activeentites list based on entite name
-                    const devis = activeDevis.find(devis => devis.nom === devisName);
-        
-                    if (devis) {
-                        // Replace the entite name with the corresponding entite ID
-                        demracData.no_devis = devis.ND;
-                    } else {
-                        throw new Error(`No entite found with name: ${devisName}`);
-                    }
-                }
-        // Check and map SPRid_FK, programme_fk, and status_Dr_fk to their corresponding IDs
-        if (demracData.SPRid_FK) {
-            const statpropId = statusPropmapping[demracData.SPRid_FK];
+
+        // Fetch active prospects list
+        const activeprospectsResponse = await getActiveProspects(EB);
+        console.log('Active prospects Response:', activeprospectsResponse);
+
+        if (!activeprospectsResponse.success || !Array.isArray(activeprospectsResponse.data)) {
+            throw new Error('Active prospects data is not an array.');
+        }
+        const activeProspects = activeprospectsResponse.data;
+        // Convert Pro_fk name to Proid
+        if (typeof demracData.Pro_fk === 'object' && demracData.Pro_fk.nom) {
+            const prospectName = demracData.Pro_fk.nom;
+            console.warn('Converting prospect name to Proid:', prospectName);
+            const prospect = activeProspects.find(p => p.nom === prospectName);
+            if (prospect) {
+                demracData.Pro_fk = prospect.Proid;
+            } else {
+                throw new Error(`No prospect found with name: ${prospectName}`);
+            }
+        }
+        // Fetch active devis list
+        const activedevisResponse = await getActiveDevis(EB);
+        console.log('Active devis Response:', activedevisResponse);
+
+        if (!activedevisResponse.success || !Array.isArray(activedevisResponse.data)) {
+            throw new Error('Active devis data is not an array.');
+        }
+        const activeDevis = activedevisResponse.data;
+
+        // Convert no_devis ND to appropriate ID
+        if (typeof demracData.no_devis === 'object' && demracData.no_devis.ND) {
+            const devisName = demracData.no_devis.ND;
+            console.warn('Converting devis ND to ID:', devisName);
+
+            const devis = activeDevis.find(d => d.ND === devisName);
+            if (devis) {
+                demracData.no_devis = devis.ND;
+            } else {
+                throw new Error(`No devis found with name: ${devisName}`);
+            }
+        }
+
+        // Handle SPRid_FK mapping
+        if (typeof demracData.SPRid_FK === 'object' && demracData.SPRid_FK.SPR_desc) {
+            const priorityDesc = demracData.SPRid_FK.SPR_desc;
+            const statpropId = statusPropmapping[priorityDesc];
             if (!statpropId) {
-                throw new Error(`Invalid priority description: ${demracData.SPRid_FK}`);
+                throw new Error(`Invalid priority description: ${priorityDesc}`);
             }
             demracData.SPRid_FK = statpropId;
-        }    
+        }
+
         // Insert data into the database
-        // Now insert the new prospect into the 'Prospect' table, using the EB_fk field
-      const { data: demrac, error: contactError } = await supabase
-      .from('DR')
-      .insert([{ EB_fk: EB, ...demracData }])
-      .select();
-    if (contactError) {
-      throw contactError;
-    }
-// Extract the newly created Prospect ID (Proid)
-const NDRid_fk = demrac[0].NDRid;
- // Now associate the Prospect with the Site by inserting into 'Site-Prospect' association table
- const { data: siteDemrac, error: siteDemracError } = await supabase
- .from('Site-Dr')
- .insert([{ EB_FK: EB, NDRid_fk }]);
-if (siteDemracError) {
- throw siteDemracError;
-}
-// Return the successfully created prospect and the association details
-return { success: true, data: { demrac: demrac[0], siteDemrac } };
+        const { data: demrac, error: contactError } = await supabase
+            .from('DR')
+            .insert([{ EB_fk: EB, ...demracData }])
+            .select();
+
+        if (contactError) {
+            throw contactError;
+        }
+        // Link DR with the site
+        const NDR_fk = demrac[0].NDRid;
+        const { data: siteDemrac, error: siteDemracError } = await supabase
+            .from('Site-Dr')
+            .insert([{ EB_fk: EB, NDR_fk }]);
+        if (siteDemracError) {
+            throw siteDemracError;
+        }
+        return { success: true, data: { demrac: demrac[0], siteDemrac } };
     } catch (error) {
         console.error('Error in createDR:', error.message);
         throw error;

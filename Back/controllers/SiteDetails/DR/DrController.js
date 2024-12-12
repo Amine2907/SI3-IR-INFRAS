@@ -77,11 +77,14 @@ const createDr = async (req, res) => {
         console.error("Error in model operation:", result.error);
         return res.status(400).json({ error: result.error });
       }
-      console.log("DR created successfully:", result.result);
-      return res.status(200).json(result.result);
+    // Return a success response with the created data
+    return res.status(201).json({
+        message: 'DR successfully created and associated with site.',
+        data: result.data,
+      });
     } catch (error) {
-      console.error("Error during DR creation:", error.message);
-      return res.status(400).json({ error: error.message });
+      console.error('Error creating DR:', error.message);
+      return res.status(500).json({ error: 'An error occurred while creating the prospect.' });
     }
   };
 // Get all active drs controller 
