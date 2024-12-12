@@ -15,7 +15,6 @@ import cellStyle from './Styles/styles';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SiteDemracService from 'services/site_details/DR/DrService';
-import CombinedModal from 'examples/popup/PropsectDpPopUp/CombinedPopUp';
 import usedemracData from './DrService';
 import statusPropValues from './DrData';
 import DrUpdateModal from 'examples/popup/DrPopUp/Update/DrUpdatePopUp';

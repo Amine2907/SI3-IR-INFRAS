@@ -96,7 +96,7 @@ const getAlldrs = async(req,res)=>{
 // Get dr by its id controller 
 const getdrsById = async(req,res) => {
   const drId = req.params.id;
-    const result = await drModel.GetdrsById(drId);
+    const result = await drModel.getDrsById(drId);
     if(!result.success){
         return res.status(400).json({error:result.error});
     }

@@ -7,7 +7,6 @@ import Icon from '@mui/material/Icon';
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
-import ProspectModal from 'examples/popup/ProspectsPopUp/ProspectPopUp';
 import SiteDemracService from 'services/site_details/DR/DrService';
 import MDAlert from 'components/MDAlert';
 import DrAddModal from 'examples/popup/DrPopUp/Add/DrAddPopUp';

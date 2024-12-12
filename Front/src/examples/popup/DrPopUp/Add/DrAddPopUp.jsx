@@ -148,9 +148,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
     onSave({ Sid, demracData });
   };
   const handleToggleActive = () => {
-    if (demrac) {
-      setIsActive(!isActive);
-    }
+    setIsActive(!isActive);
   };
   const handleoperatorsChange = e => {
     const { value } = e.target;

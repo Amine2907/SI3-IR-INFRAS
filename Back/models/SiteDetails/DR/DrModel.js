@@ -256,8 +256,8 @@ const getAllInactiveDrs = async(EB) => {
         return {success:false , error:error.messsage};
     }
 };
-//GetDrsById 
-const GetDrsById = async(NDRid) => {
+//getDrsById 
+const getDrsById = async(NDRid) => {
     try {
         const {data,error} = await supabase
         .from('DR')
@@ -404,7 +404,7 @@ const desactivateDr = async(id) => {
 const drModel = {
     createDr,
     getAllDrs,
-    GetDrsById,
+    getDrsById,
     updateDr,
     activateDr,
     desactivateDr,
