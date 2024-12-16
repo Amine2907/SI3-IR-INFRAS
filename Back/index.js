@@ -20,6 +20,7 @@ import preEtudeStorageRoutes from './routes/SiteDetails/PreEtude/preEtudeStorage
 import demRacRoutes from './routes/SiteDetails/DR/demRac.js';
 import demRacStorageRoutes from './routes/SiteDetails/DR/demRacStorage.js';
 import devisRoutes from './routes/SiteDetails/Devis/devis.js';
+import factureRoutes from './routes/SiteDetails/Reglement/Facture/factures.js';
 // Exports here 
 export { default as contactService } from './services/contactsService.js';
 export { default as AuthService } from './services/authService.js';
@@ -51,6 +52,7 @@ app.use('/api/pre-storage',preEtudeStorageRoutes);
 app.use('/api/dem-rac',demRacRoutes);
 app.use('/api/dem-rac-storage',demRacStorageRoutes);
 app.use('/api/devis',devisRoutes);
+app.use('/api/facture',factureRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });
