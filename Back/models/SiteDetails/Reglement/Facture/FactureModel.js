@@ -1,4 +1,4 @@
-import { supabase } from "../../../config/supabaseClient.js";
+import { supabase } from "../../../../config/supabaseClient.js";
 // create Facture Model 
 const createFacture = async (Devis_fk, factureData) => {
     try {

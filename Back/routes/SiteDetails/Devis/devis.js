@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import devisController from "../../../controllers/SiteDetails/Devis/DevisController";
+import devisController from "../../../controllers/SiteDetails/Devis/DevisController.js";
 router.post('/create-devis-site',devisController.createDevis);
 router.put('/:id',devisController.updateDevis);
 router.get('/:id',devisController.getDevisById);

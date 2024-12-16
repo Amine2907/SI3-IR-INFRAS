@@ -1,4 +1,4 @@
-import { supabase } from "../../../config/supabaseClient.js";
+import { supabase } from "../../../../config/supabaseClient.js";
 // create Paiement Model 
 const createPaiement = async (Devis_fk, paiementData) => {
     try {
