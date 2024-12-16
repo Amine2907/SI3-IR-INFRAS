@@ -9,7 +9,7 @@ router.get('/:Sid/active-devis',devisController.getAllActiveDevis);
 router.get('/:Sid/inactive-devis',devisController.getAllInactiveDevis);
 router.get('/:Sid/active-factures',devisController.fetchActiveFacture);
 router.get('/:Sid/active-fours',devisController.fetchActiveFrs);
-router.get('/:Sid/active-pais',devisController.fetchActivePais);
+router.get('/:Sid/active-paies',devisController.fetchActivePais);
 router.patch('/:id/desactivate',devisController.desactivateDevis);
 router.patch('/:id/activate',devisController.activateDevis);
 
