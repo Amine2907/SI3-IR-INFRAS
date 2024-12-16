@@ -61,15 +61,6 @@ const getActiveProspectsForDemrac = async Sid => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
-// Get all active entites's site for a dem rac  Service
-const getActiveEntitesForDemrac = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/active-entites`);
-    return { success: true, data: response.data };
-  } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
-  }
-};
 // Get all active devis's site for a dem rac  Service
 const getActiveDevisForDemrac = async Sid => {
   try {
@@ -102,7 +93,6 @@ const SiteDemracService = {
   displayDemRacSite,
   getDemrabById,
   getActiveProspectsForDemrac,
-  getActiveEntitesForDemrac,
   getActiveDevisForDemrac,
   getActiveDemracForSite,
   getInactiveDemracForSite,

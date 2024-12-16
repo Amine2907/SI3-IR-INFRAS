@@ -11,10 +11,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
+import entityService from 'services/entityService';
 const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     demrac || {
-      SPRid_FK: { SPR_desc: '' },
       gestionnaire_de_reseau: { nom: '' },
       Pro_fk: { nom: '' },
       no_devis: { ND: '' },
@@ -36,8 +36,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
       setFormData({ ...formData, no_devis: { ND: value } });
     } else if (name === 'Pro_fk') {
       setFormData({ ...formData, Pro_fk: { nom: value } });
-    } else if (name === 'SPRid_FK') {
-      setFormData({ ...formData, SPRid_FK: { nom: value } });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -49,7 +47,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
         gestionnaire_de_reseau: demrac.gestionnaire_de_reseau || { nom: '' },
         Pro_fk: demrac.Pro_fk || { nom: '' },
         no_devis: demrac.no_devis || { ND: '' },
-        SPRid_FK: demrac.SPRid_FK || { SPR_desc: '' },
       });
       setIsActive(demrac.is_active);
       setSelectedDemrac(demrac.prospectName || '');
@@ -71,13 +68,13 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
         setActivePropescts([]);
       }
     };
-    fetchActiveProspects();
+    fetchActiveProspects(Sid);
   }, []);
   //   fetch Active Entites
   useEffect(() => {
-    const fetchActiveEntites = async Sid => {
+    const fetchActiveEntites = async () => {
       try {
-        const result = await SiteDemracService.getActiveEntitesForDemrac(Sid);
+        const result = await entityService.getActiveEntites();
         if (result.success) {
           setActiveEntites(result.data);
         } else {
@@ -107,7 +104,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
         setActiveDevis([]);
       }
     };
-    fetchActiveDevis();
+    fetchActiveDevis(Sid);
   }, []);
   const validateForm = () => {
     const newErrors = {};
@@ -140,25 +137,18 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
       [field]: { [subField]: value },
     });
   };
-  const handleCompanieschange = (field, subField, value) => {
-    if (field === 'SPRid_FK') {
-      // Directly set the numeric ID instead of an object
-      setFormData({
-        ...formData,
-        [field]: { ...formData[field], [subField]: value },
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [field]: { [subField]: value },
-      });
-    }
+  const handleNestedVChange = (field, subField, value) => {
+    // Directly set the numeric ID instead of an object
+    setFormData({
+      ...formData,
+      [field]: { ...formData[field], [subField]: value },
+    });
   };
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
-          Ajouter DR
+          Modifier DR
         </MDTypography>
         <div className={styles.formGrid}>
           <MDInput
@@ -177,15 +167,15 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
           <FormControl
             fullWidth
             required
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+            style={{ marginBottom: '5px', marginTop: '10px', width: '320px' }}
           >
             <Select
               labelId="role-select-label"
               name="Pro_fk"
               value={formData.Pro_fk.nom || ''}
               displayEmpty
-              onChange={e => handleCompanieschange('Pro_fk', 'nom', e.target.value)}
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              onChange={e => handleNestedVChange('Pro_fk', 'nom', e.target.value)}
+              style={{ padding: '12px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
               required
             >
               <MenuItem value="" disabled>
@@ -305,7 +295,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
               name="gestionnaire_de_reseau"
               value={formData.gestionnaire_de_reseau.nom || ''}
               displayEmpty
-              onChange={e => handleCompanieschange('gestionnaire_de_reseau', 'nom', e.target.value)}
+              onChange={e => handleNestedVChange('gestionnaire_de_reseau', 'nom', e.target.value)}
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
               required
             >
@@ -330,17 +320,20 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
           >
             <Select
               name="SPRid_FK"
-              value={formData.SPRid_FK.nom || ''}
-              onChange={e => handleDropdownChange('SPRid_FK', 'SPR_desc', e.target.value)}
+              value={formData.SPRid_FK || ''}
+              onChange={e => setFormData({ ...formData, SPRid_FK: e.target.value })}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
-              required
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.SPRid_FK ? 'red' : '',
+              }}
             >
               <MenuItem value="" disabled>
-                -- Choisir un status proposition --
+                -- Choisir un statut --
               </MenuItem>
-              <MenuItem value="Devis en attente">Devis en attente</MenuItem>
-              <MenuItem value="Reçu">Reçu</MenuItem>
+              <MenuItem value={1}>Devis en attente</MenuItem>
+              <MenuItem value={2}>Reçu</MenuItem>
             </Select>
           </FormControl>
           <div>
@@ -376,9 +369,7 @@ DrUpdateModal.propTypes = {
     gestionnaire_de_reseau: PropTypes.shape({
       nom: PropTypes.string.isRequired,
     }).isRequired,
-    SPRid_FK: PropTypes.shape({
-      SPR_desc: PropTypes.string.isRequired,
-    }).isRequired,
+    SPRid_FK: PropTypes.string,
     no_devis: PropTypes.shape({
       ND: PropTypes.string.isRequired,
     }).isRequired,

@@ -1,6 +1,5 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import Icon from '@mui/material/Icon';
@@ -10,11 +9,13 @@ import MDButton from 'components/MDButton';
 import SiteDemracService from 'services/site_details/DR/DrService';
 import MDAlert from 'components/MDAlert';
 import DrAddModal from 'examples/popup/DrPopUp/Add/DrAddPopUp';
-function DemRacHeader() {
+import usedemracData from '../DrList/DrService';
+import { Alert, AlertDescription } from 'components/ui/alert';
+import PropTypes from 'prop-types';
+function DemRacHeader({ site }) {
+  const { demracData, loading, error, fetchDemracData } = usedemracData(site);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [showUploadModal, setshowUploadModal] = useState(false);
   const [alert, setAlert] = useState(false);
   const [selecteddemrac, setSelecteddemrac] = useState(null);
@@ -24,43 +25,19 @@ function DemRacHeader() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-
   const handleUpload = async () => {
     setshowUploadModal(true);
     setIsModalOpen(true);
   };
-
   const handleAddDr = () => {
     setShowModal(true);
   };
-  const fetchDemRacData = useCallback(async () => {
-    if (Sid) {
-      try {
-        setLoading(true);
-        const response = await SiteDemracService.getDemRacSite(Sid);
-        if (response.success && response.data) {
-          setLocalUserData(response.data);
-        } else {
-          setError(
-            response.error?.message ||
-              'Échec de la récupération des données demandes de raccordements.'
-          );
-        }
-      } catch (err) {
-        setError('An error occurred while fetching user data: ' + err.message);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      setLoading(false);
-      setError('Les informations utilisateur ne sont pas disponibles');
-    }
-  }, []);
   // Fetch the prospects data whenever the Sid changes
   useEffect(() => {
-    fetchDemRacData();
-  }, [Sid]);
-
+    if (Sid) {
+      fetchDemracData();
+    }
+  }, [site, fetchDemracData, Sid]);
   const handleSave = async data => {
     const { demracData } = data;
     try {
@@ -71,13 +48,9 @@ function DemRacHeader() {
         successMessage = 'Dem rac enregistré avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
         // After successfully creating the prospect, fetch the updated list of prospects
-        fetchDemRacData(); // Refetch the data to include the newly created prospect
+        fetchDemracData();
       } else {
         let errorMessage = `Error: ${result.error}`;
-        // Check if the error is related to a prospect already existing with status 'Prospect Validé'
-        if (result.error.includes("A prospect with status 'Prospect Validé' already exists")) {
-          errorMessage = 'Il y a déjà un prospect avec le statut "Prospect Validé" pour ce site.';
-        }
         console.error(errorMessage); // Log any errors from the API response
         setAlert({ show: true, message: errorMessage, type: 'error' });
       }
@@ -91,6 +64,27 @@ function DemRacHeader() {
     }
     handleCloseModal();
   };
+  if (loading)
+    return (
+      <Alert variant="destructive" className="mt-4">
+        <AlertDescription>Chargement...</AlertDescription>
+      </Alert>
+    );
+  if (error)
+    return (
+      <Alert variant="destructive" className="mt-4">
+        <AlertDescription>Error: {String(error)}</AlertDescription>
+      </Alert>
+    );
+
+  if (!demracData.length)
+    return (
+      <Alert variant="destructive" className="mt-4">
+        <AlertDescription>
+          Aucune donnée des demracs pour ce site sont disponibles.
+        </AlertDescription>
+      </Alert>
+    );
   return (
     <div className="prospect-list">
       <Card id="prospect-card">
@@ -130,4 +124,7 @@ function DemRacHeader() {
     </div>
   );
 }
+DemRacHeader.propTypes = {
+  site: PropTypes.string.isRequired,
+};
 export default DemRacHeader;

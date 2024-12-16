@@ -13,22 +13,8 @@
  * - getInactiveDrs: gets all the inactive Drs in the database
  */
 import { supabase } from "../../../config/supabaseClient.js";
+import entityModel from "../../Entites/entiteModel.js";
 import { statusPropmapping } from "./DrData.js";
-const getActiveEntites = async () => {
-    try {
-        const { data, error } = await supabase
-            .from('Entite')
-            .select('Eid, nom')
-            .eq('is_active', true);
-        if (error) {
-            throw new Error(`Error fetching active entites: ${error.message}`);
-        }
-        return {success:true , data}; // Return active entites data (list of objects with Eid and nom)
-    } catch (error) {
-        console.error(error);
-        return []; // Return empty array if an error occurs
-    }
-};
 const getActiveProspects = async (Sid) => {
     try {
         const { data, error } = await supabase
@@ -64,102 +50,82 @@ const getActiveDevis = async (Sid) => {
 //Create Dr
 const createDr = async (EB, demracData) => {
     try {
-        // Fetch active entites list
-        const activeentitesResponse = await getActiveEntites();
-        console.log('Active entites Response:', activeentitesResponse);
-
-        if (!activeentitesResponse.success || !Array.isArray(activeentitesResponse.data)) {
-            throw new Error('Active entites data is not an array.');
+        // Fetch active entities
+        const activeEntitiesResponse = await entityModel.getAllActiveEntites();
+        if (!activeEntitiesResponse.success || !Array.isArray(activeEntitiesResponse.data)) {
+            throw new Error('Failed to fetch active entities.');
         }
-        const activeentites = activeentitesResponse.data;
-        if (activeentites.length === 0) {
-            throw new Error('No active entites found.');
-        }
+        const activeEntities = activeEntitiesResponse.data;
 
-        // Convert gestionnaire_de_reseau name to Eid
-        if (typeof demracData.gestionnaire_de_reseau === 'object' && demracData.gestionnaire_de_reseau.nom) {
-            const entiteName = demracData.gestionnaire_de_reseau.nom;
-            console.warn('Converting entite name to entite ID:', entiteName);
-
-            const entite = activeentites.find(e => e.nom === entiteName);
-            if (entite) {
-                demracData.gestionnaire_de_reseau = entite.Eid;
-            } else {
-                throw new Error(`No entite found with name: ${entiteName}`);
+        // Map gestionnaire_de_reseau.nom -> Eid
+        if (demracData.gestionnaire_de_reseau?.nom) {
+            const entity = activeEntities.find(e => e.nom === demracData.gestionnaire_de_reseau.nom);
+            if (!entity) {
+                throw new Error(`Entity not found for name: ${demracData.gestionnaire_de_reseau.nom}`);
             }
+            demracData.gestionnaire_de_reseau = entity.Eid;
         }
-
-        // Fetch active prospects list
-        const activeprospectsResponse = await getActiveProspects(EB);
-        console.log('Active prospects Response:', activeprospectsResponse);
-
-        if (!activeprospectsResponse.success || !Array.isArray(activeprospectsResponse.data)) {
-            throw new Error('Active prospects data is not an array.');
+        // Fetch active prospects
+        const activeProspectsResponse = await getActiveProspects(EB);
+        if (!activeProspectsResponse.success || !Array.isArray(activeProspectsResponse.data)) {
+            throw new Error('Failed to fetch active prospects.');
         }
-        const activeProspects = activeprospectsResponse.data;
-        // Convert Pro_fk name to Proid
-        if (typeof demracData.Pro_fk === 'object' && demracData.Pro_fk.nom) {
-            const prospectName = demracData.Pro_fk.nom;
-            console.warn('Converting prospect name to Proid:', prospectName);
-            const prospect = activeProspects.find(p => p.nom === prospectName);
-            if (prospect) {
-                demracData.Pro_fk = prospect.Proid;
-            } else {
-                throw new Error(`No prospect found with name: ${prospectName}`);
+        const activeProspects = activeProspectsResponse.data;
+
+        // Map Pro_fk.nom -> Proid
+        if (demracData.Pro_fk?.nom) {
+            const prospect = activeProspects.find(p => p.nom === demracData.Pro_fk.nom);
+            if (!prospect) {
+                throw new Error(`Prospect not found for name: ${demracData.Pro_fk.nom}`);
             }
+            demracData.Pro_fk = prospect.Proid;
         }
-        // Fetch active devis list
-        const activedevisResponse = await getActiveDevis(EB);
-        console.log('Active devis Response:', activedevisResponse);
 
-        if (!activedevisResponse.success || !Array.isArray(activedevisResponse.data)) {
-            throw new Error('Active devis data is not an array.');
+        // Fetch active devis
+        const activeDevisResponse = await getActiveDevis(EB);
+        if (!activeDevisResponse.success || !Array.isArray(activeDevisResponse.data)) {
+            throw new Error('Failed to fetch active devis.');
         }
-        const activeDevis = activedevisResponse.data;
+        const activeDevis = activeDevisResponse.data;
 
-        // Convert no_devis ND to appropriate ID
-        if (typeof demracData.no_devis === 'object' && demracData.no_devis.ND) {
-            const devisName = demracData.no_devis.ND;
-            console.warn('Converting devis ND to ID:', devisName);
-
-            const devis = activeDevis.find(d => d.ND === devisName);
-            if (devis) {
-                demracData.no_devis = devis.ND;
-            } else {
-                throw new Error(`No devis found with name: ${devisName}`);
+        // Map no_devis.ND -> ID
+        if (demracData.no_devis?.ND) {
+            const devis = activeDevis.find(d => d.ND === demracData.no_devis.ND);
+            if (!devis) {
+                throw new Error(`Devis not found for ND: ${demracData.no_devis.ND}`);
             }
+            demracData.no_devis = devis.ND;
         }
-
-        // Handle SPRid_FK mapping
-        if (typeof demracData.SPRid_FK === 'object' && demracData.SPRid_FK.SPR_desc) {
-            const priorityDesc = demracData.SPRid_FK.SPR_desc;
-            const statpropId = statusPropmapping[priorityDesc];
-            if (!statpropId) {
-                throw new Error(`Invalid priority description: ${priorityDesc}`);
+        // Map SPRid_FK.SPR_desc -> ID
+        if (demracData.SPRid_FK?.SPR_desc) {
+            const statusPropId = statusPropmapping[demracData.SPRid_FK.SPR_desc];
+            if (!statusPropId) {
+                throw new Error(`Invalid SPR_desc: ${demracData.SPRid_FK.SPR_desc}`);
             }
-            demracData.SPRid_FK = statpropId;
+            demracData.SPRid_FK = statusPropId;
         }
-
-        // Insert data into the database
+        if (!demracData.no_devis || !demracData.no_devis.ND) {
+            delete demracData.no_devis;
+        }
+        // Insert into DR table
         const { data: demrac, error: contactError } = await supabase
             .from('DR')
             .insert([{ EB_fk: EB, ...demracData }])
             .select();
 
-        if (contactError) {
-            throw contactError;
-        }
+        if (contactError) throw contactError;
+
         // Link DR with the site
         const NDR_fk = demrac[0].NDRid;
-        const { data: siteDemrac, error: siteDemracError } = await supabase
+        const { error: siteDemracError } = await supabase
             .from('Site-Dr')
             .insert([{ EB_fk: EB, NDR_fk }]);
-        if (siteDemracError) {
-            throw siteDemracError;
-        }
-        return { success: true, data: { demrac: demrac[0], siteDemrac } };
+
+        if (siteDemracError) throw siteDemracError;
+
+        return { success: true, data: demrac[0] };
     } catch (error) {
-        console.error('Error in createDR:', error.message);
+        console.error('Error in createDr:', error.message);
         throw error;
     }
 };
@@ -231,7 +197,7 @@ const updateDr = async (NDRid, updates) => {
     try {
         //Active ENtites
       // Fetch active entites list (if necessary for mapping)
-      const activeentitesResponse = await getActiveEntites();
+      const activeentitesResponse = await entityModel.getAllActiveEntites();
       console.log('Active entites Response:', activeentitesResponse);
       if (!activeentitesResponse.success) {
         throw new Error('Failed to fetch active entites');
@@ -254,7 +220,7 @@ const updateDr = async (NDRid, updates) => {
       }
     //   Active Propspecs 
      // Fetch active prospects list (if necessary for mapping)
-     const activepropsectsResponse = await getActiveEntites();
+     const activepropsectsResponse = await getActiveProspects();
      console.log('Active entites Response:', activepropsectsResponse);
      if (!activepropsectsResponse.success) {
        throw new Error('Failed to fetch active entites');
@@ -368,7 +334,6 @@ const drModel = {
     desactivateDr,
     getAllActiveDrs,
     getAllInactiveDrs,
-    getActiveEntites,
     getActiveProspects,
     getActiveDevis,
 }

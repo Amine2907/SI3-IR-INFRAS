@@ -101,7 +101,7 @@ const searchSites = async filters => {
 const getActiveCompanies = async () => {
   try {
     const response = await axios.get(`${API_URL}/active-companies`);
-    return { success: true, data: response.data }; // Assuming the data is in response.data
+    return { success: true, data: response.data };
   } catch (error) {
     return { success: false, error: error.message };
   }

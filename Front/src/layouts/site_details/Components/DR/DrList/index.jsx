@@ -26,7 +26,6 @@ function DemRacList({ site }) {
   const { EB } = location.state || {};
   const [selecteddemrac, setSelecteddemrac] = useState(null);
   const Sid = EB;
-  const NDRid = selecteddemrac?.NDRid;
   const handleEdit = demrac => {
     setSelecteddemrac(demrac);
     setShowModal(true);
@@ -34,14 +33,6 @@ function DemRacList({ site }) {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-  useEffect(() => {
-    if (demracData && demracData.length > 0) {
-      console.log('demracs Data:', demracData);
-      demracData.forEach(demrac => {
-        console.log('Status proposition FK:', demrac.SPRid_FK);
-      });
-    }
-  }, [demracData]);
   useEffect(() => {
     if (Sid) {
       fetchDemracData();
@@ -110,7 +101,6 @@ function DemRacList({ site }) {
         </AlertDescription>
       </Alert>
     );
-
   return (
     <TableContainer>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>

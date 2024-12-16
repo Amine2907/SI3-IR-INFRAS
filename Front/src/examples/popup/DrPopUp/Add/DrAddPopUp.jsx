@@ -11,6 +11,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
+import entityService from 'services/entityService';
 const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     demrac || {
@@ -35,8 +36,6 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
       setFormData({ ...formData, no_devis: { ND: value } });
     } else if (name === 'Pro_fk') {
       setFormData({ ...formData, Pro_fk: { nom: value } });
-    } else if (name === 'SPRid_FK') {
-      setFormData({ ...formData, SPRid_FK: { nom: value } });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -48,7 +47,6 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
         gestionnaire_de_reseau: demrac.gestionnaire_de_reseau || { nom: '' },
         Pro_fk: demrac.Pro_fk || { nom: '' },
         no_devis: demrac.no_devis || { ND: '' },
-        SPRid_FK: demrac.SPRid_FK || { SPR_desc: '' },
       });
       setIsActive(demrac.is_active);
     }
@@ -69,13 +67,13 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
         setActivePropescts([]);
       }
     };
-    fetchActiveProspects();
+    fetchActiveProspects(Sid);
   }, []);
   //   fetch Active Entites
   useEffect(() => {
     const fetchActiveEntites = async () => {
       try {
-        const result = await SiteDemracService.getActiveEntitesForDemrac();
+        const result = await entityService.getActiveEntites();
         if (result.success) {
           setActiveEntites(result.data);
         } else {
@@ -105,12 +103,11 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
         setActiveDevis([]);
       }
     };
-    fetchActiveDevis();
+    fetchActiveDevis(Sid);
   }, []);
   const validateForm = () => {
     const newErrors = {};
     // if (!formData.nom) newErrors.nom = true;
-    // if (!formData.latitude) newErrors.latitude = true;
     return newErrors;
   };
   const handleSubmit = () => {
@@ -124,10 +121,10 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
         drdc: formData.drdc,
         type_rac: formData.type_rac,
         gestionnaire_de_reseau: formData.gestionnaire_de_reseau.nom,
-        SPRid_FK: formData.SPRid_FK.SPR_desc,
+        SPRid_FK: formData.SPRid_FK,
         no_devis: formData.no_devis.ND,
         Pro_fk: formData.Pro_fk.nom,
-        is_active: true,
+        is_active: isActive,
       };
       console.log('prospect data :', demracData);
       onSave({ Sid, demracData });
@@ -140,10 +137,10 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
       drdc: formData.drdc,
       type_rac: formData.type_rac,
       gestionnaire_de_reseau: formData.gestionnaire_de_reseau.nom,
-      SPRid_FK: formData.SPRid_FK.SPR_desc,
+      SPRid_FK: formData.SPRid_FK,
       no_devis: formData.no_devis.ND,
       Pro_fk: formData.Pro_fk.nom,
-      is_active: true,
+      is_active: isActive,
     };
     onSave({ Sid, demracData });
   };
@@ -160,21 +157,6 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
       [field]: { [subField]: value },
     });
   };
-  const handleCompanieschange = (field, subField, value) => {
-    if (field === 'SPRid_FK') {
-      // Directly set the numeric ID instead of an object
-      setFormData({
-        ...formData,
-        [field]: { ...formData[field], [subField]: value },
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [field]: { [subField]: value },
-      });
-    }
-  };
-
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -198,15 +180,15 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
           <FormControl
             fullWidth
             required
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+            style={{ marginBottom: '5px', marginTop: '10px', width: '320px' }}
           >
             <Select
               labelId="role-select-label"
               name="Pro_fk"
               value={formData.Pro_fk.nom || ''}
               displayEmpty
-              onChange={e => handleCompanieschange('Pro_fk', 'nom', e.target.value)}
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              onChange={e => handleDropdownChange('Pro_fk', 'nom', e.target.value)}
+              style={{ padding: '12px', fontSize: '14px', borderColor: errors.Pro_fk ? 'red' : '' }}
               required
             >
               <MenuItem value="" disabled>
@@ -281,7 +263,11 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               value={formData.type_rac || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.type_rac ? 'red' : '',
+              }}
               required
             >
               <MenuItem value="" disabled>
@@ -292,8 +278,8 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               <MenuItem value="A Renseigner">A Renseigner</MenuItem>
             </Select>
           </FormControl>
-          <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
-            <InputLabel id="operators-label">operators</InputLabel>
+          <FormControl style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+            <InputLabel id="operators-label">Operateurs</InputLabel>
             <Select
               labelId="operators-label"
               name="operators"
@@ -301,7 +287,11 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               value={formData.operators || []}
               onChange={handleoperatorsChange}
               renderValue={selected => selected.join(', ')}
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.operators ? 'red' : '',
+              }}
             >
               {operators.map(operateur => (
                 <MenuItem key={operateur} value={operateur}>
@@ -309,7 +299,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
                     type="checkbox"
                     checked={formData.operators && formData.operators.includes(operateur)}
                     readOnly
-                    style={{ marginRight: '10px' }}
+                    style={{ marginRight: '100px', cursor: 'pointer' }}
                   />
                   <MDTypography variant="body2">{operateur}</MDTypography>
                 </MenuItem>
@@ -326,12 +316,16 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               name="gestionnaire_de_reseau"
               value={formData.gestionnaire_de_reseau.nom || ''}
               displayEmpty
-              onChange={e => handleCompanieschange('gestionnaire_de_reseau', 'nom', e.target.value)}
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              onChange={e => handleDropdownChange('gestionnaire_de_reseau', 'nom', e.target.value)}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.gestionnaire_de_reseau ? 'red' : '',
+              }}
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir un entite --
+                -- Choisir une entite --
               </MenuItem>
               {activeEntites.length > 0 ? (
                 activeEntites.map(entite => (
@@ -346,22 +340,26 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
           </FormControl>
           <FormControl
             fullWidth
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
             required
+            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
           >
             <Select
               name="SPRid_FK"
-              value={formData.SPRid_FK.nom || ''}
-              onChange={e => handleDropdownChange('SPRid_FK', 'SPR_desc', e.target.value)}
+              value={formData.SPRid_FK || ''}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              onChange={e => setFormData({ ...formData, SPRid_FK: e.target.value })}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                // borderColor: errors. ? 'red' : '',
+              }}
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir un status proposition --
+                -- Choisir un statut --
               </MenuItem>
-              <MenuItem value="Devis en attente">Devis en attente</MenuItem>
-              <MenuItem value="Reçu">Reçu</MenuItem>
+              <MenuItem value={1}>Devis en attente</MenuItem>
+              <MenuItem value={2}>Reçu</MenuItem>
             </Select>
           </FormControl>
           <div>
@@ -397,9 +395,7 @@ DrAddModal.propTypes = {
     gestionnaire_de_reseau: PropTypes.shape({
       nom: PropTypes.string.isRequired,
     }).isRequired,
-    SPRid_FK: PropTypes.shape({
-      SPR_desc: PropTypes.string.isRequired,
-    }).isRequired,
+    SPRid_FK: PropTypes.string,
     no_devis: PropTypes.shape({
       ND: PropTypes.string.isRequired,
     }).isRequired,

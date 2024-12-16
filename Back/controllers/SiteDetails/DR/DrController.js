@@ -14,18 +14,6 @@
  */
 import drModel from "../../../models/SiteDetails/DR/DrModel.js";
 import { statusPropmapping } from "../../../models/SiteDetails/DR/DrData.js";
-const fetchActiveEntites = async (req, res) => {
-    try {
-        const result = await drModel.getActiveEntites();
-        if (result.success) {
-            return res.status(200).json(result.data);
-        } else {
-            return res.status(500).json({ success: false, message: result.error });
-        }
-    } catch (error) {
-        return res.status(500).json({ success: false, message: error.message });
-    }
-};
 const fetchActiveProspects = async (req,res) => {
     const siteId = req.params.Sid;
     try {
@@ -198,7 +186,6 @@ const getAllInactiveDrs = async(req,res) => {
 }
 // Search drs controller 
 const demRacController = {
-    fetchActiveEntites,
     fetchActiveProspects,
     fetchActiveDevis,
     createDr,
