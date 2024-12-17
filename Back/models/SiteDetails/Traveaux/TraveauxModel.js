@@ -146,4 +146,4 @@ const traveauxModel = {
     desactivateTraveaux,
     getTraveauxById,
 }
-export default traveauxModel; 
+export default traveauxModel;

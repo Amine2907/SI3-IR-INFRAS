@@ -1,6 +1,7 @@
 import express from "express";
 const router = express.Router();
 import traveauxController from "../../../controllers/SiteDetails/Traveaux/TraveauxController.js";
+
 router.post('/create-trav-site',traveauxController.createTraveau);
 router.put('/:id',traveauxController.updateTrav);
 router.get('/:id',traveauxController.getTravById);

@@ -121,7 +121,7 @@ const getInactiveTravs = async(req,res) => {
 }
 // traveaux controller 
 const traveauxController = {
-   createTraveau,
+    createTraveau,
     getAllTravx,
     getTravById,
     updateTrav,
