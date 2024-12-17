@@ -21,6 +21,8 @@ import demRacRoutes from './routes/SiteDetails/DR/demRac.js';
 import demRacStorageRoutes from './routes/SiteDetails/DR/demRacStorage.js';
 import devisRoutes from './routes/SiteDetails/Devis/devis.js';
 import factureRoutes from './routes/SiteDetails/Reglement/Facture/factures.js';
+import traveauxRoutes from './routes/SiteDetails/Traveaux/traveaux.js';
+import miseEnServiceRoutes from './routes/SiteDetails/MES/miseEnService.js';
 // Exports here 
 export { default as contactService } from './services/contactsService.js';
 export { default as AuthService } from './services/authService.js';
@@ -53,6 +55,8 @@ app.use('/api/dem-rac',demRacRoutes);
 app.use('/api/dem-rac-storage',demRacStorageRoutes);
 app.use('/api/devis',devisRoutes);
 app.use('/api/facture',factureRoutes);
+app.use('/api/traveaux',traveauxRoutes);
+app.use('/api/mes',miseEnServiceRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });
