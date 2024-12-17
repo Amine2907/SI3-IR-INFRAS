@@ -19,6 +19,7 @@ import devisRoutes from './routes/SiteDetails/Devis/devis.js';
 import factureRoutes from './routes/SiteDetails/Reglement/Facture/factures.js';
 import traveauxRoutes from './routes/SiteDetails/Traveaux/traveaux.js';
 import miseEnServiceRoutes from './routes/SiteDetails/MES/miseEnService.js';
+import paieRoutes from './routes/SiteDetails/Reglement/Paiement/paiements.js';
 // Storing Routes 
 import prospectStorageRoutes from './routes/SiteDetails/Prospect/prospectStorage.js';
 import demRacStorageRoutes from './routes/SiteDetails/DR/demRacStorage.js';
@@ -59,6 +60,7 @@ app.use('/api/devis',devisRoutes);
 app.use('/api/facture',factureRoutes);
 app.use('/api/traveaux',traveauxRoutes);
 app.use('/api/mes',miseEnServiceRoutes);
+app.use('/api/paie',paieRoutes);
 // Use Storing Routes 
 app.use('/api/dem-rac-storage',demRacStorageRoutes);
 app.use('/api/dp-storage',dpStorageRoutes);
