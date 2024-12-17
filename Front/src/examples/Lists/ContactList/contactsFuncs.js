@@ -60,7 +60,7 @@ setNoResultsMessage: Fonction permettant d'afficher un message d'alerte en cas d
 Retour
 Cette fonction met à jour l'état des contacts avec les résultats de la recherche et affiche un message si aucun contact correspondant n'est trouvé.
  */
-import contactService from 'services/contactsService';
+import contactService from 'services/Contacts/contactsService';
 
 export const fetchActiveContacts = async (setContacts, setNoResultsMessage) => {
   setNoResultsMessage('');
@@ -92,7 +92,6 @@ export const fetchInactiveContacts = async (setContacts, setNoResultsMessage) =>
     );
   }
 };
-
 export const handleSave = async (
   data,
   selectedContact,

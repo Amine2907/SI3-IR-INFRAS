@@ -1,4 +1,4 @@
-import contactService from 'services/contactsService';
+import contactService from 'services/Contacts/contactsService';
 import siteContactService from 'services/Site_Services/siteContactService';
 import SiteService from 'services/Site_Services/siteService';
 const program = {

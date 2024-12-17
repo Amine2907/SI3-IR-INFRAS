@@ -30,7 +30,7 @@
  * The component uses Material Dashboard 2 React components and Material UI for styling.
  */
 import React, { useEffect, useState } from 'react';
-import entityService from 'services/entityService';
+import entityService from 'services/Entites/entityService';
 // @mui material components
 import Card from '@mui/material/Card';
 import Icon from '@mui/material/Icon';

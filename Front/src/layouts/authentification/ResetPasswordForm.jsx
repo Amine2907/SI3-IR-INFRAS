@@ -37,7 +37,7 @@ import {
 } from 'components/ui/card';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { Alert, AlertDescription } from 'components/ui/alert';
-import AuthService from 'services/authService';
+import AuthService from 'services/Auth/authService';
 export default function PasswordReset() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);

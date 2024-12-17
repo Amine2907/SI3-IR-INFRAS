@@ -8,7 +8,7 @@
  * - setUserData: a function to set the data
  */
 import { useState, useCallback } from 'react';
-import settingsService from 'services/settingsService';
+import settingsService from 'services/Settings/settingsService';
 
 const useUserData = user => {
   const [userData, setUserData] = useState([]);
