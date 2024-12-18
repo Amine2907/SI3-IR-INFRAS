@@ -94,9 +94,7 @@ function DevisList() {
   if (!devisData.length)
     return (
       <Alert variant="destructive" className="mt-4">
-        <AlertDescription>
-          Aucune donnée des pre-etude pour ce site sont disponibles.
-        </AlertDescription>
+        <AlertDescription>Aucune donnée des devis pour ce site sont disponibles.</AlertDescription>
       </Alert>
     );
   return (

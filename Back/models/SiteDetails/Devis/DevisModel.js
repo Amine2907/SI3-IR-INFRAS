@@ -6,7 +6,7 @@ const getActiveFournisseurs = async () => {
             .from('Entite')
             .select('Eid, nom')
             .eq('is_active', true)
-            .eq('role',Fournisseur);
+            .eq('role','Fournisseur');
         if (error) {
             throw new Error(`Error fetching active fournisseurs : ${error.message}`);
         }

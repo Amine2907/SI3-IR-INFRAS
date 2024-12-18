@@ -31,10 +31,10 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
     setIsActive(!isActive);
   };
   const handleToggleConforme = () => {
-    setIsConforme(!isActive);
+    setIsConforme(!isConforme);
   };
   const handleToggleValide = () => {
-    setIsValide(!isActive);
+    setIsValide(!isValide);
   };
   const handleFoursChange = event => {
     setActiveFrns(event.target.value);
@@ -305,12 +305,12 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               {' '}
               {isActive ? 'Active' : 'Inactive'}
             </Switch>
-            <label>{isConforme ? 'Conforme' : 'Non Conforme'}</label>
+            <label>Conformite</label>
             <Switch type="checkbox" checked={isConforme} onChange={handleToggleConforme}>
               {' '}
               {isActive ? 'Conforme' : 'Non Conforme'}
             </Switch>
-            <label>{isValide ? 'Valide par SFR' : 'Non valide par SFR'}</label>
+            <label>Valide par SFR</label>
             <Switch type="checkbox" checked={isValide} onChange={handleToggleValide}>
               {' '}
               {isActive ? 'Valide par SFR' : 'Non valide par SFR'}
