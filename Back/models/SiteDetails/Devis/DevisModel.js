@@ -37,7 +37,7 @@ const getActivePais = async (Sid) => {
 const getActiveFacture = async (Sid) => {
     try {
         const { data, error } = await supabase
-        .from('facture')
+        .from('Facture')
         .select('Fid, no_fac')
         .eq('is_active', true)
         .eq('EB_fk', Sid);

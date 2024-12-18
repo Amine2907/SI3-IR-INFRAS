@@ -14,13 +14,13 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MDAlert from 'components/MDAlert';
 import cellStyle from './styles/styles';
-import PreEtModal from 'examples/popup/PreEtudePopUp';
 import SiteDevisService from 'services/site_details/Devis/DevisService';
 import useDevisForSite from './devisService';
+import DevisUModal from 'examples/popup/DevisPopUp';
+import DevisStorageModal from 'examples/popup/DevisStoragePopUp';
 function DevisList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
   const { EB } = location.state || {};
@@ -30,7 +30,6 @@ function DevisList() {
   const handleEdit = devis => {
     setSelectedDevis(devis);
     setShowModal(true);
-    setIsModalOpen(true);
   };
   const handleUpload = devis => {
     setSelectedDevis(devis);
@@ -155,7 +154,7 @@ function DevisList() {
         </TableBody>
       </table>
       {showModal && (
-        <PreEtModal
+        <DevisUModal
           Sid={siteId}
           devis={selectedDevis}
           onSave={handleUpdate}
@@ -163,7 +162,7 @@ function DevisList() {
         />
       )}
       {showStorageModal && (
-        <devisStorageModal devis={selectedDevis} onSave={handleUpdate} onClose={handleCloseModal} />
+        <DevisStorageModal devis={selectedDevis} onSave={handleUpdate} onClose={handleCloseModal} />
       )}
       {/* Display Alert if there's an error */}
       {alert.show && (

@@ -4,7 +4,7 @@ const API_URL = 'http://localhost:5000/api/devis';
 const createDevis = async ({ Sid, devisData }) => {
   try {
     console.log('Sending request:', { Sid, devisData });
-    const response = await axios.post(`${API_URL}/create-demrac-site`, {
+    const response = await axios.post(`${API_URL}/create-devis-site`, {
       Sid,
       devisData,
     });
@@ -44,7 +44,7 @@ const getDevisSite = async Sid => {
 // Display a Devis for a site Service
 const displayDevisSite = async (Sid, ND) => {
   try {
-    const response = await axios.get(`${API_URL}/${Sid}/demracs`, {
+    const response = await axios.get(`${API_URL}/${Sid}/devis`, {
       data: { ND },
     });
     return { success: true, data: response.data };

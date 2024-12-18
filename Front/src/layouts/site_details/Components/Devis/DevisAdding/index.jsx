@@ -11,7 +11,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 const DevisAddingModal = ({ Sid, devis, onSave }) => {
-  const [formData, setFormData] = useState(devis || { type_devis: '' });
+  const [formData, setFormData] = useState(
+    devis || {
+      fournisseur: { nom: '' },
+      no_dr: { NDRid: '' },
+    }
+  );
   const [errors, setErrors] = useState({});
   const [activeFrns, setActiveFrns] = useState([]);
   const [activeDemracs, setActiveDemracs] = useState([]);
@@ -19,13 +24,16 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
   const [isConforme, setIsConforme] = useState(devis ? devis.conformite : true);
   const [isValide, setIsValide] = useState(devis ? devis.valide_par_SFR : true);
 
-  const handleChange = event => {
-    const { name, value } = event.target;
-    setFormData(prevData => {
-      const updatedData = { ...prevData, [name]: value };
-      console.log('Updated Data:', updatedData);
-      return updatedData;
-    });
+  const handleChange = e => {
+    const { name, value } = e.target;
+    // Special handling for nested fields
+    if (name === 'fournisseur') {
+      setFormData({ ...formData, fournisseur: { nom: value } });
+    } else if (name === 'no_dr') {
+      setFormData({ ...formData, no_devis: { NDRid: value } });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
   const handleToggleActive = () => {
     setIsActive(!isActive);
@@ -36,18 +44,25 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
   const handleToggleValide = () => {
     setIsValide(!isValide);
   };
-  const handleFoursChange = event => {
-    setActiveFrns(event.target.value);
+  //   const handleFoursChange = event => {
+  //     setActiveFrns(event.target.value);
+  //   };
+  //   const handleDemracChange = event => {
+  //     setActiveDemracs(event.target.value);
+  //   };
+  const handleDropdownChange = (field, subField, value) => {
+    setFormData({
+      ...formData,
+      [field]: { [subField]: value },
+    });
   };
-  const handleDemracChange = event => {
-    setActiveDemracs(event.target.value);
-  };
-
   useEffect(() => {
     if (devis) {
       setFormData(prevData => ({
         ...prevData,
         ...devis,
+        fournisseur: devis.fournisseur || { nom: '' },
+        no_dr: devis.fournisseur || { NDRid: '' },
       }));
       setIsActive(devis.is_active);
       setIsConforme(devis.conformite);
@@ -59,18 +74,22 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
     const fetchActiveFrns = async () => {
       try {
         const result = await SiteDevisService.getActiveFrnsForDevis(Sid);
-        if (result.success) {
-          setActiveFrns(result.data);
+
+        // Ensure result.success is checked, and data is validated.
+        if (result.success && Array.isArray(result.data)) {
+          setActiveFrns(result.data); // Valid array
         } else {
-          console.error('Error fetching active fournisseurs :', result.error);
-          setActiveFrns([]);
+          console.error(
+            'Error fetching active fournisseurs:',
+            result.error || 'Invalid data structure'
+          );
+          setActiveFrns([]); // Fallback to empty array
         }
       } catch (error) {
         console.error('Error during fetch:', error.message);
-        setActiveFrns([]);
+        setActiveFrns([]); // Fallback to empty array
       }
     };
-
     fetchActiveFrns();
   }, [Sid]);
   // get Active Demandes de raccordements for dropodwn
@@ -78,30 +97,58 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
     const fetchActiveDemracs = async () => {
       try {
         const result = await SiteDemracService.getActiveDemracForSite(Sid);
-        if (result.success) {
-          setActiveDemracs(result.data);
+        // Ensure result.success is checked, and data is validated
+        if (result.success && Array.isArray(result.data)) {
+          setActiveDemracs(result.data); // Valid array
         } else {
-          console.error('Error fetching active dem racs:', result.error);
-          setActiveDemracs([]);
+          console.error(
+            'Error fetching active dem racs:',
+            result.error || 'Invalid data structure'
+          );
+          setActiveDemracs([]); // Fallback to empty array
         }
       } catch (error) {
         console.error('Error during fetch:', error.message);
-        setActiveDemracs([]);
+        setActiveDemracs([]); // Fallback to empty array
       }
     };
     fetchActiveDemracs();
   }, [Sid]);
-  const handleSubmit = () => {
+  const validateForm = () => {
     const newErrors = {};
+    // if (!formData.nom) newErrors.nom = true;
+    return newErrors;
+  };
+  const handleSubmit = () => {
+    const newErrors = validateForm;
     // if (!formData.type_devis) newErrors.type_devis = true;
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      const devisData = {
+        no_devis: formData.no_devis,
+        fournisseur: formData.fournisseur.nom,
+        no_dr: formData.no_dr.NDRid,
+        type_devis: formData.type_devis,
+        devis_date: formData.devis_date,
+        montant: formData.montant,
+        code_postal_lieu: formData.code_postal_lieu,
+        code_paiement: formData.code_paiement,
+        expiration_date: formData.expiration_date,
+        reception_date: formData.reception_date,
+        etat_ralance: formData.etat_ralance,
+        derniere_relance_date: formData.derniere_relance_date,
+        is_active: isActive,
+        conformite: isConforme,
+        valide_par_SFR: isValide,
+      };
+      console.log('devis data :', devisData);
+      onSave({ Sid, devisData });
       return;
     }
     const devisData = {
       no_devis: formData.no_devis,
-      fournisseur: formData.fournisseur,
-      no_dr: formData.no_dr,
+      fournisseur: formData.fournisseur.nom,
+      no_dr: formData.no_dr.NDRid,
       type_devis: formData.type_devis,
       devis_date: formData.devis_date,
       montant: formData.montant,
@@ -115,10 +162,8 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
       conformite: isConforme,
       valide_par_SFR: isValide,
     };
-    console.log('devis data:', devisData);
     onSave({ Sid, devisData });
   };
-
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -134,37 +179,45 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
             <Select
               name="fournisseur"
-              value={formData.fournisseur || ''}
-              onChange={handleFoursChange}
+              value={formData.fournisseur.nom || ''}
+              onChange={e => handleDropdownChange('fournisseur', 'nom', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
             >
               <MenuItem value="" disabled>
                 -- Choisir le fournisseur --
               </MenuItem>
-              {activeFrns.map(fournisseur => (
-                <MenuItem key={fournisseur.id} value={fournisseur.nom}>
-                  {fournisseur.nom}
-                </MenuItem>
-              ))}
+              {activeFrns.length > 0 ? (
+                activeFrns.map(fournisseur => (
+                  <MenuItem key={fournisseur.id} value={fournisseur.nom}>
+                    {fournisseur.nom}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="">No active fournisseurs available</MenuItem>
+              )}
             </Select>
           </FormControl>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
             <Select
               name="no_dr"
-              value={formData.no_dr || ''}
-              onChange={handleDemracChange}
+              value={formData.no_dr.NDRid || ''}
+              onChange={e => handleDropdownChange('no_dr', 'NDRid', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
             >
               <MenuItem value="" disabled>
                 -- Choisir le DR --
               </MenuItem>
-              {activeDemracs.map(demrac => (
-                <MenuItem key={demrac.id} value={demrac.nom}>
-                  {demrac.nom}
-                </MenuItem>
-              ))}
+              {activeDemracs.length > 0 ? (
+                activeDemracs.map(demrac => (
+                  <MenuItem key={demrac.id} value={demrac.NDRid}>
+                    {demrac.NDRid}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="">No active drs available</MenuItem>
+              )}
             </Select>
           </FormControl>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
@@ -191,7 +244,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           </FormControl>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="devis_date "
+              label="Date de devis "
               name="devis_date "
               value={formData.devis_date ? dayjs(formData.devis_date) : null}
               onChange={newValue => {
@@ -231,7 +284,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Date d'expiration de devis"
+              label="Date d'expiration"
               name="expiration_date"
               value={formData.expiration_date ? dayjs(formData.expiration_date) : null}
               onChange={newValue => {
@@ -247,7 +300,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Date de reception de devis"
+              label="Date de reception"
               name="reception_date"
               value={formData.reception_date ? dayjs(formData.reception_date) : null}
               onChange={newValue => {
@@ -330,8 +383,12 @@ DevisAddingModal.propTypes = {
   Sid: PropTypes.string.isRequired,
   devis: PropTypes.shape({
     no_devis: PropTypes.number,
-    fournisseur: PropTypes.string,
-    no_dr: PropTypes.number,
+    fournisseur: PropTypes.shape({
+      nom: PropTypes.string.isRequired,
+    }).isRequired,
+    no_dr: PropTypes.shape({
+      NDRid: PropTypes.string.isRequired,
+    }).isRequired,
     type_devis: PropTypes.string,
     devis_date: PropTypes.string,
     montant: PropTypes.number,

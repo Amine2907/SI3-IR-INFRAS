@@ -9,7 +9,6 @@ const useDevisForSite = () => {
   const location = useLocation();
   const { EB } = location.state || {};
   const siteId = EB;
-
   // Function to fetch deviss data
   const fetchdevisData = async () => {
     try {
@@ -22,7 +21,6 @@ const useDevisForSite = () => {
         throw new Error(`Failed to fetch fournisseurs for site ID: ${siteId}`);
       }
       const fournisseurs = fournisseurResponse.data;
-
       // Fetch devis for the site
       const devisResponse = await SiteDevisService.getDevisSite(siteId);
       if (!devisResponse.success) throw new Error('Failed to fetch devis');
