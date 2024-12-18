@@ -59,34 +59,39 @@ const createDevis = async (EB, devisData) => {
             throw new Error('Failed to fetch active fournisseurs.');
         }
         const activeEntities = activeFournResponse.data;
+
         // Map fournisseur.nom -> Eid
         if (devisData.fournisseur?.nom) {
             const frns = activeEntities.find(e => e.nom === devisData.fournisseur.nom);
             if (!frns) {
-                throw new Error(`fournisseur not found for name: ${devisData.fournisseur.nom}`);
+                throw new Error(`Fournisseur not found for name: ${devisData.fournisseur.nom}`);
             }
-            devisData.fournisseur = frns.Eid;
+            devisData.fournisseur = frns.Eid; // Ensure Eid is a number
         }
+
         // Fetch active paiements
         const activePaisResponse = await getActivePais(EB);
         if (!activePaisResponse.success || !Array.isArray(activePaisResponse.data)) {
             throw new Error('Failed to fetch active paiements.');
         }
         const activePaies = activePaisResponse.data;
-        // Map no_paie.nom -> Pid
+
+        // Map no_paie.Pid -> Pid
         if (devisData.no_paie?.Pid) {
-            const paiement = activePaies.find(p => p.Pid === devisData.no_paie.Pid);
+            const paiement = activePaies.find(p => p.Pid === parseInt(devisData.no_paie.Pid, 10));
             if (!paiement) {
-                throw new Error(`Paiement not found for name: ${devisData.no_paie.Pid}`);
+                throw new Error(`Paiement not found for Pid: ${devisData.no_paie.Pid}`);
             }
-            devisData.no_paie = paiement.Pid;
+            devisData.no_paie = paiement.Pid; // Ensure Pid is numeric
         }
+
         // Fetch active factures
         const activefactureResponse = await getActiveFacture(EB);
         if (!activefactureResponse.success || !Array.isArray(activefactureResponse.data)) {
             throw new Error('Failed to fetch active factures.');
         }
         const activeFacture = activefactureResponse.data;
+
         // Map no_devis.no_fac -> ID
         if (devisData.factures?.no_fac) {
             const facture = activeFacture.find(d => d.no_fac === devisData.no_devis.no_fac);
@@ -95,25 +100,31 @@ const createDevis = async (EB, devisData) => {
             }
             devisData.no_devis = facture.no_fac;
         }
+
+        // Remove invalid fields if necessary
         if (!devisData.factures || !devisData.factures.no_fac) {
             delete devisData.factures;
         }
         if (!devisData.no_paie || !devisData.no_paie.Pid) {
             delete devisData.no_paie;
         }
+
         // Insert into Devis table
         const { data: devis, error: contactError } = await supabase
             .from('Devis')
             .insert([{ EB_fk: EB, ...devisData }])
             .select();
+
         if (contactError) throw contactError;
+
         // Link Devis with the site
         const Did = devis[0].ND;
         const { error: siteDevisError } = await supabase
             .from('Site-Devis')
-            .insert([{ EB_fk: EB, Did }]);
+            .insert([{ Sid: EB, Did }]);
 
         if (siteDevisError) throw siteDevisError;
+
         return { success: true, data: devis[0] };
     } catch (error) {
         console.error('Error in createDevis:', error.message);

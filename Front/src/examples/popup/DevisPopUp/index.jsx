@@ -14,7 +14,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
-  const [formData, setFormData] = useState(devis || {});
+  const [formData, setFormData] = useState(
+    devis || {
+      fournisseur: { nom: '' },
+    }
+  );
   const [isActive, setIsActive] = useState(devis ? devis.is_active : true);
   const [isConforme, setIsConforme] = useState(devis ? devis.conformite : true);
   const [isValide, setIsValide] = useState(devis ? devis.valide_par_SFR : true);
@@ -31,25 +35,25 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
       return updatedData;
     });
   };
-  const handleFournisseurChange = event => {
-    const { value } = event.target;
-    setActiveFournisseurs(value);
-  };
-  const handleDemracChange = event => {
-    const { value } = event.target;
-    setActiveDemracs(value);
-  };
   useEffect(() => {
     if (devis) {
       setFormData({
         ...devis,
+        fournisseur: devis.fournisseur || { nom: '' },
       });
-      devis.fournisseurName || '';
       setIsActive(devis.is_active);
       setIsConforme(devis.conformite);
       setIsValide(devis.valide_par_SFR);
     }
   }, [devis]);
+  const handleDropdownChange = (field, subField, value) => {
+    console.log(`Updating ${field}.${subField} with value:`, value); // Debug log
+    // Directly set the numeric ID instead of an object
+    setFormData({
+      ...formData,
+      [field]: { ...formData[field], [subField]: value },
+    });
+  };
   //   fetching active fournisseurs for the site
   const fetchActiveFrns = async () => {
     try {
@@ -76,7 +80,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
   const fetchActiveDemrac = async () => {
     try {
       // Call the service method to fetch active prospects for the given Sid
-      const result = await SiteDemracService.getActiveFrnsForDevis(Sid);
+      const result = await SiteDemracService.getDemRacSite(Sid);
       // Check if the result is successful
       if (result.success) {
         // Set the active prospects data if the response is successful
@@ -101,27 +105,44 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
     return newErrors;
   };
   const handleSubmit = () => {
-    console.log('handleSubmit called');
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      console.log('Validation errors:', newErrors);
+      console.log('demRac data :', devisData);
+      onSave({
+        Sid,
+        ...formData,
+        is_active: isActive,
+        conformite: isConforme,
+        valide_par_SFR: isValide,
+      });
       return;
     }
-    console.log('Submitting form data:', {
+    onSave({
       ...formData,
       is_active: isActive,
       conformite: isConforme,
       valide_par_SFR: isValide,
     });
-    onSave({ ...formData, is_active: isActive, conformite: isConforme, valide_par_SFR: isValide });
   };
   const handleToggleActive = () => {
     setIsActive(prevState => !prevState);
     setFormData(prevData => ({
       ...prevData,
       is_active: !isActive,
+    }));
+  };
+  const handleToggleConforme = () => {
+    setIsConforme(prevState => !prevState);
+    setFormData(prevData => ({
+      ...prevData,
       conformite: !isConforme,
+    }));
+  };
+  const handleToggleValide = () => {
+    setIsValide(prevState => !prevState);
+    setFormData(prevData => ({
+      ...prevData,
       valide_par_SFR: !isValide,
     }));
   };
@@ -133,18 +154,18 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
         </MDTypography>
         <div className={styles.formGrid}>
           <MDInput
-            name="no_devis"
-            value={formData.no_devis || ''}
+            name="ND"
+            value={formData.ND || ''}
             onChange={handleChange}
             placeholder="N de devis"
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />
-          <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
+          <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="fournisseur"
-              value={formData.fournisseur || ''}
-              onChange={handleFournisseurChange}
+              value={formData.fournisseur.nom || ''}
+              onChange={e => handleDropdownChange('fournisseur', 'nom', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
             >
@@ -158,11 +179,11 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
+          <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="no_dr"
               value={formData.no_dr || ''}
-              onChange={handleDemracChange}
+              onChange={handleChange}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
             >
@@ -176,7 +197,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
-          <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
+          <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="type_devis"
               value={formData.type_devis}
@@ -214,14 +235,31 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
               style={{ marginBottom: '10px', width: '100%' }}
             />
           </LocalizationProvider>
-          <MDInput
-            name="montant"
-            value={formData.montant || ''}
-            onChange={handleChange}
-            placeholder="Montant (TTC) "
-            style={{ marginBottom: '5px', width: '300px' }}
-            required
-          />
+          <div style={{ position: 'relative', width: '300px' }}>
+            <MDInput
+              name="montant"
+              value={formData.montant}
+              onChange={handleChange}
+              placeholder="Montant (TTC) "
+              style={{
+                marginBottom: '5px',
+                width: '100%',
+                marginTop: '10px',
+                borderColor: errors.montant ? 'red' : '',
+              }}
+            />
+            <Icon
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                pointerEvents: 'none',
+              }}
+            >
+              euro
+            </Icon>
+          </div>
           <MDInput
             name="code_postal_lieu"
             value={formData.code_postal_lieu || ''}
@@ -270,7 +308,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
               style={{ marginBottom: '10px', width: '100%' }}
             />
           </LocalizationProvider>
-          <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
+          <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="etat_ralance"
               value={formData.etat_ralance}
@@ -308,31 +346,32 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
               style={{ marginBottom: '10px', width: '100%' }}
             />
           </LocalizationProvider>
+          <div>
+            <Label>{isActive ? 'Active' : 'Inactive'}</Label>
+            <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
+              {' '}
+              {isActive ? 'Active' : 'Inactive'}
+            </Switch>
+            <label>Conformite</label>
+            <Switch type="checkbox" checked={isConforme} onChange={handleToggleConforme}>
+              {' '}
+              {isActive ? 'Conforme' : 'Non Conforme'}
+            </Switch>
+            <label>Valide par SFR</label>
+            <Switch type="checkbox" checked={isValide} onChange={handleToggleValide}>
+              {' '}
+              {isActive ? 'Valide par SFR' : 'Non valide par SFR'}
+            </Switch>
+          </div>
         </div>
-      </div>
-      <div>
-        <Label>{isActive ? 'Active' : 'Inactive'}</Label>
-        <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
-          {' '}
-          {isActive ? 'Active' : 'Inactive'}
-        </Switch>
-        <Switch type="checkbox" checked={isConforme} onChange={handleToggleConforme}>
-          {' '}
-          {isActive ? 'Conforme' : 'Non Conforme'}
-        </Switch>
-        <label>Valide par SFR</label>
-        <Switch type="checkbox" checked={isValide} onChange={handleToggleValide}>
-          {' '}
-          {isActive ? 'Valide par SFR' : 'Non valide par SFR'}
-        </Switch>
-      </div>
-      <div className={styles.buttonContainer}>
-        <MDButton onClick={handleSubmit} variant="gradient" color="dark">
-          modifier
-        </MDButton>
-        <MDButton onClick={onClose} variant="gradient" color="dark">
-          Fermer
-        </MDButton>
+        <div className={styles.buttonContainer}>
+          <MDButton onClick={handleSubmit} variant="gradient" color="dark">
+            modifier
+          </MDButton>
+          <MDButton onClick={onClose} variant="gradient" color="dark">
+            Fermer
+          </MDButton>
+        </div>
       </div>
     </div>
   );
@@ -340,9 +379,9 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
 DevisUModal.propTypes = {
   Sid: PropTypes.string.isRequired,
   devis: PropTypes.shape({
-    no_devis: PropTypes.number,
+    ND: PropTypes.number,
     fournisseur: PropTypes.string,
-    no_dr: PropTypes.number,
+    no_dr: PropTypes.string,
     type_devis: PropTypes.string,
     devis_date: PropTypes.string,
     montant: PropTypes.number,

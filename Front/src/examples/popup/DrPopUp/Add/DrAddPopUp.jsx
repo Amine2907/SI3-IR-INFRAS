@@ -351,7 +351,6 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                // borderColor: errors. ? 'red' : '',
               }}
               required
             >

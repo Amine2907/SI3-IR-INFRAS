@@ -14,7 +14,6 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
   const [formData, setFormData] = useState(
     devis || {
       fournisseur: { nom: '' },
-      no_dr: { NDRid: '' },
     }
   );
   const [errors, setErrors] = useState({});
@@ -29,8 +28,6 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
     // Special handling for nested fields
     if (name === 'fournisseur') {
       setFormData({ ...formData, fournisseur: { nom: value } });
-    } else if (name === 'no_dr') {
-      setFormData({ ...formData, no_devis: { NDRid: value } });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -44,31 +41,24 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
   const handleToggleValide = () => {
     setIsValide(!isValide);
   };
-  //   const handleFoursChange = event => {
-  //     setActiveFrns(event.target.value);
-  //   };
-  //   const handleDemracChange = event => {
-  //     setActiveDemracs(event.target.value);
-  //   };
-  const handleDropdownChange = (field, subField, value) => {
-    setFormData({
-      ...formData,
-      [field]: { [subField]: value },
-    });
-  };
   useEffect(() => {
     if (devis) {
-      setFormData(prevData => ({
-        ...prevData,
+      setFormData({
         ...devis,
         fournisseur: devis.fournisseur || { nom: '' },
-        no_dr: devis.fournisseur || { NDRid: '' },
-      }));
+      });
       setIsActive(devis.is_active);
       setIsConforme(devis.conformite);
       setIsValide(devis.valide_par_SFR);
     }
   }, [devis]);
+  const handleDropdownChange = (field, subField, value) => {
+    console.log(`Updating ${field}.${subField} with value:`, value); // Debug log
+    setFormData({
+      ...formData,
+      [field]: { [subField]: value },
+    });
+  };
   // get Active Fournisseurs for dropdown
   useEffect(() => {
     const fetchActiveFrns = async () => {
@@ -125,9 +115,9 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       const devisData = {
-        no_devis: formData.no_devis,
+        ND: formData.ND,
         fournisseur: formData.fournisseur.nom,
-        no_dr: formData.no_dr.NDRid,
+        no_dr: formData.no_dr,
         type_devis: formData.type_devis,
         devis_date: formData.devis_date,
         montant: formData.montant,
@@ -146,9 +136,9 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
       return;
     }
     const devisData = {
-      no_devis: formData.no_devis,
+      ND: formData.ND,
       fournisseur: formData.fournisseur.nom,
-      no_dr: formData.no_dr.NDRid,
+      no_dr: formData.no_dr,
       type_devis: formData.type_devis,
       devis_date: formData.devis_date,
       montant: formData.montant,
@@ -169,14 +159,14 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
       <div className={styles.modalContent}>
         <div className={styles.formGrid}>
           <MDInput
-            name="no_devis"
-            value={formData.no_devis || ''}
+            name="ND"
+            value={formData.ND || ''}
             onChange={handleChange}
             placeholder="N de devis"
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />
-          <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
+          <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="fournisseur"
               value={formData.fournisseur.nom || ''}
@@ -198,11 +188,11 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               )}
             </Select>
           </FormControl>
-          <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
+          <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="no_dr"
-              value={formData.no_dr.NDRid || ''}
-              onChange={e => handleDropdownChange('no_dr', 'NDRid', e.target.value)}
+              value={formData.no_dr || ''}
+              onChange={handleChange}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
             >
@@ -220,10 +210,10 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               )}
             </Select>
           </FormControl>
-          <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
+          <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="type_devis"
-              value={formData.type_devis}
+              value={formData.type_devis || ''}
               onChange={handleChange}
               displayEmpty
               style={{
@@ -314,10 +304,10 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               style={{ marginBottom: '10px', width: '100%' }}
             />
           </LocalizationProvider>
-          <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
+          <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="etat_ralance"
-              value={formData.etat_ralance}
+              value={formData.etat_ralance || ''}
               onChange={handleChange}
               displayEmpty
               style={{
@@ -352,22 +342,19 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               style={{ marginBottom: '10px', width: '100%' }}
             />
           </LocalizationProvider>
-          <div>
+        </div>
+        <div className={styles.switchContainer}>
+          <div className={styles.switchItem}>
             <label>{isActive ? 'Active' : 'Inactive'}</label>
-            <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
-              {' '}
-              {isActive ? 'Active' : 'Inactive'}
-            </Switch>
-            <label>Conformite</label>
-            <Switch type="checkbox" checked={isConforme} onChange={handleToggleConforme}>
-              {' '}
-              {isActive ? 'Conforme' : 'Non Conforme'}
-            </Switch>
-            <label>Valide par SFR</label>
-            <Switch type="checkbox" checked={isValide} onChange={handleToggleValide}>
-              {' '}
-              {isActive ? 'Valide par SFR' : 'Non valide par SFR'}
-            </Switch>
+            <Switch checked={isActive} onChange={handleToggleActive} />
+          </div>
+          <div className={styles.switchItem}>
+            <label>{isConforme ? 'Conforme' : 'Non Conforme'}</label>
+            <Switch checked={isConforme} onChange={handleToggleConforme} />
+          </div>
+          <div className={styles.switchItem}>
+            <label>{isValide ? 'Valide par SFR' : 'Non valide par SFR'}</label>
+            <Switch checked={isValide} onChange={handleToggleValide} />
           </div>
         </div>
         <div className={styles.buttonContainer}>
@@ -382,13 +369,11 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
 DevisAddingModal.propTypes = {
   Sid: PropTypes.string.isRequired,
   devis: PropTypes.shape({
-    no_devis: PropTypes.number,
+    ND: PropTypes.number,
     fournisseur: PropTypes.shape({
       nom: PropTypes.string.isRequired,
     }).isRequired,
-    no_dr: PropTypes.shape({
-      NDRid: PropTypes.string.isRequired,
-    }).isRequired,
+    no_dr: PropTypes.string,
     type_devis: PropTypes.string,
     devis_date: PropTypes.string,
     montant: PropTypes.number,

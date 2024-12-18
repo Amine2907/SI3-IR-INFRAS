@@ -77,6 +77,11 @@ function DevisList() {
     }
     handleCloseModal();
   };
+  const getDotColor = conformite => {
+    if (conformite === true) return 'green';
+    if (conformite === false) return 'red';
+    return 'gray';
+  };
   if (loading)
     return (
       <Alert variant="destructive" className="mt-4">
@@ -116,19 +121,28 @@ function DevisList() {
           {devisData.map(devis => {
             return (
               <TableRow key={devis.id}>
-                <TableCell>{devis.no_devis || 'N/A'}</TableCell>
+                <TableCell>{devis.ND || 'N/A'}</TableCell>
                 <TableCell>{devis.fournisseurName || 'N/A'}</TableCell>
                 <TableCell>{devis.type_devis || 'N/A'}</TableCell>
                 <TableCell>{devis.reception_date || 'N/A'}</TableCell>
-                <TableCell>{devis.montant || 'N/A'}</TableCell>
-                <TableCell>{devis.conformite || 'N/A'}</TableCell>
                 <TableCell>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography variant="body2" sx={{ fontWeight: 'normal' }}>
-                      {devis.cout ? parseFloat(devis.cout).toFixed(2) : 'N/A'}
+                      {devis.montant ? parseFloat(devis.montant).toFixed(2) : 'N/A'}
                     </Typography>
                     <Icon sx={{ fontSize: 'inherit', ml: 0.5 }}>euro</Icon>
                   </Box>
+                </TableCell>
+                <TableCell>
+                  <div
+                    style={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: '50%',
+                      backgroundColor: getDotColor(devis.conformite),
+                    }}
+                  />
+                  {devis.conformite === undefined ? 'N/A' : ''}
                 </TableCell>
                 <TableCell title="Modifier devis" placement="top">
                   <Icon
