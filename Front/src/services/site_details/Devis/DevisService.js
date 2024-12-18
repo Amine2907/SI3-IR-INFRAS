@@ -94,7 +94,7 @@ const getinactiveDevis = async Sid => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
-const SiteDemracService = {
+const SiteDevisService = {
   createDevis,
   updateDevis,
   getDevisSite,
@@ -106,4 +106,4 @@ const SiteDemracService = {
   getActiveDevis,
   getinactiveDevis,
 };
-export default SiteDemracService;
+export default SiteDevisService;
