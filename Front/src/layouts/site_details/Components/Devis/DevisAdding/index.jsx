@@ -345,15 +345,15 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
         </div>
         <div className={styles.switchContainer}>
           <div className={styles.switchItem}>
-            <label>{isActive ? 'Active' : 'Inactive'}</label>
+            <label>Active</label>
             <Switch checked={isActive} onChange={handleToggleActive} />
           </div>
           <div className={styles.switchItem}>
-            <label>{isConforme ? 'Conforme' : 'Non Conforme'}</label>
+            <label>Conformite</label>
             <Switch checked={isConforme} onChange={handleToggleConforme} />
           </div>
           <div className={styles.switchItem}>
-            <label>{isValide ? 'Valide par SFR' : 'Non valide par SFR'}</label>
+            <label>Valide par SFR</label>
             <Switch checked={isValide} onChange={handleToggleValide} />
           </div>
         </div>
