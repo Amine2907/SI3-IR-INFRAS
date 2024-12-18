@@ -1,49 +1,49 @@
 .modal {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 600px;
-    margin: auto;
-  }
-  
-  .modalContent {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .centerButton {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .fileList {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  
-  .fileItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  
-  .fileItem:last-child {
-    border-bottom: none;
-  }
-  
-  .addFile {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .buttonContainer {
-    display: flex;
-    justify-content: space-between;
-  }
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.centerButton {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.fileList {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.fileItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.fileItem:last-child {
+  border-bottom: none;
+}
+
+.addFile {
+  display: flex;
+  justify-content: center;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+}

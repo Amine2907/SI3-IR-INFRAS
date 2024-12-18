@@ -10,7 +10,10 @@ const createFacture = async ({ Sid, factureData }) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.Facturesage };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.Facturesage,
+    };
   }
 };
 // Update Facture Service
@@ -20,7 +23,10 @@ const updateFacture = async (Fid, updates) => {
     const response = await axios.put(`${API_URL}/${Fid}`, updates);
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.Facturesage };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.Facturesage,
+    };
   }
 };
 // get Factureeaux by ID Service
@@ -29,7 +35,10 @@ const getFactureById = async Fid => {
     const response = await axios.get(`${API_URL}/${Fid}`);
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.Facturesage };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.Facturesage,
+    };
   }
 };
 // Get all Factureeaux for a site Service
@@ -38,7 +47,10 @@ const getFactureSite = async Sid => {
     const response = await axios.get(`${API_URL}/${Sid}/facture`);
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.Facturesage };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.Facturesage,
+    };
   }
 };
 // Display a Facture for a site Service
@@ -49,7 +61,10 @@ const displayFactureSite = async (Sid, Fid) => {
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.Facturesage };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.Facturesage,
+    };
   }
 };
 const getActiveFacture = async Sid => {
@@ -57,7 +72,10 @@ const getActiveFacture = async Sid => {
     const response = await axios.get(`${API_URL}/${Sid}/active-facture`);
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.Facturesage };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.Facturesage,
+    };
   }
 };
 const getInactiveFacture = async Sid => {
@@ -65,7 +83,10 @@ const getInactiveFacture = async Sid => {
     const response = await axios.get(`${API_URL}/${Sid}/active-facture`);
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.Facturesage };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.Facturesage,
+    };
   }
 };
 const siteFactureService = {

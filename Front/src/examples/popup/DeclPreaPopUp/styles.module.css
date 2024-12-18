@@ -44,5 +44,5 @@ button {
   grid-template-columns: 1fr 1fr; /* Two equal-width columns */
   gap: 350px;
   margin-top: 20px;
-  width: 100%
+  width: 100%;
 }

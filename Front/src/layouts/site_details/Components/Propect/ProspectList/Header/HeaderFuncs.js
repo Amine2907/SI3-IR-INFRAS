@@ -23,7 +23,7 @@ function HeaderListFunctions() {
   const renderTabContent = () => {
     switch (tabValue) {
       case 0:
-        return < ProspectList/>;
+        return <ProspectList />;
       case 1:
         return <DeclPreaList />;
       default:
