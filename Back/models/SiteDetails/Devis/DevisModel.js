@@ -1,4 +1,29 @@
 import { supabase } from "../../../config/supabaseClient.js";
+// Validate Prospect 
+const getValidatePropsect = async (selectedNoDr) => {
+    try {
+        const { data, error } = await supabase
+            .from('Devis')
+            .select(`
+                no_dr,
+                DR (Prospect!inner (section, parcelle)),
+                DP (numero_DP, Prospect!inner (section, parcelle))
+            `)
+            .eq('no_dr', selectedNoDr);  // Filter by the selected 'no_dr'
+
+        if (error) {
+            throw new Error('Error fetching devis details: ' + error.message);
+        }
+        if (!data || data.length === 0) {
+            throw new Error('No details found for the selected no_dr.');
+        }
+
+        return data[0];  // Return the first match (or adjust as needed)
+    } catch (err) {
+        console.error(err.message);
+        throw err;
+    }
+};
 // get Active fournisseurs
 const getActiveFournisseurs = async () => {
     try {
@@ -53,6 +78,24 @@ const getActiveFacture = async (Sid) => {
 //Create Devis 
 const createDevis = async (EB, devisData) => {
     try {
+                const selectedNoDr = devisData.no_dr;
+                const fetchedDetails = await getValidatePropsect(selectedNoDr);
+        
+                if (!fetchedDetails) {
+                    throw new Error('No details found for the selected no_dr.');
+                }
+        
+                const { section, parcelle, numero_DP } = fetchedDetails;
+        
+                if (
+                    devisData.section !== section ||
+                    devisData.parcelle !== parcelle ||
+                    devisData.numero_DP !== numero_DP
+                ) {
+                    throw new Error(
+                        'Validation failed: The provided section, parcelle, or numero_DP does not match the database records.'
+                    );
+                }
         // Fetch active fournisseurs
         const activeFournResponse = await getActiveFournisseurs();
         if (!activeFournResponse.success || !Array.isArray(activeFournResponse.data)) {
@@ -324,5 +367,6 @@ const devisModel = {
     getActiveFournisseurs,
     getActiveFacture,
     getActivePais,
+    getValidatePropsect,
 }
 export default devisModel ; 

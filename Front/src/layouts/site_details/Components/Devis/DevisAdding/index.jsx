@@ -10,6 +10,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
+import MDBox from 'components/MDBox';
+import MDTypography from 'components/MDTypography';
 const DevisAddingModal = ({ Sid, devis, onSave }) => {
   const [formData, setFormData] = useState(
     devis || {
@@ -64,7 +66,6 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
     const fetchActiveFrns = async () => {
       try {
         const result = await SiteDevisService.getActiveFrnsForDevis(Sid);
-
         // Ensure result.success is checked, and data is validated.
         if (result.success && Array.isArray(result.data)) {
           setActiveFrns(result.data); // Valid array
@@ -110,31 +111,13 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
     return newErrors;
   };
   const handleSubmit = () => {
-    const newErrors = validateForm;
-    // if (!formData.type_devis) newErrors.type_devis = true;
+    const newErrors = validateForm();
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      const devisData = {
-        ND: formData.ND,
-        fournisseur: formData.fournisseur.nom,
-        no_dr: formData.no_dr,
-        type_devis: formData.type_devis,
-        devis_date: formData.devis_date,
-        montant: formData.montant,
-        code_postal_lieu: formData.code_postal_lieu,
-        code_paiement: formData.code_paiement,
-        expiration_date: formData.expiration_date,
-        reception_date: formData.reception_date,
-        etat_ralance: formData.etat_ralance,
-        derniere_relance_date: formData.derniere_relance_date,
-        is_active: isActive,
-        conformite: isConforme,
-        valide_par_SFR: isValide,
-      };
-      console.log('devis data :', devisData);
-      onSave({ Sid, devisData });
       return;
     }
+
     const devisData = {
       ND: formData.ND,
       fournisseur: formData.fournisseur.nom,
@@ -148,10 +131,24 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
       reception_date: formData.reception_date,
       etat_ralance: formData.etat_ralance,
       derniere_relance_date: formData.derniere_relance_date,
+      section: formData.section,
+      parcelle: formData.parcelle,
+      numero_DP: formData.numero_DP,
       is_active: isActive,
       conformite: isConforme,
       valide_par_SFR: isValide,
     };
+    // Validation checks
+    if (devisData.section !== formData.section) {
+      throw new Error('Validation failed: Incorrect section provided.');
+    }
+    if (devisData.parcelle !== formData.parcelle) {
+      throw new Error('Validation failed: Incorrect parcelle provided.');
+    }
+    if (devisData.numero_DP !== formData.numero_DP) {
+      throw new Error('Validation failed: Incorrect numero_DP provided.');
+    }
+    console.log('devis data :', devisData);
     onSave({ Sid, devisData });
   };
   return (
@@ -357,11 +354,41 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
             <Switch checked={isValide} onChange={handleToggleValide} />
           </div>
         </div>
-        <div className={styles.buttonContainer}>
-          <MDButton onClick={handleSubmit} variant="gradient" color="dark">
-            Creer
-          </MDButton>
-        </div>
+        <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
+          <MDTypography variant="h6" fontWeight="medium">
+            Valdiation Prospect
+          </MDTypography>
+          <MDBox display="flex" gap={2}></MDBox>
+        </MDBox>
+        <MDInput
+          name="numero_DP"
+          value={formData.numero_DP || ''}
+          onChange={handleChange}
+          placeholder="N DP"
+          style={{ marginBottom: '5px', width: '300px' }}
+          required
+        />
+        <MDInput
+          name="section"
+          value={formData.section || ''}
+          onChange={handleChange}
+          placeholder="Section"
+          style={{ marginBottom: '5px', width: '300px' }}
+          required
+        />
+        <MDInput
+          name="parcelle"
+          value={formData.parcelle || ''}
+          onChange={handleChange}
+          placeholder="Parcelle"
+          style={{ marginBottom: '5px', width: '300px' }}
+          required
+        />
+      </div>
+      <div className={styles.buttonContainer}>
+        <MDButton onClick={handleSubmit} variant="gradient" color="dark">
+          Creer
+        </MDButton>
       </div>
     </div>
   );
@@ -383,6 +410,9 @@ DevisAddingModal.propTypes = {
     reception_date: PropTypes.string,
     etat_ralance: PropTypes.string,
     derniere_relance_date: PropTypes.string,
+    section: PropTypes.string,
+    parcelle: PropTypes.string,
+    numero_DP: PropTypes.string,
     is_active: PropTypes.bool,
     conformite: PropTypes.bool,
     valide_par_SFR: PropTypes.bool,
