@@ -1,29 +1,37 @@
 import { supabase } from "../../../config/supabaseClient.js";
-// Validate Prospect 
-const getValidatePropsect = async (selectedNoDr) => {
-    try {
-        const { data, error } = await supabase
-            .from('Devis')
-            .select(`
-                no_dr,
-                DR (Prospect!inner (section, parcelle)),
-                DP (numero_DP, Prospect!inner (section, parcelle))
-            `)
-            .eq('no_dr', selectedNoDr);  // Filter by the selected 'no_dr'
+// // Validate Prospect 
+// const getValidatePropsect = async (selectedNoDr) => {
+//     try {
+//         console.log('Fetching data for no_dr:', selectedNoDr);
 
-        if (error) {
-            throw new Error('Error fetching devis details: ' + error.message);
-        }
-        if (!data || data.length === 0) {
-            throw new Error('No details found for the selected no_dr.');
-        }
+//         const { data, error } = await supabase
+//             .from('Devis')
+//             .select(`
+//                 no_dr,
+//                 DP_fk,
+//                 DP (numero_DP),
+//                 DR (Prospect!inner(section, parcelle))
+//             `)
+//             .eq('no_dr', selectedNoDr);
 
-        return data[0];  // Return the first match (or adjust as needed)
-    } catch (err) {
-        console.error(err.message);
-        throw err;
-    }
-};
+//         if (error) {
+//             console.error('Supabase error:', error.message);
+//             throw new Error('Error fetching devis details: ' + error.message);
+//         }
+
+//         console.log('Fetched data:', data);
+
+//         if (!data || data.length === 0) {
+//             console.log('No data found for no_dr:', selectedNoDr);
+//             return null;
+//         }
+
+//         return data[0];
+//     } catch (err) {
+//         console.error('Error in getValidatePropsect:', err.message);
+//         throw err;
+//     }
+// };
 // get Active fournisseurs
 const getActiveFournisseurs = async () => {
     try {
@@ -78,24 +86,41 @@ const getActiveFacture = async (Sid) => {
 //Create Devis 
 const createDevis = async (EB, devisData) => {
     try {
-                const selectedNoDr = devisData.no_dr;
-                const fetchedDetails = await getValidatePropsect(selectedNoDr);
+    // Check if the ND already exists in the Devis table
+    const { data: existingDevis, error: fetchError, count } = await supabase
+      .from('Devis')
+      .select('ND')
+      .eq('ND', devisData.ND);
+
+    if (fetchError) throw fetchError;
+
+    if (count > 1) {
+      // More than one result returned, handle the error
+      throw new Error(`Multiple Devis found with ND ${devisData.ND}, expected only one.`);
+    }
+
+    if (count === 0) {
+      // No rows found, this is fine if you're inserting a new record
+      console.log(`No Devis found with ND ${devisData.ND}, proceeding with insert.`);
+    }
+                // const selectedNoDr = devisData.no_dr;
+                // const fetchedDetails = await getValidatePropsect(selectedNoDr);
         
-                if (!fetchedDetails) {
-                    throw new Error('No details found for the selected no_dr.');
-                }
+                // if (!fetchedDetails) {
+                //     throw new Error('No details found for the selected no_dr.');
+                // }
         
-                const { section, parcelle, numero_DP } = fetchedDetails;
+                // const { section, parcelle, numero_DP } = fetchedDetails;
         
-                if (
-                    devisData.section !== section ||
-                    devisData.parcelle !== parcelle ||
-                    devisData.numero_DP !== numero_DP
-                ) {
-                    throw new Error(
-                        'Validation failed: The provided section, parcelle, or numero_DP does not match the database records.'
-                    );
-                }
+                // if (
+                //     devisData.section !== section ||
+                //     devisData.parcelle !== parcelle ||
+                //     devisData.numero_DP !== numero_DP
+                // ) {
+                //     throw new Error(
+                //         'Validation failed: The provided section, parcelle, or numero_DP does not match the database records.'
+                //     );
+                // }
         // Fetch active fournisseurs
         const activeFournResponse = await getActiveFournisseurs();
         if (!activeFournResponse.success || !Array.isArray(activeFournResponse.data)) {
@@ -367,6 +392,6 @@ const devisModel = {
     getActiveFournisseurs,
     getActiveFacture,
     getActivePais,
-    getValidatePropsect,
+    // getValidatePropsect,
 }
 export default devisModel ; 

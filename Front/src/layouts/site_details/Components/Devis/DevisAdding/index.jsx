@@ -117,10 +117,11 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
       setErrors(newErrors);
       return;
     }
+    const selectedFournisseur = activeFrns.find(f => f.nom === formData.fournisseur.nom);
 
     const devisData = {
       ND: formData.ND,
-      fournisseur: formData.fournisseur.nom,
+      fournisseur: selectedFournisseur ? selectedFournisseur.id : null,
       no_dr: formData.no_dr,
       type_devis: formData.type_devis,
       devis_date: formData.devis_date,
@@ -131,23 +132,23 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
       reception_date: formData.reception_date,
       etat_ralance: formData.etat_ralance,
       derniere_relance_date: formData.derniere_relance_date,
-      section: formData.section,
-      parcelle: formData.parcelle,
-      numero_DP: formData.numero_DP,
+      //   section: formData.section,
+      //   parcelle: formData.parcelle,
+      //   numero_DP: formData.numero_DP,
       is_active: isActive,
       conformite: isConforme,
       valide_par_SFR: isValide,
     };
     // Validation checks
-    if (devisData.section !== formData.section) {
-      throw new Error('Validation failed: Incorrect section provided.');
-    }
-    if (devisData.parcelle !== formData.parcelle) {
-      throw new Error('Validation failed: Incorrect parcelle provided.');
-    }
-    if (devisData.numero_DP !== formData.numero_DP) {
-      throw new Error('Validation failed: Incorrect numero_DP provided.');
-    }
+    // if (devisData.section !== formData.section) {
+    //   throw new Error('Validation failed: Incorrect section provided.');
+    // }
+    // if (devisData.parcelle !== formData.parcelle) {
+    //   throw new Error('Validation failed: Incorrect parcelle provided.');
+    // }
+    // if (devisData.numero_DP !== formData.numero_DP) {
+    //   throw new Error('Validation failed: Incorrect numero_DP provided.');
+    // }
     console.log('devis data :', devisData);
     onSave({ Sid, devisData });
   };
@@ -360,7 +361,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           </MDTypography>
           <MDBox display="flex" gap={2}></MDBox>
         </MDBox>
-        <MDInput
+        {/* <MDInput
           name="numero_DP"
           value={formData.numero_DP || ''}
           onChange={handleChange}
@@ -383,7 +384,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           placeholder="Parcelle"
           style={{ marginBottom: '5px', width: '300px' }}
           required
-        />
+        /> */}
       </div>
       <div className={styles.buttonContainer}>
         <MDButton onClick={handleSubmit} variant="gradient" color="dark">
@@ -410,9 +411,9 @@ DevisAddingModal.propTypes = {
     reception_date: PropTypes.string,
     etat_ralance: PropTypes.string,
     derniere_relance_date: PropTypes.string,
-    section: PropTypes.string,
-    parcelle: PropTypes.string,
-    numero_DP: PropTypes.string,
+    // section: PropTypes.string,
+    // parcelle: PropTypes.string,
+    // numero_DP: PropTypes.string,
     is_active: PropTypes.bool,
     conformite: PropTypes.bool,
     valide_par_SFR: PropTypes.bool,

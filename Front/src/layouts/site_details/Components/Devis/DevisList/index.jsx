@@ -53,6 +53,9 @@ function DevisList() {
     }
     const { fournisseurName, ...filteredUpdates } = updates;
     try {
+      if (fournisseur && fournisseur.nom) {
+        filteredUpdates.fournisseur_id = fournisseur.id; // Assuming 'id' is the supplier ID
+      }
       const result = await SiteDevisService.updateDevis(devisId, filteredUpdates);
       let successMessage = '';
       if (result.success) {
