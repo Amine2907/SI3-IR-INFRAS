@@ -1,37 +1,42 @@
 import { supabase } from "../../../config/supabaseClient.js";
 // // Validate Prospect 
-// const getValidatePropsect = async (selectedNoDr) => {
-//     try {
-//         console.log('Fetching data for no_dr:', selectedNoDr);
+const getValidatePropsect = async (selectedNoDr) => {
+    try {
+        console.log('Fetching data for no_dr:', selectedNoDr);
+        const { data, error } = await supabase
+        .from('Devis')
+        .select(`
+            no_dr,
+            DR (
+                Pro_fk (
+                    section,
+                    parcelle
+                )
+            ),
+            DP (
+                numero_DP,
+                PRid_fk
+            )
+        `)
+        .eq('no_dr', selectedNoDr);
+        if (error) {
+            console.error('Supabase error:', error.message);
+            throw new Error('Error fetching devis details: ' + error.message);
+        }
 
-//         const { data, error } = await supabase
-//             .from('Devis')
-//             .select(`
-//                 no_dr,
-//                 DP_fk,
-//                 DP (numero_DP),
-//                 DR (Prospect!inner(section, parcelle))
-//             `)
-//             .eq('no_dr', selectedNoDr);
+        console.log('Fetched data:', data);
 
-//         if (error) {
-//             console.error('Supabase error:', error.message);
-//             throw new Error('Error fetching devis details: ' + error.message);
-//         }
+        if (!data || data.length === 0) {
+            console.log('No data found for no_dr:', selectedNoDr);
+            return null;
+        }
 
-//         console.log('Fetched data:', data);
-
-//         if (!data || data.length === 0) {
-//             console.log('No data found for no_dr:', selectedNoDr);
-//             return null;
-//         }
-
-//         return data[0];
-//     } catch (err) {
-//         console.error('Error in getValidatePropsect:', err.message);
-//         throw err;
-//     }
-// };
+        return data[0];
+    } catch (err) {
+        console.error('Error in getValidatePropsect:', err.message);
+        throw err;
+    }
+};
 // get Active fournisseurs
 const getActiveFournisseurs = async () => {
     try {
@@ -103,24 +108,24 @@ const createDevis = async (EB, devisData) => {
       // No rows found, this is fine if you're inserting a new record
       console.log(`No Devis found with ND ${devisData.ND}, proceeding with insert.`);
     }
-                // const selectedNoDr = devisData.no_dr;
-                // const fetchedDetails = await getValidatePropsect(selectedNoDr);
+                const selectedNoDr = devisData.no_dr;
+                const fetchedDetails = await getValidatePropsect(selectedNoDr);
         
-                // if (!fetchedDetails) {
-                //     throw new Error('No details found for the selected no_dr.');
-                // }
+                if (!fetchedDetails) {
+                    throw new Error('No details found for the selected no_dr.');
+                }
         
-                // const { section, parcelle, numero_DP } = fetchedDetails;
+                const { section, parcelle, numero_DP } = fetchedDetails;
         
-                // if (
-                //     devisData.section !== section ||
-                //     devisData.parcelle !== parcelle ||
-                //     devisData.numero_DP !== numero_DP
-                // ) {
-                //     throw new Error(
-                //         'Validation failed: The provided section, parcelle, or numero_DP does not match the database records.'
-                //     );
-                // }
+                if (
+                    devisData.section !== section ||
+                    devisData.parcelle !== parcelle ||
+                    devisData.numero_DP !== numero_DP
+                ) {
+                    throw new Error(
+                        'Validation failed: The provided section, parcelle, or numero_DP does not match the database records.'
+                    );
+                }
         // Fetch active fournisseurs
         const activeFournResponse = await getActiveFournisseurs();
         if (!activeFournResponse.success || !Array.isArray(activeFournResponse.data)) {
