@@ -15,48 +15,56 @@ const getValidatePropsect = async (selectedNoDr) => {
                     )
                 )
             `)
-            .eq('no_dr', selectedNoDr)
-            .single();
+            .eq('no_dr', selectedNoDr); // Removed .single() to allow multiple rows
 
         if (error) {
             console.error('Supabase error:', error.message);
             throw new Error('Error fetching devis details: ' + error.message);
         }
 
+        if (!data || data.length === 0) {
+            console.log('No data found for no_dr:', selectedNoDr);
+            return [];
+        }
+
         console.log('Fetched data:', data);
 
-        if (!data) {
-            console.log('No data found for no_dr:', selectedNoDr);
-            return null;
-        }
+        // Extract details for each row
+        const results = await Promise.all(data.map(async (row) => {
+            const section = row.DR?.Prospect?.section;
+            const parcelle = row.DR?.Prospect?.parcelle;
+            const Pro_fk = row.DR?.Pro_fk;
 
-        // Extract nested data
-        const section = data.DR?.Prospect?.section;
-        const parcelle = data.DR?.Prospect?.parcelle;
-        const Pro_fk = data.DR?.Pro_fk;
+            if (!Pro_fk) {
+                console.warn(`Missing Pro_fk for row:`, row);
+                return { no_dr: row.no_dr, section, parcelle, numero_DP: null };
+            }
 
-        // Fetch numero_DP from DP table
-        const { data: dpData, error: dpError } = await supabase
-            .from('DP')
-            .select('numero_DP')
-            .eq('PRid_fk', Pro_fk)
-            .single();
+            const { data: dpData, error: dpError } = await supabase
+                .from('DP')
+                .select('numero_DP')
+                .eq('PRid_fk', Pro_fk)
+                .single();
 
-        if (dpError) {
-            console.error('Error fetching DP data:', dpError.message);
-            throw new Error('Error fetching DP data: ' + dpError.message);
-        }
+            if (dpError) {
+                console.error('Error fetching DP data:', dpError.message);
+                throw new Error('Error fetching DP data: ' + dpError.message);
+            }
 
-        const numero_DP = dpData?.numero_DP;
+            const numero_DP = dpData?.numero_DP;
 
-        console.log('Extracted data:', { no_dr: data.no_dr, section, parcelle, numero_DP });
+            return { no_dr: row.no_dr, section, parcelle, numero_DP };
+        }));
 
-        return { no_dr: data.no_dr, section, parcelle, numero_DP };
+        console.log('Extracted data:', results);
+
+        return results;
     } catch (err) {
         console.error('Error in getValidatePropsect:', err.message);
         throw err;
     }
 };
+
 // get Active fournisseurs
 const getActiveFournisseurs = async () => {
     try {
@@ -111,106 +119,82 @@ const getActiveFacture = async (Sid) => {
 //Create Devis 
 const createDevis = async (EB, devisData) => {
     try {
-    // Check if the ND already exists in the Devis table
-    const { data: existingDevis, error: fetchError, count } = await supabase
-      .from('Devis')
-      .select('ND')
-      .eq('ND', devisData.ND);
+        console.log('Creating Devis with data:', devisData);
 
-    if (fetchError) throw fetchError;
+        const { data: existingDevis, error: fetchError, count } = await supabase
+            .from('Devis')
+            .select('ND', { count: 'exact' })
+            .eq('ND', devisData.ND);
 
-    if (count > 1) {
-      // More than one result returned, handle the error
-      throw new Error(`Multiple Devis found with ND ${devisData.ND}, expected only one.`);
-    }
+        if (fetchError) throw fetchError;
 
-    if (count === 0) {
-      // No rows found, this is fine if you're inserting a new record
-      console.log(`No Devis found with ND ${devisData.ND}, proceeding with insert.`);
-    }
-                const selectedNoDr = devisData.no_dr;
-                const fetchedDetails = await getValidatePropsect(selectedNoDr);
-        
-                if (!fetchedDetails) {
-                    throw new Error('No details found for the selected no_dr.');
-                }
-        
-                const { section, parcelle, numero_DP } = fetchedDetails;
-        
-                if (
-                    devisData.section !== section ||
-                    devisData.parcelle !== parcelle ||
-                    devisData.numero_DP !== numero_DP
-                ) {
-                    throw new Error(
-                        'Validation failed: The provided section, parcelle, or numero_DP does not match the database records.'
-                    );
-                }
-        // Fetch active fournisseurs
-        const activeFournResponse = await getActiveFournisseurs();
-        if (!activeFournResponse.success || !Array.isArray(activeFournResponse.data)) {
-            throw new Error('Failed to fetch active fournisseurs.');
-        }
-        const activeEntities = activeFournResponse.data;
-
-        // Map fournisseur.nom -> Eid
-        if (devisData.fournisseur?.nom) {
-            const frns = activeEntities.find(e => e.nom === devisData.fournisseur.nom);
-            if (!frns) {
-                throw new Error(`Fournisseur not found for name: ${devisData.fournisseur.nom}`);
-            }
-            devisData.fournisseur = frns.Eid; // Ensure Eid is a number
+        if (count > 1) {
+            throw new Error(`Multiple Devis found with ND ${devisData.ND}, expected only one.`);
         }
 
-        // Fetch active paiements
-        const activePaisResponse = await getActivePais(EB);
-        if (!activePaisResponse.success || !Array.isArray(activePaisResponse.data)) {
-            throw new Error('Failed to fetch active paiements.');
-        }
-        const activePaies = activePaisResponse.data;
-
-        // Map no_paie.Pid -> Pid
-        if (devisData.no_paie?.Pid) {
-            const paiement = activePaies.find(p => p.Pid === parseInt(devisData.no_paie.Pid, 10));
-            if (!paiement) {
-                throw new Error(`Paiement not found for Pid: ${devisData.no_paie.Pid}`);
-            }
-            devisData.no_paie = paiement.Pid; // Ensure Pid is numeric
+        if (count === 0) {
+            console.log(`No Devis found with ND ${devisData.ND}, proceeding with insert.`);
         }
 
-        // Fetch active factures
-        const activefactureResponse = await getActiveFacture(EB);
-        if (!activefactureResponse.success || !Array.isArray(activefactureResponse.data)) {
-            throw new Error('Failed to fetch active factures.');
-        }
-        const activeFacture = activefactureResponse.data;
+        const selectedNoDr = devisData.no_dr;
+        const fetchedDetails = await getValidatePropsect(selectedNoDr);
 
-        // Map no_devis.no_fac -> ID
-        if (devisData.factures?.no_fac) {
-            const facture = activeFacture.find(d => d.no_fac === devisData.no_devis.no_fac);
-            if (!facture) {
-                throw new Error(`Facture not found for ND: ${devisData.no_devis.no_fac}`);
-            }
-            devisData.no_devis = facture.no_fac;
+        if (!fetchedDetails || fetchedDetails.length === 0) {
+            throw new Error('No details found for the selected no_dr.');
         }
 
-        // Remove invalid fields if necessary
-        if (!devisData.factures || !devisData.factures.no_fac) {
-            delete devisData.factures;
-        }
-        if (!devisData.no_paie || !devisData.no_paie.Pid) {
-            delete devisData.no_paie;
+        console.log('Fetched details:', fetchedDetails);
+
+        const providedDetails = {
+            section: devisData.section,
+            parcelle: devisData.parcelle,
+            numero_DP: devisData.numero_DP,
+        };
+
+        console.log('Provided data:', providedDetails);
+
+        const isValid = fetchedDetails.some((fetched) =>
+            fetched.section?.toString() === providedDetails.section?.toString() &&
+            fetched.parcelle?.toString() === providedDetails.parcelle?.toString() &&
+            fetched.numero_DP?.toString() === providedDetails.numero_DP?.toString()
+        );
+
+        if (!isValid) {
+            console.error('Validation failed. Fetched:', fetchedDetails);
+            console.error('Provided:', providedDetails);
+            throw new Error(
+                'Validation failed: None of the fetched records match the provided section, parcelle, and numero_DP.'
+            );
         }
 
-        // Insert into Devis table
+        // Prepare the data for insertion
+        const newDevisData = {
+            no_dr: devisData.no_dr,
+            ND: devisData.ND,
+            type_devis: devisData.type_devis,
+            devis_date: devisData.devis_date,
+            montant: devisData.montant,
+            code_postal_lieu: devisData.code_postal_lieu,
+            code_paiement: devisData.code_paiement,
+            expiration_date: devisData.expiration_date,
+            reception_date: devisData.reception_date,
+            etat_ralance: devisData.etat_ralance,
+            derniere_relance_date: devisData.derniere_relance_date,
+            is_active: devisData.is_active,
+            conformite: devisData.conformite,
+            valide_par_SFR: devisData.valide_par_SFR,
+            numero_DP: devisData.numero_DP,
+            section: devisData.section,
+            parcelle: devisData.parcelle,
+        };
+
         const { data: devis, error: contactError } = await supabase
             .from('Devis')
-            .insert([{ EB_fk: EB, ...devisData }])
+            .insert([{ EB_fk: EB, ...newDevisData }])
             .select();
 
         if (contactError) throw contactError;
 
-        // Link Devis with the site
         const Did = devis[0].ND;
         const { error: siteDevisError } = await supabase
             .from('Site-Devis')
@@ -224,7 +208,6 @@ const createDevis = async (EB, devisData) => {
         throw error;
     }
 };
-
 //getAllDevis
 const getAllDevis = async(EB) => {
     try {
