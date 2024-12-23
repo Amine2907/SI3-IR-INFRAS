@@ -15,7 +15,6 @@
 .formGrid > *:first-child {
   margin-right: 8px; /* Add specific margin to the first field */
 }
-
 .buttonContainer {
   display: flex;
   justify-content: flex-start;

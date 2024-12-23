@@ -361,30 +361,32 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           </MDTypography>
           <MDBox display="flex" gap={2}></MDBox>
         </MDBox>
-        <MDInput
-          name="numero_DP"
-          value={formData.numero_DP || ''}
-          onChange={handleChange}
-          placeholder="N DP"
-          style={{ marginBottom: '5px', width: '300px' }}
-          required
-        />
-        <MDInput
-          name="section"
-          value={formData.section || ''}
-          onChange={handleChange}
-          placeholder="Section"
-          style={{ marginBottom: '5px', width: '300px' }}
-          required
-        />
-        <MDInput
-          name="parcelle"
-          value={formData.parcelle || ''}
-          onChange={handleChange}
-          placeholder="Parcelle"
-          style={{ marginBottom: '5px', width: '300px' }}
-          required
-        />
+        <div className={styles.formGrid}>
+          <MDInput
+            name="numero_DP"
+            value={formData.numero_DP || ''}
+            onChange={handleChange}
+            placeholder="N DP"
+            style={{ marginBottom: '5px', width: '300px' }}
+            required
+          />
+          <MDInput
+            name="section"
+            value={formData.section || ''}
+            onChange={handleChange}
+            placeholder="Section"
+            style={{ marginBottom: '5px', width: '300px' }}
+            required
+          />
+          <MDInput
+            name="parcelle"
+            value={formData.parcelle || ''}
+            onChange={handleChange}
+            placeholder="Parcelle"
+            style={{ marginBottom: '5px', width: '300px' }}
+            required
+          />
+        </div>
       </div>
       <div className={styles.buttonContainer}>
         <MDButton onClick={handleSubmit} variant="gradient" color="dark">
