@@ -4,20 +4,14 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
-import ProspectStorageService from 'services/site_details/Prospect/prospectStorageService';
 const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
   const [files, setFiles] = useState([]); // List of files
   const [errors, setErrors] = useState({});
-  // Form validation
-  const validateForm = () => {
-    const newErrors = {};
-    return newErrors;
-  };
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await ProspectStorageService.generateProspectSignedUrl();
+        // const response = await prospectStorageService.generateprospectSignedUrl();
         if (response.success) {
           setFiles(
             response.data.map(file => ({
@@ -27,14 +21,20 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
             }))
           );
         } else {
-          console.error('Error fetching Prospect files:', response.error);
+          console.error('Error fetching prospect files:', response.error);
         }
       } catch (error) {
-        console.error('Error fetching Prospect files:', error);
+        console.error('Error fetching prospect files:', error);
       }
     };
     fetchFiles();
   }, []);
+  // Form validation
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.nom) newErrors.nom = true;
+    return newErrors;
+  };
   // Submit form
   const handleSubmit = async () => {
     const newErrors = validateForm();
@@ -47,8 +47,8 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
       return;
     }
     const file = files[0]; // Get the first file from the files array
-    // Call the uploadDp function
-    const result = await ProspectStorageService.uploadProspectFile(file);
+    // Call the uploadprospect function
+    // const result = await prospectStorageService.uploadprospect(file);
     if (result.success) {
       // Handle successful upload
       console.log('File uploaded successfully:', result.data);
@@ -59,25 +59,28 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
   };
   // Add new file
   const handleAddFile = event => {
-    const newFile = event.target.files[0]; // Get the selected file
+    const newFile = event.target.files[0];
     if (newFile) {
       setFiles([{ id: Date.now(), name: newFile.name, url: URL.createObjectURL(newFile) }]);
     }
   };
+  // Download a file
   const handleDownloadFile = file => {
     const link = document.createElement('a');
     link.href = file.url;
     link.download = file.name;
     link.click();
   };
+  // Delete a file
   const handleDeleteFile = fileId => {
     setFiles(prevFiles => prevFiles.filter(file => file.id !== fileId));
   };
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <Typography variant="h6" gutterBottom align="center">
-          Prospect Fichiers
+          Prosoect Fichier
         </Typography>
         {/* List of files */}
         <div className={styles.fileList}>
@@ -91,7 +94,7 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
                   color="success"
                   size="small"
                 >
-                  Download
+                  Enregistrer
                 </MDButton>
                 <MDButton
                   onClick={() => handleDeleteFile(file.id)}
@@ -100,22 +103,21 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
                   size="small"
                   style={{ marginLeft: '10px' }}
                 >
-                  Delete
+                  Supprimer
                 </MDButton>
               </div>
             </div>
           ))}
           {files.length === 0 && <p>No files available. Fetch or add files.</p>}
         </div>
-        {/* Button to add a new file */}
         <div className={styles.addFile}>
           <input
-            id="file-upload-prospect"
+            id="file-upload"
             type="file"
             style={{ display: 'none' }}
             onChange={handleAddFile}
           />
-          <label htmlFor="file-upload-prospect">
+          <label htmlFor="file-upload">
             <MDButton variant="gradient" color="dark" component="span">
               Ajouter un neauveau fichier
             </MDButton>
@@ -123,7 +125,7 @@ const ProspectStorageModal = ({ prospect, onSave, onClose }) => {
         </div>
         {/* Form buttons */}
         <div className={styles.buttonContainer}>
-          <MDButton onClick={handleSubmit} variant="gradient" color="dark">
+          <MDButton onClick={onSave} variant="gradient" color="dark">
             Enregistrer
           </MDButton>
           <MDButton onClick={onClose} variant="gradient" color="dark">

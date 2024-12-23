@@ -17,9 +17,11 @@ import useDpsForProspects from './DeclPreal/declpreaService';
 import ProspectDpService from 'services/site_details/DP/DpService';
 import DpUModal from 'examples/popup/DeclPreaPopUp/DpPopUp';
 import MDAlert from 'components/MDAlert';
+import DpStorageModal from 'examples/popup/DpStoragePopUp';
 function DeclPreaList() {
   const [showModal, setShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
   const { EB } = location.state || {};
@@ -32,8 +34,15 @@ function DeclPreaList() {
     setShowModal(true);
     setIsModalOpen(true);
   };
+  const handleOpenModal = () => {
+    setShowUploadModal(true);
+  };
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+  const handleUploadDp = () => {
+    // Upload logic here
+    null;
   };
   const handleUpdate = async updates => {
     const DPid = selecteddp?.DPid;
@@ -130,12 +139,20 @@ function DeclPreaList() {
                     edit
                   </Icon>
                 </TableCell>
+                <TableCell title="Modifier dp" placement="top">
+                  <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={handleOpenModal}>
+                    add
+                  </Icon>
+                </TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </table>
       {showModal && <DpUModal dp={selecteddp} onSave={handleUpdate} onClose={handleCloseModal} />}
+      {showUploadModal && (
+        <DpStorageModal declprea={selecteddp} onSave={handleUploadDp} onClose={handleCloseModal} />
+      )}
       {/* Display Alert if there's an error */}
       {alert.show && (
         <MDAlert

@@ -1,0 +1,66 @@
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    padding: 1.5rem;
+  }
+  
+  .modalContent {
+    padding: 1rem;
+  }
+  h3 {
+    margin-bottom: 15px;
+  }
+  
+  input {
+    font-size: 14px;
+    padding: 8px;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+  }
+  
+  .formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 15px;
+  }
+  
+  button {
+    margin-right: 10px;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 100%;
+  }
+  /* Add a backdrop for the modal */
+  .modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+  .fileList {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .addFile {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  

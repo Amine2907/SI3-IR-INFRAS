@@ -4,15 +4,14 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
-import DpStorageService from 'services/site_details/DP/dpStorageService';
-const DpStorageModal = ({ dp, onSave, onClose }) => {
-  const [formData, setFormData] = useState(dp || {});
+const DrUploadModal = ({ demrac, onSave, onClose }) => {
+  const [formData, setFormData] = useState(demrac || {});
   const [files, setFiles] = useState([]); // List of files
   const [errors, setErrors] = useState({});
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await DpStorageService.generateDpSignedUrl();
+        // const response = await demracStorageService.generatedemracSignedUrl();
         if (response.success) {
           setFiles(
             response.data.map(file => ({
@@ -22,10 +21,10 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
             }))
           );
         } else {
-          console.error('Error fetching DP files:', response.error);
+          console.error('Error fetching demrac files:', response.error);
         }
       } catch (error) {
-        console.error('Error fetching DP files:', error);
+        console.error('Error fetching demrac files:', error);
       }
     };
     fetchFiles();
@@ -48,8 +47,8 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
       return;
     }
     const file = files[0]; // Get the first file from the files array
-    // Call the uploadDp function
-    const result = await DpStorageService.uploadDp(file);
+    // Call the uploaddemrac function
+    // const result = await demracStorageService.uploaddemrac(file);
     if (result.success) {
       // Handle successful upload
       console.log('File uploaded successfully:', result.data);
@@ -81,7 +80,7 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <Typography variant="h6" gutterBottom align="center">
-          DPS Fichiers
+          Demande raccordement Fichier
         </Typography>
         {/* List of files */}
         <div className={styles.fileList}>
@@ -126,7 +125,7 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
         </div>
         {/* Form buttons */}
         <div className={styles.buttonContainer}>
-          <MDButton onClick={handleSubmit} variant="gradient" color="dark">
+          <MDButton onClick={onSave} variant="gradient" color="dark">
             Enregistrer
           </MDButton>
           <MDButton onClick={onClose} variant="gradient" color="dark">
@@ -137,9 +136,9 @@ const DpStorageModal = ({ dp, onSave, onClose }) => {
     </div>
   );
 };
-DpStorageModal.propTypes = {
-  dp: PropTypes.object,
+DrUploadModal.propTypes = {
+  demrac: PropTypes.object,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-export default DpStorageModal;
+export default DrUploadModal;

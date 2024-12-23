@@ -64,7 +64,6 @@ const getValidatePropsect = async (selectedNoDr) => {
         throw err;
     }
 };
-
 // get Active fournisseurs
 const getActiveFournisseurs = async () => {
     try {

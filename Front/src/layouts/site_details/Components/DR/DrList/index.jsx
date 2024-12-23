@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import SiteDemracService from 'services/site_details/DR/DrService';
 import usedemracData from './DrService';
 import statusPropValues from './DrData';
-import DrUpdateModal from 'examples/popup/DrPopUp/Update/DrUpdatePopUp';
+import DrUploadModal from 'examples/popup/DrPopUp/Upload/DrUploadPopUp';
 function DemRacList({ site }) {
   const { demracData, loading, error, fetchDemracData } = usedemracData(site);
   const [showModal, setShowModal] = useState(false);
@@ -25,6 +25,7 @@ function DemRacList({ site }) {
   const location = useLocation();
   const { EB } = location.state || {};
   const [selecteddemrac, setSelecteddemrac] = useState(null);
+  const [showUploadModal, setshowUploadModal] = useState(false);
   const Sid = EB;
   const handleEdit = demrac => {
     setSelecteddemrac(demrac);
@@ -32,12 +33,20 @@ function DemRacList({ site }) {
   };
   const handleCloseModal = () => {
     setShowModal(false);
+    setshowUploadModal(false);
   };
   useEffect(() => {
     if (Sid) {
       fetchDemracData();
     }
   }, [site, fetchDemracData]);
+  const handleOpenModal = () => {
+    setshowUploadModal(true);
+  };
+  const handleUpload = () => {
+    // uplaoding logic here
+    null;
+  };
   // update a site's demrac
   const handleUpdate = async updates => {
     const NDRid = selecteddemrac?.NDRid;
@@ -145,12 +154,20 @@ function DemRacList({ site }) {
                         edit
                       </Icon>
                     </TableCell>
+                    <TableCell title="Ajouter demrac " placement="top">
+                      <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={handleOpenModal}>
+                        add
+                      </Icon>
+                    </TableCell>
                   </TableRow>
                 );
               })}
             </TableBody>
           </table>
         </>
+      )}
+      {showUploadModal && (
+        <DrUploadModal demrac={selecteddemrac} onSave={handleUpload} onClose={handleCloseModal} />
       )}
 
       {showModal && (

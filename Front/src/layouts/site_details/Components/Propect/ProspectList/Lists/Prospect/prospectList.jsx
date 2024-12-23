@@ -20,9 +20,11 @@ import CombinedModal from 'examples/popup/PropsectDpPopUp/CombinedPopUp';
 import ProspectDpService from 'services/site_details/DP/DpService';
 import { statusValidationValues } from './ProspectData';
 import useDpsForProspects from '../DeclPreal/declpreaService';
+import ProspectStorageModal from 'examples/popup/PropsectStoragePopUp';
 function ProspectList({ site }) {
   const { prospectsData, loading, error, fetchProspectsData } = useProspectsData(site);
   const [showModal, setShowModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
@@ -37,8 +39,16 @@ function ProspectList({ site }) {
     setShowModal(true);
     setIsModalOpen(true);
   };
+  const handleOpenModal = () => {
+    setShowUploadModal(true);
+  };
   const handleCloseModal = () => {
     setShowModal(false);
+    setShowUploadModal(false);
+  };
+  const handleUploadPropsect = () => {
+    // uploading file logic here
+    null;
   };
   useEffect(() => {
     if (prospectsData && prospectsData.length > 0) {
@@ -184,11 +194,23 @@ function ProspectList({ site }) {
                     edit
                   </Icon>
                 </TableCell>
+                <TableCell title="Ajouter Prospect " placement="top">
+                  <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={handleOpenModal}>
+                    add
+                  </Icon>
+                </TableCell>
               </TableRow>
             );
           })}
         </TableBody>
       </table>
+      {showUploadModal && (
+        <ProspectStorageModal
+          prospect={selectedprospect}
+          onSave={handleUploadPropsect}
+          onClose={handleCloseModal}
+        />
+      )}
       {showModal && (
         <CombinedModal
           open={isModalOpen}
@@ -197,7 +219,7 @@ function ProspectList({ site }) {
           dp={selectedDp}
           onSaveProspect={handleUpdate}
           onSaveDp={handleSaveDp}
-          onClose={() => setIsModalOpen(false)}
+          onClose={handleCloseModal}
         />
       )}
       {/* Display Alert if there's an error */}

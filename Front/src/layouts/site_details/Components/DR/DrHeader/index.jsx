@@ -14,7 +14,6 @@ import PropTypes from 'prop-types';
 function DemRacHeader({ site }) {
   const { fetchDemracData } = usedemracData(site);
   const [showModal, setShowModal] = useState(false);
-  const [showUploadModal, setshowUploadModal] = useState(false);
   const [alert, setAlert] = useState(false);
   const [selecteddemrac, setSelecteddemrac] = useState(null);
   const location = useLocation();
@@ -22,9 +21,6 @@ function DemRacHeader({ site }) {
   const Sid = EB;
   const handleCloseModal = () => {
     setShowModal(false);
-  };
-  const handleUpload = async () => {
-    setshowUploadModal(true);
   };
   const handleAddDr = () => {
     setShowModal(true);
@@ -72,9 +68,6 @@ function DemRacHeader({ site }) {
           <MDBox display="flex" gap={2}>
             <MDButton onClick={handleAddDr} variant="gradient" color="dark">
               <Icon sx={{ fontWeight: 'bold' }}>add</Icon>&nbsp;Ajouter DR
-            </MDButton>
-            <MDButton onClick={handleUpload} variant="gradient" color="dark">
-              <Icon sx={{ fontWeight: 'bold' }}>upload</Icon>&nbsp;Telecharger
             </MDButton>
           </MDBox>
         </MDBox>
