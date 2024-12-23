@@ -1,0 +1,69 @@
+.formGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px; /* Significantly reduced gap */
+    justify-content: flex-start; /* Changed to flex-start for tighter control */
+  }
+  
+  .formGrid > * {
+    flex: 0 0 auto; /* Changed to prevent flex growing */
+    width: 200px; /* Fixed width instead of percentage */
+    box-sizing: border-box;
+  }
+  
+  /* Add margin-right to the first field */
+  .formGrid > *:first-child {
+    margin-right: 8px; /* Add specific margin to the first field */
+  }
+  .buttonContainer {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 8px;
+    width: 100%;
+  }
+  
+  select,
+  input {
+    font-size: 12px;
+    padding: 4px 6px; /* Further reduced padding */
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+    height: 28px; /* Set specific height for consistency */
+  }
+  
+  select:focus,
+  input:focus {
+    border-color: #1976d2;
+    outline: none;
+  }
+  
+  button {
+    padding: 4px 12px;
+    font-size: 12px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    height: 28px; /* Match height with inputs */
+  }
+  
+  button:hover {
+    opacity: 0.9;
+  }
+  .switchContainer {
+      display: flex;
+      flex-direction: raw;
+      gap: 5px; /* Adds spacing between the switches */
+    }
+    
+    .switchItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between; /* Space between the label and switch */
+    }
+    
+    .switchItem label {
+      margin-right: 10px; /* Adds space between the label and the switch */
+    }
+  
