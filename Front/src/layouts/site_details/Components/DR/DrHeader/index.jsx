@@ -10,11 +10,9 @@ import SiteDemracService from 'services/site_details/DR/DrService';
 import MDAlert from 'components/MDAlert';
 import DrAddModal from 'examples/popup/DrPopUp/Add/DrAddPopUp';
 import usedemracData from '../DrList/DrService';
-import { Alert, AlertDescription } from 'components/ui/alert';
 import PropTypes from 'prop-types';
 function DemRacHeader({ site }) {
-  const { demracData, loading, error, fetchDemracData } = usedemracData(site);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { fetchDemracData } = usedemracData(site);
   const [showModal, setShowModal] = useState(false);
   const [showUploadModal, setshowUploadModal] = useState(false);
   const [alert, setAlert] = useState(false);
@@ -27,7 +25,6 @@ function DemRacHeader({ site }) {
   };
   const handleUpload = async () => {
     setshowUploadModal(true);
-    setIsModalOpen(true);
   };
   const handleAddDr = () => {
     setShowModal(true);
@@ -64,29 +61,9 @@ function DemRacHeader({ site }) {
     }
     handleCloseModal();
   };
-  if (loading)
-    return (
-      <Alert variant="destructive" className="mt-4">
-        <AlertDescription>Chargement...</AlertDescription>
-      </Alert>
-    );
-  if (error)
-    return (
-      <Alert variant="destructive" className="mt-4">
-        <AlertDescription>Error: {String(error)}</AlertDescription>
-      </Alert>
-    );
-
-  if (!demracData.length)
-    return (
-      <Alert variant="destructive" className="mt-4">
-        <AlertDescription>
-          Aucune donnée des demracs pour ce site sont disponibles.
-        </AlertDescription>
-      </Alert>
-    );
   return (
     <div className="prospect-list">
+      {/* Card for "Demandes de raccordements" */}
       <Card id="prospect-card">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDTypography variant="h6" fontWeight="medium">
@@ -102,6 +79,7 @@ function DemRacHeader({ site }) {
           </MDBox>
         </MDBox>
       </Card>
+      {/* Modal for adding a new demande */}
       {showModal && (
         <DrAddModal
           Sid={Sid}

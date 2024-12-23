@@ -80,73 +80,79 @@ function DemRacList({ site }) {
     }
     handleCloseModal(); // Close the modal after save
   };
-  if (loading)
+  if (loading) {
     return (
       <Alert variant="destructive" className="mt-4">
         <AlertDescription>Chargement...</AlertDescription>
       </Alert>
     );
-  if (error)
+  }
+
+  if (error) {
     return (
       <Alert variant="destructive" className="mt-4">
         <AlertDescription>Error: {String(error)}</AlertDescription>
       </Alert>
     );
+  }
 
-  if (!demracData.length)
-    return (
-      <Alert variant="destructive" className="mt-4">
-        <AlertDescription>
-          Aucune donnée des demracs pour ce site sont disponibles.
-        </AlertDescription>
-      </Alert>
-    );
   return (
     <TableContainer>
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-        <Typography variant="h6">{demracData.length} Résultat(s)</Typography>
-      </Box>
-      <table>
-        <thead>
-          <TableRow>
-            <TableCell sx={cellStyle}>N Demande</TableCell>
-            <TableCell sx={cellStyle}>Nom Prospect</TableCell>
-            <TableCell sx={cellStyle}>DR DATE</TableCell>
-            <TableCell sx={cellStyle}>KO DATE </TableCell>
-            <TableCell sx={cellStyle}>Type de raccordement</TableCell>
-            <TableCell sx={cellStyle}>Status proposition</TableCell>
-            <TableCell sx={cellStyle}>Opearateurs</TableCell>
-            <TableCell sx={cellStyle}>Modifier</TableCell>
-          </TableRow>
-        </thead>
-        <TableBody>
-          {demracData.map(demrac => {
-            const statusProp = statusPropValues[demrac.SPRid_FK] || 'N/A';
-            return (
-              <TableRow key={demrac.id}>
-                <TableCell>{demrac.NDRid || 'N/A'}</TableCell>
-                <TableCell>{demrac.prospectName || 'N/A'}</TableCell>
-                <TableCell>{demrac.date_dr || 'N/A'}</TableCell>
-                <TableCell>{demrac.Ko_Dp || 'N/A'}</TableCell>
-                <TableCell>{demrac.type_rac || 'N/A'}</TableCell>
-                <TableCell>{statusProp}</TableCell>
-                <TableCell>
-                  {Array.isArray(demrac.operators) ? demrac.operators.join(', ') : 'N/A'}
-                </TableCell>
-                <TableCell title="Modifier demrac" placement="top">
-                  <Icon
-                    sx={{ cursor: 'pointer' }}
-                    fontSize="small"
-                    onClick={() => handleEdit(demrac)}
-                  >
-                    edit
-                  </Icon>
-                </TableCell>
+      {!demracData || !demracData.length ? (
+        <Alert variant="destructive" className="mt-4">
+          <AlertDescription>
+            Aucune donnée des demracs pour ce site sont disponibles.
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <>
+          <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+            <Typography variant="h6">{demracData.length} Résultat(s)</Typography>
+          </Box>
+          <table>
+            <thead>
+              <TableRow>
+                <TableCell sx={cellStyle}>N Demande</TableCell>
+                <TableCell sx={cellStyle}>Nom Prospect</TableCell>
+                <TableCell sx={cellStyle}>DR DATE</TableCell>
+                <TableCell sx={cellStyle}>KO DATE </TableCell>
+                <TableCell sx={cellStyle}>Type de raccordement</TableCell>
+                <TableCell sx={cellStyle}>Status proposition</TableCell>
+                <TableCell sx={cellStyle}>Opearateurs</TableCell>
+                <TableCell sx={cellStyle}>Modifier</TableCell>
               </TableRow>
-            );
-          })}
-        </TableBody>
-      </table>
+            </thead>
+            <TableBody>
+              {demracData.map(demrac => {
+                const statusProp = statusPropValues[demrac.SPRid_FK] || 'N/A';
+                return (
+                  <TableRow key={demrac.id}>
+                    <TableCell>{demrac.NDRid || 'N/A'}</TableCell>
+                    <TableCell>{demrac.prospectName || 'N/A'}</TableCell>
+                    <TableCell>{demrac.date_dr || 'N/A'}</TableCell>
+                    <TableCell>{demrac.Ko_Dp || 'N/A'}</TableCell>
+                    <TableCell>{demrac.type_rac || 'N/A'}</TableCell>
+                    <TableCell>{statusProp}</TableCell>
+                    <TableCell>
+                      {Array.isArray(demrac.operators) ? demrac.operators.join(', ') : 'N/A'}
+                    </TableCell>
+                    <TableCell title="Modifier demrac" placement="top">
+                      <Icon
+                        sx={{ cursor: 'pointer' }}
+                        fontSize="small"
+                        onClick={() => handleEdit(demrac)}
+                      >
+                        edit
+                      </Icon>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </table>
+        </>
+      )}
+
       {showModal && (
         <DrUpdateModal
           Sid={Sid}
@@ -155,7 +161,7 @@ function DemRacList({ site }) {
           onClose={handleCloseModal}
         />
       )}
-      {/* Display Alert if there's an error */}
+
       {alert.show && (
         <MDAlert
           color={alert.type}
