@@ -3,7 +3,6 @@ import { supabase } from "../../../config/supabaseClient.js";
 const getValidatePropsect = async (selectedNoDr) => {
     try {
         console.log('Fetching data for no_dr:', selectedNoDr);
-
         const { data, error } = await supabase
             .from('Devis')
             .select(`
@@ -110,193 +109,103 @@ const getActiveFacture = async (Sid) => {
     }
 };
 //Create Devis 
-// const createDevis = async (EB, devisData) => {
-//     try {
-//     // Check if the ND already exists in the Devis table
-//     const { data: existingDevis, error: fetchError, count } = await supabase
-//       .from('Devis')
-//       .select('ND')
-//       .eq('ND', devisData.ND);
-
-//     if (fetchError) throw fetchError;
-
-//     if (count > 1) {
-//       // More than one result returned, handle the error
-//       throw new Error(`Multiple Devis found with ND ${devisData.ND}, expected only one.`);
-//     }
-
-//     if (count === 0) {
-//       // No rows found, this is fine if you're inserting a new record
-//       console.log(`No Devis found with ND ${devisData.ND}, proceeding with insert.`);
-//     }
-//                 const selectedNoDr = devisData.no_dr;
-//                 const fetchedDetails = await getValidatePropsect(selectedNoDr);
-        
-//                 if (!fetchedDetails) {
-//                     throw new Error('No details found for the selected no_dr.');
-//                 }
-        
-//                 const { section, parcelle, numero_DP } = fetchedDetails;
-        
-//                 if (
-//                     devisData.section !== section ||
-//                     devisData.parcelle !== parcelle ||
-//                     devisData.numero_DP !== numero_DP
-//                 ) {
-//                     throw new Error(
-//                         'Validation failed: The provided section, parcelle, or numero_DP does not match the database records.'
-//                     );
-//                 }
-//         // Fetch active fournisseurs
-//         const activeFournResponse = await getActiveFournisseurs();
-//         if (!activeFournResponse.success || !Array.isArray(activeFournResponse.data)) {
-//             throw new Error('Failed to fetch active fournisseurs.');
-//         }
-//         const activeEntities = activeFournResponse.data;
-
-//         // Map fournisseur.nom -> Eid
-//         if (devisData.fournisseur?.nom) {
-//             const frns = activeEntities.find(e => e.nom === devisData.fournisseur.nom);
-//             if (!frns) {
-//                 throw new Error(`Fournisseur not found for name: ${devisData.fournisseur.nom}`);
-//             }
-//             devisData.fournisseur = frns.Eid; // Ensure Eid is a number
-//         }
-
-//         // Fetch active paiements
-//         const activePaisResponse = await getActivePais(EB);
-//         if (!activePaisResponse.success || !Array.isArray(activePaisResponse.data)) {
-//             throw new Error('Failed to fetch active paiements.');
-//         }
-//         const activePaies = activePaisResponse.data;
-
-//         // Map no_paie.Pid -> Pid
-//         if (devisData.no_paie?.Pid) {
-//             const paiement = activePaies.find(p => p.Pid === parseInt(devisData.no_paie.Pid, 10));
-//             if (!paiement) {
-//                 throw new Error(`Paiement not found for Pid: ${devisData.no_paie.Pid}`);
-//             }
-//             devisData.no_paie = paiement.Pid; // Ensure Pid is numeric
-//         }
-
-//         // Fetch active factures
-//         const activefactureResponse = await getActiveFacture(EB);
-//         if (!activefactureResponse.success || !Array.isArray(activefactureResponse.data)) {
-//             throw new Error('Failed to fetch active factures.');
-//         }
-//         const activeFacture = activefactureResponse.data;
-
-//         // Map no_devis.no_fac -> ID
-//         if (devisData.factures?.no_fac) {
-//             const facture = activeFacture.find(d => d.no_fac === devisData.no_devis.no_fac);
-//             if (!facture) {
-//                 throw new Error(`Facture not found for ND: ${devisData.no_devis.no_fac}`);
-//             }
-//             devisData.no_devis = facture.no_fac;
-//         }
-
-//         // Remove invalid fields if necessary
-//         if (!devisData.factures || !devisData.factures.no_fac) {
-//             delete devisData.factures;
-//         }
-//         if (!devisData.no_paie || !devisData.no_paie.Pid) {
-//             delete devisData.no_paie;
-//         }
-
-//         // Insert into Devis table
-//         const { data: devis, error: contactError } = await supabase
-//             .from('Devis')
-//             .insert([{ EB_fk: EB, ...devisData }])
-//             .select();
-
-//         if (contactError) throw contactError;
-
-//         // Link Devis with the site
-//         const Did = devis[0].ND;
-//         const { error: siteDevisError } = await supabase
-//             .from('Site-Devis')
-//             .insert([{ Sid: EB, Did }]);
-
-//         if (siteDevisError) throw siteDevisError;
-
-//         return { success: true, data: devis[0] };
-//     } catch (error) {
-//         console.error('Error in createDevis:', error.message);
-//         throw error;
-//     }
-// };
 const createDevis = async (EB, devisData) => {
     try {
-        console.log('Creating Devis with data:', devisData);
+    // Check if the ND already exists in the Devis table
+    const { data: existingDevis, error: fetchError, count } = await supabase
+      .from('Devis')
+      .select('ND')
+      .eq('ND', devisData.ND);
 
-        // Check if the ND already exists in the Devis table
-        const { data: existingDevis, error: fetchError, count } = await supabase
-            .from('Devis')
-            .select('ND', { count: 'exact' })
-            .eq('ND', devisData.ND);
+    if (fetchError) throw fetchError;
 
-        if (fetchError) throw fetchError;
+    if (count > 1) {
+      // More than one result returned, handle the error
+      throw new Error(`Multiple Devis found with ND ${devisData.ND}, expected only one.`);
+    }
 
-        if (count > 1) {
-            throw new Error(`Multiple Devis found with ND ${devisData.ND}, expected only one.`);
+    if (count === 0) {
+      // No rows found, this is fine if you're inserting a new record
+      console.log(`No Devis found with ND ${devisData.ND}, proceeding with insert.`);
+    }
+                const selectedNoDr = devisData.no_dr;
+                const fetchedDetails = await getValidatePropsect(selectedNoDr);
+        
+                if (!fetchedDetails) {
+                    throw new Error('No details found for the selected no_dr.');
+                }
+        
+                const { section, parcelle, numero_DP } = fetchedDetails;
+        
+                if (
+                    devisData.section !== section ||
+                    devisData.parcelle !== parcelle ||
+                    devisData.numero_DP !== numero_DP
+                ) {
+                    throw new Error(
+                        'Validation failed: The provided section, parcelle, or numero_DP does not match the database records.'
+                    );
+                }
+        // Fetch active fournisseurs
+        const activeFournResponse = await getActiveFournisseurs();
+        if (!activeFournResponse.success || !Array.isArray(activeFournResponse.data)) {
+            throw new Error('Failed to fetch active fournisseurs.');
+        }
+        const activeEntities = activeFournResponse.data;
+
+        // Map fournisseur.nom -> Eid
+        if (devisData.fournisseur?.nom) {
+            const frns = activeEntities.find(e => e.nom === devisData.fournisseur.nom);
+            if (!frns) {
+                throw new Error(`Fournisseur not found for name: ${devisData.fournisseur.nom}`);
+            }
+            devisData.fournisseur = frns.Eid; // Ensure Eid is a number
         }
 
-        if (count === 0) {
-            console.log(`No Devis found with ND ${devisData.ND}, proceeding with insert.`);
+        // Fetch active paiements
+        const activePaisResponse = await getActivePais(EB);
+        if (!activePaisResponse.success || !Array.isArray(activePaisResponse.data)) {
+            throw new Error('Failed to fetch active paiements.');
+        }
+        const activePaies = activePaisResponse.data;
+
+        // Map no_paie.Pid -> Pid
+        if (devisData.no_paie?.Pid) {
+            const paiement = activePaies.find(p => p.Pid === parseInt(devisData.no_paie.Pid, 10));
+            if (!paiement) {
+                throw new Error(`Paiement not found for Pid: ${devisData.no_paie.Pid}`);
+            }
+            devisData.no_paie = paiement.Pid; // Ensure Pid is numeric
         }
 
-        const selectedNoDr = devisData.no_dr;
-        const fetchedDetails = await getValidatePropsect(selectedNoDr);
-        
-        if (!fetchedDetails) {
-            throw new Error('No details found for the selected no_dr.');
+        // Fetch active factures
+        const activefactureResponse = await getActiveFacture(EB);
+        if (!activefactureResponse.success || !Array.isArray(activefactureResponse.data)) {
+            throw new Error('Failed to fetch active factures.');
         }
-        
-        const { section, parcelle, numero_DP } = fetchedDetails;
-        
-        console.log('Fetched details:', fetchedDetails);
-        console.log('Provided data:', { section: devisData.section, parcelle: devisData.parcelle, numero_DP: devisData.numero_DP });
-        
-        console.log('Validation check:');
-        console.log('Fetched:', { section, parcelle, numero_DP });
-        console.log('Provided:', { section: devisData.section, parcelle: devisData.parcelle, numero_DP: devisData.numero_DP });
+        const activeFacture = activefactureResponse.data;
 
-        if (
-            devisData.section !== section.toString() ||
-            devisData.parcelle !== parcelle.toString() ||
-            devisData.numero_DP !== numero_DP.toString()
-        ) {
-            console.log('Validation failed. Fetched:', { section, parcelle, numero_DP });
-            console.log('Provided:', { section: devisData.section, parcelle: devisData.parcelle, numero_DP: devisData.numero_DP });
-            throw new Error(
-                'Validation failed: The provided section, parcelle, or numero_DP does not match the database records.'
-            );
+        // Map no_devis.no_fac -> ID
+        if (devisData.factures?.no_fac) {
+            const facture = activeFacture.find(d => d.no_fac === devisData.no_devis.no_fac);
+            if (!facture) {
+                throw new Error(`Facture not found for ND: ${devisData.no_devis.no_fac}`);
+            }
+            devisData.no_devis = facture.no_fac;
         }
 
-        // Prepare the data for insertion
-        const newDevisData = {
-            no_dr: devisData.no_dr,
-            ND: devisData.ND,
-            type_devis: devisData.type_devis,
-            devis_date: devisData.devis_date,
-            montant: devisData.montant,
-            code_postal_lieu: devisData.code_postal_lieu,
-            code_paiement: devisData.code_paiement,
-            expiration_date: devisData.expiration_date,
-            reception_date: devisData.reception_date,
-            etat_ralance: devisData.etat_ralance,
-            derniere_relance_date: devisData.derniere_relance_date,
-            is_active: devisData.is_active,
-            conformite: devisData.conformite,
-            valide_par_SFR: devisData.valide_par_SFR,
-            numero_DP: devisData.numero_DP,
-            section: devisData.section,
-            parcelle: devisData.parcelle
-        };
+        // Remove invalid fields if necessary
+        if (!devisData.factures || !devisData.factures.no_fac) {
+            delete devisData.factures;
+        }
+        if (!devisData.no_paie || !devisData.no_paie.Pid) {
+            delete devisData.no_paie;
+        }
+
         // Insert into Devis table
         const { data: devis, error: contactError } = await supabase
             .from('Devis')
-            .insert([{ EB_fk: EB, ...newDevisData }])
+            .insert([{ EB_fk: EB, ...devisData }])
             .select();
 
         if (contactError) throw contactError;
@@ -315,6 +224,7 @@ const createDevis = async (EB, devisData) => {
         throw error;
     }
 };
+
 //getAllDevis
 const getAllDevis = async(EB) => {
     try {

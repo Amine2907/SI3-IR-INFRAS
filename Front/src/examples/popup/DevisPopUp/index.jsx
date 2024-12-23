@@ -39,7 +39,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
     if (devis) {
       setFormData({
         ...devis,
-        fournisseur: devis.fournisseur || { nom: '' },
+        fournisseur: devis.fournisseur ? devis.fournisseur : { nom: '' },
       });
       setIsActive(devis.is_active);
       setIsConforme(devis.conformite);
@@ -48,10 +48,10 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
   }, [devis]);
   const handleDropdownChange = (field, subField, value) => {
     console.log(`Updating ${field}.${subField} with value:`, value); // Debug log
-    // Directly set the numeric ID instead of an object
+    // Ensure `formData[field]` exists before accessing sub-properties
     setFormData({
       ...formData,
-      [field]: { ...formData[field], [subField]: value },
+      [field]: { ...(formData[field] || {}), [subField]: value },
     });
   };
   //   fetching active fournisseurs for the site
@@ -109,9 +109,11 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       console.log('demRac data :', devisData);
+      const selectedFournisseur = activeFrns.find(f => f.nom === formData.fournisseur.nom);
       onSave({
         Sid,
         ...formData,
+        fournisseur: selectedFournisseur ? selectedFournisseur.id : null,
         is_active: isActive,
         conformite: isConforme,
         valide_par_SFR: isValide,
