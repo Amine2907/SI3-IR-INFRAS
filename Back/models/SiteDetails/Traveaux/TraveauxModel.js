@@ -27,6 +27,22 @@ const createTraveaux = async (Sid, traveauxData) => {
       throw error; // Rethrow error for higher-level handling
     }
   };
+//   get active libelle de virments
+  const getActiveLibelle = async (Sid) => {
+    try {
+        const { data, error } = await supabase
+        .from('Paiements')
+        .select('libelle_du_virement')
+        .eq('is_active',true)
+        .eq('EB_fk',Sid);
+        if (error) {
+            throw error;
+        }
+        return { success: true, data };
+    }catch(error){
+        return { success: false, error: error.message };
+    }
+}
 // get all Traveaus
 const getAllTraveaux = async (Sid) => {
     try {
@@ -145,5 +161,6 @@ const traveauxModel = {
     activateTraveaux,
     desactivateTraveaux,
     getTraveauxById,
+    getActiveLibelle,
 }
 export default traveauxModel;

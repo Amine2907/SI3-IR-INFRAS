@@ -9,21 +9,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
-import SiteDevisService from 'services/site_details/Devis/DevisService';
-const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
+import siteTravService from 'services/site_details/Traveaux/TraveauxService';
+const TravAddingModal = ({ Sid, traveaux = {}, onSave }) => {
   const [formData, setFormData] = useState({
-    no_devis: '',
-    reglement_date: '',
-    no_virement: '',
-    nom_acteur: '',
-    libelle_du_virement: '',
-    montant: '',
-    no_commande: '',
-    ...paiement,
+    ...traveaux,
   });
   const [errors, setErrors] = useState({});
-  const [activeDevis, setActiveDevis] = useState([]);
-  const [isActive, setIsActive] = useState(paiement.is_active ?? true);
+  const [actvieLibelle, setActiveLib] = useState([]);
+  const [isActive, setIsActive] = useState(traveaux.is_active ?? true);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -35,16 +28,19 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
   useEffect(() => {
     const fetchLibelle = async () => {
       try {
-        const result = await SiteDevisService.getDevisSite(Sid);
+        const result = await siteTravService.getActiveLibelle(Sid);
         if (result.success && Array.isArray(result.data)) {
-          setActiveDevis(result.data);
+          setActiveLib(result.data);
         } else {
-          console.error('Error fetching active devis:', result.error || 'Invalid data structure');
-          setActiveDevis([]);
+          console.error(
+            'Error fetching active libelle de virements:',
+            result.error || 'Invalid data structure'
+          );
+          setActiveLib([]);
         }
       } catch (error) {
         console.error('Error during fetch:', error.message);
-        setActiveDevis([]);
+        setActiveLib([]);
       }
     };
     fetchLibelle();
@@ -62,13 +58,18 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
       return;
     }
     const traveauxData = {
-      no_devis: formData.no_devis,
-      reglement_date: formData.reglement_date,
-      no_virement: formData.no_virement,
-      nom_acteur: formData.nom_acteur,
-      libelle_du_virement: formData.libelle_du_virement,
-      montant: formData.montant,
-      no_commande: formData.no_commande,
+      Tid: formData.Tid,
+      paie_id: formData.paie_id,
+      levee_pylone_prev: formData.levee_pylone_prev,
+      levee_pylone_reel: formData.levee_pylone_reel,
+      extension_prev: formData.extension_prev,
+      extension_reel: formData.extension_reel,
+      branchement_prev: formData.branchement_prev,
+      branchement_reel: formData.branchement_reel,
+      fin_gc_prev: formData.fin_gc_prev,
+      fin_gc_reel: formData.fin_gc_reel,
+      edle_prev: formData.edle_prev,
+      edle_reel: formData.edle_reel,
       is_active: isActive,
     };
     console.log('traveaux data :', traveauxData);
@@ -79,44 +80,44 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
       <div className={styles.modalContent}>
         <div className={styles.formGrid}>
           <MDInput
-            name="no_virement"
-            value={formData.no_virement || ''}
+            name="Tid"
+            value={formData.Tid || ''}
             onChange={handleChange}
-            placeholder="No virement"
+            placeholder="No traveaux"
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
-              name="no_devis"
-              value={formData.no_devis || ''}
+              name="paie_id"
+              value={formData.paie_id || ''}
               onChange={handleChange}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
             >
               <MenuItem value="" disabled>
-                -- Choisir le Devis --
+                -- Choisir libelle Virement --
               </MenuItem>
-              {activeDevis.length > 0 ? (
-                activeDevis.map(devis => (
-                  <MenuItem key={devis.id} value={devis.ND}>
-                    {devis.ND}
+              {actvieLibelle.length > 0 ? (
+                actvieLibelle.map(lib => (
+                  <MenuItem key={lib.Pid} value={lib.libelle_du_virement}>
+                    {lib.libelle_du_virement}
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem value="">No active devis available</MenuItem>
+                <MenuItem value="">No active lib available</MenuItem>
               )}
             </Select>
           </FormControl>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
-              name="reglement_date"
-              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              label="Levage Pylône (PREV)"
+              name="levee_pylone_prev"
+              value={formData.levee_pylone_prev ? dayjs(formData.levee_pylone_prev) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'reglement_date',
+                    name: 'levee_pylone_prev',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -126,13 +127,13 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
-              name="reglement_date"
-              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              label="Levage Pylône (RÉEL)"
+              name="levee_pylone_reel"
+              value={formData.levee_pylone_reel ? dayjs(formData.levee_pylone_reel) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'reglement_date',
+                    name: 'levee_pylone_reel',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -142,13 +143,13 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
-              name="reglement_date"
-              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              label="Extension (Prev)"
+              name="extension_prev"
+              value={formData.extension_prev ? dayjs(formData.extension_prev) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'reglement_date',
+                    name: 'extension_prev',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -158,13 +159,13 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
-              name="reglement_date"
-              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              label="Extension (Reel)"
+              name="extension_reel"
+              value={formData.extension_reel ? dayjs(formData.extension_reel) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'reglement_date',
+                    name: 'extension_reel',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -174,13 +175,13 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
-              name="reglement_date"
-              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              label="Branchement (PREV)"
+              name="branchement_prev"
+              value={formData.branchement_prev ? dayjs(formData.branchement_prev) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'reglement_date',
+                    name: 'branchement_prev',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -190,13 +191,13 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
-              name="reglement_date"
-              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              label="Branchement (REEL)"
+              name="branchement_reel"
+              value={formData.branchement_reel ? dayjs(formData.branchement_reel) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'reglement_date',
+                    name: 'branchement_reel',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -206,13 +207,13 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
-              name="reglement_date"
-              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              label="Fin GC (Prev)"
+              name="fin_gc_prev"
+              value={formData.fin_gc_prev ? dayjs(formData.fin_gc_prev) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'reglement_date',
+                    name: 'fin_gc_prev',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -222,13 +223,13 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
-              name="reglement_date"
-              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              label="Fin GC (REEL)"
+              name="fin_gc_reel"
+              value={formData.fin_gc_reel ? dayjs(formData.fin_gc_reel) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'reglement_date',
+                    name: 'fin_gc_reel',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -238,13 +239,13 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
-              name="reglement_date"
-              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              label="EDLE (Prev)"
+              name="edle_prev"
+              value={formData.edle_prev ? dayjs(formData.edle_prev) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'reglement_date',
+                    name: 'edle_prev',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -254,13 +255,13 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
-              name="reglement_date"
-              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              label="EDLE (REEL)"
+              name="edle_reel"
+              value={formData.edle_reel ? dayjs(formData.edle_reel) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'reglement_date',
+                    name: 'edle_reel',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -286,16 +287,20 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
 };
 TravAddingModal.propTypes = {
   Sid: PropTypes.string.isRequired,
-  paiement: PropTypes.shape({
-    no_devis: PropTypes.string,
-    reglement_date: PropTypes.string,
-    no_virement: PropTypes.string,
-    nom_acteur: PropTypes.string,
-    libelle_du_virement: PropTypes.string,
-    montant: PropTypes.string,
-    no_commande: PropTypes.string,
+  traveaux: PropTypes.shape({
+    Tid: PropTypes.string,
+    paie_id: PropTypes.string,
+    levee_pylone_prev: PropTypes.string,
+    levee_pylone_reel: PropTypes.string,
+    extension_prev: PropTypes.string,
+    extension_reel: PropTypes.string,
+    branchement_prev: PropTypes.string,
+    branchement_reel: PropTypes.string,
+    fin_gc_prev: PropTypes.string,
+    fin_gc_reel: PropTypes.string,
+    edle_prev: PropTypes.string,
+    edle_reel: PropTypes.string,
     is_active: PropTypes.bool,
-    paiement_partiel: PropTypes.bool,
   }),
   onSave: PropTypes.func.isRequired,
 };

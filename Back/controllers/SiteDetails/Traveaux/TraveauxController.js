@@ -43,6 +43,15 @@ const getTravById = async(req,res) => {
     }
     return res.status(200).json(result.data);
 }
+// get active libelle de virments 
+const getActiveLibelle = async(req,res) => {
+  const siteId = req.params.Sid;
+    const result = await traveauxModel.getActiveLibelle(siteId);
+    if(!result.success){
+        return res.status(400).json({error:result.error});
+    }
+    return res.status(200).json(result.data);
+}
 //Update Traveaux controller 
 const updateTrav = async (req, res) => {
   try {
@@ -129,5 +138,6 @@ const traveauxController = {
     activateTrav,
     getActiveTravs,
     getInactiveTravs,
+    getActiveLibelle,
 }
 export default traveauxController ; 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/trav';
+const API_URL = 'http://localhost:5000/api/traveaux';
 // Create trav Service
 const createTrav = async ({ Sid, traveauxData }) => {
   try {
@@ -27,6 +27,15 @@ const updateTrav = async (Tid, updates) => {
 const getTravById = async Tid => {
   try {
     const response = await axios.get(`${API_URL}/${Tid}`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
+};
+// get active libelle de virments
+const getActiveLibelle = async Sid => {
+  try {
+    const response = await axios.get(`${API_URL}/${Sid}/active-libelle`);
     return { success: true, data: response.data };
   } catch (error) {
     return { success: false, error: error.response ? error.response.data.error : error.message };
@@ -76,5 +85,6 @@ const siteTravService = {
   getTravById,
   getActiveTrav,
   getinactiveTrav,
+  getActiveLibelle,
 };
 export default siteTravService;
