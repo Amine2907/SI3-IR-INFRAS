@@ -1,39 +1,56 @@
 import { supabase } from "../../../../config/supabaseClient.js";
 // create Paiement Model 
-const createPaiement = async (Devis_fk, paiementData) => {
+const createPaiement = async (Devis_fk, Sid, paiementData) => {
     try {
-        console.log('Incoming data for create Paiement:', paiementData);
-      // Now insert the new Paiement into the 'Devis' table, using the PRid_fk field
-      const { data: Paiement, error: contactError } = await supabase
-        .from('Paiement')
-        .insert([{ no_devis: Devis_fk, ...paiementData }])
+      console.log('Incoming data for create Paiement:', paiementData);
+      // Insert the new Paiement into the 'Paiements' table
+      const { data: Paiement, error: paiementError } = await supabase
+        .from('Paiements')
+        .insert([{ no_devis: Devis_fk, EB_fk: Sid, ...paiementData }])
         .select();
-      if (contactError) {
-        throw contactError;
+  
+      if (paiementError) {
+        console.error('Error inserting into Paiements:', paiementError.message);
+        throw new Error('Error inserting Paiement: ' + paiementError.message);
       }
+  
       // Extract the newly created Paiement ID (Pid)
       const Paiementfk = Paiement[0].Pid;
-      // Now associate the Paiement with the Site by inserting into 'Site-Paiement' association table
-      const { data: sitePaiement, error: devisPaiementError  } = await supabase
+  
+      // Associate the Paiement with the Site in the 'Site-Paie' table
+      const { error: sitePaiementError } = await supabase
+        .from('Site-Paie')
+        .insert([{ Pid: Paiementfk, Sid }]);
+  
+      if (sitePaiementError) {
+        console.error('Error associating Paiement with Site:', sitePaiementError.message);
+        throw new Error('Error associating Paiement with Site: ' + sitePaiementError.message);
+      }
+  
+      // Associate the Paiement with the Devis in the 'Devis-Paiement' table
+      const { error: devisPaiementError } = await supabase
         .from('Devis-Paiement')
         .insert([{ Did: Devis_fk, Paiementfk }]);
-      if (devisPaiementError ) {
-        throw devisPaiementError ;
+  
+      if (devisPaiementError) {
+        console.error('Error associating Paiement with Devis:', devisPaiementError.message);
+        throw new Error('Error associating Paiement with Devis: ' + devisPaiementError.message);
       }
-      // Return the successfully created Paiement and the association details
-      return { success: true, data: { Paiement: Paiement[0], sitePaiement } };
+      // Return the successfully created Paiement and its associations
+      return { success: true, data: { Paiement: Paiement[0] } };
     } catch (error) {
       console.error('Error in createPaiement:', error.message);
       throw error; // Rethrow error for higher-level handling
     }
   };
+  
 // get all Paiements
-const getAllPais = async (devisID) => {
+const getAllPais = async (Sid) => {
     try {
         const { data, error } = await supabase
-        .from('Paiement')
+        .from('Paiements')
         .select('*')
-        .eq('ND',devisID);
+        .eq('EB_fk',Sid);
         if (error) {
             throw error;
         }
@@ -58,13 +75,13 @@ const getPaiementById = async (id) => {
         }
 }
 // get active Paiements
-const getActivePaiement = async (devisID) => {
+const getActivePaiement = async (paieId) => {
         try {
             const { data, error } = await supabase
             .from('Paiement')
             .select('*')
             .eq('is_active', true)
-            .eq('ND',devisID);
+            .eq('ND',paieId);
             ;
             if (error) {
                 throw error;
@@ -75,13 +92,13 @@ const getActivePaiement = async (devisID) => {
         }
 }
 // get inactive Paiements
-const getInactivePaiement = async (devisID) => {
+const getInactivePaiement = async (paieId) => {
     try {
         const { data, error } = await supabase
         .from('Paiement')
         .select('*')
         .eq('is_active', false)
-        .eq('ND',devisID);
+        .eq('ND',paieId);
         if (error) {
             throw error;
         }

@@ -15,7 +15,6 @@ const useReglForSite = () => {
     try {
       setLoading(true);
       setError(null);
-
       // Fetch payment data for the site
       const paiementResponse = await sitePaiementService.getPaieSite(siteId);
       if (!paiementResponse.success) {

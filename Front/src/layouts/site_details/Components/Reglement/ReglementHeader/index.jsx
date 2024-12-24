@@ -10,7 +10,7 @@ import sitePaiementService from 'services/site_details/Reglement/Paiement/Paieme
 import useReglForSite from '../ReglementList/reglementService';
 function ReglementHeader() {
   const [alert, setAlert] = useState(false);
-  const [selectedReglement, setSelectedReglement] = useState(null);
+  const [selectedPaiement, setSelectedPaiement] = useState(null);
   const location = useLocation();
   const { EB } = location.state || {};
   const Sid = EB;
@@ -49,7 +49,7 @@ function ReglementHeader() {
           </MDTypography>
           <MDBox display="flex" gap={2}></MDBox>
         </MDBox>
-        <ReglementAddingModal Sid={Sid} Reglement={selectedReglement} onSave={handleAddRegl} />
+        <ReglementAddingModal Sid={Sid} Reglement={selectedPaiement} onSave={handleAddRegl} />
       </Card>
       {/* Display Alert if there's an error */}
       {alert.show && (

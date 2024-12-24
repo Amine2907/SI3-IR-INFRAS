@@ -10,12 +10,22 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import SiteDevisService from 'services/site_details/Devis/DevisService';
-const ReglAddingModal = ({ Sid, paiement, onSave }) => {
-  const [formData, setFormData] = useState(paiement);
+
+const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
+  const [formData, setFormData] = useState({
+    no_devis: '',
+    paiement_date: '',
+    no_virement: '',
+    nom_acteur: '',
+    libelle_du_virement: '',
+    montant: '',
+    no_commande: '',
+    ...paiement,
+  });
   const [errors, setErrors] = useState({});
   const [activeDevis, setActiveDevis] = useState([]);
-  const [isActive, setIsActive] = useState(paiement ? paiement.is_active : true);
-  const [isPartiel, setisPartiel] = useState(paiement ? paiement.paiement_partiel : true);
+  const [isActive, setIsActive] = useState(paiement.is_active ?? true);
+  const [isPartiel, setisPartiel] = useState(paiement.paiement_partiel ?? true);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -28,41 +38,30 @@ const ReglAddingModal = ({ Sid, paiement, onSave }) => {
     setisPartiel(!isPartiel);
   };
   useEffect(() => {
-    if (paiement) {
-      setFormData({
-        ...paiement,
-      });
-      setIsActive(paiement.is_active);
-      setisPartiel(paiement.paiement_partiel);
-    }
-  }, [paiement]);
-  // get Active devis for dropdown
-  useEffect(() => {
-    const fecthActiveDevis = async () => {
+    const fetchActiveDevis = async () => {
       try {
         const result = await SiteDevisService.getDevisSite(Sid);
-        // Ensure result.success is checked, and data is validated.
         if (result.success && Array.isArray(result.data)) {
-          setActiveDevis(result.data); // Valid array
+          setActiveDevis(result.data);
         } else {
           console.error('Error fetching active devis:', result.error || 'Invalid data structure');
-          setActiveDevis([]); // Fallback to empty array
+          setActiveDevis([]);
         }
       } catch (error) {
         console.error('Error during fetch:', error.message);
-        setActiveDevis([]); // Fallback to empty array
+        setActiveDevis([]);
       }
     };
-    fecthActiveDevis();
+    fetchActiveDevis();
   }, [Sid]);
+
   const validateForm = () => {
     const newErrors = {};
-    // if (!formData.nom) newErrors.nom = true;
     return newErrors;
   };
+
   const handleSubmit = () => {
     const newErrors = validateForm();
-
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -73,6 +72,8 @@ const ReglAddingModal = ({ Sid, paiement, onSave }) => {
       no_virement: formData.no_virement,
       nom_acteur: formData.nom_acteur,
       libelle_du_virement: formData.libelle_du_virement,
+      montant: formData.montant,
+      no_commande: formData.no_commande,
       is_active: isActive,
       paiement_partiel: isPartiel,
     };
@@ -186,9 +187,11 @@ ReglAddingModal.propTypes = {
   paiement: PropTypes.shape({
     no_devis: PropTypes.string,
     paiement_date: PropTypes.string,
-    no_virement: PropTypes.number,
+    no_virement: PropTypes.string,
     nom_acteur: PropTypes.string,
     libelle_du_virement: PropTypes.string,
+    montant: PropTypes.string,
+    no_commande: PropTypes.string,
     is_active: PropTypes.bool,
     paiement_partiel: PropTypes.bool,
   }),

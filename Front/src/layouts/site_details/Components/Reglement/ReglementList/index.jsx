@@ -24,15 +24,15 @@ function ReglementList() {
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
   const { EB } = location.state || {};
-  const [selectedRegl, setselectedRegl] = useState(null);
+  const [selectedPaie, setSelectedPaie] = useState(null);
   const siteId = EB;
   const { paiementData, loading, error, fetchPaiementData } = useReglForSite(siteId);
   const handleEdit = paiement => {
-    setselectedRegl(paiement);
+    setSelectedPaie(paiement);
     setShowModal(true);
   };
   const handleUpload = paiement => {
-    setselectedRegl(paiement);
+    setSelectedPaie(paiement);
     setShowStorageModal(true);
   };
   const handleCloseModal = () => {
@@ -40,7 +40,7 @@ function ReglementList() {
     setShowStorageModal(false);
   };
   const handleUpdate = async updates => {
-    const reglId = selectedRegl?.Pid;
+    const reglId = selectedPaie?.Pid;
     console.log('Sending update for reglId:', reglId, 'Updates:', updates);
     if (!reglId) {
       console.error('reglId is missing, cannot update.');
@@ -154,14 +154,14 @@ function ReglementList() {
       {showModal && (
         <PaieUModal
           Sid={siteId}
-          paiement={selectedRegl}
+          paiement={selectedPaie}
           onSave={handleUpdate}
           onClose={handleCloseModal}
         />
       )}
       {showStorageModal && (
         <PaieStorageModal
-          paiement={selectedRegl}
+          paiement={selectedPaie}
           onSave={handleUpdate}
           onClose={handleCloseModal}
         />
