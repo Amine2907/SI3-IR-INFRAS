@@ -1,6 +1,18 @@
-import MDTypography from 'components/MDTypography';
+import { Grid } from '@mui/material';
+import MESHeader from './MesHeader';
+import MiseEnServiceList from './MesList';
 
 function MES() {
-  return <MDTypography>MES</MDTypography>;
+  return (
+    <Grid container spacing={2} direction="column">
+      {' '}
+      <Grid item>
+        <MESHeader />
+      </Grid>
+      <Grid item>
+        <MiseEnServiceList />
+      </Grid>
+    </Grid>
+  );
 }
 export default MES;

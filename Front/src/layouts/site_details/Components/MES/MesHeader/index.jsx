@@ -5,9 +5,9 @@ import Card from '@mui/material/Card';
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDAlert from 'components/MDAlert';
-import MESAddingModal from '../MESAdding';
 import useMesForSite from '../MesList/mesService';
 import siteMesService from 'services/site_details/MES/MesService';
+import MesAddingModal from '../MesAdding';
 function MESHeader() {
   const [alert, setAlert] = useState(false);
   const [selectedMes, setSelectedMes] = useState(null);
@@ -57,7 +57,7 @@ function MESHeader() {
           </MDTypography>
           <MDBox display="flex" gap={2}></MDBox>
         </MDBox>
-        <MESAddingModal Sid={Sid} MES={selectedMes} onSave={handleAddMes} />
+        <MesAddingModal Sid={Sid} mes={selectedMes} onSave={handleAddMes} />
       </Card>
       {/* Display Alert if there's an error */}
       {alert.show && (

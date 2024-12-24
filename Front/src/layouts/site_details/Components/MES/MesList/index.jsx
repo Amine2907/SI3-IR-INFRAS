@@ -13,8 +13,6 @@ import { Alert, AlertDescription } from 'components/ui/alert';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MDAlert from 'components/MDAlert';
-import TravStorageModal from 'examples/popup/TravStoragePopUp';
-import TravUModal from 'examples/popup/mesPopUp';
 import cellStyle from './styles/styles';
 import useMesForSite from './mesService';
 import siteMesService from 'services/site_details/MES/MesService';
