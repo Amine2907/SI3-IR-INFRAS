@@ -1,12 +1,12 @@
 import { supabase } from "../../../../config/supabaseClient.js";
 // create Paiement Model 
-const createPaiement = async (Devis_fk, Sid, paiementData) => {
+const createPaiement = async (Sid,devis_fk, paiementData) => {
     try {
       console.log('Incoming data for create Paiement:', paiementData);
       // Insert the new Paiement into the 'Paiements' table
       const { data: Paiement, error: paiementError } = await supabase
         .from('Paiements')
-        .insert([{ no_devis: Devis_fk, EB_fk: Sid, ...paiementData }])
+        .insert([{ no_devis: devis_fk, EB_fk: Sid, ...paiementData }])
         .select();
   
       if (paiementError) {
@@ -30,7 +30,7 @@ const createPaiement = async (Devis_fk, Sid, paiementData) => {
       // Associate the Paiement with the Devis in the 'Devis-Paiement' table
       const { error: devisPaiementError } = await supabase
         .from('Devis-Paiement')
-        .insert([{ Did: Devis_fk, Paiementfk }]);
+        .insert([{ Did: devis_fk, Paiementfk }]);
   
       if (devisPaiementError) {
         console.error('Error associating Paiement with Devis:', devisPaiementError.message);

@@ -17,10 +17,10 @@ function ReglementHeader() {
   const { fetchPaiementData } = useReglForSite(Sid);
 
   const handleAddRegl = async data => {
-    const { paiementData } = data;
+    const { devis_fk, paiementData } = data;
     try {
       // Create new Reglement
-      const result = await sitePaiementService.createPaie({ Sid, paiementData });
+      const result = await sitePaiementService.createPaie({ Sid, devis_fk, paiementData });
       let successMessage = '';
       if (result.success) {
         successMessage = 'Reglement enregistré avec succès !';

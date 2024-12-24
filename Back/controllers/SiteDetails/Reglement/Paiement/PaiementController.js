@@ -1,31 +1,35 @@
 import paiementModel from "../../../../models/SiteDetails/Reglement/Paiement/PaiementModel.js";
 //Create Facture controlller 
 const createPaiement = async (req, res) => {
-    const { Devis_fk, paiementData } = req.body;
-    // Validate required fields
-    if (!Devis_fk) {
-        return res.status(400).json({ error: 'Devis_fk (Devis identifier) is required.' });
-      }
-      if (!paiementData) {
-        return res.status(400).json({ error: 'paiementData is required.' });
-      }
-    try {
-        const result = await paiementModel.createPaiement(Devis_fk,paiementData)
-      if (!result.success) {
-        console.error("Error in model operation:", result.error);
-        return res.status(400).json({ error: result.error });
-      }
+  const { Sid,devis_fk, paiementData } = req.body;
+  // Validate required fields
+  if (!devis_fk) {
+    return res.status(400).json({ error: 'devis_fk (Devis identifier) is required.' });
+  }
+  if (!Sid) {
+    return res.status(400).json({ error: 'Sid (Site identifier) is required.' });
+  }
+  if (!paiementData) {
+    return res.status(400).json({ error: 'paiementData is required.' });
+  }
+  try {
+    // Call the model to create Paiement and handle associations
+    const result = await paiementModel.createPaiement( Sid, devis_fk,paiementData);
+    if (!result.success) {
+      console.error('Error in model operation:', result.error);
+      return res.status(400).json({ error: result.error });
+    }
     // Return a success response with the created data
     return res.status(201).json({
-        message: 'Paiement successfully created and associated with Devis.',
-        data: result.data,
-      });
-    } catch (error) {
-      console.error('Error Paiement Facture:', error.message);
-      return res.status(500).json({ error: 'An error occurred while creating the Paiement.' });
-    }
-  };
-// Get all active factures controller 
+      message: 'Paiement successfully created and associated with Devis and Site.',
+      data: result.data,
+    });
+  } catch (error) {
+    console.error('Error during Paiement creation:', error.message);
+    return res.status(500).json({ error: 'An error occurred while creating the Paiement.' });
+  }
+};
+// Get all active factures controller
 const getAllPaie = async(req,res)=>{
     const siteId = req.params.Sid;
     const result = await paiementModel.getAllPais(siteId);

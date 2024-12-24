@@ -1,11 +1,12 @@
 import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/paie';
 // Create paie Service
-const createPaie = async ({ Sid, paiementData }) => {
+const createPaie = async ({ Sid, devis_fk, paiementData }) => {
   try {
     console.log('sending request:', { Sid, paiementData });
     const response = await axios.post(`${API_URL}/create-paie-site`, {
       Sid,
+      devis_fk,
       paiementData,
     });
     return { success: true, data: response.data };

@@ -4,7 +4,7 @@ import styles from './styles.module.css';
 import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Select, MenuItem, FormControl, Switch } from '@mui/material';
+import { Select, MenuItem, FormControl, Switch, InputLabel } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -78,7 +78,7 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
       paiement_partiel: isPartiel,
     };
     console.log('paiement data :', paiementData);
-    onSave({ Sid, paiementData });
+    onSave({ Sid, devis_fk: formData.no_devis, paiementData });
   };
   return (
     <div className={styles.modal}>
@@ -130,10 +130,6 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />
-          <div className={styles.switchItem}>
-            <label>paiement Partiel</label>
-            <Switch checked={isPartiel} onChange={handleTogglePaie} />
-          </div>
           <MDInput
             name="montant"
             value={formData.montant || ''}
@@ -169,8 +165,12 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
         </div>
         <div className={styles.switchContainer}>
           <div className={styles.switchItem}>
-            <label>Active</label>
+            <InputLabel>Active</InputLabel>
             <Switch checked={isActive} onChange={handleToggleActive} />
+            <div className={styles.switchItem}>
+              <InputLabel>Paiement partiel</InputLabel>
+              <Switch checked={isPartiel} onChange={handleTogglePaie} />
+            </div>
           </div>
         </div>
       </div>
