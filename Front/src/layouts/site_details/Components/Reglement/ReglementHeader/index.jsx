@@ -5,26 +5,27 @@ import Card from '@mui/material/Card';
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDAlert from 'components/MDAlert';
-import SiteReglementService from 'services/site_details/Reglement/ReglementService';
 import ReglementAddingModal from '../ReglementAdding';
+import sitePaiementService from 'services/site_details/Reglement/Paiement/PaiementService';
+import useReglForSite from '../ReglementList/reglementService';
 function ReglementHeader() {
   const [alert, setAlert] = useState(false);
   const [selectedReglement, setSelectedReglement] = useState(null);
   const location = useLocation();
   const { EB } = location.state || {};
   const Sid = EB;
-  const { fetchreglementData } = useReglementForSite(Sid);
+  const { fetchPaiementData } = useReglForSite(Sid);
 
   const handleAddRegl = async data => {
-    const { reglementData } = data;
+    const { paiementData } = data;
     try {
       // Create new Reglement
-      const result = await SiteReglementService.createReglement({ Sid, reglementData });
+      const result = await sitePaiementService.createPaie({ Sid, paiementData });
       let successMessage = '';
       if (result.success) {
         successMessage = 'Reglement enregistré avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
-        fetchreglementData();
+        fetchPaiementData();
       } else {
         let errorMessage = `Error: ${result.error}`;
         console.error(errorMessage); // Log any errors from the API response

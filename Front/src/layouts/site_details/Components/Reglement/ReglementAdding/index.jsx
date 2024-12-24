@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import styles from './styles.module.css';
 import PropTypes from 'prop-types';
@@ -8,22 +9,17 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
+import SiteDevisService from 'services/site_details/Devis/DevisService';
 const ReglAddingModal = ({ Sid, paiement, onSave }) => {
   const [formData, setFormData] = useState(paiement);
   const [errors, setErrors] = useState({});
-  const [activeFrns, setActiveFrns] = useState([]);
-  const [activeDemracs, setActiveDemracs] = useState([]);
+  const [activeDevis, setActiveDevis] = useState([]);
   const [isActive, setIsActive] = useState(paiement ? paiement.is_active : true);
   const [isPartiel, setisPartiel] = useState(paiement ? paiement.paiement_partiel : true);
 
   const handleChange = e => {
     const { name, value } = e.target;
-    // Special handling for nested fields
-    if (name === 'fournisseur') {
-      setFormData({ ...formData, fournisseur: { nom: value } });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData({ ...formData, [name]: value });
   };
   const handleToggleActive = () => {
     setIsActive(!isActive);
@@ -35,40 +31,29 @@ const ReglAddingModal = ({ Sid, paiement, onSave }) => {
     if (paiement) {
       setFormData({
         ...paiement,
-        // fournisseur: paiement.fournisseur || { nom: '' },
       });
       setIsActive(paiement.is_active);
       setisPartiel(paiement.paiement_partiel);
     }
   }, [paiement]);
-  const handleDropdownChange = (field, subField, value) => {
-    console.log(`Updating ${field}.${subField} with value:`, value); // Debug log
-    setFormData({
-      ...formData,
-      [field]: { [subField]: value },
-    });
-  };
-  // get Active Fournisseurs for dropdown
+  // get Active devis for dropdown
   useEffect(() => {
-    const fetchActiveFrns = async () => {
+    const fecthActiveDevis = async () => {
       try {
-        const result = await SitepaiementService.getActiveFrnsForpaiement(Sid);
+        const result = await SiteDevisService.getDevisSite(Sid);
         // Ensure result.success is checked, and data is validated.
         if (result.success && Array.isArray(result.data)) {
-          setActiveFrns(result.data); // Valid array
+          setActiveDevis(result.data); // Valid array
         } else {
-          console.error(
-            'Error fetching active fournisseurs:',
-            result.error || 'Invalid data structure'
-          );
-          setActiveFrns([]); // Fallback to empty array
+          console.error('Error fetching active devis:', result.error || 'Invalid data structure');
+          setActiveDevis([]); // Fallback to empty array
         }
       } catch (error) {
         console.error('Error during fetch:', error.message);
-        setActiveFrns([]); // Fallback to empty array
+        setActiveDevis([]); // Fallback to empty array
       }
     };
-    fetchActiveFrns();
+    fecthActiveDevis();
   }, [Sid]);
   const validateForm = () => {
     const newErrors = {};
@@ -85,7 +70,7 @@ const ReglAddingModal = ({ Sid, paiement, onSave }) => {
     const paiementData = {
       no_devis: formData.no_devis,
       paiement_date: formData.paiement_date,
-      No_virement: formData.No_virement,
+      no_virement: formData.no_virement,
       nom_acteur: formData.nom_acteur,
       libelle_du_virement: formData.libelle_du_virement,
       is_active: isActive,
@@ -99,8 +84,8 @@ const ReglAddingModal = ({ Sid, paiement, onSave }) => {
       <div className={styles.modalContent}>
         <div className={styles.formGrid}>
           <MDInput
-            name="No_virement"
-            value={formData.No_virement || ''}
+            name="no_virement"
+            value={formData.no_virement || ''}
             onChange={handleChange}
             placeholder="No virement"
             style={{ marginBottom: '5px', width: '300px' }}
@@ -117,14 +102,14 @@ const ReglAddingModal = ({ Sid, paiement, onSave }) => {
               <MenuItem value="" disabled>
                 -- Choisir le DR --
               </MenuItem>
-              {activeDemracs.length > 0 ? (
-                activeDemracs.map(demrac => (
-                  <MenuItem key={demrac.id} value={demrac.NDRid}>
-                    {demrac.NDRid}
+              {activeDevis.length > 0 ? (
+                activeDevis.map(devis => (
+                  <MenuItem key={devis.id} value={devis.NDRid}>
+                    {devis.NDRid}
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem value="">No active drs available</MenuItem>
+                <MenuItem value="">No active devis available</MenuItem>
               )}
             </Select>
           </FormControl>
@@ -201,7 +186,7 @@ ReglAddingModal.propTypes = {
   paiement: PropTypes.shape({
     no_devis: PropTypes.string,
     paiement_date: PropTypes.string,
-    No_virement: PropTypes.number,
+    no_virement: PropTypes.number,
     nom_acteur: PropTypes.string,
     libelle_du_virement: PropTypes.string,
     is_active: PropTypes.bool,

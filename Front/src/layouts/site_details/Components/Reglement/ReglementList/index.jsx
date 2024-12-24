@@ -14,10 +14,10 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MDAlert from 'components/MDAlert';
 import cellStyle from './styles/styles';
-import SiteDevisService from 'services/site_details/Devis/DevisService';
-import useDevisForSite from './devisService';
-import DevisUModal from 'examples/popup/DevisPopUp';
-import DevisStorageModal from 'examples/popup/DevisStoragePopUp';
+import useReglForSite from './reglementService';
+import sitePaiementService from 'services/site_details/Reglement/Paiement/PaiementService';
+import PaieUModal from 'examples/popup/ReglementPopUp';
+import PaieStorageModal from 'examples/popup/ReglStoragePopUp';
 function ReglementList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -26,13 +26,13 @@ function ReglementList() {
   const { EB } = location.state || {};
   const [selectedRegl, setselectedRegl] = useState(null);
   const siteId = EB;
-  const { reglementData, loading, error, fetchreglementData } = useDevisForSite(siteId);
-  const handleEdit = devis => {
-    setselectedRegl(devis);
+  const { paiementData, loading, error, fetchPaiementData } = useReglForSite(siteId);
+  const handleEdit = paiement => {
+    setselectedRegl(paiement);
     setShowModal(true);
   };
-  const handleUpload = devis => {
-    setselectedRegl(devis);
+  const handleUpload = paiement => {
+    setselectedRegl(paiement);
     setShowStorageModal(true);
   };
   const handleCloseModal = () => {
@@ -46,22 +46,18 @@ function ReglementList() {
       console.error('reglId is missing, cannot update.');
       setAlert({
         show: true,
-        message: "Une erreur s'est produite : l'ID de la devis est manquant.",
+        message: "Une erreur s'est produite : l'ID de la paiement est manquant.",
         type: 'error',
       });
       return;
     }
-    const { fournisseurName, ...filteredUpdates } = updates;
     try {
-      if (fournisseur && fournisseur.nom) {
-        filteredUpdates.fournisseur_id = fournisseur.id; // Assuming 'id' is the supplier ID
-      }
-      const result = await SiteDevisService.updateDevis(reglId, filteredUpdates);
+      const result = await sitePaiementService.updatePaie(reglId, updates);
       let successMessage = '';
       if (result.success) {
-        successMessage = 'devis modifiee avec succès !';
+        successMessage = 'paiement modifiee avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
-        fetchreglementData();
+        fetchPaiementData();
         handleCloseModal();
       } else {
         setAlert({
@@ -74,16 +70,11 @@ function ReglementList() {
       console.error('Error while sending request:', error);
       setAlert({
         show: true,
-        message: "Une erreur s'est produite lors de la mise à jour de  devis.",
+        message: "Une erreur s'est produite lors de la mise à jour de  paiement.",
         type: 'error',
       });
     }
     handleCloseModal();
-  };
-  const getDotColor = conformite => {
-    if (conformite === true) return 'green';
-    if (conformite === false) return 'red';
-    return 'gray';
   };
   if (loading)
     return (
@@ -98,7 +89,7 @@ function ReglementList() {
       </Alert>
     );
 
-  if (!reglementData.length)
+  if (!paiementData.length)
     return (
       <Alert variant="destructive" className="mt-4">
         <AlertDescription>
@@ -109,59 +100,48 @@ function ReglementList() {
   return (
     <TableContainer>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-        <Typography variant="h6">{reglementData.length} Résultat(s)</Typography>
+        <Typography variant="h6">{paiementData.length} Résultat(s)</Typography>
       </Box>
       <table>
         <thead>
           <TableRow>
             <TableCell sx={cellStyle}>No Virement</TableCell>
             <TableCell sx={cellStyle}>Nom acteur</TableCell>
-            <TableCell sx={cellStyle}>Montant Paiement</TableCell>
+            <TableCell sx={cellStyle}>Montant (TTC)</TableCell>
             <TableCell sx={cellStyle}>Date de reglement</TableCell>
             <TableCell sx={cellStyle}>Libelle du virement</TableCell>
           </TableRow>
         </thead>
         <TableBody>
-          {reglementData.map(devis => {
+          {paiementData.map(paiement => {
             return (
-              <TableRow key={devis.id}>
-                <TableCell>{devis.ND || 'N/A'}</TableCell>
-                <TableCell>{devis.fournisseurName || 'N/A'}</TableCell>
-                <TableCell>{devis.type_devis || 'N/A'}</TableCell>
-                <TableCell>{devis.reception_date || 'N/A'}</TableCell>
+              <TableRow key={paiement.id}>
+                <TableCell>{paiement.ND || 'N/A'}</TableCell>
+                <TableCell>{paiement.fournisseurName || 'N/A'}</TableCell>
+                <TableCell>{paiement.type_paiement || 'N/A'}</TableCell>
+                <TableCell>{paiement.reception_date || 'N/A'}</TableCell>
                 <TableCell>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography variant="body2" sx={{ fontWeight: 'normal' }}>
-                      {devis.montant ? parseFloat(devis.montant).toFixed(2) : 'N/A'}
+                      {paiement.montant ? parseFloat(paiement.montant).toFixed(2) : 'N/A'}
                     </Typography>
                     <Icon sx={{ fontSize: 'inherit', ml: 0.5 }}>euro</Icon>
                   </Box>
                 </TableCell>
-                <TableCell>
-                  <div
-                    style={{
-                      width: 10,
-                      height: 10,
-                      borderRadius: '50%',
-                      backgroundColor: getDotColor(devis.conformite),
-                    }}
-                  />
-                  {devis.conformite === undefined ? 'N/A' : ''}
-                </TableCell>
-                <TableCell title="Modifier devis" placement="top">
+                <TableCell title="Modifier paiement" placement="top">
                   <Icon
                     sx={{ cursor: 'pointer' }}
                     fontSize="small"
-                    onClick={() => handleEdit(devis)}
+                    onClick={() => handleEdit(paiement)}
                   >
                     edit
                   </Icon>
                 </TableCell>
-                <TableCell title="Ajouter devis" placement="top">
+                <TableCell title="Ajouter paiement" placement="top">
                   <Icon
                     sx={{ cursor: 'pointer' }}
                     fontSize="small"
-                    onClick={() => handleUpload(devis)}
+                    onClick={() => handleUpload(paiement)}
                   >
                     add
                   </Icon>
@@ -172,15 +152,19 @@ function ReglementList() {
         </TableBody>
       </table>
       {showModal && (
-        <DevisUModal
+        <PaieUModal
           Sid={siteId}
-          devis={selectedRegl}
+          paiement={selectedRegl}
           onSave={handleUpdate}
           onClose={handleCloseModal}
         />
       )}
       {showStorageModal && (
-        <DevisStorageModal devis={selectedRegl} onSave={handleUpdate} onClose={handleCloseModal} />
+        <PaieStorageModal
+          paiement={selectedRegl}
+          onSave={handleUpdate}
+          onClose={handleCloseModal}
+        />
       )}
       {/* Display Alert if there's an error */}
       {alert.show && (
