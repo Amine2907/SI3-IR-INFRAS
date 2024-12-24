@@ -10,7 +10,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import SiteDevisService from 'services/site_details/Devis/DevisService';
-
 const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
   const [formData, setFormData] = useState({
     no_devis: '',
@@ -25,7 +24,6 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
   const [errors, setErrors] = useState({});
   const [activeDevis, setActiveDevis] = useState([]);
   const [isActive, setIsActive] = useState(paiement.is_active ?? true);
-  const [isPartiel, setisPartiel] = useState(paiement.paiement_partiel ?? true);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -34,11 +32,8 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
   const handleToggleActive = () => {
     setIsActive(!isActive);
   };
-  const handleTogglePaie = () => {
-    setisPartiel(!isPartiel);
-  };
   useEffect(() => {
-    const fetchActiveDevis = async () => {
+    const fetchLibelle = async () => {
       try {
         const result = await SiteDevisService.getDevisSite(Sid);
         if (result.success && Array.isArray(result.data)) {
@@ -52,7 +47,7 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
         setActiveDevis([]);
       }
     };
-    fetchActiveDevis();
+    fetchLibelle();
   }, [Sid]);
 
   const validateForm = () => {
@@ -66,7 +61,7 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
       setErrors(newErrors);
       return;
     }
-    const paiementData = {
+    const traveauxData = {
       no_devis: formData.no_devis,
       reglement_date: formData.reglement_date,
       no_virement: formData.no_virement,
@@ -75,10 +70,9 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
       montant: formData.montant,
       no_commande: formData.no_commande,
       is_active: isActive,
-      paiement_partiel: isPartiel,
     };
-    console.log('paiement data :', paiementData);
-    onSave({ Sid, devis_fk: formData.no_devis, paiementData });
+    console.log('traveaux data :', traveauxData);
+    onSave({ Sid, traveauxData });
   };
   return (
     <div className={styles.modal}>
@@ -114,38 +108,150 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
               )}
             </Select>
           </FormControl>
-          <MDInput
-            name="nom_acteur"
-            value={formData.nom_acteur || ''}
-            onChange={handleChange}
-            placeholder="Nom Acteur"
-            style={{ marginBottom: '5px', width: '300px' }}
-            required
-          />
-          <MDInput
-            name="libelle_du_virement"
-            value={formData.libelle_du_virement || ''}
-            onChange={handleChange}
-            placeholder="Libelle de virement"
-            style={{ marginBottom: '5px', width: '300px' }}
-            required
-          />
-          <MDInput
-            name="montant"
-            value={formData.montant || ''}
-            onChange={handleChange}
-            placeholder="Montant (TTC)"
-            style={{ marginBottom: '5px', width: '300px' }}
-            required
-          />
-          <MDInput
-            name="no_commande"
-            value={formData.no_commande || ''}
-            onChange={handleChange}
-            placeholder="No commande"
-            style={{ marginBottom: '5px', width: '300px' }}
-            required
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Data de paiement"
+              name="reglement_date"
+              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'reglement_date',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '100%' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Data de paiement"
+              name="reglement_date"
+              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'reglement_date',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '100%' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Data de paiement"
+              name="reglement_date"
+              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'reglement_date',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '100%' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Data de paiement"
+              name="reglement_date"
+              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'reglement_date',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '100%' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Data de paiement"
+              name="reglement_date"
+              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'reglement_date',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '100%' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Data de paiement"
+              name="reglement_date"
+              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'reglement_date',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '100%' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Data de paiement"
+              name="reglement_date"
+              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'reglement_date',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '100%' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Data de paiement"
+              name="reglement_date"
+              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'reglement_date',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '100%' }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Data de paiement"
+              name="reglement_date"
+              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'reglement_date',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '100%' }}
+            />
+          </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Data de paiement"
@@ -167,10 +273,6 @@ const TravAddingModal = ({ Sid, paiement = {}, onSave }) => {
           <div className={styles.switchItem}>
             <InputLabel>Active</InputLabel>
             <Switch checked={isActive} onChange={handleToggleActive} />
-            <div className={styles.switchItem}>
-              <InputLabel>Paiement partiel</InputLabel>
-              <Switch checked={isPartiel} onChange={handleTogglePaie} />
-            </div>
           </div>
         </div>
       </div>
