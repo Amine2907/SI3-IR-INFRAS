@@ -1,11 +1,8 @@
 import paiementModel from "../../../../models/SiteDetails/Reglement/Paiement/PaiementModel.js";
 //Create Facture controlller 
 const createPaiement = async (req, res) => {
-  const { Sid,devis_fk, paiementData } = req.body;
+  const { Sid, paiementData } = req.body;
   // Validate required fields
-  if (!devis_fk) {
-    return res.status(400).json({ error: 'devis_fk (Devis identifier) is required.' });
-  }
   if (!Sid) {
     return res.status(400).json({ error: 'Sid (Site identifier) is required.' });
   }
@@ -14,14 +11,14 @@ const createPaiement = async (req, res) => {
   }
   try {
     // Call the model to create Paiement and handle associations
-    const result = await paiementModel.createPaiement( Sid, devis_fk,paiementData);
+    const result = await paiementModel.createPaiement( Sid,paiementData);
     if (!result.success) {
       console.error('Error in model operation:', result.error);
       return res.status(400).json({ error: result.error });
     }
     // Return a success response with the created data
     return res.status(201).json({
-      message: 'Paiement successfully created and associated with Devis and Site.',
+      message: 'Paiement successfully created and associated with Paiement and Site.',
       data: result.data,
     });
   } catch (error) {
@@ -50,16 +47,16 @@ const getPaieById = async(req,res) => {
 //Update dr controller 
 const updatePaie = async (req, res) => {
   try {
-    // Extract Devis ID from URL parameters
+    // Extract Paiement ID from URL parameters
     const paieId = req.params.id;
     let updates = { ...req.body }; // Extract update fields from request body
     console.log('--- Update fatcure Request ---');
-    console.log('Devis ID :', paieId);
+    console.log('Paiement ID :', paieId);
     console.log('Request Body:', updates);
-    // Validate Devis ID
+    // Validate Paiement ID
     if (!paieId) {
-      console.error('Error: Devis ID not provided');
-      return res.status(400).json({ error: 'Devis ID is required.' });
+      console.error('Error: Paiement ID not provided');
+      return res.status(400).json({ error: 'Paiement ID is required.' });
     }
     // Validate update fields
     if (!updates || Object.keys(updates).length === 0) {
@@ -70,7 +67,7 @@ const updatePaie = async (req, res) => {
     console.log('Transformed update fields:', updates);
 
     // Call the model to update the dr
-    const result = await paiementModel.updatePaie(paieId, updates);
+    const result = await paiementModel.updatePaiement(paieId, updates);
     console.log('--- Model Response ---');
     console.log('Result:', result);
 

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import MDBox from 'components/MDBox';
@@ -11,21 +11,23 @@ import useReglForSite from '../ReglementList/reglementService';
 function ReglementHeader() {
   const [alert, setAlert] = useState(false);
   const [selectedPaiement, setSelectedPaiement] = useState(null);
+  const [isPaiementCreated, setIsPaiementCreated] = useState(false);
   const location = useLocation();
   const { EB } = location.state || {};
   const Sid = EB;
   const { fetchPaiementData } = useReglForSite(Sid);
 
   const handleAddRegl = async data => {
-    const { devis_fk, paiementData } = data;
+    const { paiementData } = data;
     try {
       // Create new Reglement
-      const result = await sitePaiementService.createPaie({ Sid, devis_fk, paiementData });
+      const result = await sitePaiementService.createPaie({ Sid, paiementData });
       let successMessage = '';
       if (result.success) {
         successMessage = 'Reglement enregistré avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
-        fetchPaiementData();
+        setSelectedPaiement(null);
+        setIsPaiementCreated(true);
       } else {
         let errorMessage = `Error: ${result.error}`;
         console.error(errorMessage); // Log any errors from the API response
@@ -40,6 +42,12 @@ function ReglementHeader() {
       });
     }
   };
+  useEffect(() => {
+    if (isPaiementCreated) {
+      fetchPaiementData(); // Trigger data fetch
+      setIsPaiementCreated(false); // Reset the flag to prevent infinite loop
+    }
+  }, [isPaiementCreated, fetchPaiementData]);
   return (
     <div className="Reglement-list">
       <Card id="Reglement-card">

@@ -116,10 +116,8 @@ function ReglementList() {
           {paiementData.map(paiement => {
             return (
               <TableRow key={paiement.id}>
-                <TableCell>{paiement.ND || 'N/A'}</TableCell>
-                <TableCell>{paiement.fournisseurName || 'N/A'}</TableCell>
-                <TableCell>{paiement.type_paiement || 'N/A'}</TableCell>
-                <TableCell>{paiement.reception_date || 'N/A'}</TableCell>
+                <TableCell>{paiement.no_virement || 'N/A'}</TableCell>
+                <TableCell>{paiement.nom_acteur || 'N/A'}</TableCell>
                 <TableCell>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography variant="body2" sx={{ fontWeight: 'normal' }}>
@@ -128,6 +126,8 @@ function ReglementList() {
                     <Icon sx={{ fontSize: 'inherit', ml: 0.5 }}>euro</Icon>
                   </Box>
                 </TableCell>
+                <TableCell>{paiement.reglement_date || 'N/A'}</TableCell>
+                <TableCell>{paiement.libelle_du_virement || 'N/A'}</TableCell>
                 <TableCell title="Modifier paiement" placement="top">
                   <Icon
                     sx={{ cursor: 'pointer' }}

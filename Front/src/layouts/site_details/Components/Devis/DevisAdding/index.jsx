@@ -3,7 +3,7 @@ import styles from './styles.module.css';
 import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Select, MenuItem, FormControl, Switch } from '@mui/material';
+import { Select, MenuItem, FormControl, Switch, InputLabel } from '@mui/material';
 import SiteDevisService from 'services/site_details/Devis/DevisService';
 import SiteDemracService from 'services/site_details/DR/DrService';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -343,15 +343,15 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
         </div>
         <div className={styles.switchContainer}>
           <div className={styles.switchItem}>
-            <label>Active</label>
+            <InputLabel>Active</InputLabel>
             <Switch checked={isActive} onChange={handleToggleActive} />
           </div>
           <div className={styles.switchItem}>
-            <label>Conformite</label>
+            <InputLabel>Conformite</InputLabel>
             <Switch checked={isConforme} onChange={handleToggleConforme} />
           </div>
           <div className={styles.switchItem}>
-            <label>Valide par SFR</label>
+            <InputLabel>Valide par SFR</InputLabel>
             <Switch checked={isValide} onChange={handleToggleValide} />
           </div>
         </div>

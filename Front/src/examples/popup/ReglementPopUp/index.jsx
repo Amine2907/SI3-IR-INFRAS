@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
-import { Switch, Select, MenuItem, FormControl } from '@mui/material';
-import { Label } from '@radix-ui/react-label';
+import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -154,10 +153,6 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />
-          <div className={styles.switchItem}>
-            <label>paiement Partiel</label>
-            <Switch checked={isPartiel} onChange={handleTogglePaie} />
-          </div>
           <MDInput
             name="montant"
             value={formData.montant || ''}
@@ -177,12 +172,12 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Data de paiement"
-              name="paiement_date"
-              value={formData.paiement_date ? dayjs(formData.paiement_date) : null}
+              name="reglement_date"
+              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'paiement_date',
+                    name: 'reglement_date',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -191,11 +186,15 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
             />
           </LocalizationProvider>
           <div>
-            <Label>{isActive ? 'Active' : 'Inactive'}</Label>
+            <InputLabel>Active</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
               {' '}
               {isActive ? 'Active' : 'Inactive'}
             </Switch>
+          </div>
+          <div>
+            <InputLabel>paiement Partiel</InputLabel>{' '}
+            <Switch checked={isPartiel} onChange={handleTogglePaie} />
           </div>
         </div>
         <div className={styles.buttonContainer}>
@@ -214,7 +213,7 @@ PaieUModal.propTypes = {
   Sid: PropTypes.string.isRequired,
   paiement: PropTypes.shape({
     no_devis: PropTypes.string,
-    paiement_date: PropTypes.string,
+    reglement_date: PropTypes.string,
     no_virement: PropTypes.number,
     nom_acteur: PropTypes.string,
     libelle_du_virement: PropTypes.string,

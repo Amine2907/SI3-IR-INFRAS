@@ -14,7 +14,7 @@ import SiteDevisService from 'services/site_details/Devis/DevisService';
 const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
   const [formData, setFormData] = useState({
     no_devis: '',
-    paiement_date: '',
+    reglement_date: '',
     no_virement: '',
     nom_acteur: '',
     libelle_du_virement: '',
@@ -68,7 +68,7 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
     }
     const paiementData = {
       no_devis: formData.no_devis,
-      paiement_date: formData.paiement_date,
+      reglement_date: formData.reglement_date,
       no_virement: formData.no_virement,
       nom_acteur: formData.nom_acteur,
       libelle_du_virement: formData.libelle_du_virement,
@@ -101,12 +101,12 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
               style={{ padding: '10px', fontSize: '14px' }}
             >
               <MenuItem value="" disabled>
-                -- Choisir le DR --
+                -- Choisir le Devis --
               </MenuItem>
               {activeDevis.length > 0 ? (
                 activeDevis.map(devis => (
-                  <MenuItem key={devis.id} value={devis.NDRid}>
-                    {devis.NDRid}
+                  <MenuItem key={devis.id} value={devis.ND}>
+                    {devis.ND}
                   </MenuItem>
                 ))
               ) : (
@@ -142,19 +142,19 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
             name="no_commande"
             value={formData.no_commande || ''}
             onChange={handleChange}
-            placeholder="N commande"
+            placeholder="No commande"
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Data de paiement"
-              name="paiement_date"
-              value={formData.paiement_date ? dayjs(formData.paiement_date) : null}
+              name="reglement_date"
+              value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
               onChange={newValue => {
                 handleChange({
                   target: {
-                    name: 'paiement_date',
+                    name: 'reglement_date',
                     value: newValue ? newValue.format('YYYY-MM-DD') : '',
                   },
                 });
@@ -186,7 +186,7 @@ ReglAddingModal.propTypes = {
   Sid: PropTypes.string.isRequired,
   paiement: PropTypes.shape({
     no_devis: PropTypes.string,
-    paiement_date: PropTypes.string,
+    reglement_date: PropTypes.string,
     no_virement: PropTypes.string,
     nom_acteur: PropTypes.string,
     libelle_du_virement: PropTypes.string,
