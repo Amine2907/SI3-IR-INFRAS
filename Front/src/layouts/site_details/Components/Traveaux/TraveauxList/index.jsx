@@ -13,10 +13,11 @@ import { Alert, AlertDescription } from 'components/ui/alert';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import MDAlert from 'components/MDAlert';
-import PaieUModal from 'examples/popup/ReglementPopUp';
-import PaieStorageModal from 'examples/popup/ReglStoragePopUp';
 import useTravForSite from './traveauxService';
 import siteTravService from 'services/site_details/Traveaux/TraveauxService';
+import TravStorageModal from 'examples/popup/TravStoragePopUp';
+import TravUModal from 'examples/popup/TraveauxPopUp';
+import cellStyle from './styles/styles';
 function TraveauxList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -92,7 +93,7 @@ function TraveauxList() {
     return (
       <Alert variant="destructive" className="mt-4">
         <AlertDescription>
-          Aucune donnée des reglements pour ce site sont disponibles.
+          Aucune donnée des traveaux pour ce site sont disponibles.
         </AlertDescription>
       </Alert>
     );
@@ -144,7 +145,7 @@ function TraveauxList() {
         </TableBody>
       </table>
       {showModal && (
-        <PaieUModal
+        <TravUModal
           Sid={siteId}
           traveaux={selectedTrav}
           onSave={handleUpdate}
@@ -152,7 +153,7 @@ function TraveauxList() {
         />
       )}
       {showStorageModal && (
-        <PaieStorageModal
+        <TravStorageModal
           traveaux={selectedTrav}
           onSave={handleUpdate}
           onClose={handleCloseModal}

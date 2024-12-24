@@ -9,7 +9,6 @@ const useTravForSite = () => {
   const location = useLocation();
   const { EB } = location.state || {};
   const siteId = EB;
-
   // Function to fetch traveaux data
   const fecthTravData = async () => {
     try {

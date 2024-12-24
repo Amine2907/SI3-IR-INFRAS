@@ -15,7 +15,7 @@ function TraveauxHeader() {
   const location = useLocation();
   const { EB } = location.state || {};
   const Sid = EB;
-  const { fecthtraveauxData } = useTravForSite(Sid);
+  const { fecthTravData } = useTravForSite(Sid);
 
   const handleAddTrav = async data => {
     const { traveauxData } = data;
@@ -44,10 +44,10 @@ function TraveauxHeader() {
   };
   useEffect(() => {
     if (isTraveauxCreated) {
-      fecthtraveauxData(); // Trigger data fetch
+      fecthTravData(); // Trigger data fetch
       setisTraveauxCreated(false); // Reset the flag to prevent infinite loop
     }
-  }, [isTraveauxCreated, fecthtraveauxData]);
+  }, [isTraveauxCreated, fecthTravData]);
   return (
     <div className="Traveaux-list">
       <Card id="Traveaux-card">
