@@ -66,9 +66,7 @@ export const STATUS_SITE_FK = [
   '8.PEM',
   'En service',
 ];
-
 // Status Site FK
 export const STATUS_SITE_SFR = ['Activé', 'Inactif', 'Terminé'];
-
 // Operators
 export const OPERATORS = ['SFR', 'ORANGE', 'FREE', 'Bouygues Telecom'];

@@ -130,7 +130,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
       });
     }
   };
-
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
