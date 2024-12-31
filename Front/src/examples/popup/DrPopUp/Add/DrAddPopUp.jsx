@@ -168,7 +168,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
             name="NDRid"
             value={formData.NDRid || ''}
             onChange={handleChange}
-            placeholder="NDRid*"
+            placeholder="Num DR*"
             style={{
               marginBottom: '5px',
               width: '320px',
@@ -362,7 +362,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
             </Select>
           </FormControl>
           <div>
-            <label>{isActive ? 'Active' : 'Inactive'}</label>
+            <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
               {' '}
               {isActive ? 'Active' : 'Inactive'}

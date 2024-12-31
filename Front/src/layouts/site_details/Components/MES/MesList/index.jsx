@@ -17,6 +17,7 @@ import cellStyle from './styles/styles';
 import useMesForSite from './mesService';
 import siteMesService from 'services/site_details/MES/MesService';
 import MesStorageModal from 'examples/popup/MesStoragePopUp';
+import MesUModal from 'examples/popup/MesPopUp';
 function MiseEnServiceList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -140,7 +141,7 @@ function MiseEnServiceList() {
         </TableBody>
       </table>
       {showModal && (
-        <TravUModal
+        <MesUModal
           Sid={siteId}
           mes={selectedMes}
           onSave={handleUpdate}

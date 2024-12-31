@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import SiteDemracService from 'services/site_details/DR/DrService';
 import usedemracData from './DrService';
 import statusPropValues from './DrData';
-import DrUploadModal from 'examples/popup/DrPopUp/Upload/DrUploadPopUp';
+import DrUpdateModal from 'examples/popup/DrPopUp/Update/DrUpdatePopUp';
 function DemRacList({ site }) {
   const { demracData, loading, error, fetchDemracData } = usedemracData(site);
   const [showModal, setShowModal] = useState(false);

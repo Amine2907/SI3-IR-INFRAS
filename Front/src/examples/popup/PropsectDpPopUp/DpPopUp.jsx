@@ -3,12 +3,11 @@ import styles from './styles.module.css';
 import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch, Select, MenuItem, FormControl } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
-import { Label } from '@radix-ui/react-label';
 const DpModal = ({ Proid, dp, onSave, onClose }) => {
   const [formData, setFormData] = useState(dp || {});
   const [isActive, setIsActive] = useState(dp ? dp.is_active : false);
@@ -289,12 +288,12 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
           </LocalizationProvider>
         </div>
         <div>
-          <Label>{isActive ? 'Active' : 'Inactive'}</Label>
+          <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
           <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
             {' '}
             {isActive ? 'Active' : 'Inactive'}
           </Switch>
-          <label>{isRelance ? 'Relance' : 'Non Relance'}</label>
+          <InputLabel>{isRelance ? 'Relance' : 'Non Relance'}</InputLabel>
           <Switch type="checkbox" checked={isRelance} onChange={handleToggleRelance}>
             {isRelance ? 'Relance' : 'Non Relance'}
           </Switch>

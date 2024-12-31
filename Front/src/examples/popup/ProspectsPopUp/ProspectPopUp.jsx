@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch, Select, MenuItem, FormControl } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { statusSfrValues, statusValidationValues } from './ProspectData';
 import { useLocation } from 'react-router-dom';
 const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
@@ -216,12 +216,12 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
             </Select>
           </FormControl>
           <div>
-            <label>{isActive ? 'Active' : 'Inactive'}</label>
+            <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
               {' '}
               {isActive ? 'Active' : 'Inactive'}
             </Switch>
-            <label>{isRetenu ? 'Retenu' : 'Non Retenu'}</label>
+            <InputLabel>{isRetenu ? 'Retenu' : 'Non Retenu'}</InputLabel>
             <Switch type="checkbox" checked={isRetenu} onChange={handleToggleRetenu}>
               {isRetenu ? 'Retenu' : 'Non Retenu'}
             </Switch>

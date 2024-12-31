@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
-import { Switch, Select, MenuItem, FormControl, Icon } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl, Icon, InputLabel } from '@mui/material';
 import { Label } from '@radix-ui/react-label';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
@@ -273,7 +273,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
           </div>
         </div>
         <div>
-          <Label>{isActive ? 'Active' : 'Inactive'}</Label>
+          <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
           <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
             {' '}
             {isActive ? 'Active' : 'Inactive'}

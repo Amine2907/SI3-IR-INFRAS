@@ -126,7 +126,7 @@ const CompanyModal = ({ company, onSave, onClose }) => {
           </Select>
         </FormControl>
         <div>
-          <label>{isActive ? 'Active' : 'Inactive'}</label>
+          <InputLabel>Active</InputLabel>
           <Switch checked={isActive} onChange={handleToggleActive} />
         </div>
         <MDButton

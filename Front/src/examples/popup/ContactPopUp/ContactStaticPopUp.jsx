@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch } from '@mui/material';
+import { InputLabel, Switch } from '@mui/material';
 
 const ConatctStaticModal = ({ contact, onClose }) => {
   // Initialize state based on contact prop
@@ -74,10 +74,9 @@ const ConatctStaticModal = ({ contact, onClose }) => {
         />
 
         <div>
-          <label>{isActive ? 'Active' : 'Inactive'}</label>
+          <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
           <Switch checked={isActive} name="is_active" inputProps={{ 'aria-label': 'controlled' }} />
         </div>
-
         <MDButton onClick={onClose} variant="gradient" color="dark" style={{ marginLeft: '130px' }}>
           Fermer
         </MDButton>

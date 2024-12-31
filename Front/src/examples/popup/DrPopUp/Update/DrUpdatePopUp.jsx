@@ -131,12 +131,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
     const { value } = e.target;
     setFormData({ ...formData, operators: value });
   };
-  const handleDropdownChange = (field, subField, value) => {
-    setFormData({
-      ...formData,
-      [field]: { [subField]: value },
-    });
-  };
   const handleNestedVChange = (field, subField, value) => {
     // Directly set the numeric ID instead of an object
     setFormData({
@@ -337,7 +331,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
             </Select>
           </FormControl>
           <div>
-            <label>{isActive ? 'Active' : 'Inactive'}</label>
+            <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
               {' '}
               {isActive ? 'Active' : 'Inactive'}

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
-import { Switch, Select, MenuItem, FormControl, Icon } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl, Icon, InputLabel } from '@mui/material';
 import { Label } from '@radix-ui/react-label';
 import SiteDevisService from 'services/site_details/Devis/DevisService';
 import SiteDemracService from 'services/site_details/DR/DrService';
@@ -349,17 +349,17 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
             />
           </LocalizationProvider>
           <div>
-            <Label>{isActive ? 'Active' : 'Inactive'}</Label>
+            <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
               {' '}
               {isActive ? 'Active' : 'Inactive'}
             </Switch>
-            <label>Conformite</label>
+            <InputLabel>Conformite</InputLabel>
             <Switch type="checkbox" checked={isConforme} onChange={handleToggleConforme}>
               {' '}
               {isActive ? 'Conforme' : 'Non Conforme'}
             </Switch>
-            <label>Valide par SFR</label>
+            <InputLabel>Valide par SFR</InputLabel>
             <Switch type="checkbox" checked={isValide} onChange={handleToggleValide}>
               {' '}
               {isActive ? 'Valide par SFR' : 'Non valide par SFR'}

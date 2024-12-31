@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch } from '@mui/material';
+import { InputLabel, Switch } from '@mui/material';
 
 const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
   const [formData, setFormData] = useState({
@@ -147,7 +147,7 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
 
         {/* Switch for Active (Always On) */}
         <div>
-          <label>Active</label>
+          <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
           <Switch checked={isActive} onChange={() => setIsActive(true)} color="primary" />
         </div>
 

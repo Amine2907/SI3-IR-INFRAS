@@ -23,7 +23,7 @@ import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch, Select, MenuItem, FormControl } from '@mui/material';
+import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 const EntiteModal = ({ entite, onSave, onClose }) => {
   const [formData, setFormData] = useState(entite || {});
   const [isActive, setIsActive] = useState(entite ? entite.is_active : true);
@@ -194,7 +194,7 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
             style={{ marginBottom: '5px', width: '320px' }}
           ></MDInput>
           <div>
-            <label>{isActive ? 'Active' : 'Inactive'}</label>
+            <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
               {' '}
               {isActive ? 'Active' : 'Inactive'}
