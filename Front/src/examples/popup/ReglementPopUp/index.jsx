@@ -10,6 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
+import SiteDevisService from 'services/site_details/Devis/DevisService';
 const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
   const [formData, setFormData] = useState(paiement);
   const [isActive, setIsActive] = useState(paiement ? paiement.is_active : true);
@@ -36,22 +37,21 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
     }
   }, [paiement]);
   useEffect(() => {
-    const fecthActiveDevis = async () => {
+    const fetchActiveDevis = async () => {
       try {
         const result = await SiteDevisService.getDevisSite(Sid);
-        // Ensure result.success is checked, and data is validated.
         if (result.success && Array.isArray(result.data)) {
-          setActiveDevis(result.data); // Valid array
+          setActiveDevis(result.data);
         } else {
           console.error('Error fetching active devis:', result.error || 'Invalid data structure');
-          setActiveDevis([]); // Fallback to empty array
+          setActiveDevis([]);
         }
       } catch (error) {
         console.error('Error during fetch:', error.message);
-        setActiveDevis([]); // Fallback to empty array
+        setActiveDevis([]);
       }
     };
-    fecthActiveDevis();
+    fetchActiveDevis();
   }, [Sid]);
   const handleDropdownChange = (field, subField, value) => {
     console.log(`Updating ${field}.${subField} with value:`, value); // Debug log
@@ -124,12 +124,12 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
               style={{ padding: '10px', fontSize: '14px' }}
             >
               <MenuItem value="" disabled>
-                -- Choisir le DR --
+                -- Choisir le Devis --
               </MenuItem>
               {activeDevis.length > 0 ? (
                 activeDevis.map(devis => (
-                  <MenuItem key={devis.id} value={devis.NDRid}>
-                    {devis.NDRid}
+                  <MenuItem key={devis.id} value={devis.ND}>
+                    {devis.ND}
                   </MenuItem>
                 ))
               ) : (

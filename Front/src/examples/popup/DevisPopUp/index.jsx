@@ -6,7 +6,6 @@ import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
 import { Switch, Select, MenuItem, FormControl, Icon, InputLabel } from '@mui/material';
-import { Label } from '@radix-ui/react-label';
 import SiteDevisService from 'services/site_details/Devis/DevisService';
 import SiteDemracService from 'services/site_details/DR/DrService';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -166,7 +165,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="fournisseur"
-              value={formData.fournisseur.nom || ''}
+              value={formData.fournisseur?.nom || ''}
               onChange={e => handleDropdownChange('fournisseur', 'nom', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
@@ -313,7 +312,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="etat_ralance"
-              value={formData.etat_ralance}
+              value={formData.etat_ralance || ''}
               onChange={handleChange}
               displayEmpty
               style={{
@@ -349,21 +348,24 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
             />
           </LocalizationProvider>
           <div>
-            <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
-            <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
-              {' '}
-              {isActive ? 'Active' : 'Inactive'}
-            </Switch>
-            <InputLabel>Conformite</InputLabel>
-            <Switch type="checkbox" checked={isConforme} onChange={handleToggleConforme}>
-              {' '}
-              {isActive ? 'Conforme' : 'Non Conforme'}
-            </Switch>
-            <InputLabel>Valide par SFR</InputLabel>
-            <Switch type="checkbox" checked={isValide} onChange={handleToggleValide}>
-              {' '}
-              {isActive ? 'Valide par SFR' : 'Non valide par SFR'}
-            </Switch>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
+              <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
+                {isActive ? 'Active' : 'Inactive'}
+              </Switch>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <InputLabel>Conformite</InputLabel>
+              <Switch type="checkbox" checked={isConforme} onChange={handleToggleConforme}>
+                {isConforme ? 'Conforme' : 'Non Conforme'}
+              </Switch>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <InputLabel>Valide par SFR</InputLabel>
+              <Switch type="checkbox" checked={isValide} onChange={handleToggleValide}>
+                {isValide ? 'Valide par SFR' : 'Non valide par SFR'}
+              </Switch>
+            </div>
           </div>
         </div>
         <div className={styles.buttonContainer}>
