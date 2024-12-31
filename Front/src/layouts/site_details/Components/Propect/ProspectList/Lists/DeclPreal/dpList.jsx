@@ -20,7 +20,6 @@ import MDAlert from 'components/MDAlert';
 import DpStorageModal from 'examples/popup/DpStoragePopUp';
 function DeclPreaList() {
   const [showModal, setShowModal] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
@@ -29,16 +28,15 @@ function DeclPreaList() {
   const siteId = EB;
   const { dpsData, loading, error, fetchDpData } = useDpsForProspects(siteId);
   const handleEdit = dp => {
-    // console.log('Editing DP:', dp);
     setSelecteddp(dp);
     setShowModal(true);
-    setIsModalOpen(true);
   };
   const handleOpenModal = () => {
     setShowUploadModal(true);
   };
   const handleCloseModal = () => {
     setShowModal(false);
+    setShowUploadModal(false);
   };
   const handleUploadDp = () => {
     // Upload logic here
@@ -139,7 +137,8 @@ function DeclPreaList() {
                     edit
                   </Icon>
                 </TableCell>
-                <TableCell title="Modifier dp" placement="top">
+                <TableCell title="Ajouter DP " placement="top">
+                  {' '}
                   <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={handleOpenModal}>
                     add
                   </Icon>
@@ -166,7 +165,6 @@ function DeclPreaList() {
       )}
     </TableContainer>
   );
-  5;
 }
 DeclPreaList.propTypes = {
   site: PropTypes.string.isRequired,
