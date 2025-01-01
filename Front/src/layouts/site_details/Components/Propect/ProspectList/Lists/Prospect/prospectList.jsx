@@ -137,6 +137,11 @@ function ProspectList({ site }) {
     }
     handleCloseModal();
   };
+  const getDotColor = retenu => {
+    if (retenu === true) return 'green';
+    if (retenu === false) return 'red';
+    return 'gray';
+  };
   if (loading)
     return (
       <Alert variant="destructive" className="mt-4">
@@ -184,7 +189,17 @@ function ProspectList({ site }) {
                 <TableCell>{statusValidation}</TableCell>
                 <TableCell>{prospect.longitude || 'N/A'}</TableCell>
                 <TableCell>{prospect.latitude || 'N/A'}</TableCell>
-                <TableCell>{prospect.retenu ? 'Retenu' : 'Non retenu'}</TableCell>
+                <TableCell>
+                  <div
+                    style={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: '50%',
+                      backgroundColor: getDotColor(prospect.retenu),
+                    }}
+                  />
+                  {prospect.retenu === undefined ? 'N/A' : ''}
+                </TableCell>
                 <TableCell title="Modifier prospect" placement="top">
                   <Icon
                     sx={{ cursor: 'pointer' }}

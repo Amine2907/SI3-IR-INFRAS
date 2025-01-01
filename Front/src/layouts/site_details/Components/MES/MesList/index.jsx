@@ -76,6 +76,11 @@ function MiseEnServiceList() {
     }
     handleCloseModal();
   };
+  const getDotColor = status_consuel => {
+    if (status_consuel === 'En attente') return 'green';
+    if (status_consuel === 'ok') return 'red';
+    return 'gray';
+  };
   if (loading)
     return (
       <Alert variant="destructive" className="mt-4">
@@ -117,7 +122,17 @@ function MiseEnServiceList() {
             return (
               <TableRow key={mes.id}>
                 <TableCell>{mes.no_PDL || 'N/A'}</TableCell>
-                <TableCell>{mes.status_consuel || 'N/A'}</TableCell>
+                <TableCell>
+                  <div
+                    style={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: '50%',
+                      backgroundColor: getDotColor(mes.status_consuel),
+                    }}
+                  />
+                  {mes.status_consuel === undefined ? 'N/A' : ''}
+                </TableCell>
                 <TableCell>{mes.consuel_remise || 'N/A'}</TableCell>
                 <TableCell>{mes.MES_demande || 'N/A'}</TableCell>
                 <TableCell>{mes.MES_reel || 'N/A'}</TableCell>

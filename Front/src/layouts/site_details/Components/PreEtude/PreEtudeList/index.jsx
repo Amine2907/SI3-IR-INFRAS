@@ -79,6 +79,11 @@ function PreEtudeList() {
     }
     handleCloseModal();
   };
+  const getDotColor = type_rac => {
+    if (type_rac === 'Simple') return 'green';
+    if (type_rac === 'Complexe') return 'red';
+    return 'gray';
+  };
   if (loading)
     return (
       <Alert variant="destructive" className="mt-4">
@@ -118,7 +123,17 @@ function PreEtudeList() {
             return (
               <TableRow key={preEtude.id}>
                 <TableCell>{preEtude.prospectName || 'N/A'}</TableCell>
-                <TableCell>{preEtude.type_rac || 'N/A'}</TableCell>
+                <TableCell>
+                  <div
+                    style={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: '50%',
+                      backgroundColor: getDotColor(preEtude.type_rac),
+                    }}
+                  />
+                  {preEtude.type_rac === undefined ? 'N/A' : ''}
+                </TableCell>
                 <TableCell>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography variant="body2" sx={{ fontWeight: 'normal' }}>

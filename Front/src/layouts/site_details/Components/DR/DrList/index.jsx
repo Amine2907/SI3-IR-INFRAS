@@ -89,6 +89,19 @@ function DemRacList({ site }) {
     }
     handleCloseModal(); // Close the modal after save
   };
+  const getDotColor = (key, value) => {
+    if (key === 'type_rac') {
+      if (value === 'Simple') return 'green';
+      if (value === 'Complexe') return 'red';
+      return 'gray';
+    }
+    if (key === 'statusProp') {
+      if (value === 'Devis en attente') return 'orange';
+      if (value === 'Reçu') return 'blue';
+      return 'gray';
+    }
+    return 'gray';
+  };
   if (loading) {
     return (
       <Alert variant="destructive" className="mt-4">
@@ -140,8 +153,28 @@ function DemRacList({ site }) {
                     <TableCell>{demrac.prospectName || 'N/A'}</TableCell>
                     <TableCell>{demrac.date_dr || 'N/A'}</TableCell>
                     <TableCell>{demrac.Ko_Dp || 'N/A'}</TableCell>
-                    <TableCell>{demrac.type_rac || 'N/A'}</TableCell>
-                    <TableCell>{statusProp}</TableCell>
+                    <TableCell>
+                      <div
+                        style={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: '50%',
+                          backgroundColor: getDotColor('type_rac', demrac.type_rac),
+                          margin: 'auto',
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div
+                        style={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: '50%',
+                          backgroundColor: getDotColor('statusProp', statusProp),
+                          margin: 'auto',
+                        }}
+                      />
+                    </TableCell>
                     <TableCell>
                       {Array.isArray(demrac.operators) ? demrac.operators.join(', ') : 'N/A'}
                     </TableCell>
