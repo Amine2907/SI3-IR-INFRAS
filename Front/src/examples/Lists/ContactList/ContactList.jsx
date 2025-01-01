@@ -113,7 +113,7 @@ const ContactList = () => {
                 label="Recherche par nom, prénom, mission"
                 value={searchQuery}
                 onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
+                style={{ width: '100%', marginBottom: '10px' }}
               />
               <MDButton
                 onClick={() => {
