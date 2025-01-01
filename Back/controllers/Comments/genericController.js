@@ -13,7 +13,6 @@ const genericController = {
       res.status(500).json({ message: `Error creating record: ${error.message}` });
     }
   },
-
   // Get all records from the table
   getAll: async (req, res) => {
     const { table } = req.params;
@@ -70,5 +69,4 @@ const genericController = {
     }
   },
 };
-
 export default genericController;
