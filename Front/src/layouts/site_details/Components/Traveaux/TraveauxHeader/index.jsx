@@ -26,6 +26,7 @@ function TraveauxHeader() {
       if (result.success) {
         successMessage = 'Traveaux enregistré avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
+        fecthTravData();
         setSelectedTrav(null);
         setisTraveauxCreated(true);
       } else {
