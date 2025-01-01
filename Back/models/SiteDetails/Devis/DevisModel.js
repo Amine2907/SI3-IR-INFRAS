@@ -289,11 +289,15 @@ const updateDevis = async (ND, updates) => {
         const frnsName = updates.fournisseur;
         const entite = activeentites.find(entite => entite.nom === frnsName);
         if (entite) {
-          updates.fournisseur = entite.Eid;
+            updates.fournisseur = entite.Eid; // Ensure it's a bigint
         } else {
-          throw new Error(`No entite found with name: ${frnsName}`);
+            throw new Error(`No entite found with name: ${frnsName}`);
         }
-      }
+    } else if (!updates.fournisseur || typeof updates.fournisseur !== 'number') {
+        updates.fournisseur = null; // Default to null if invalid
+    }
+
+    console.log('Transformed updates ready for database operation:', updates);
     //   Active Paiements 
      // Fetch active prospects list (if necessary for mapping)
      const activepropsectsResponse = await getActivePais();
