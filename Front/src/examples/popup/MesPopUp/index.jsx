@@ -113,8 +113,8 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
               </MenuItem>
               {activeTrav.length > 0 ? (
                 activeTrav.map(trav => (
-                  <MenuItem key={trav.id} value={trav.travelle_du_virement}>
-                    {trav.travelle_du_virement}
+                  <MenuItem key={trav.id} value={trav.Tid}>
+                    {trav.Tid}
                   </MenuItem>
                 ))
               ) : (
