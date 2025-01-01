@@ -11,7 +11,7 @@
  * - selectedEntity: The currently selected entity for editing, or null for adding a new entity.
  * - alert: Object containing alert visibility, message, and type.
  * - isActive: Boolean indicating whether active entities are displayed.
- * - searchQuery: Object containing search fields for filtering entities.
+ * - setSearchTerm: Object containing search fields for filtering entities.
  * - noResultsMessage: Message displayed when no entities match the search criteria.
  *
  * Functions:
@@ -51,45 +51,24 @@ const EntiteList = () => {
   const [selectedEntity, setSelectedEntity] = useState(null);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [isActive, setIsActive] = useState(true);
-  const [searchQuery, setSearchQuery] = useState({
-    nom: '',
-    ville: '',
-    region: '',
-    code_postal: '',
-    role: '',
-  });
+  const [searchTerm, setSearchTerm] = useState('');
   const [noResultsMessage, setNoResultsMessage] = useState('');
-  // Function to render the search results
   const renderSearch = () => {
-    if (
-      searchQuery.nom.length > 0 ||
-      searchQuery.ville.length > 0 ||
-      searchQuery.region.length > 0 ||
-      searchQuery.code_postal.length > 0 ||
-      searchQuery.role.length > 0
-    ) {
+    if (searchTerm.trim().length > 0) {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
       const filteredEntites = entites.filter(entite => {
-        const nom = entite.nom
-          ? entite.nom.toLowerCase().includes(searchQuery.nom.toLowerCase())
-          : false;
-        const ville = entite.ville
-          ? entite.ville.toLowerCase().includes(searchQuery.ville.toLowerCase())
-          : false;
-        const region = entite.region
-          ? entite.region.toLowerCase().includes(searchQuery.region.toLowerCase())
-          : false;
-        const code_postal = entite.code_postal
-          ? entite.code_postal.toLowerCase().includes(searchQuery.code_postal.toLowerCase())
-          : false;
-        const role = entite.role
-          ? entite.role.toLowerCase().includes(searchQuery.role.toLowerCase())
-          : false;
-        return nom || ville || region || code_postal || role;
+        return (
+          (entite.nom && entite.nom.toLowerCase().includes(lowerCaseSearchTerm)) ||
+          (entite.ville && entite.ville.toLowerCase().includes(lowerCaseSearchTerm)) ||
+          (entite.region && entite.region.toLowerCase().includes(lowerCaseSearchTerm)) ||
+          (entite.code_postal && entite.code_postal.toLowerCase().includes(lowerCaseSearchTerm)) ||
+          (entite.role && entite.role.toLowerCase().includes(lowerCaseSearchTerm))
+        );
       });
 
       return filteredEntites; // Return filtered entities
     }
-    return entites; // Return original entities if no search query
+    return entites; // Return original entities if no search term
   };
   const roles = [
     'Fournisseur',
@@ -183,31 +162,23 @@ const EntiteList = () => {
   const handleRoleChange = e => {
     const { name, value } = e.target;
     console.log(`Changing ${name} to ${value}`);
-    setSearchQuery(prev => ({ ...prev, [name]: value }));
+    setSearchTerm(prev => ({ ...prev, [name]: value }));
   };
   // Search functionality
   const handleSearchChange = e => {
-    const { name, value } = e.target; // Destructure name and value from the event target
-    // Update searchQuery with the new value
-    setSearchQuery(prev => {
-      const updatedQuery = { ...prev, [name]: value }; // Update only the field that changed
-      console.log('Updated searchQuery:', updatedQuery); // Log the updated searchQuery
-      return updatedQuery; // Return the updated state
-    });
-    // If the input is cleared, fetch active entities
-    if (value === '') {
-      fetchActiveEntites();
-    } else {
-      handleSearchEntities(); // Otherwise, fetch entities based on the search query
+    const value = e.target.value; // Get the input value
+    setSearchTerm(value); // Update search term state
+    if (value.trim() === '') {
+      fetchActiveEntites(); // Fetch all entities if search bar is cleared
     }
   };
   const handleSearchEntities = async () => {
     try {
-      if (!searchQuery || typeof searchQuery !== 'object') {
-        console.error('Invalid searchQuery: searchQuery must be an object');
+      if (!setSearchTerm || typeof setSearchTerm !== 'object') {
+        console.error('Invalid setSearchTerm: setSearchTerm must be an object');
         return;
       }
-      const result = await entityService.searchEntities(searchQuery);
+      const result = await entityService.searchEntities(setSearchTerm);
       if (result.success) {
         setEntites(result.data);
         // Show message if no contacts are found
@@ -238,19 +209,19 @@ const EntiteList = () => {
     });
   };
   useEffect(() => {
-    console.log('Updated searchQuery:', searchQuery); // Ensure `searchQuery` is updated
+    console.log('Updated setSearchTerm:', setSearchTerm); // Ensure `setSearchTerm` is updated
     if (
-      searchQuery.nom ||
-      searchQuery.ville ||
-      searchQuery.region ||
-      searchQuery.code_postal ||
-      searchQuery.role
+      setSearchTerm.nom ||
+      setSearchTerm.ville ||
+      setSearchTerm.region ||
+      setSearchTerm.code_postal ||
+      setSearchTerm.role
     ) {
       handleSearchEntities();
     } else {
       fetchActiveEntites(); // Clear filters if all fields are empty
     }
-  }, [searchQuery]);
+  }, [setSearchTerm]);
   // Render filtered entities
   const filteredEntites = renderSearch();
   return (
@@ -259,33 +230,13 @@ const EntiteList = () => {
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDBox pr={1}>
             <div className="entite-list">
+              {/* Search Bar */}
               <MDInput
-                label="Recherche par nom"
-                name="nom"
-                value={searchQuery.nom}
+                label="Recherche par nom, ville, region, code postal"
+                name="searchTerm"
+                value={searchTerm}
                 onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par ville"
-                name="ville"
-                value={searchQuery.ville}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par region"
-                name="region"
-                value={searchQuery.region}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par code postal"
-                name="code_postal"
-                value={searchQuery.code_postal}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
+                style={{ width: '100%', marginBottom: '10px' }}
               />
               {/* Dropdown for Role Selection */}
               <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
@@ -295,7 +246,7 @@ const EntiteList = () => {
                 <Select
                   labelId="role-select-label"
                   name="role"
-                  value={searchQuery.role}
+                  value={setSearchTerm.role}
                   onChange={handleRoleChange}
                   label="Role"
                 >
@@ -309,7 +260,7 @@ const EntiteList = () => {
               <MDButton
                 onClick={() => {
                   setNoResultsMessage('');
-                  setSearchQuery({ nom: '', ville: '', region: '', code_postal: '', role: '' });
+                  setSearchTerm({ nom: '', ville: '', region: '', code_postal: '', role: '' });
                 }}
                 variant="gradient"
                 color="dark"

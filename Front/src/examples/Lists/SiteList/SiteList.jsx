@@ -23,19 +23,7 @@ const SiteList = () => {
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [activeCompanies, setActiveCompanies] = useState([]);
   const [isActive, setIsActive] = useState(true);
-  const [searchQuery, setSearchQuery] = useState({
-    EB: '',
-    G2R: '',
-    nom: '',
-    code_postal: '',
-    Ville: '',
-    status_site_SFR: '',
-    region: '',
-    Operateurs: '',
-    programme_fk: '',
-    status_site_fk: '',
-    Acteur_ENEDIS_id: '',
-  });
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const [noResultsMessage, setNoResultsMessage] = useState('');
   // Fetch active companies when the component mounts
@@ -56,75 +44,34 @@ const SiteList = () => {
     };
     fetchActiveCompanies();
   }, []); // Empty dependency array to run once when the component mounts
-  // Function to render the search results
   const renderSearch = () => {
-    if (
-      searchQuery.status_site_SFR.length > 0 ||
-      searchQuery.EB.length > 0 ||
-      searchQuery.G2R.length > 0 ||
-      searchQuery.Ville.length > 0 ||
-      searchQuery.code_postal.length > 0 ||
-      searchQuery.nom.length > 0 ||
-      searchQuery.region.length > 0 ||
-      searchQuery.Operateurs.length > 0 ||
-      searchQuery.programme_fk.length > 0 ||
-      searchQuery.status_site_fk.length > 0 ||
-      (searchQuery.Acteur_ENEDIS_id && searchQuery.Acteur_ENEDIS_id.length > 0)
-    ) {
-      const filteredsites = sites.filter(Site => {
-        const EB = Site.EB ? Site.EB.toLowerCase().includes(searchQuery.EB.toLowerCase()) : false;
-        const G2R = Site.G2R
-          ? Site.G2R.toLowerCase().includes(searchQuery.G2R.toLowerCase())
-          : false;
-        const nom = Site.nom
-          ? Site.nom.toLowerCase().includes(searchQuery.nom.toLowerCase())
-          : false;
-        const status_site_SFR = Site.status_site_SFR
-          ? Site.status_site_SFR.toLowerCase().includes(searchQuery.status_site_SFR.toLowerCase())
-          : false;
-        const Acteur_ENEDIS_id = Site.Acteur_ENEDIS_id
-          ? String(Site.Acteur_ENEDIS_id)
-              .toLowerCase()
-              .includes(searchQuery.Acteur_ENEDIS_id.toLowerCase())
-          : false;
-        const Operateurs = Site.Operateurs
-          ? String(Site.Operateurs).toLowerCase().includes(searchQuery.Operateurs.toLowerCase())
-          : false;
-        const region = Site.region
-          ? Site.region.toLowerCase().includes(searchQuery.region.toLowerCase())
-          : false;
-        const status_site_fk = Site.status_site_fk
-          ? String(Site.status_site_fk)
-              .toLowerCase()
-              .includes(searchQuery.status_site_fk.toLowerCase())
-          : false;
-        const programme_fk = Site.programme_fk
-          ? String(Site.programme_fk).toLowerCase().includes(searchQuery.programme_fk.toLowerCase())
-          : false;
-        const code_postal = Site.code_postal
-          ? String(Site.code_postal).toLowerCase().includes(searchQuery.code_postal.toLowerCase())
-          : false;
-        const Ville = Site.Ville
-          ? Site.Ville.toLowerCase().includes(searchQuery.Ville.toLowerCase())
-          : false;
-        return (
-          EB ||
-          G2R ||
-          nom ||
-          code_postal ||
-          Ville ||
-          status_site_SFR ||
-          region ||
-          Operateurs ||
-          programme_fk ||
-          status_site_fk ||
-          Acteur_ENEDIS_id
-        );
-      });
-      return filteredsites; // Return filtered Sites
+    if (!searchQuery.trim()) {
+      return sites; // Return all sites if search query is empty
     }
-    return sites; // Return original Sites if no search query
+    const lowerCaseQuery = searchQuery.toLowerCase();
+
+    return sites.filter(site => {
+      const combinedFields = [
+        site.EB,
+        site.G2R,
+        site.nom,
+        site.code_postal,
+        site.Ville,
+        site.status_site_SFR,
+        site.region,
+        site.Operateurs,
+        site.programme_fk,
+        site.status_site_fk,
+        site.Acteur_ENEDIS_id,
+      ]
+        .filter(Boolean) // Remove null or undefined values
+        .map(field => field.toString().toLowerCase()) // Convert to lowercase string
+        .join(' '); // Combine all fields into a single string
+
+      return combinedFields.includes(lowerCaseQuery); // Check if the query matches
+    });
   };
+  const filteredSites = renderSearch();
   // Fetch Active and Inactive Sites
   const fetchActivesites = async () => {
     setNoResultsMessage('');
@@ -218,21 +165,9 @@ const SiteList = () => {
       Acteur_ENEDIS_id: value,
     }));
   };
-  // Search functionality
   const handleSearchChange = e => {
-    const { name, value } = e.target; // Destructure name and value from the event target
-    // Update searchQuery with the new value
-    setSearchQuery(prev => {
-      const updatedQuery = { ...prev, [name]: value }; // Update only the field that changed
-      console.log('Updated searchQuery:', updatedQuery); // Log the updated searchQuery
-      return updatedQuery; // Return the updated state
-    });
-    // If the input is cleared, fetch active Sites
-    if (value === '') {
-      fetchActivesites();
-    } else {
-      handleSearchSites(); // Otherwise, fetch Sites based on the search query
-    }
+    const { value } = e.target; // Get the value from the input
+    setSearchQuery(value); // Set it directly as the string searchQuery
   };
   // handle Search Sites based on searchQuery
   const handleSearchSites = async () => {
@@ -294,49 +229,26 @@ const SiteList = () => {
       fetchActivesites(); // Clear filters if all fields are empty
     }
   }, [searchQuery]);
-  // Render filtered Sites
-  const filteredsites = renderSearch();
   return (
     <div className="Site-list">
       <Card id="search-Site">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDBox pr={1}>
             <div className="Site-list">
-              <MDInput
-                label="Recherche par EB"
-                name="EB"
-                value={searchQuery.EB}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par G2R"
-                name="G2R"
-                value={searchQuery.G2R}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par nom du site"
-                name="nom"
-                value={searchQuery.nom}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par code postal"
-                name="code_postal"
-                value={searchQuery.code_postal}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par ville"
-                name="Ville"
-                value={searchQuery.Ville}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
+              <MDBox
+                pt={2}
+                px={2}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <MDInput
+                  label="Recherche par Nom, EB, G2R, Code Postal, Ville"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  style={{ width: '100%', marginBottom: '10px' }}
+                />
+              </MDBox>
               {/* Dropdown for Status Site SFR Selection */}
               <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
                 <MDTypography variant="body2" fontWeight="medium">
@@ -496,7 +408,8 @@ const SiteList = () => {
             style={{ marginRight: '10px' }}
           />
           <Grid container spacing={3}>
-            {filteredsites.map(site => (
+            {noResultsMessage && <MDTypography>{noResultsMessage}</MDTypography>}
+            {filteredSites.map(site => (
               <Grid item xs={12} sm={8} md={4} key={site.EB}>
                 <SiteCard
                   site={site}
