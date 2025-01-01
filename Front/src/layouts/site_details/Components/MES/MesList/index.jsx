@@ -40,7 +40,7 @@ function MiseEnServiceList() {
     setShowStorageModal(false);
   };
   const handleUpdate = async updates => {
-    const mesId = selectedMes?.Mid;
+    const mesId = selectedMes?.MESid;
     console.log('Sending update for mesId:', mesId, 'Updates:', updates);
     if (!mesId) {
       console.error('mesId is missing, cannot update.');
