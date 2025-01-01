@@ -1,12 +1,7 @@
 /* eslint-disable */
 // constants.js
 // Priority levels
-export const PRIORITIES = [
-  'P00',
-  'P0',
-  'P1',
-  'P2',
-];
+export const PRIORITIES = ['P00', 'P0', 'P1', 'P2'];
 // Regions
 export const REGIONS = [
   'Auvergne-Rhône-Alpes',
@@ -24,7 +19,7 @@ export const REGIONS = [
   'Nouvelle-Aquitaine',
   'Occitanie',
   'Pays de la Loire',
-  'Provence-Alpes-Côte d\'Azur',
+  "Provence-Alpes-Côte d'Azur",
   'Réunion',
 ];
 

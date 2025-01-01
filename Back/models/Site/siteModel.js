@@ -382,6 +382,20 @@ const SearchSite = async (filters) => {
         return { success: false, error: error.message };
     }
 };
+const getDpData = async (Sid) => {
+    try {
+        const {data,error} = await supabase
+        .from('DP')
+        .select('status_go_traveauxR')
+        .eq('EB_fk',Sid);
+        if(error){
+            throw error ; 
+        }
+        return {success:true , data };
+    }catch(error){
+        return {success:false , error:error.messsage};
+    }
+}
 const siteModel = {
     createSite,
     getAllSites,
@@ -393,5 +407,6 @@ const siteModel = {
     getAllInactivesites,
     SearchSite,
     getActiveCompanies,
+    getDpData,
 }
 export default siteModel ; 

@@ -26,6 +26,19 @@ const fetchActiveCompanies = async (req, res) => {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
+const fetchDpData = async (req, res) => {
+  const siteId = req.params.Sid;
+  try {
+      const result = await siteModel.getDpData(siteId);
+      if (result.success) {
+          return res.status(200).json(result.data);
+      } else {
+          return res.status(500).json({ success: false, message: result.error });
+      }
+  } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+  }
+};
 //Create site controlller 
 const createsite = async (req, res) => {
     try {
@@ -238,5 +251,6 @@ const siteController = {
     SearchSites,
     getActivesites,
     getInactivesites,
+    fetchDpData,
 }
 export default siteController ; 

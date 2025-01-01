@@ -26,6 +26,14 @@ const createSite = async data => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
+const getDpData = async Sid => {
+  try {
+    const response = await axios.get(`${API_URL}/${Sid}/dp-data`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
+};
 // Get all Sites
 const getAllSites = async () => {
   try {
@@ -118,5 +126,6 @@ const SiteService = {
   getInactiveSites,
   searchSites,
   getActiveCompanies,
+  getDpData,
 };
 export default SiteService;

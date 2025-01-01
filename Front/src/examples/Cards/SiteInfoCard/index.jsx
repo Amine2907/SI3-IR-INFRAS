@@ -380,6 +380,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
                     <strong>Status SFR:</strong> {site.status_site_SFR}
                   </MDTypography>
                 </MDBox>
+                {/* Status Traveaux GO R  */}
                 {/* Priorité */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>priority_high</Icon>
