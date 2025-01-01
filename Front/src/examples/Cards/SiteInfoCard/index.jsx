@@ -496,8 +496,8 @@ const SiteInfoCard = ({ site, onEdit }) => {
                           </MenuItem>
                           {activeContacts.length > 0 ? (
                             activeContacts.map(contact => (
-                              <MenuItem key={contact.nom} value={contact.Cid}>
-                                {contact.nom}
+                              <MenuItem key={contact.Cid} value={contact.Cid}>
+                                {contact.nom ? contact.nom : contact.email}{' '}
                               </MenuItem>
                             ))
                           ) : (
