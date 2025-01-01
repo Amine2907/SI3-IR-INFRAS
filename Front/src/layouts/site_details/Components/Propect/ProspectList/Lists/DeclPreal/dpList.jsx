@@ -10,10 +10,10 @@ import {
   Icon,
 } from '@mui/material';
 import { Alert, AlertDescription } from 'components/ui/alert';
-import cellStyle from '../Styles/styles';
+import cellStyle from '../../Styles/styles';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import useDpsForProspects from './DeclPreal/declpreaService';
+import useDpsForProspects from './declpreaService';
 import ProspectDpService from 'services/site_details/DP/DpService';
 import DpUModal from 'examples/popup/DeclPreaPopUp/DpPopUp';
 import MDAlert from 'components/MDAlert';

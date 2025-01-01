@@ -2,8 +2,7 @@
 import { useState, useEffect } from 'react';
 import breakpoints from 'assets/theme/base/breakpoints';
 import ProspectList from '../Lists/Prospect/prospectList';
-import DeclPreaList from '../Lists/dpList';
-
+import DeclPreaList from '../Lists/DeclPreal/dpList';
 function HeaderListFunctions() {
   const [tabsOrientation, setTabsOrientation] = useState('horizontal');
   const [tabValue, setTabValue] = useState(0);
