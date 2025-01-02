@@ -184,7 +184,7 @@ const getDpDataWithProspect = async (Sid) => {
         .select(`
           status_go_traveauxR,
           Prospect!DP_PRid_fk_fkey (
-            PRid_fk
+            Proid
           )
         `)
         .eq('EB_fk', Sid)

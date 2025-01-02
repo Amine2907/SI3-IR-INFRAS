@@ -56,14 +56,13 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [showDropDown, setShowDropDown] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
   // eslint-disable-next-line no-unused-vars
-  const siteId = site.EB;
+  const Sid = site.EB;
   useEffect(() => {
     if (formData.status_go_traveauxR) {
       setStatusGoTraveauxR(formData.status_go_traveauxR);
     }
   }, [formData.status_go_traveauxR]);
   useEffect(() => {
-    const Sid = site.EB;
     const fetchContactsSite = async () => {
       if (Sid) {
         try {
@@ -125,7 +124,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
 
   useEffect(() => {
     const fetchDPStatus = async () => {
-      const Sid = site.EB;
       try {
         const dpData = await ProspectDpService.getDpDataWithProspect(Sid);
         if (dpData && dpData.status_go_traveauxR) {
@@ -139,9 +137,8 @@ const SiteInfoCard = ({ site, onEdit }) => {
       }
     };
     fetchDPStatus();
-  }, [site.EB]);
+  }, [Sid]);
   const fetchContactsSite = async () => {
-    const Sid = site.EB;
     if (Sid) {
       try {
         const contactSite = await getContactsSite(Sid);
@@ -176,7 +173,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
   };
   const handleSave = async data => {
     const { contactData } = data;
-    const Sid = site.EB;
     // Log to check values before making the API call
     console.log('Saving contact with data:', { Sid, contactData });
     try {
@@ -219,7 +215,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
   // Handle Edit for display contact details
   const handleEdit = async contactId => {
     try {
-      const Sid = site.EB; // Extract the site ID from context
       const response = await performSiteContactAction('fetchContacts', Sid);
       if (response.success) {
         const contacts = response.data;
@@ -255,7 +250,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
   // Handle Delete Contact realted to a site
   const handleDelete = async Cid => {
     setShowWarning(false);
-    const Sid = site.EB; // Extract the site ID from context
     if (!Cid) {
       setAlert({ show: true, message: 'Contact ID is required', type: 'error' });
       return;
@@ -282,10 +276,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
   };
   // Handle Associate Contacts
   const handleAssociateContacts = async selectedContacts => {
-    // console.log('Selected Contacts:', selectedContacts);
-    const siteId = site.EB;
-    // console.log('Site ID:', siteId);
-    // Check if siteId and selectedContacts are valid
     if (!selectedContacts || !Array.isArray(selectedContacts) || selectedContacts.length === 0) {
       setAlert({
         show: true,
@@ -297,7 +287,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
     try {
       // Prepare the payload to send to the backend
       const payload = {
-        Sid: siteId, // Site ID (string)
+        Sid: Sid, // Site ID (string)
         Cids: selectedContacts, // Array of selected contact IDs
       };
       // console.log('Payload:', payload);
