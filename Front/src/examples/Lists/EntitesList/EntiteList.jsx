@@ -52,9 +52,10 @@ const EntiteList = () => {
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [isActive, setIsActive] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
   const [noResultsMessage, setNoResultsMessage] = useState('');
   const renderSearch = () => {
-    if (searchTerm.trim().length > 0) {
+    if (typeof searchTerm === 'string' && searchTerm.trim().length > 0) {
       const lowerCaseSearchTerm = searchTerm.toLowerCase();
       const filteredEntites = entites.filter(entite => {
         return (
@@ -65,7 +66,6 @@ const EntiteList = () => {
           (entite.role && entite.role.toLowerCase().includes(lowerCaseSearchTerm))
         );
       });
-
       return filteredEntites; // Return filtered entities
     }
     return entites; // Return original entities if no search term
@@ -85,10 +85,8 @@ const EntiteList = () => {
     setNoResultsMessage('');
     const result = await entityService.getActiveEntites();
     if (result.success) {
-      setEntites(result.data); // Update your entites state here
-      if (result.data.length === 0) {
-        setNoResultsMessage('Aucune entité active trouvée.');
-      }
+      setEntites(result.data);
+      setNoResultsMessage(result.data.length === 0 ? 'Aucune entité inactive trouvée.' : '');
     } else {
       console.error(result.error);
       setNoResultsMessage(
@@ -100,9 +98,7 @@ const EntiteList = () => {
     const result = await entityService.getInactiveEntites();
     if (result.success) {
       setEntites(result.data);
-      if (result.data.length === 0) {
-        setNoResultsMessage('Aucune entité inactive trouvée.');
-      } // Update your entites state here
+      setNoResultsMessage(result.data.length === 0 ? 'Aucune entité inactive trouvée.' : '');
     } else {
       console.error(result.error);
       setNoResultsMessage(
@@ -160,14 +156,14 @@ const EntiteList = () => {
   };
   // Search Role
   const handleRoleChange = e => {
-    const { name, value } = e.target;
-    console.log(`Changing ${name} to ${value}`);
-    setSearchTerm(prev => ({ ...prev, [name]: value }));
+    const value = e.target.value;
+    setSelectedRole(value); // Update the dropdown state
+    setSearchTerm(value); // Update searchTerm state to trigger filtering
   };
   // Search functionality
   const handleSearchChange = e => {
-    const value = e.target.value; // Get the input value
-    setSearchTerm(value); // Update search term state
+    const value = e.target.value;
+    setSearchTerm(value); // Update searchTerm state
     if (value.trim() === '') {
       fetchActiveEntites(); // Fetch all entities if search bar is cleared
     }
@@ -181,14 +177,14 @@ const EntiteList = () => {
       const result = await entityService.searchEntities(setSearchTerm);
       if (result.success) {
         setEntites(result.data);
-        // Show message if no contacts are found
-        if (result.data.length === 0) {
-          setNoResultsMessage('Aucune entité trouvée pour les critères de recherche spécifiés.');
-        } else {
-          setNoResultsMessage(''); // Clear message if results are found
-        }
+        setNoResultsMessage(
+          result.data.length === 0
+            ? 'Aucune entité trouvée pour les critères de recherche spécifiés.'
+            : ''
+        );
       } else {
         console.error(result.error);
+        setNoResultsMessage('Erreur lors de la recherche. Veuillez réessayer plus tard.');
       }
     } catch (error) {
       console.error('Error while searching entities:', error);
@@ -224,6 +220,11 @@ const EntiteList = () => {
   }, [setSearchTerm]);
   // Render filtered entities
   const filteredEntites = renderSearch();
+  const clearSearch = () => {
+    setSearchTerm(''); // Clear the search bar
+    setSelectedRole(''); // Clear the dropdown value
+    fetchActiveEntites(); // Fetch all entities
+  };
   return (
     <div className="entite-list">
       <Card id="search-entite">
@@ -246,7 +247,7 @@ const EntiteList = () => {
                 <Select
                   labelId="role-select-label"
                   name="role"
-                  value={setSearchTerm.role}
+                  value={selectedRole} // Bind to selectedRole state
                   onChange={handleRoleChange}
                   label="Role"
                 >
@@ -257,14 +258,7 @@ const EntiteList = () => {
                   ))}
                 </Select>
               </FormControl>
-              <MDButton
-                onClick={() => {
-                  setNoResultsMessage('');
-                  setSearchTerm({ nom: '', ville: '', region: '', code_postal: '', role: '' });
-                }}
-                variant="gradient"
-                color="dark"
-              >
+              <MDButton onClick={() => clearSearch()} variant="gradient" color="dark">
                 Effacer la recherche
               </MDButton>
             </div>
@@ -298,7 +292,7 @@ const EntiteList = () => {
             ))}
           </Grid>
           {/* Conditionally render the no results alert */}
-          {noResultsMessage && (
+          {filteredEntites.length === 0 && noResultsMessage && (
             <Alert variant="destructive" className="mt-4">
               <AlertDescription>{noResultsMessage}</AlertDescription>
             </Alert>

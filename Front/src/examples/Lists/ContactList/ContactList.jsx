@@ -80,17 +80,6 @@ const ContactList = () => {
       setIsActive(true);
     }
   };
-  // Handle search change
-  // const handleChange = e => {
-  //   handleSearchChange(
-  //     e,
-  //     searchQuery,
-  //     setSearchQuery,
-  //     setContacts,
-  //     setNoResultsMessage,
-  //     handleSearchContacts
-  //   );
-  // };
   const handleToggleActiveInactive = () => {
     setIsActive(prevIsActive => {
       const newIsActive = !prevIsActive; // Toggle the active state

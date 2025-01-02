@@ -18,12 +18,12 @@ import ProspectDpService from 'services/site_details/DP/DpService';
 import DpUModal from 'examples/popup/DeclPreaPopUp/DpPopUp';
 import MDAlert from 'components/MDAlert';
 import DpStorageModal from 'examples/popup/DpStoragePopUp';
-import {
-  fetchDpComments,
-  addDpComment,
-  deleteDpComment,
-} from 'services/Commentary/Dp/dpComService';
-import CommentsList from 'examples/Cards/Commentaires';
+// import {
+//   fetchDpComments,
+//   addDpComment,
+//   deleteDpComment,
+// } from 'services/Commentary/Dp/dpComService';
+// import CommentsList from 'examples/Cards/Commentaires';
 function DeclPreaList() {
   const [showModal, setShowModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -149,13 +149,13 @@ function DeclPreaList() {
                     add
                   </Icon>
                 </TableCell>
-                <CommentsList
+                {/* <CommentsList
                   fetchComments={fetchDpComments}
                   onAddComment={addDpComment}
                   onDeleteComment={deleteDpComment}
                   context={dp.id} // Pass DP ID as context
                   title="Commentaires"
-                />
+                /> */}
               </TableRow>
             );
           })}
