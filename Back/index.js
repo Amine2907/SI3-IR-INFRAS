@@ -21,6 +21,7 @@ import traveauxRoutes from './routes/SiteDetails/Traveaux/traveaux.js';
 import miseEnServiceRoutes from './routes/SiteDetails/MES/miseEnService.js';
 import paieRoutes from './routes/SiteDetails/Reglement/Paiement/paiements.js';
 import CommentsRoutes from './routes/Comments/comments.js';
+import siteFields from './routes/Site/siteFields.js';
 // Storing Routes 
 import prospectStorageRoutes from './routes/SiteDetails/Prospect/prospectStorage.js';
 import demRacStorageRoutes from './routes/SiteDetails/DR/demRacStorage.js';
@@ -63,6 +64,7 @@ app.use('/api/traveaux',traveauxRoutes);
 app.use('/api/mes',miseEnServiceRoutes);
 app.use('/api/paie',paieRoutes);
 app.use('/api/com',CommentsRoutes);
+app.use('/api/site-fields',siteFields);
 // Use Storing Routes 
 app.use('/api/dem-rac-storage',demRacStorageRoutes);
 app.use('/api/dp-storage',dpStorageRoutes);
