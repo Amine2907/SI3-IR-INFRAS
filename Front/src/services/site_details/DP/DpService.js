@@ -87,6 +87,14 @@ const getInactiveDpsForProspect = async Proid => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
+const getDpDataWithProspect = async DPid => {
+  try {
+    const response = await axios.get(`${API_URL}/${DPid}/dp-data`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
+};
 const ProspectDpService = {
   createDp,
   updateDp,
@@ -97,5 +105,6 @@ const ProspectDpService = {
   getAllDpsForProspect,
   getActiveDpsForProspect,
   getInactiveDpsForProspect,
+  getDpDataWithProspect,
 };
 export default ProspectDpService;

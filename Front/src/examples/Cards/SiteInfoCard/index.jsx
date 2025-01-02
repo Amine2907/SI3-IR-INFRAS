@@ -29,6 +29,7 @@ import WarningPopUp from 'examples/popup/userPopUp/WariningPopUp';
 import siteContactService from 'services/Site_Services/siteContactService';
 import ContactSiteModal from 'examples/popup/ContactPopUp/ContactSitePopUp';
 import ConatctStaticModal from 'examples/popup/ContactPopUp/ContactStaticPopUp';
+import ProspectDpService from 'services/site_details/DP/DpService';
 const SiteInfoCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -44,6 +45,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
       contact_fk: [],
     }
   );
+  const [statusGoTraveauxR, setStatusGoTraveauxR] = useState('N/A');
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [showModal, setShowModal] = useState(false);
   const [showContactModel, setShowContactModel] = useState(false);
@@ -55,6 +57,11 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const siteId = site.EB;
+  useEffect(() => {
+    if (formData.status_go_traveauxR) {
+      setStatusGoTraveauxR(formData.status_go_traveauxR);
+    }
+  }, [formData.status_go_traveauxR]);
   useEffect(() => {
     const Sid = site.EB;
     const fetchContactsSite = async () => {
@@ -115,6 +122,24 @@ const SiteInfoCard = ({ site, onEdit }) => {
     };
     fetchCompanyName();
   }, [site.Acteur_ENEDIS_id]);
+
+  useEffect(() => {
+    const fetchDPStatus = async () => {
+      const Sid = site.EB;
+      try {
+        const dpData = await ProspectDpService.getDpDataWithProspect(Sid);
+        if (dpData && dpData.status_go_traveauxR) {
+          setFormData(prev => ({
+            ...prev,
+            status_go_traveauxR: dpData.status_go_traveauxR,
+          }));
+        }
+      } catch (error) {
+        console.error('Error fetching DP data:', error);
+      }
+    };
+    fetchDPStatus();
+  }, [site.EB]);
   const fetchContactsSite = async () => {
     const Sid = site.EB;
     if (Sid) {
@@ -381,6 +406,14 @@ const SiteInfoCard = ({ site, onEdit }) => {
                   </MDTypography>
                 </MDBox>
                 {/* Status Traveaux GO R  */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>construction</Icon> {/* Example Icon */}
+                  <MDTypography variant="h6" fontWeight="medium">
+                    <strong>Status GO Traveaux (Reel):</strong>
+                    {statusGoTraveauxR || 'N/A'}
+                    {/* Display the value */}
+                  </MDTypography>
+                </MDBox>
                 {/* Priorité */}
                 <MDBox display="flex" alignItems="center">
                   <Icon sx={{ mr: 1 }}>priority_high</Icon>

@@ -177,6 +177,30 @@ const desactivateDp = async(id) => {
         return {success:false , error:error.messsage};
     }
 };
+const getDpDataWithProspect = async (Sid) => {
+    try {
+      const { data, error } = await supabase
+        .from('DP')
+        .select(`
+          status_go_traveauxR,
+          Prospect!DP_PRid_fk_fkey (
+            PRid_fk
+          )
+        `)
+        .eq('EB_fk', Sid)
+        .eq('Prospect.is_active', true)
+        .eq('Prospect.status_validation_fk', 25);
+  
+      if (error) {
+        throw error;
+      }
+      // Process the data if needed
+      return { success: true, data };
+    } catch (error) {
+      console.error('Error fetching data with join:', error);
+      return { success: false, error: error.message };
+    }
+  };
 // exporting all model's functions 
 const declarationPrealableModel = {
     createDp,
@@ -187,5 +211,6 @@ const declarationPrealableModel = {
     activateDp,
     desactivateDp,
     getDpById,
+    getDpDataWithProspect,
 }
 export default declarationPrealableModel; 

@@ -10,4 +10,6 @@ router.get('/:id',declarationPrealableController.getDpsById);
 router.put('/:id',declarationPrealableController.updateDp);
 router.patch('/:id/desactivate',declarationPrealableController.desactivateDp);
 router.patch('/:id/activate',declarationPrealableController.activateDp);
+router.get('/:id/dp-data',declarationPrealableController.getDpDataWithProspect);
+
 export default router; 

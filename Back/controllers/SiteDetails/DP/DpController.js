@@ -126,6 +126,19 @@ const getInactiveDps = async(req,res) => {
     }
     return res.status(200).json(result.data);
 }
+const getDpDataWithProspect = async (req, res) => {
+  try {
+    const Sid = req.params.id;
+    const result = await declarationPrealableModel.getDpDataWithProspect(Sid);
+    if (!result.success) {
+      return res.status(400).json({ error: result.error });
+    }
+    return res.status(200).json(result.data);
+  } catch (error) {
+    console.error('Error fetching Dp data with Prospect:', error.message);
+    return res.status(500).json({ error: 'An error occurred while fetching Dp data with Prospect.' });
+  }
+}
 // exporting all controller's functions
 const declarationPrealableController = {
     getAllDps,
@@ -136,5 +149,6 @@ const declarationPrealableController = {
     desactivateDp,
     updateDp,
     getDpsById,
+    getDpDataWithProspect,
 }
 export default declarationPrealableController ; 
