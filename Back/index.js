@@ -1,6 +1,6 @@
 // Imports here 
-import express from "express"; 
-import cors from "cors"; 
+import express from "express";
+import cors from "cors";
 import bodyParser from "body-parser";
 // Routes
 import authRoutes from './routes/Auth/auth.js';
