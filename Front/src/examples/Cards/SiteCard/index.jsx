@@ -6,16 +6,13 @@ import Icon from '@mui/material/Icon';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
-import TextField from '@mui/material/TextField';
 import Card from '@mui/material/Card';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import { useMaterialUIController } from '../../../context/index';
 import { program, Status_Site, priority, fetchCompanyNameById } from './CardData';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import SiteFieldsService from 'services/Site_Services/siteFieldsService';
 const SiteCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -27,6 +24,14 @@ const SiteCard = ({ site, onEdit }) => {
     devisPg: true,
     mesPg: true,
   });
+  // State to hold data fetched from SiteFieldsService
+  const [prospectRetenu, setProspectRetenu] = useState('N/A');
+  const [drDate, setDrDate] = useState(null);
+  const [devisDate, setDevisDate] = useState(null);
+  const [reglementDate, setReglementDate] = useState(null);
+  const [mesDate, setMesDate] = useState(null);
+  const Sid = site.EB;
+  console.log('site', Sid);
   useEffect(() => {
     const acteurId = site.Acteur_ENEDIS_id;
     const fetchCompanyName = async () => {
@@ -47,7 +52,72 @@ const SiteCard = ({ site, onEdit }) => {
     const { name, checked } = event.target;
     setCheckedValues(prev => ({ ...prev, [name]: checked }));
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Prospect Retenu
+        const prospectResponse = await SiteFieldsService.getPropsectRetenu(Sid);
+        if (
+          prospectResponse.success &&
+          Array.isArray(prospectResponse.data) &&
+          prospectResponse.data.length > 0
+        ) {
+          setProspectRetenu(prospectResponse.data[0]?.retenu ?? 'N/A'); // Use the first valid item
+        } else {
+          console.warn(`No valid Prospect Retenu data found for Sid: ${Sid}`);
+          setProspectRetenu('N/A');
+        }
 
+        // DR Date
+        const drResponse = await SiteFieldsService.getDrDate(Sid);
+        if (drResponse.success && Array.isArray(drResponse.data) && drResponse.data.length > 0) {
+          setDrDate(drResponse.data[0]?.date_dr ?? 'N/A');
+        } else {
+          console.warn(`No valid DR dates found for Sid: ${Sid}`);
+          setDrDate('N/A');
+        }
+
+        // Devis Date
+        const devisResponse = await SiteFieldsService.getDevisDate(Sid);
+        if (
+          devisResponse.success &&
+          Array.isArray(devisResponse.data) &&
+          devisResponse.data.length > 0
+        ) {
+          setDevisDate(devisResponse.data[0]?.reception_date ?? 'N/A');
+        } else {
+          console.warn(`No valid Devis reception date found for Sid: ${Sid}`);
+          setDevisDate('N/A');
+        }
+
+        // Règlement Date
+        const reglementResponse = await SiteFieldsService.getReglementDate(Sid);
+        if (
+          reglementResponse.success &&
+          Array.isArray(reglementResponse.data) &&
+          reglementResponse.data.length > 0
+        ) {
+          setReglementDate(reglementResponse.data[0]?.reglement_date ?? 'N/A');
+        } else {
+          console.warn(`No valid reglement dates found for Sid: ${Sid}`);
+          setReglementDate('N/A');
+        }
+
+        // MES Date
+        const mesResponse = await SiteFieldsService.getMesDate(Sid);
+        if (mesResponse.success && Array.isArray(mesResponse.data) && mesResponse.data.length > 0) {
+          setMesDate(mesResponse.data[0]?.MES_reel ?? 'N/A');
+        } else {
+          console.warn(`No valid MES reel dates found for Sid: ${Sid}`);
+          setMesDate('N/A');
+        }
+      } catch (error) {
+        console.error('Error fetching site fields data:', error);
+      }
+    };
+
+    fetchData();
+  }, [Sid]);
   return (
     <Grid item xs={12}>
       <Card id="site_card">
@@ -182,46 +252,53 @@ const SiteCard = ({ site, onEdit }) => {
                 </MDBox>
                 {/* Collapsible Section for Extra Information */}
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
-                  <MDBox mt={2}>
-                    <MDBox>
-                      {/* Prospect Retenu */}
-                      <MDTypography variant="h6" fontWeight="medium">
-                        Prospect Retenu
-                      </MDTypography>
-                      <TextField fullWidth placeholder="Enter prospect retenu" />
-                    </MDBox>
-                    <MDBox>
-                      {/* Devis Reçus */}
-                      <MDTypography variant="h6" fontWeight="medium" mt={2}>
-                        Devis Reçus
-                      </MDTypography>
-                      <TextField fullWidth placeholder="Enter devis reçus" />
-                    </MDBox>
-                    {/* Date Fields with Date Picker */}
-                    <MDTypography variant="h6" fontWeight="medium" mt={2}>
-                      DR Date
+                  {/* Prospect Retenu */}
+                  <MDBox display="flex" alignItems="center" mt={2}>
+                    <Icon sx={{ mr: 1 }}>person</Icon>
+                    <MDTypography variant="h6" fontWeight="medium">
+                      <strong>Prospect Retenu:</strong>{' '}
+                      {typeof prospectRetenu === 'string'
+                        ? prospectRetenu
+                        : JSON.stringify(prospectRetenu)}
                     </MDTypography>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker fullWidth onChange={() => {}} />
-                    </LocalizationProvider>
-                    <MDTypography variant="h6" fontWeight="medium" mt={2}>
-                      Devis Reception Date
+                  </MDBox>
+
+                  {/* DR Date */}
+                  <MDBox display="flex" alignItems="center" mt={2}>
+                    <Icon sx={{ mr: 1 }}>calendar_today</Icon>
+                    <MDTypography variant="h6" fontWeight="medium">
+                      <strong>DR Date:</strong>{' '}
+                      {typeof drDate === 'string' ? drDate : JSON.stringify(drDate)}
                     </MDTypography>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker fullWidth onChange={() => {}} />
-                    </LocalizationProvider>
-                    <MDTypography variant="h6" fontWeight="medium" mt={2}>
-                      Règlement Date
+                  </MDBox>
+
+                  {/* Devis Date */}
+                  <MDBox display="flex" alignItems="center" mt={2}>
+                    <Icon sx={{ mr: 1 }}>calendar_today</Icon>
+                    <MDTypography variant="h6" fontWeight="medium">
+                      <strong>Devis Date:</strong>{' '}
+                      {typeof devisDate === 'string' ? devisDate : JSON.stringify(devisDate)}
                     </MDTypography>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker fullWidth onChange={() => {}} />
-                    </LocalizationProvider>
-                    <MDTypography variant="h6" fontWeight="medium" mt={2}>
-                      MES (réel)
+                  </MDBox>
+
+                  {/* Règlement Date */}
+                  <MDBox display="flex" alignItems="center" mt={2}>
+                    <Icon sx={{ mr: 1 }}>calendar_today</Icon>
+                    <MDTypography variant="h6" fontWeight="medium">
+                      <strong>Règlement Date:</strong>{' '}
+                      {typeof reglementDate === 'string'
+                        ? reglementDate
+                        : JSON.stringify(reglementDate)}
                     </MDTypography>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker fullWidth onChange={() => {}} />
-                    </LocalizationProvider>
+                  </MDBox>
+
+                  {/* MES Date */}
+                  <MDBox display="flex" alignItems="center" mt={2}>
+                    <Icon sx={{ mr: 1 }}>calendar_today</Icon>
+                    <MDTypography variant="h6" fontWeight="medium">
+                      <strong>MES Date:</strong>{' '}
+                      {typeof mesDate === 'string' ? mesDate : JSON.stringify(mesDate)}
+                    </MDTypography>
                   </MDBox>
                 </Collapse>
                 {/* Edit Button */}

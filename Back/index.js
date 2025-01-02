@@ -32,11 +32,6 @@ import paieStorageRoutes from './routes/SiteDetails/Reglement/Paiement/paieStora
 import factureStorageRoutes from './routes/SiteDetails/Reglement/Facture/factureStorage.js';
 import travStorageRoutes from './routes/SiteDetails/Traveaux/travsStorage.js';
 import miseEnServiceStorageRoutes from './routes/SiteDetails/MES/mesStorage.js';
-// Exports here 
-export { default as contactService } from './services/contactsService.js';
-export { default as AuthService } from './services/authService.js';
-export { default as entityService } from './services/entityService.js';
-export { default as settingsService } from './services/settingsService.js';
 // Express Setup
 const app = express();
 app.use(cors({

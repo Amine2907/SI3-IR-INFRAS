@@ -87,7 +87,6 @@ const fetchActiveDp = async (prospectID) => {
             .select('*')
             .eq('is_active', true)
             .eq('PRid_fk',prospectID);
-            ;
             if (error) {
                 throw error;
             }
