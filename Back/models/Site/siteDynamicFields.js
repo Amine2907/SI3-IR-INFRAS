@@ -10,7 +10,6 @@ const getPropsectretenu  = async (Sid) => {
     console.error('Supabase Error Details:', error); // Log detailed error
     throw error;
   }
-  console.log('Returned Data:', data); // Log the returned data
   return data; // Make sure data is properly returned
 };
 const getDrDate = async (Sid) => {
@@ -32,7 +31,6 @@ const getDrDate = async (Sid) => {
     }
 };
   const getDevisRecDate = async (Sid) => {
-    try {
       const { data, error } = await supabase
         .from('Devis')
         .select('reception_date')
@@ -43,20 +41,13 @@ const getDrDate = async (Sid) => {
         console.error('Supabase Error Details (getDevisRecDate):', error);
         throw error;
       }
-  
-      if (!data || data.length === 0 || !data[0].reception_date) {
-        console.warn(`No valid Devis reception date found for Sid: ${Sid}`);
-        return null;
+      const validDates = data.filter((record) => record.reception_date !== null);
+      if (validDates.length > 0) {
+          return { success: true, data: validDates[0].reception_date };
+      } else {
+          return { success: false, error: 'No valid Devis dates found.' };
       }
-  
-      console.log('Returned Data (getDevisRecDate):', data);
-      return data[0].reception_date;
-    } catch (error) {
-      console.error('Error in getDevisRecDate:', error.message);
-      throw new Error('An error occurred while fetching Devis reception date.');
-    }
   };
-  
   const getReglementDate = async (Sid) => {
     try {
       const { data, error } = await supabase
@@ -69,23 +60,17 @@ const getDrDate = async (Sid) => {
         console.error('Supabase Error Details (getReglementDate):', error);
         throw error;
       }
-  
-      // Filter out null values
-      const validDates = data.filter((record) => record.reglement_date !== null);
-  
-      if (validDates.length === 0) {
-        console.warn(`No valid reglement dates found for Sid: ${Sid}`);
-        return null;
+        const validDates = data.filter((record) => record.reglement_date !== null);
+      if (validDates.length > 0) {
+          return { success: true, data: validDates[0].reglement_date };
+      } else {
+          return { success: false, error: 'No valid Devis dates found.' };
       }
-  
-      console.log('Returned Data (getReglementDate):', validDates);
-      return validDates[0].reglement_date; // Return the first valid date
     } catch (error) {
       console.error('Error in getReglementDate:', error.message);
       throw new Error('An error occurred while fetching reglement date.');
     }
   };
-  
   const getMesReel = async (Sid) => {
     const { data, error } = await supabase
       .from('MES')
@@ -104,7 +89,6 @@ const getDrDate = async (Sid) => {
         return { success: false, error: 'No valid MES reel dates found.' };
     }
 };
-  
 const siteDynFieldsModel = {
     getPropsectretenu,
     getDevisRecDate,

@@ -62,7 +62,7 @@ const SiteCard = ({ site, onEdit }) => {
           Array.isArray(prospectResponse.data) &&
           prospectResponse.data.length > 0
         ) {
-          setProspectRetenu(prospectResponse.data[0]?.retenu ?? 'N/A'); // Use the first valid item
+          setProspectRetenu(prospectResponse.data[0]?.retenu ? 'Oui' : 'Non');
         } else {
           console.warn(`No valid Prospect Retenu data found for Sid: ${Sid}`);
           setProspectRetenu('N/A');
@@ -102,7 +102,6 @@ const SiteCard = ({ site, onEdit }) => {
           console.warn(`No valid reglement dates found for Sid: ${Sid}`);
           setReglementDate('N/A');
         }
-
         // MES Date
         const mesResponse = await SiteFieldsService.getMesDate(Sid);
         if (mesResponse.success && Array.isArray(mesResponse.data) && mesResponse.data.length > 0) {
@@ -256,10 +255,7 @@ const SiteCard = ({ site, onEdit }) => {
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>person</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      <strong>Prospect Retenu:</strong>{' '}
-                      {typeof prospectRetenu === 'string'
-                        ? prospectRetenu
-                        : JSON.stringify(prospectRetenu)}
+                      <strong>Prospect Retenu:</strong> {prospectRetenu}
                     </MDTypography>
                   </MDBox>
 
@@ -267,8 +263,7 @@ const SiteCard = ({ site, onEdit }) => {
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>calendar_today</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      <strong>DR Date:</strong>{' '}
-                      {typeof drDate === 'string' ? drDate : JSON.stringify(drDate)}
+                      <strong>DR Date:</strong> {drDate}
                     </MDTypography>
                   </MDBox>
 
@@ -276,8 +271,7 @@ const SiteCard = ({ site, onEdit }) => {
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>calendar_today</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      <strong>Devis Date:</strong>{' '}
-                      {typeof devisDate === 'string' ? devisDate : JSON.stringify(devisDate)}
+                      <strong>Devis Date:</strong> {devisDate}
                     </MDTypography>
                   </MDBox>
 
@@ -285,10 +279,7 @@ const SiteCard = ({ site, onEdit }) => {
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>calendar_today</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      <strong>Règlement Date:</strong>{' '}
-                      {typeof reglementDate === 'string'
-                        ? reglementDate
-                        : JSON.stringify(reglementDate)}
+                      <strong>Règlement Date:</strong> {reglementDate}
                     </MDTypography>
                   </MDBox>
 
@@ -296,8 +287,7 @@ const SiteCard = ({ site, onEdit }) => {
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>calendar_today</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      <strong>MES Date:</strong>{' '}
-                      {typeof mesDate === 'string' ? mesDate : JSON.stringify(mesDate)}
+                      <strong>MES Date:</strong> {mesDate}
                     </MDTypography>
                   </MDBox>
                 </Collapse>
