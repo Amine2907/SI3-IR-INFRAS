@@ -23,6 +23,7 @@ const SiteList = () => {
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [activeCompanies, setActiveCompanies] = useState([]);
   const [isActive, setIsActive] = useState(true);
+  const [searchText, setSearchText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const [noResultsMessage, setNoResultsMessage] = useState('');
@@ -45,31 +46,37 @@ const SiteList = () => {
     fetchActiveCompanies();
   }, []); // Empty dependency array to run once when the component mounts
   const renderSearch = () => {
-    if (!searchQuery.trim()) {
-      return sites; // Return all sites if search query is empty
-    }
-    const lowerCaseQuery = searchQuery.toLowerCase();
+    const filteredBySearchText = !searchText.trim()
+      ? sites
+      : sites.filter(site => {
+          const lowerCaseQuery = searchText.toLowerCase();
+          const combinedFields = [
+            site.EB,
+            site.G2R,
+            site.nom,
+            site.code_postal,
+            site.Ville,
+            site.status_site_SFR,
+            site.region,
+            site.Operateurs,
+            site.programme_fk,
+            site.status_site_fk,
+            site.Acteur_ENEDIS_id,
+          ]
+            .filter(Boolean)
+            .map(field => field.toString().toLowerCase())
+            .join(' ');
+          return combinedFields.includes(lowerCaseQuery);
+        });
 
-    return sites.filter(site => {
-      const combinedFields = [
-        site.EB,
-        site.G2R,
-        site.nom,
-        site.code_postal,
-        site.Ville,
-        site.status_site_SFR,
-        site.region,
-        site.Operateurs,
-        site.programme_fk,
-        site.status_site_fk,
-        site.Acteur_ENEDIS_id,
-      ]
-        .filter(Boolean) // Remove null or undefined values
-        .map(field => field.toString().toLowerCase()) // Convert to lowercase string
-        .join(' '); // Combine all fields into a single string
-
-      return combinedFields.includes(lowerCaseQuery); // Check if the query matches
+    const filteredBySearchQuery = filteredBySearchText.filter(site => {
+      return Object.entries(searchQuery).every(([key, value]) => {
+        if (!value) return true; // Skip if the field is not set
+        return site[key] && site[key].toString().includes(value.toString());
+      });
     });
+
+    return filteredBySearchQuery;
   };
   const filteredSites = renderSearch();
   // Fetch Active and Inactive Sites
@@ -167,7 +174,7 @@ const SiteList = () => {
   };
   const handleSearchChange = e => {
     const { value } = e.target; // Get the value from the input
-    setSearchQuery(value); // Set it directly as the string searchQuery
+    setSearchText(value); // Set it to the text-specific state
   };
   // handle Search Sites based on searchQuery
   const handleSearchSites = async () => {
@@ -244,8 +251,8 @@ const SiteList = () => {
               >
                 <MDInput
                   label="Recherche par Nom, EB, G2R, Code Postal, Ville"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
+                  value={searchText} // Use searchText here
+                  onChange={handleSearchChange} // Update searchText on change
                   style={{ width: '100%', marginBottom: '10px' }}
                 />
               </MDBox>
@@ -257,7 +264,7 @@ const SiteList = () => {
                 <Select
                   labelId="role-select-label"
                   name="status_site_SFR"
-                  value={searchQuery.status_site_SFR}
+                  value={searchQuery.status_site_SFR || ''}
                   onChange={handleSearchDropDown}
                   label="status_site_SFR"
                 >
@@ -276,7 +283,7 @@ const SiteList = () => {
                 <Select
                   labelId="role-select-label"
                   name="region"
-                  value={searchQuery.region}
+                  value={searchQuery.region || ''}
                   onChange={handleSearchDropDown}
                   label="region"
                 >
@@ -295,7 +302,7 @@ const SiteList = () => {
                 <Select
                   labelId="role-select-label"
                   name="Operateurs"
-                  value={searchQuery.Operateurs}
+                  value={searchQuery.Operateurs || ''}
                   onChange={handleSearchDropDown}
                   label="Operateurs"
                 >
@@ -314,7 +321,7 @@ const SiteList = () => {
                 <Select
                   labelId="role-select-label"
                   name="programme_fk"
-                  value={searchQuery.programme_fk}
+                  value={searchQuery.programme_fk || ''}
                   onChange={handleSearchDropDown}
                   label="region"
                 >
@@ -333,7 +340,7 @@ const SiteList = () => {
                 <Select
                   labelId="role-select-label"
                   name="status_site_fk"
-                  value={searchQuery.status_site_fk}
+                  value={searchQuery.status_site_fk || ''}
                   onChange={handleSearchDropDown}
                   label="status_site_fk"
                 >
@@ -371,19 +378,8 @@ const SiteList = () => {
               <MDButton
                 onClick={() => {
                   setNoResultsMessage('');
-                  setSearchQuery({
-                    EB: '',
-                    G2R: '',
-                    nom: '',
-                    code_postal: '',
-                    Ville: '',
-                    status_site_SFR: '',
-                    region: '',
-                    Operateurs: '',
-                    programme_fk: '',
-                    status_site_fk: '',
-                    Acteur_ENEDIS_id: '',
-                  });
+                  setSearchText(''); // Clear text input
+                  setSearchQuery('');
                 }}
                 variant="gradient"
                 color="dark"
