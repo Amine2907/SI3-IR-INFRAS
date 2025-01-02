@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TableContainer,
   TableCell,
@@ -18,12 +18,7 @@ import ProspectDpService from 'services/site_details/DP/DpService';
 import DpUModal from 'examples/popup/DeclPreaPopUp/DpPopUp';
 import MDAlert from 'components/MDAlert';
 import DpStorageModal from 'examples/popup/DpStoragePopUp';
-// import {
-//   fetchDpComments,
-//   addDpComment,
-//   deleteDpComment,
-// } from 'services/Commentary/Dp/dpComService';
-// import CommentsList from 'examples/Cards/Commentaires';
+import SiteService from 'services/Site_Services/siteService';
 function DeclPreaList() {
   const [showModal, setShowModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -32,7 +27,22 @@ function DeclPreaList() {
   const { EB } = location.state || {};
   const [selecteddp, setSelecteddp] = useState(null);
   const siteId = EB;
+  const [site, setSite] = useState(null);
   const { dpsData, loading, error, fetchDpData } = useDpsForProspects(siteId);
+  // useEffect(() => {
+  //   if (siteId) {
+  //     fetchSiteDetails(siteId);
+  //   }
+  // }, [siteId]);
+  // const fetchSiteDetails = async siteId => {
+  //   const result = await SiteService.getSiteById(siteId);
+  //   if (result.success) {
+  //     console.log('Fetched site details:', result.data);
+  //     setSite(result.data[0]);
+  //   } else {
+  //     console.error('Failed to fetch site details:', result.error);
+  //   }
+  // };
   const handleEdit = dp => {
     setSelecteddp(dp);
     setShowModal(true);
@@ -58,6 +68,7 @@ function DeclPreaList() {
         message: "Une erreur s'est produite : l'ID de la DP est manquant.",
         type: 'error',
       });
+      await fetchSiteDetails(siteId);
       return;
     }
     const { prospectName, ...filteredUpdates } = updates;

@@ -2,10 +2,13 @@ import declarationPrealableModel from "../../../models/SiteDetails/DP/DpModel.js
 import { etat } from "../../../models/SiteDetails/DP/DpData.js";
 //Create Dp controlller 
 const createDp = async (req, res) => {
-  const { Proid, dpData } = req.body;
+  const { Sid ,Proid, dpData } = req.body;
     // Validate required fields
+    if (!Sid) {
+      return res.status(400).json({ error: 'Sid (Site identifier) is required.' });
+    }
     if (!Proid) {
-      return res.status(400).json({ error: 'Proid (Dp identifier) is required.' });
+      return res.status(400).json({ error: 'Proid (Prospect identifier) is required.' });
     }
     if (!dpData) {
       return res.status(400).json({ error: 'dpData is required.' });
@@ -21,7 +24,7 @@ const createDp = async (req, res) => {
   }
   try {
     // Call the model function to create a new Dp
-    const result = await declarationPrealableModel.createDp(Proid, dpData);  // Pass Proid and dpData to the model
+    const result = await declarationPrealableModel.createDp(Sid ,Proid, dpData);  // Pass Sid ,Proid and dpData to the model
     if (!result.success) {
       throw new Error(result.error);
     }

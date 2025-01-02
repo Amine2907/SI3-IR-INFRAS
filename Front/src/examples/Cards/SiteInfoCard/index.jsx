@@ -30,6 +30,7 @@ import siteContactService from 'services/Site_Services/siteContactService';
 import ContactSiteModal from 'examples/popup/ContactPopUp/ContactSitePopUp';
 import ConatctStaticModal from 'examples/popup/ContactPopUp/ContactStaticPopUp';
 import ProspectDpService from 'services/site_details/DP/DpService';
+import SiteService from 'services/Site_Services/siteService';
 const SiteInfoCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -55,13 +56,22 @@ const SiteInfoCard = ({ site, onEdit }) => {
   const [contactToDeleteCid, setContactToDeleteCid] = useState(null);
   const [showDropDown, setShowDropDown] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const setSite = useState(null);
   // eslint-disable-next-line no-unused-vars
   const Sid = site.EB;
-  useEffect(() => {
-    if (formData.status_go_traveauxR) {
-      setStatusGoTraveauxR(formData.status_go_traveauxR);
+  const fetchSiteInfoDetails = async () => {
+    try {
+      const result = await SiteService.getSiteById(Sid);
+      if (result.success) {
+        console.log('Fetched site details:', result.data);
+        setSite(result.data[0]);
+      } else {
+        console.error('Failed to fetch site details:', result.error);
+      }
+    } catch (error) {
+      console.error('Error during fetch:', error.message);
     }
-  }, [formData.status_go_traveauxR]);
+  };
   useEffect(() => {
     const fetchContactsSite = async () => {
       if (Sid) {
@@ -81,7 +91,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
       }
     };
     fetchContactsSite();
-  }, [site.EB]);
+  }, [Sid]);
   useEffect(() => {
     const fetchActiveContacts = async () => {
       try {
@@ -126,11 +136,14 @@ const SiteInfoCard = ({ site, onEdit }) => {
     const fetchDPStatus = async () => {
       try {
         const dpData = await ProspectDpService.getDpDataWithProspect(Sid);
-        if (dpData && dpData.status_go_traveauxR) {
+        console.log('dpData:', dpData);
+        if (dpData && dpData.data && dpData.data.length > 0) {
+          const statusGoTraveauxR = dpData.data[0].status_go_traveauxR;
           setFormData(prev => ({
             ...prev,
-            status_go_traveauxR: dpData.status_go_traveauxR,
+            status_go_traveauxR: statusGoTraveauxR,
           }));
+          await fetchSiteInfoDetails();
         }
       } catch (error) {
         console.error('Error fetching DP data:', error);
@@ -138,6 +151,11 @@ const SiteInfoCard = ({ site, onEdit }) => {
     };
     fetchDPStatus();
   }, [Sid]);
+  useEffect(() => {
+    if (formData.status_go_traveauxR) {
+      setStatusGoTraveauxR(formData.status_go_traveauxR);
+    }
+  }, [formData.status_go_traveauxR]);
   const fetchContactsSite = async () => {
     if (Sid) {
       try {
@@ -354,7 +372,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
                   <MDBox display="flex" alignItems="center">
                     <Icon sx={{ mr: 1 }}>business</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      {site.EB}
+                      {Sid}
                     </MDTypography>
                   </MDBox>
                   {/* Programme with Colored Background */}
@@ -590,7 +608,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
       {/* Add NEW CONTACT TO A SITE  */}
       {showModal && !showDropDown && (
         <ContactSiteModal
-          Sid={site.EB}
+          Sid={Sid}
           contact={selectedContact}
           onSave={handleSave}
           onClose={handleModalClose}
@@ -643,6 +661,7 @@ SiteInfoCard.propTypes = {
     commentaires: PropTypes.string.isRequired,
     status_site_SFR: PropTypes.string.isRequired,
     is_active: PropTypes.bool.isRequired,
+    statusGoTraveauxR: PropTypes.string,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
 };

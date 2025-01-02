@@ -1,7 +1,7 @@
 import { supabase } from "../../../config/supabaseClient.js";
 import { etat } from "./DpData.js";
 // create Dp Model 
-const createDp = async (Proid, DpData) => {
+const createDp = async (Sid , Proid, DpData) => {
     try {
         console.log('Incoming data for createDp:', DpData);
         if (DpData.etat_prerequis) {
@@ -28,7 +28,7 @@ const createDp = async (Proid, DpData) => {
       // Now insert the new Dp into the 'Dp' table, using the PRid_fk field
       const { data: Dp, error: contactError } = await supabase
         .from('DP')
-        .insert([{ PRid_fk: Proid, ...DpData }])
+        .insert([{  EB_fk: Sid,PRid_fk: Proid, ...DpData }])
         .select();
       if (contactError) {
         throw contactError;

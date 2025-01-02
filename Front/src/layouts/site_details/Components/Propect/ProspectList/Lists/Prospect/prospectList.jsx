@@ -109,7 +109,7 @@ function ProspectList({ site }) {
     const { dpData } = data;
     try {
       // Create new DP
-      const result = await ProspectDpService.createDp({ Proid, dpData });
+      const result = await ProspectDpService.createDp({ Sid, Proid, dpData });
       // console.log('API result:', result); // Log the API response for debugging
       let successMessage = '';
       if (result.success) {
@@ -118,9 +118,6 @@ function ProspectList({ site }) {
         fetchDpData();
       } else {
         let errorMessage = `Error: ${result.error}`;
-        // Log the error to ensure the message format is as expected
-        // console.log('API Error:', result.error);
-        // Check if the error is related to an active DP
         if (result.error.includes('A DP with active status already exists for this site')) {
           errorMessage = 'Il y a déjà une déclaration préalable active pour ce prospect.';
         }
