@@ -2,6 +2,20 @@ import { supabase } from "../../../config/supabaseClient.js";
 // create Traveaux Model
 const createTraveaux = async (Sid, traveauxData) => {
     try {
+        // User can add only one Traveaux which colunm is_active equal to True ! 
+      if (traveauxData.is_active === true)  {
+        const { data: exisitngTraveaux, error: checkError } = await supabase
+          .from('Traveaux')
+          .select('*')
+          .eq('EB_fk', Sid)  // Match using EB_fk  (the site identifier)
+          .eq('is_active', true);  // Ensure we have only one prospect which have is_active = True 
+        if (checkError) {
+          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
+        }
+        if (exisitngTraveaux && exisitngTraveaux.length > 0) {
+          throw new Error("This Site have already one reglement with active status already exists for this site.");
+        }
+      }
         console.log('Incoming data for create Traveaux :', traveauxData);
         // Fetch the active Paiements and map the `paie_id` based on `libelle_du_virement`
         const { data: activePaiements, error: fetchError } = await supabase

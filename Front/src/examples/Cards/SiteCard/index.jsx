@@ -310,7 +310,6 @@ const SiteCard = ({ site, onEdit }) => {
                       <strong>Prospect Retenu:</strong> {prospectRetenu}
                     </MDTypography>
                   </MDBox>
-
                   {/* DR Date */}
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>calendar_today</Icon>
@@ -318,7 +317,6 @@ const SiteCard = ({ site, onEdit }) => {
                       <strong>DR Date:</strong> {drDate}
                     </MDTypography>
                   </MDBox>
-
                   {/* Devis Date */}
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>calendar_today</Icon>

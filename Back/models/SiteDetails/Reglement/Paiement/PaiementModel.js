@@ -2,6 +2,20 @@ import { supabase } from "../../../../config/supabaseClient.js";
 // create Paiement Model 
 const createPaiement = async (Sid, paiementData) => {
     try {
+        // User can add only one reglement which colunm is_active equal to True ! 
+      if (paiementData.is_active === true)  {
+        const { data: exisitingPaiement, error: checkError } = await supabase
+          .from('Paiements')
+          .select('*')
+          .eq('EB_fk', Sid)  // Match using EB_fk  (the site identifier)
+          .eq('is_active', true);  // Ensure we have only one prospect which have is_active = True 
+        if (checkError) {
+          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
+        }
+        if (exisitingPaiement && exisitingPaiement.length > 0) {
+          throw new Error("This Site have already one reglement with active status already exists for this site.");
+        }
+      }
       console.log('Incoming data for create Paiement:', paiementData);
       // Insert the new Paiement into the 'Paiements' table
       const { data: Paiement, error: paiementError } = await supabase

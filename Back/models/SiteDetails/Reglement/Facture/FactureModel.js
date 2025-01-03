@@ -2,6 +2,20 @@ import { supabase } from "../../../../config/supabaseClient.js";
 // create Facture Model 
 const createFacture = async (Devis_fk, factureData) => {
     try {
+        // User can add only one reglement which colunm is_active equal to True ! 
+      if (factureData.is_active === true)  {
+        const { data: exisitngFacture, error: checkError } = await supabase
+          .from('Facture')
+          .select('*')
+          .eq('EB_fk', Sid)  // Match using EB_fk  (the site identifier)
+          .eq('is_active', true);  // Ensure we have only one prospect which have is_active = True 
+        if (checkError) {
+          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
+        }
+        if (exisitngFacture && exisitngFacture.length > 0) {
+          throw new Error("This Site have already one reglement with active status already exists for this site.");
+        }
+      }
         console.log('Incoming data for create facture:', factureData);
       // Now insert the new Facture into the 'Devis' table, using the PRid_fk field
       const { data: Facture, error: contactError } = await supabase

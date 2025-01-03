@@ -184,6 +184,20 @@ const createDevis = async (EB, devisData) => {
             section: devisData.section,
             parcelle: devisData.parcelle
         };
+        // user can only add one and only Devis where is_active = true
+       if (newDevisData.is_active === true)  {
+        const { data: exisitngDevis, error: checkError } = await supabase
+          .from('Devis')
+          .select('*')
+          .eq('EB_fk', EB)  // Match using EB_fk  (the site identifier)
+          .eq('is_active', true);  // Ensure we have only one mise en service which have is_active = True 
+        if (checkError) {
+          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
+        }
+        if (exisitngDevis && exisitngDevis.length > 0) {
+          throw new Error("This Site have already one mise en service  with active status already exists for this site.");
+        }
+      }
         // Insert into Devis table
         const { data: devis, error: contactError } = await supabase
             .from('Devis')

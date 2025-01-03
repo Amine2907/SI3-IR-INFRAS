@@ -2,6 +2,20 @@ import { supabase } from "../../../config/supabaseClient.js";
 // create PreEtude Model 
 const createPreEtude = async (Sid, preEtudeData) => {
     try {
+    // User can add only one preEtude which colunm is_active equal to True ! 
+      if (preEtudeData.is_active === true)  {
+        const { data: existingPreEtude, error: checkError } = await supabase
+          .from('PreEtude')
+          .select('*')
+          .eq('EB_fk', Sid)  // Match using EB_fk  (the site identifier)
+          .eq('is_active', true);  // Ensure we have only one preEtude which have is_active = True 
+        if (checkError) {
+          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
+        }
+        if (existingPreEtude && existingPreEtude.length > 0) {
+          throw new Error("This Site have already one preEtude with active status already exists for this site.");
+        }
+      }
       const { data: preEtude, error: contactError } = await supabase
         .from('PreEtude')
         .insert([{ EB_fk: Sid , ...preEtudeData }])

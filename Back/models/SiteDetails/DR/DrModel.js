@@ -107,6 +107,20 @@ const createDr = async (EB, demracData) => {
         if (!demracData.no_devis || !demracData.no_devis.ND) {
             delete demracData.no_devis;
         }
+        // user can only add one and only Demande de raccordement where is_active = true
+        if (demracData.is_active === true)  {
+            const { data: exisitngDr, error: checkError } = await supabase
+              .from('DR')
+              .select('*')
+              .eq('EB_fk', Sid)  // Match using EB_fk  (the site identifier)
+              .eq('is_active', true);  // Ensure we have only one mise en service which have is_active = True 
+            if (checkError) {
+              throw new Error(`Error fetching existing Dps: ${checkError.message}`);
+            }
+            if (exisitngDr && exisitngDr.length > 0) {
+              throw new Error("This Site have already one mise en service  with active status already exists for this site.");
+            }
+          }
         // Insert into DR table
         const { data: demrac, error: contactError } = await supabase
             .from('DR')

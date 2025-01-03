@@ -3,6 +3,20 @@ import { supabase } from "../../../config/supabaseClient.js";
 // create MES Model 
 const createMes = async (Sid, mesData) => {
     try {
+        // user can only add one and only mes with is_active = true 
+        if (mesData.is_active === true)  {
+            const { data: existingMes, error: checkError } = await supabase
+              .from('MES')
+              .select('*')
+              .eq('EB_fk', Sid)  // Match using EB_fk  (the site identifier)
+              .eq('is_active', true);  // Ensure we have only one mise en service which have is_active = True 
+            if (checkError) {
+              throw new Error(`Error fetching existing Dps: ${checkError.message}`);
+            }
+            if (existingMes && existingMes.length > 0) {
+              throw new Error("This Site have already one mise en service  with active status already exists for this site.");
+            }
+          }
         console.log('Incoming data for create MES :', mesData);
       // Now insert the new mes into the 'Devis' table, using the PRid_fk field
       const { data: mes, error: contactError } = await supabase
