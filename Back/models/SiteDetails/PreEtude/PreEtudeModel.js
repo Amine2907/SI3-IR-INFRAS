@@ -119,6 +119,23 @@ const fetchInactivePreEtude = async (siteID) => {
 // update PreEtude Model 
 const updatePreEtude = async (preEtudeId, updates) => {
     try {
+    // Ensure only one PreEtude entry can be active at a time, if applicable
+    if (updates.is_active === true) {
+        const { data: activePreEtudes, error: fetchError } = await supabase
+          .from('PreEtude')
+          .select('PREid')
+          .eq('is_active', true);
+  
+        if (fetchError) {
+          throw new Error(`Error fetching active PreEtude entries: ${fetchError.message}`);
+        }
+  
+        if (activePreEtudes && activePreEtudes.length > 0) {
+          throw new Error(
+            'An active PreEtude entry already exists. Please deactivate it before activating another one.'
+          );
+        }
+      }
         const { data, error } = await supabase
         .from('PreEtude')
         .update(updates)

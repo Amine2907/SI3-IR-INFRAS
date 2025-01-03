@@ -209,6 +209,23 @@ const getDrsById = async(NDRid) => {
 //Update Drs 
 const updateDr = async (NDRid, updates) => {
     try {
+    // Check if updates include activation
+    if (updates.is_active === true) {
+        // Fetch any active DR records
+        const { data: activeDrs, error: fetchError } = await supabase
+          .from('DR')
+          .select('NDRid')
+          .eq('is_active', true);
+  
+        if (fetchError) {
+          throw new Error(`Error fetching active DRs: ${fetchError.message}`);
+        }
+  
+        // Prevent activation if an active DR already exists
+        if (activeDrs && activeDrs.length > 0) {
+          throw new Error('An active DR already exists. Please deactivate it before activating another one.');
+        }
+      }
         //Active ENtites
       // Fetch active entites list (if necessary for mapping)
       const activeentitesResponse = await entityModel.getAllActiveEntites();

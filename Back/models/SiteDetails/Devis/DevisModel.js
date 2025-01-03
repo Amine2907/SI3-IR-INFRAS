@@ -286,6 +286,24 @@ const getDevisById = async(ND) => {
 //Update Drs 
 const updateDevis = async (ND, updates) => {
     try {
+            // Check if `is_active` is being updated to `true`
+    if (updates.is_active === true) {
+        const { data: activeDevis, error: fetchError } = await supabase
+          .from('Devis')
+          .select('ND')
+          .eq('is_active', true);
+  
+        if (fetchError) {
+          throw new Error(`Failed to fetch active Devis: ${fetchError.message}`);
+        }
+  
+        if (Array.isArray(activeDevis) && activeDevis.length > 0) {
+          // If there is already an active `Devis`, prevent the update
+          throw new Error(
+            `Cannot update is_active to True. There is already an active Devis with ND: ${activeDevis[0].ND}`
+          );
+        }
+      }
         //Active Fournisseurs
       // Fetch active entites list (if necessary for mapping)
       const activeentitesResponse = await getActiveFournisseurs();

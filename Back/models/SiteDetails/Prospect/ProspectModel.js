@@ -134,6 +134,23 @@ const fetchInactiveProspect = async (siteID) => {
 // update Prospect Model 
 const updateProspect = async (prospectID, updates) => {
     try {
+                // Check if the update includes activation
+                if (updates.is_active === true) {
+                    // Fetch any active prospects
+                    const { data: activeProspects, error: fetchError } = await supabase
+                        .from('Prospect')
+                        .select('Proid')
+                        .eq('is_active', true);
+        
+                    if (fetchError) {
+                        throw new Error(`Error fetching active prospects: ${fetchError.message}`);
+                    }
+        
+                    // Prevent activation if there's already an active prospect
+                    if (activeProspects && activeProspects.length > 0) {
+                        throw new Error('An active prospect already exists. Please deactivate it before activating another one.');
+                    }
+                }
         // Ensure `status_validation_fk` is mapped correctly
         if (updates.status_validation_fk) {
             if (typeof updates.status_validation_fk === 'string') {

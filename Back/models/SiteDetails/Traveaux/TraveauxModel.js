@@ -148,6 +148,25 @@ const getInactiveTraveaux = async (Sid) => {
 // update Traveau Model 
 const updateTraveaux = async (Tid, updates) => {
     try {
+         // Check if the `is_active` field is being updated to `True`
+    if (updates.is_active === true) {
+        // Fetch any active `Traveaux` records
+        const { data: activeTraveaux, error: fetchError } = await supabase
+          .from('Traveaux')
+          .select('Tid')
+          .eq('is_active', true);
+  
+        if (fetchError) {
+          throw new Error(`Failed to fetch active Traveaux: ${fetchError.message}`);
+        }
+  
+        if (Array.isArray(activeTraveaux) && activeTraveaux.length > 0) {
+          // If there is already an active `Traveaux`, prevent the update
+          throw new Error(
+            `Cannot update is_active to True. There is already an active Traveaux with Tid: ${activeTraveaux[0].Tid}`
+          );
+        }
+      }
         // Fetch the active Paiements and map the `paie_id` if present in updates
         if (updates.paie_id && typeof updates.paie_id === 'string') {
             const { data: activePaiements, error: fetchError } = await supabase

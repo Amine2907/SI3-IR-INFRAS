@@ -108,6 +108,21 @@ const getInactiveMes = async (Sid) => {
 // update mes Model 
 const updateMes = async (MESid, updates) => {
     try {
+            // Ensure only one MES entry can be active at a time
+    if (updates.is_active === true) {
+        const { data: activeMes, error: fetchError } = await supabase
+          .from('MES')
+          .select('MESid')
+          .eq('is_active', true);
+  
+        if (fetchError) {
+          throw new Error(`Error fetching active MES entries: ${fetchError.message}`);
+        }
+  
+        if (activeMes && activeMes.length > 0) {
+          throw new Error('An active MES entry already exists. Please deactivate it before activating another one.');
+        }
+      }
         const { data, error } = await supabase
         .from('MES')
         .update(updates)

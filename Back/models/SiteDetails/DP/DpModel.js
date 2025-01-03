@@ -128,6 +128,23 @@ const fetchInactiveDp = async (prospectID) => {
 // update Dp Model 
 const updateDp = async (DpID, updates) => {
     try {
+              // Check if the update includes activation
+              if (updates.is_active === true) {
+                // Fetch any active DPs
+                const { data: activeDPs, error: fetchError } = await supabase
+                    .from('DP')
+                    .select('DPid')
+                    .eq('is_active', true);
+    
+                if (fetchError) {
+                    throw new Error(`Error fetching active DPs: ${fetchError.message}`);
+                }
+    
+                // Prevent activation if there's already an active DP
+                if (activeDPs && activeDPs.length > 0) {
+                    throw new Error('An active DP already exists. Please deactivate it before activating another one.');
+                }
+            }
         // Ensure `etat_prerequis` is mapped correctly
         if (updates.etat_prerequis) {
             if (typeof updates.etat_prerequis === 'string') {
