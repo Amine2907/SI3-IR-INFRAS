@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { React, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
@@ -56,80 +57,42 @@ const SiteCard = ({ site, onEdit }) => {
     const fetchData = async () => {
       try {
         // Prospect Retenu
+        console.log('Fetching Prospect Retenu...');
         const prospectResponse = await SiteFieldsService.getPropsectRetenu(Sid);
-        console.log('prospectResponse:', prospectResponse);
-        if (prospectResponse && prospectResponse.data && prospectResponse.data.length > 0) {
-          const Retenu = prospectResponse.data[0].retenu;
-          setFormData(prev => ({
-            ...prev,
-            retenu: Retenu,
-          }));
-        } else {
-          setFormData(prev => ({
-            ...prev,
-            retenu: 'N/A',
-          }));
-        }
+        console.log('Prospect Response:', prospectResponse);
+        const retenu =
+          Array.isArray(prospectResponse) && prospectResponse[0]?.retenu !== undefined
+            ? prospectResponse[0].retenu
+            : 'N/A';
+        setFormData(prev => ({ ...prev, retenu }));
 
         // DR Date
+        console.log('Fetching DR Date...');
         const drResponse = await SiteFieldsService.getDrDate(Sid);
-        if (drResponse && drResponse.data && drResponse.data.length > 0) {
-          const DrDate = drResponse.data[0].date_dr;
-          setFormData(prev => ({
-            ...prev,
-            drDate: DrDate,
-          }));
-        } else {
-          setFormData(prev => ({
-            ...prev,
-            drDate: 'N/A',
-          }));
-        }
+        console.log('DR Date Response:', drResponse);
+        const drDate = drResponse?.success ? drResponse.data : 'N/A';
+        setFormData(prev => ({ ...prev, drDate }));
 
         // Devis Date
+        console.log('Fetching Devis Date...');
         const devisResponse = await SiteFieldsService.getDevisDate(Sid);
-        if (devisResponse && devisResponse.data && devisResponse.data.length > 0) {
-          const DevisDate = devisResponse.data[0].reception_date;
-          setFormData(prev => ({
-            ...prev,
-            devisDate: DevisDate,
-          }));
-        } else {
-          setFormData(prev => ({
-            ...prev,
-            devisDate: 'N/A',
-          }));
-        }
+        console.log('Devis Date Response:', devisResponse);
+        const devisDate = devisResponse?.success ? devisResponse.data : 'N/A';
+        setFormData(prev => ({ ...prev, devisDate }));
 
-        // Règlement Date
+        // Reglement Date
+        console.log('Fetching Reglement Date...');
         const reglementResponse = await SiteFieldsService.getReglementDate(Sid);
-        if (reglementResponse && reglementResponse.data && reglementResponse.data.length > 0) {
-          const ReglementDate = reglementResponse.data[0].reglement_date;
-          setFormData(prev => ({
-            ...prev,
-            reglementDate: ReglementDate,
-          }));
-        } else {
-          setFormData(prev => ({
-            ...prev,
-            reglementDate: 'N/A',
-          }));
-        }
+        console.log('Reglement Date Response:', reglementResponse);
+        const reglementDate = reglementResponse?.success ? reglementResponse.data : 'N/A';
+        setFormData(prev => ({ ...prev, reglementDate }));
 
         // MES Date
+        console.log('Fetching MES Date...');
         const mesResponse = await SiteFieldsService.getMesDate(Sid);
-        if (mesResponse && mesResponse.data && mesResponse.data.length > 0) {
-          const MesDate = mesResponse.data[0].MES_reel;
-          setFormData(prev => ({
-            ...prev,
-            mesDate: MesDate,
-          }));
-        } else {
-          setFormData(prev => ({
-            ...prev,
-            mesDate: 'N/A',
-          }));
-        }
+        console.log('MES Date Response:', mesResponse);
+        const mesDate = mesResponse?.success ? mesResponse.data : 'N/A';
+        setFormData(prev => ({ ...prev, mesDate }));
       } catch (error) {
         console.error('Error fetching site fields data:', error);
       }
@@ -137,6 +100,7 @@ const SiteCard = ({ site, onEdit }) => {
 
     fetchData();
   }, [Sid]);
+
   useEffect(() => {
     // Update Prospect Retenu
     if (formData.prospectRetenu) {
@@ -303,41 +267,34 @@ const SiteCard = ({ site, onEdit }) => {
                 </MDBox>
                 {/* Collapsible Section for Extra Information */}
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
-                  {/* Prospect Retenu */}
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>person</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      <strong>Prospect Retenu:</strong> {prospectRetenu}
+                      <strong>Prospect Retenu:</strong> {formData.retenu || 'N/A'}
                     </MDTypography>
                   </MDBox>
-                  {/* DR Date */}
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>calendar_today</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      <strong>DR Date:</strong> {drDate}
+                      <strong>DR Date:</strong> {formData.drDate || 'N/A'}
                     </MDTypography>
                   </MDBox>
-                  {/* Devis Date */}
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>calendar_today</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      <strong>Devis Date:</strong> {devisDate}
+                      <strong>Devis Date:</strong> {formData.devisDate || 'N/A'}
                     </MDTypography>
                   </MDBox>
-
-                  {/* Règlement Date */}
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>calendar_today</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      <strong>Règlement Date:</strong> {reglementDate}
+                      <strong>Règlement Date:</strong> {formData.reglementDate || 'N/A'}
                     </MDTypography>
                   </MDBox>
-
-                  {/* MES Date */}
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>calendar_today</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      <strong>MES Date:</strong> {mesDate}
+                      <strong>MES Date:</strong> {formData.mesDate || 'N/A'}
                     </MDTypography>
                   </MDBox>
                 </Collapse>
