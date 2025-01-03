@@ -46,37 +46,43 @@ const SiteList = () => {
     fetchActiveCompanies();
   }, []); // Empty dependency array to run once when the component mounts
   const renderSearch = () => {
-    const filteredBySearchText = !searchText.trim()
-      ? sites
-      : sites.filter(site => {
-          const lowerCaseQuery = searchText.toLowerCase();
-          const combinedFields = [
-            site.EB,
-            site.G2R,
-            site.nom,
-            site.code_postal,
-            site.Ville,
-            site.status_site_SFR,
-            site.region,
-            site.Operateurs,
-            site.programme_fk,
-            site.status_site_fk,
-            site.Acteur_ENEDIS_id,
-          ]
-            .filter(Boolean)
-            .map(field => field.toString().toLowerCase())
-            .join(' ');
-          return combinedFields.includes(lowerCaseQuery);
-        });
+    let filteredSites = sites;
 
-    const filteredBySearchQuery = filteredBySearchText.filter(site => {
-      return Object.entries(searchQuery).every(([key, value]) => {
-        if (!value) return true; // Skip if the field is not set
-        return site[key] && site[key].toString().includes(value.toString());
+    // Filter by Search Text
+    if (searchText.trim()) {
+      filteredSites = filteredSites.filter(site => {
+        const lowerCaseQuery = searchText.toLowerCase();
+        const combinedFields = [
+          site.EB,
+          site.G2R,
+          site.nom,
+          site.code_postal,
+          site.Ville,
+          site.status_site_SFR,
+          site.region,
+          site.Operateurs,
+          site.programme_fk,
+          site.status_site_fk,
+          site.Acteur_ENEDIS_id,
+        ]
+          .filter(Boolean)
+          .map(field => field.toString().toLowerCase())
+          .join(' ');
+        return combinedFields.includes(lowerCaseQuery);
       });
-    });
+    }
 
-    return filteredBySearchQuery;
+    // Filter by Dropdowns
+    if (Object.keys(searchQuery).length > 0) {
+      filteredSites = filteredSites.filter(site =>
+        Object.entries(searchQuery).every(([key, value]) => {
+          if (!value) return true; // Skip if the field is not set
+          return site[key] && site[key].toString() === value.toString();
+        })
+      );
+    }
+
+    return filteredSites;
   };
   const filteredSites = renderSearch();
   // Fetch Active and Inactive Sites
@@ -217,7 +223,14 @@ const SiteList = () => {
     console.log(sites);
   }, [sites]);
   useEffect(() => {
-    console.log('Updated searchQuery:', searchQuery); // Ensure `searchQuery` is updated
+    const filteredSites = renderSearch();
+    if (filteredSites.length === 0) {
+      setNoResultsMessage('Aucune site trouvée pour les critères de recherche spécifiés.');
+    } else {
+      setNoResultsMessage(''); // Clear message if results are found
+    }
+  }, [searchText, searchQuery, sites]);
+  useEffect(() => {
     if (
       searchQuery.nom ||
       searchQuery.EB ||
@@ -378,7 +391,7 @@ const SiteList = () => {
               <MDButton
                 onClick={() => {
                   setNoResultsMessage('');
-                  setSearchText(''); // Clear text input
+                  setSearchText('');
                   setSearchQuery('');
                 }}
                 variant="gradient"
@@ -404,24 +417,23 @@ const SiteList = () => {
             style={{ marginRight: '10px' }}
           />
           <Grid container spacing={3}>
-            {noResultsMessage && <MDTypography>{noResultsMessage}</MDTypography>}
-            {filteredSites.map(site => (
-              <Grid item xs={12} sm={8} md={4} key={site.EB}>
-                <SiteCard
-                  site={site}
-                  onEdit={() => {
-                    handleEdit(site);
-                  }}
-                />
-              </Grid>
-            ))}
+            {filteredSites.length > 0
+              ? filteredSites.map(site => (
+                  <Grid item xs={12} sm={8} md={4} key={site.EB}>
+                    <SiteCard
+                      site={site}
+                      onEdit={() => {
+                        handleEdit(site);
+                      }}
+                    />
+                  </Grid>
+                ))
+              : noResultsMessage && (
+                  <Alert variant="destructive" className="mt-4">
+                    <AlertDescription>{noResultsMessage}</AlertDescription>
+                  </Alert>
+                )}
           </Grid>
-          {/* Conditionally render the no results alert */}
-          {noResultsMessage && (
-            <Alert variant="destructive" className="mt-4">
-              <AlertDescription>{noResultsMessage}</AlertDescription>
-            </Alert>
-          )}
         </MDBox>
       </Card>
       {showModal && (
