@@ -16,9 +16,10 @@ import SiteFieldsService from 'services/Site_Services/siteFieldsService';
 const SiteCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
+  const [formData, setFormData] = useState(site);
   const [companyName, setCompanyName] = useState('N/A');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [expanded, setExpanded] = useState(false); // State to control expansion
+  const [expanded, setExpanded] = useState(false);
   const [checkedValues, setCheckedValues] = useState({
     drPg: true,
     devisPg: true,
@@ -31,7 +32,6 @@ const SiteCard = ({ site, onEdit }) => {
   const [reglementDate, setReglementDate] = useState(null);
   const [mesDate, setMesDate] = useState(null);
   const Sid = site.EB;
-  console.log('site', Sid);
   useEffect(() => {
     const acteurId = site.Acteur_ENEDIS_id;
     const fetchCompanyName = async () => {
@@ -57,58 +57,78 @@ const SiteCard = ({ site, onEdit }) => {
       try {
         // Prospect Retenu
         const prospectResponse = await SiteFieldsService.getPropsectRetenu(Sid);
-        if (
-          prospectResponse.success &&
-          Array.isArray(prospectResponse.data) &&
-          prospectResponse.data.length > 0
-        ) {
-          setProspectRetenu(prospectResponse.data[0]?.retenu ? 'Oui' : 'Non');
+        console.log('prospectResponse:', prospectResponse);
+        if (prospectResponse && prospectResponse.data && prospectResponse.data.length > 0) {
+          const Retenu = prospectResponse.data[0].retenu;
+          setFormData(prev => ({
+            ...prev,
+            retenu: Retenu,
+          }));
         } else {
-          console.warn(`No valid Prospect Retenu data found for Sid: ${Sid}`);
-          setProspectRetenu('N/A');
+          setFormData(prev => ({
+            ...prev,
+            retenu: 'N/A',
+          }));
         }
 
         // DR Date
         const drResponse = await SiteFieldsService.getDrDate(Sid);
-        if (drResponse.success && Array.isArray(drResponse.data) && drResponse.data.length > 0) {
-          setDrDate(drResponse.data[0]?.date_dr ?? 'N/A');
+        if (drResponse && drResponse.data && drResponse.data.length > 0) {
+          const DrDate = drResponse.data[0].date_dr;
+          setFormData(prev => ({
+            ...prev,
+            drDate: DrDate,
+          }));
         } else {
-          console.warn(`No valid DR dates found for Sid: ${Sid}`);
-          setDrDate('N/A');
+          setFormData(prev => ({
+            ...prev,
+            drDate: 'N/A',
+          }));
         }
 
         // Devis Date
         const devisResponse = await SiteFieldsService.getDevisDate(Sid);
-        if (
-          devisResponse.success &&
-          Array.isArray(devisResponse.data) &&
-          devisResponse.data.length > 0
-        ) {
-          setDevisDate(devisResponse.data[0]?.reception_date ?? 'N/A');
+        if (devisResponse && devisResponse.data && devisResponse.data.length > 0) {
+          const DevisDate = devisResponse.data[0].reception_date;
+          setFormData(prev => ({
+            ...prev,
+            devisDate: DevisDate,
+          }));
         } else {
-          console.warn(`No valid Devis reception date found for Sid: ${Sid}`);
-          setDevisDate('N/A');
+          setFormData(prev => ({
+            ...prev,
+            devisDate: 'N/A',
+          }));
         }
 
         // Règlement Date
         const reglementResponse = await SiteFieldsService.getReglementDate(Sid);
-        if (
-          reglementResponse.success &&
-          Array.isArray(reglementResponse.data) &&
-          reglementResponse.data.length > 0
-        ) {
-          setReglementDate(reglementResponse.data[0]?.reglement_date ?? 'N/A');
+        if (reglementResponse && reglementResponse.data && reglementResponse.data.length > 0) {
+          const ReglementDate = reglementResponse.data[0].reglement_date;
+          setFormData(prev => ({
+            ...prev,
+            reglementDate: ReglementDate,
+          }));
         } else {
-          console.warn(`No valid reglement dates found for Sid: ${Sid}`);
-          setReglementDate('N/A');
+          setFormData(prev => ({
+            ...prev,
+            reglementDate: 'N/A',
+          }));
         }
+
         // MES Date
         const mesResponse = await SiteFieldsService.getMesDate(Sid);
-        if (mesResponse.success && Array.isArray(mesResponse.data) && mesResponse.data.length > 0) {
-          setMesDate(mesResponse.data[0]?.MES_reel ?? 'N/A');
+        if (mesResponse && mesResponse.data && mesResponse.data.length > 0) {
+          const MesDate = mesResponse.data[0].MES_reel;
+          setFormData(prev => ({
+            ...prev,
+            mesDate: MesDate,
+          }));
         } else {
-          console.warn(`No valid MES reel dates found for Sid: ${Sid}`);
-          setMesDate('N/A');
+          setFormData(prev => ({
+            ...prev,
+            mesDate: 'N/A',
+          }));
         }
       } catch (error) {
         console.error('Error fetching site fields data:', error);
@@ -117,6 +137,38 @@ const SiteCard = ({ site, onEdit }) => {
 
     fetchData();
   }, [Sid]);
+  useEffect(() => {
+    // Update Prospect Retenu
+    if (formData.prospectRetenu) {
+      setProspectRetenu(formData.prospectRetenu);
+    }
+
+    // Update DR Date
+    if (formData.drDate) {
+      setDrDate(formData.drDate);
+    }
+
+    // Update Devis Date
+    if (formData.devisDate) {
+      setDevisDate(formData.devisDate);
+    }
+
+    // Update Règlement Date
+    if (formData.reglementDate) {
+      setReglementDate(formData.reglementDate);
+    }
+
+    // Update MES Date
+    if (formData.mesDate) {
+      setMesDate(formData.mesDate);
+    }
+  }, [
+    formData.prospectRetenu,
+    formData.drDate,
+    formData.devisDate,
+    formData.reglementDate,
+    formData.mesDate,
+  ]);
   return (
     <Grid item xs={12}>
       <Card id="site_card">
@@ -329,6 +381,11 @@ SiteCard.propTypes = {
     commentaires: PropTypes.string.isRequired,
     status_site_SFR: PropTypes.string.isRequired,
     is_active: PropTypes.bool.isRequired,
+    prospectRetenu: PropTypes.string.isRequired,
+    drDate: PropTypes.string.isRequired,
+    devisDate: PropTypes.string.isRequired,
+    reglementDate: PropTypes.string.isRequired,
+    mesDate: PropTypes.string.isRequired,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
 };
