@@ -48,7 +48,7 @@ const ContactList = () => {
 
       setContacts(filteredContacts);
       if (filteredContacts.length === 0) {
-        setNoResultsMessage('No contacts found');
+        setNoResultsMessage('Aucune contact trouvée pour les critères de recherche spécifiés');
       } else {
         setNoResultsMessage('');
       }

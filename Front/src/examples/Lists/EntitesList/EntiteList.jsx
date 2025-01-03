@@ -55,9 +55,12 @@ const EntiteList = () => {
   const [selectedRole, setSelectedRole] = useState('');
   const [noResultsMessage, setNoResultsMessage] = useState('');
   const renderSearch = () => {
+    let filteredEntites = entites;
+
+    // Filter by Search Term
     if (typeof searchTerm === 'string' && searchTerm.trim().length > 0) {
       const lowerCaseSearchTerm = searchTerm.toLowerCase();
-      const filteredEntites = entites.filter(entite => {
+      filteredEntites = filteredEntites.filter(entite => {
         return (
           (entite.nom && entite.nom.toLowerCase().includes(lowerCaseSearchTerm)) ||
           (entite.ville && entite.ville.toLowerCase().includes(lowerCaseSearchTerm)) ||
@@ -66,10 +69,23 @@ const EntiteList = () => {
           (entite.role && entite.role.toLowerCase().includes(lowerCaseSearchTerm))
         );
       });
-      return filteredEntites; // Return filtered entities
     }
-    return entites; // Return original entities if no search term
+
+    // Filter by Role
+    if (selectedRole.trim()) {
+      filteredEntites = filteredEntites.filter(entite => entite.role === selectedRole);
+    }
+
+    return filteredEntites;
   };
+  useEffect(() => {
+    const filtered = renderSearch();
+    if (filtered.length === 0) {
+      setNoResultsMessage('Aucune entité trouvée pour les critères de recherche spécifiés.');
+    } else {
+      setNoResultsMessage(''); // Clear the message if results are found
+    }
+  }, [searchTerm, selectedRole, entites]);
   const roles = [
     'Fournisseur',
     'CSPS',
@@ -279,24 +295,24 @@ const EntiteList = () => {
             style={{ marginRight: '10px' }}
           />
           <Grid container spacing={3}>
-            {filteredEntites.map(entite => (
-              <Grid item xs={12} sm={8} md={4} key={entite.id}>
-                <EntiteCard
-                  entite={entite}
-                  onEdit={() => {
-                    setSelectedEntity(entite);
-                    setShowModal(true);
-                  }}
-                />
-              </Grid>
-            ))}
+            {filteredEntites.length > 0
+              ? filteredEntites.map(entite => (
+                  <Grid item xs={12} sm={8} md={4} key={entite.id}>
+                    <EntiteCard
+                      entite={entite}
+                      onEdit={() => {
+                        setSelectedEntity(entite);
+                        setShowModal(true);
+                      }}
+                    />
+                  </Grid>
+                ))
+              : noResultsMessage && (
+                  <Alert variant="destructive" className="mt-4">
+                    <AlertDescription>{noResultsMessage}</AlertDescription>
+                  </Alert>
+                )}
           </Grid>
-          {/* Conditionally render the no results alert */}
-          {filteredEntites.length === 0 && noResultsMessage && (
-            <Alert variant="destructive" className="mt-4">
-              <AlertDescription>{noResultsMessage}</AlertDescription>
-            </Alert>
-          )}
         </MDBox>
       </Card>
       {showModal && (
