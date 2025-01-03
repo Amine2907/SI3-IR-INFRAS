@@ -557,11 +557,13 @@ const SiteInfoCard = ({ site, onEdit }) => {
                               alignItems="center"
                               width="100%"
                             >
-                              {/* Contact Name */}
+                              {/* Contact Name or Email */}
                               <span>
-                                {contact.Contacts.nom ||
-                                  contact.Contacts.email ||
-                                  'Unknown Contact'}
+                                {contact.Contacts.nom
+                                  ? contact.Contacts.nom
+                                  : contact.Contacts.email
+                                  ? contact.Contacts.email
+                                  : 'Unknown Contact'}
                               </span>
                               {/* Action Icons */}
                               <Box>

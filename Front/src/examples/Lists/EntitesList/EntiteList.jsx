@@ -70,12 +70,10 @@ const EntiteList = () => {
         );
       });
     }
-
     // Filter by Role
     if (selectedRole.trim()) {
       filteredEntites = filteredEntites.filter(entite => entite.role === selectedRole);
     }
-
     return filteredEntites;
   };
   useEffect(() => {
