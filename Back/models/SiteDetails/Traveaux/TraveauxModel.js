@@ -2,20 +2,6 @@ import { supabase } from "../../../config/supabaseClient.js";
 // create Traveaux Model
 const createTraveaux = async (Sid, traveauxData) => {
     try {
-        // User can add only one Traveaux which colunm is_active equal to True ! 
-      if (traveauxData.is_active === true)  {
-        const { data: exisitngTraveaux, error: checkError } = await supabase
-          .from('Traveaux')
-          .select('*')
-          .eq('EB_fk', Sid)  // Match using EB_fk  (the site identifier)
-          .eq('is_active', true);  // Ensure we have only one prospect which have is_active = True 
-        if (checkError) {
-          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
-        }
-        if (exisitngTraveaux && exisitngTraveaux.length > 0) {
-          throw new Error("This Site have already one reglement with active status already exists for this site.");
-        }
-      }
         console.log('Incoming data for create Traveaux :', traveauxData);
         // Fetch the active Paiements and map the `paie_id` based on `libelle_du_virement`
         const { data: activePaiements, error: fetchError } = await supabase
@@ -148,25 +134,6 @@ const getInactiveTraveaux = async (Sid) => {
 // update Traveau Model 
 const updateTraveaux = async (Tid, updates) => {
     try {
-         // Check if the `is_active` field is being updated to `True`
-    if (updates.is_active === true) {
-        // Fetch any active `Traveaux` records
-        const { data: activeTraveaux, error: fetchError } = await supabase
-          .from('Traveaux')
-          .select('Tid')
-          .eq('is_active', true);
-  
-        if (fetchError) {
-          throw new Error(`Failed to fetch active Traveaux: ${fetchError.message}`);
-        }
-  
-        if (Array.isArray(activeTraveaux) && activeTraveaux.length > 0) {
-          // If there is already an active `Traveaux`, prevent the update
-          throw new Error(
-            `Cannot update is_active to True. There is already an active Traveaux with Tid: ${activeTraveaux[0].Tid}`
-          );
-        }
-      }
         // Fetch the active Paiements and map the `paie_id` if present in updates
         if (updates.paie_id && typeof updates.paie_id === 'string') {
             const { data: activePaiements, error: fetchError } = await supabase

@@ -2,20 +2,6 @@ import { supabase } from "../../../../config/supabaseClient.js";
 // create Paiement Model 
 const createPaiement = async (Sid, paiementData) => {
     try {
-        // User can add only one reglement which colunm is_active equal to True ! 
-      if (paiementData.is_active === true)  {
-        const { data: exisitingPaiement, error: checkError } = await supabase
-          .from('Paiements')
-          .select('*')
-          .eq('EB_fk', Sid)  // Match using EB_fk  (the site identifier)
-          .eq('is_active', true);  // Ensure we have only one prospect which have is_active = True 
-        if (checkError) {
-          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
-        }
-        if (exisitingPaiement && exisitingPaiement.length > 0) {
-          throw new Error("This Site have already one reglement with active status already exists for this site.");
-        }
-      }
       console.log('Incoming data for create Paiement:', paiementData);
       // Insert the new Paiement into the 'Paiements' table
       const { data: Paiement, error: paiementError } = await supabase
@@ -110,23 +96,6 @@ const getInactivePaiement = async (paieId) => {
 // update Paiement Model 
 const updatePaiement = async (Pid, updates) => {
     try {
-         // Ensure only one PreEtude entry can be active at a time, if applicable
-    if (updates.is_active === true) {
-        const { data: activePreEtudes, error: fetchError } = await supabase
-          .from('PreEtude')
-          .select('PREid')
-          .eq('is_active', true);
-  
-        if (fetchError) {
-          throw new Error(`Error fetching active PreEtude entries: ${fetchError.message}`);
-        }
-  
-        if (activePreEtudes && activePreEtudes.length > 0) {
-          throw new Error(
-            'An active PreEtude entry already exists. Please deactivate it before activating another one.'
-          );
-        }
-      }
         const { data, error } = await supabase
         .from('Paiements')
         .update(updates)

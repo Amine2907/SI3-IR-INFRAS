@@ -2,20 +2,6 @@ import { supabase } from "../../../config/supabaseClient.js";
 // create PreEtude Model 
 const createPreEtude = async (Sid, preEtudeData) => {
     try {
-    // User can add only one preEtude which colunm is_active equal to True ! 
-      if (preEtudeData.is_active === true)  {
-        const { data: existingPreEtude, error: checkError } = await supabase
-          .from('PreEtude')
-          .select('*')
-          .eq('EB_fk', Sid)  // Match using EB_fk  (the site identifier)
-          .eq('is_active', true);  // Ensure we have only one preEtude which have is_active = True 
-        if (checkError) {
-          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
-        }
-        if (existingPreEtude && existingPreEtude.length > 0) {
-          throw new Error("This Site have already one preEtude with active status already exists for this site.");
-        }
-      }
       const { data: preEtude, error: contactError } = await supabase
         .from('PreEtude')
         .insert([{ EB_fk: Sid , ...preEtudeData }])
@@ -119,23 +105,6 @@ const fetchInactivePreEtude = async (siteID) => {
 // update PreEtude Model 
 const updatePreEtude = async (preEtudeId, updates) => {
     try {
-    // Ensure only one PreEtude entry can be active at a time, if applicable
-    if (updates.is_active === true) {
-        const { data: activePreEtudes, error: fetchError } = await supabase
-          .from('PreEtude')
-          .select('PREid')
-          .eq('is_active', true);
-  
-        if (fetchError) {
-          throw new Error(`Error fetching active PreEtude entries: ${fetchError.message}`);
-        }
-  
-        if (activePreEtudes && activePreEtudes.length > 0) {
-          throw new Error(
-            'An active PreEtude entry already exists. Please deactivate it before activating another one.'
-          );
-        }
-      }
         const { data, error } = await supabase
         .from('PreEtude')
         .update(updates)
