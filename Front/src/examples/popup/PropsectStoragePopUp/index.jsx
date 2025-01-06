@@ -8,6 +8,7 @@ import ProspectStorageService from 'services/site_details/Prospect/prospectStora
 
 const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
+  const [formData, setFormData] = useState({}); // Added formData initialization
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -17,51 +18,52 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
         console.error('No prospect ID provided.');
         return;
       }
-      setLoading(true);
       try {
         const filesData = await fetchFiles();
+        console.log('Fetched Files:', filesData);
         setFiles(filesData || []);
       } catch (error) {
         console.error('Error fetching files:', error);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchFilesForProspect();
   }, [prospectId, fetchFiles]);
-  // Form validation
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.nom) newErrors.nom = true;
-    return newErrors;
-  };
   // Submit form to upload a file
   const handleSubmit = async () => {
-    if (!prospect?.id) {
+    if (!prospectId) {
       console.error('No prospect ID provided.');
+      setErrors({ prospectId: 'Prospect ID is required.' });
       return;
     }
-
     const file = files[0]?.file; // Get the first file to upload
     if (!file) {
-      setErrors({ file: 'Please upload a file' });
+      setErrors({ file: 'Please upload a file.' });
       return;
     }
-
     try {
-      const result = await ProspectStorageService.uploadProspectFile(file, prospect.id); // Pass prospect ID
+      console.log('Uploading file for prospect ID:', prospectId);
+      const result = await ProspectStorageService.uploadProspectFile(file, prospectId);
+
       if (result.success) {
         console.log('File uploaded successfully:', result.data);
+
+        // Update the local file list
         setFiles(prevFiles => [
           ...prevFiles,
-          { id: Date.now(), name: file.name, url: result.data.fileUrl }, // Update file list
+          { id: Date.now(), name: file.name, url: result.data.fileUrl },
         ]);
+
+        // Reset errors and notify parent
+        setErrors({});
+        onSave && onSave();
       } else {
         console.error('Error uploading file:', result.error);
+        setErrors({ upload: result.error || 'Failed to upload the file.' });
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error('Unexpected error uploading file:', error);
+      setErrors({ upload: 'An unexpected error occurred. Please try again.' });
     }
   };
   // Add new file
@@ -71,6 +73,7 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
       setFiles([{ id: Date.now(), name: newFile.name, file: newFile }]); // Store file data locally
     }
   };
+
   // Download a file
   const handleDownloadFile = async file => {
     try {
@@ -94,6 +97,7 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
   const handleDeleteFile = fileId => {
     setFiles(prevFiles => prevFiles.filter(file => file.id !== fileId));
   };
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -160,10 +164,12 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
     </div>
   );
 };
+
 ProspectStorageModal.propTypes = {
   prospectId: PropTypes.string,
   fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
+
 export default ProspectStorageModal;

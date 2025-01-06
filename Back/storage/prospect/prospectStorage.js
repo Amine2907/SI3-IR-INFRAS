@@ -3,7 +3,7 @@ import { supabase } from "../../config/supabaseClient.js";
 const generateSignedUrl = async (filePath) => {
   try {
     const { data, error } = await supabase.storage
-      .from("prospect-pdf") // Replace with your bucket name
+      .from("prospect-pdf") 
       .createSignedUrl(filePath, 60); // URL expires in 60 seconds
 
     if (error) throw error;
@@ -20,7 +20,7 @@ const uploadPdf = async (file) => {
     const filePath = `pdfs/${file.originalname}`; // Customize the folder structure as needed
 
     const { data, error } = await supabase.storage
-      .from("prospect-pdf") // Replace with your bucket name
+      .from("prospect-pdf") 
       .upload(filePath, file.buffer, {
         cacheControl: "3600",
         upsert: false, // Set to true if you want to overwrite files
@@ -39,7 +39,7 @@ const uploadPdf = async (file) => {
 const getPublicUrl = (filePath) => {
   try {
     const { data, error } = supabase.storage
-      .from("prospect-pdf") // Replace with your bucket name
+      .from("prospect-pdf") 
       .getPublicUrl(filePath);
 
     if (error) throw error;
@@ -53,7 +53,7 @@ const getPublicUrl = (filePath) => {
 
 const downloadPdf = async (filePath) => {
   try {
-    console.log("Attempting to download file from path:", filePath); // Debug log
+    console.log("Attempting to download file from path:", filePath);
     const encodedFilePath = encodeURIComponent(filePath);
     const { data, error } = await supabase.storage
       .from("prospect-pdf")

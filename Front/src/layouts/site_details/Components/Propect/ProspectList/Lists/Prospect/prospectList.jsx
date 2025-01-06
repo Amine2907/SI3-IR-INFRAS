@@ -34,12 +34,19 @@ function ProspectList({ site }) {
   const Sid = EB;
   const Proid = selectedprospect?.Proid;
   const { fetchDpData } = useDpsForProspects(Sid);
+  useEffect(() => {
+    if (selectedprospect && showUploadModal) {
+      console.log('Prospect selected and modal ready:', selectedprospect);
+    }
+  }, [selectedprospect, showUploadModal]);
   const handleEdit = prospect => {
+    console.log('Editing Prospect:', prospect);
     setSelectedprospect(prospect);
     setShowModal(true);
     setIsModalOpen(true);
   };
   const handleOpenModal = () => {
+    console.log('Opening Modal for Prospect:', selectedprospect);
     setShowUploadModal(true);
   };
   const handleCloseModal = () => {
@@ -136,16 +143,16 @@ function ProspectList({ site }) {
     return 'gray';
   };
   // ferch propsetcs files here !
-  const fetchProspectFiles = async () => {
+  const fetchProspectFiles = async prospectId => {
+    if (!prospectId) {
+      console.error('Prospect ID is required to fetch files.');
+      return [];
+    }
     try {
-      const Proid = selectedprospect?.Proid;
-      console.log('Sending request with Proid:', Proid);
-      if (!Proid) {
-        console.error('Prospect ID is required to fetch files.');
-        return [];
-      }
-      const response = await SiteProspectService.getProspectFiles(Proid);
+      console.log('Fetching files for prospect ID:', prospectId);
+      const response = await SiteProspectService.getProspectFiles(prospectId);
       if (response.success) {
+        console.log('Files fetched successfully:', response.data.files);
         return response.data.files;
       } else {
         console.error('Error fetching files:', response.error);
@@ -235,10 +242,12 @@ function ProspectList({ site }) {
       </table>
       {showUploadModal && (
         <ProspectStorageModal
-          prospect={selectedprospect}
           prospectId={selectedprospect?.Proid}
-          fetchFiles={fetchProspectFiles}
-          onSave={handleCloseModal}
+          fetchFiles={() => fetchProspectFiles(selectedprospect?.Proid)}
+          onSave={() => {
+            console.log('File uploaded successfully. Refreshing prospects.');
+            fetchProspectsData();
+          }}
           onClose={handleCloseModal}
         />
       )}
