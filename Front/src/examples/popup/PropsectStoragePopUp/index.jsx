@@ -63,13 +63,14 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
   // Download a file
   const handleDownloadFile = async file => {
     try {
-      const result = await ProspectStorageService.downloadProspectFile(file.name);
+      // Ensure correct file path is passed here
+      const result = await ProspectStorageService.downloadProspectFile(file.path);
 
       if (result.success) {
         const blob = new Blob([result.data], { type: 'application/pdf' });
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
-        link.download = file.name;
+        link.download = file.name; // The file name in the download dialog
         link.click();
       } else {
         console.error('Error downloading file:', result.error);
@@ -78,12 +79,28 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
       console.error('Error downloading file:', error);
     }
   };
+  // Handle delete button click from the frontend
+  // Delete file handler
+  const handleDeleteFile = async file => {
+    if (!file?.path) {
+      console.error('File path is required for deletion');
+      return;
+    }
 
-  // Delete a file (local state only for now)
-  const handleDeleteFile = fileId => {
-    setFiles(prevFiles => prevFiles.filter(file => file.id !== fileId));
+    try {
+      const result = await ProspectStorageService.deleteProspectFile(file.path);
+
+      if (result.success) {
+        console.log('File deleted successfully');
+        // Optionally, remove the file from the UI list or re-fetch files
+        setFiles(prevFiles => prevFiles.filter(item => item.path !== file.path));
+      } else {
+        console.error('Error deleting file:', result.error);
+      }
+    } catch (error) {
+      console.error('Error deleting file:', error);
+    }
   };
-
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>

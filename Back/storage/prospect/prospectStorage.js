@@ -62,19 +62,42 @@ const getPublicUrl = (filePath) => {
 const downloadPdf = async (filePath) => {
   try {
     console.log("Attempting to download file from path:", filePath);
-    const encodedFilePath = encodeURIComponent(filePath);
+    // Ensure the file path is correctly formatted
+    const encodedFilePath = filePath;  // No need to double encode
+
     const { data, error } = await supabase.storage
       .from("prospect-pdf")
-      .download(encodedFilePath);
+      .download(encodedFilePath);  // Download file from the provided path
 
-    if (error) throw error;
-
+    if (error) {
+      console.error("Error downloading file:", error);
+      throw new Error(error.message || "Error downloading file");
+    }
     return data;
   } catch (error) {
-    console.error("Error downloading file:", error);
+    console.error("Error in downloadPdf:", error);
     return null;
   }
 };
+const deleteFile = async (filePath) => {
+  try {
+    // Delete the file from Supabase storage
+    const { data, error } = await supabase.storage
+      .from("prospect-pdf")
+      .remove([filePath]); 
+
+    if (error) {
+      throw error;
+    }
+    // If file is deleted, return a success response
+    return { success: true, data: data };
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    return { success: false, error: error.message || error };
+  }
+};
+
+
 const listFiles = async (prospectId) => {
   try {
     // Ensure prospectId is a string when constructing the path
@@ -108,6 +131,7 @@ const prospectStorage = {
   getPublicUrl,
   downloadPdf,
   listFiles,
+  deleteFile,
 };
 
 export default prospectStorage;

@@ -59,18 +59,17 @@ const downloadFileController = async (req, res) => {
       return res.status(400).json({ error: "File path is required" });
     }
 
-    console.log("Downloading file from path:", filePath); // Debugging log
+    console.log("Downloading file from path:", filePath);
 
+    // Call the download function
     const fileBlob = await prospectStorage.downloadPdf(filePath);
 
     if (!fileBlob) {
       return res.status(404).json({ error: "File not found" });
     }
 
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="${filePath.split('/').pop()}"`
-    );
+    // Set appropriate headers and send the file as response
+    res.setHeader("Content-Disposition", `attachment; filename="${filePath.split('/').pop()}"`);
     res.setHeader("Content-Type", "application/pdf");
     return res.status(200).send(fileBlob);
   } catch (error) {
@@ -78,38 +77,7 @@ const downloadFileController = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-// Controller to get public URL for a file
-// const getPublicUrlController = async (req, res) => {
-//   try {
-//     const { prospectId } = req.body;
-//     if (!prospectId) {
-//       console.log('Prospect ID is missing in request body');
-//       return res.status(400).json({ error: "Prospect ID is required" });
-//     }
-//     // Fetch files from Supabase
-//     const { data: files, error } = await supabase.storage
-//       .from("prospect-pdf")
-//       .list(`${prospectId}/`);
 
-//     if (error) {
-//       console.log('Error fetching files from Supabase:', error);
-//       return res.status(500).json({ error: "Failed to fetch files from Supabase" });
-//     }
-//     // Return file URLs
-//     const fileUrls = files.map(file => {
-//       const { publicUrl } = supabase.storage
-//         .from("prospect-pdf")
-//         .getPublicUrl(`${prospectId}/${file.name}`);
-//       return { name: file.name, url: publicUrl };
-//     });
-
-//     return res.status(200).json({ files: fileUrls });
-
-//   } catch (error) {
-//     console.error('Unexpected error in getPublicUrlController:', error);
-//     return res.status(500).json({ error: "Internal server error" });
-//   }
-// };
 
 const getFilesByProspectController = async (req, res) => {
   const { prospectId } = req.body;
@@ -124,11 +92,32 @@ const getFilesByProspectController = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+const deleteFileController = async (req, res) => {
+  const { filePath } = req.body;
+
+  if (!filePath) {
+    return res.status(400).json({ error: "File path is required" });
+  }
+
+  try {
+    const result = await prospectStorage.deleteFile(filePath); // Call the delete function
+
+    if (result.success) {
+      return res.status(200).json({ message: "File deleted successfully" });
+    } else {
+      return res.status(500).json({ error: result.error || "Failed to delete file" });
+    }
+  } catch (error) {
+    console.error("Error in deleteFileController:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 const prospectStorageCntrl = {
   uploadFileController,
   downloadFileController,
-  // getPublicUrlController,
   generateSignedUrlController,
   getFilesByProspectController,
+  deleteFileController,
 };
 export default prospectStorageCntrl;

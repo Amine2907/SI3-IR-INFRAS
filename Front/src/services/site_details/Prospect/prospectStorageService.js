@@ -48,10 +48,9 @@ const generateProspectSignedUrl = async filePath => {
 const downloadProspectFile = async filePath => {
   try {
     const response = await axios.get(`${API_URL}/download-prospect`, {
-      params: { filePath }, // Send filePath as a query parameter
-      responseType: 'blob', // Ensure the response is treated as binary
+      params: { filePath },
+      responseType: 'blob',
     });
-
     return { success: true, data: response.data };
   } catch (error) {
     console.error('Error downloading file:', error);
@@ -60,9 +59,13 @@ const downloadProspectFile = async filePath => {
 };
 
 // Delete a prospect file
-const deleteProspectFile = async fileId => {
+const deleteProspectFile = async filePath => {
   try {
-    const response = await axios.post(`${API_URL}/delete-prospect-file`, { fileId });
+    console.log('Attempting to delete file with path:', filePath);
+
+    // Call your API endpoint to delete the file using the file path
+    const response = await axios.post(`${API_URL}/delete-prospect-file`, { filePath });
+
     return { success: true, data: response.data };
   } catch (error) {
     return {
