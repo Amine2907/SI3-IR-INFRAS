@@ -7,7 +7,8 @@ const uploadProspectFile = async (file, prospectId) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('prospectId', prospectId);
+    formData.append('prospectId', prospectId); // Attach the prospect ID
+
     const response = await axios.post(`${API_URL}/upload-prospect`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });

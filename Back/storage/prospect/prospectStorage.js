@@ -14,25 +14,33 @@ const generateSignedUrl = async (filePath) => {
     return null;
   }
 };
-
-const uploadPdf = async (file) => {
+const uploadPdf = async (file, prospectId) => {
   try {
-    const filePath = `pdfs/${file.originalname}`; // Customize the folder structure as needed
+    // Validate that prospectId is a number
+    if (!prospectId) {
+      throw new Error('Invalid prospectId: It should be a valid number');
+    }
+    // Convert prospectId to string for constructing the file path
+    const prospectIdStr = String(prospectId);
+    const filePath = `${prospectIdStr}/${file.originalname}`;
 
+    // Perform file upload using Supabase storage
     const { data, error } = await supabase.storage
-      .from("prospect-pdf") 
+      .from("prospect-pdf")
       .upload(filePath, file.buffer, {
         cacheControl: "3600",
-        upsert: false, // Set to true if you want to overwrite files
-        contentType: file.mimetype, // Important for correct file type
+        upsert: false,  // Set to true if you want to overwrite the file
+        contentType: file.mimetype,  // Set the content type of the file
       });
 
     if (error) throw error;
 
+    // Return file path if successful
     return { success: true, filePath: data.path };
+
   } catch (error) {
     console.error("Error uploading file:", error);
-    return { success: false, error };
+    return { success: false, error: error.message || error };
   }
 };
 
@@ -67,11 +75,39 @@ const downloadPdf = async (filePath) => {
     return null;
   }
 };
+const listFiles = async (prospectId) => {
+  try {
+    // Ensure prospectId is a string when constructing the path
+    const folderPath = `prospect-pdf/${prospectId}`;
+    console.log(`Fetching files from folder: ${folderPath}`); // Add logging here to debug the path
+
+    // Use the Supabase client to list files
+    const { data, error } = await supabase.storage
+      .from("prospect-pdf")
+      .list(folderPath);
+
+    if (error) {
+      console.error("Error fetching files from Supabase:", error);
+      return [];
+    }
+    console.log("Fetched files:", data); // Log the fetched files
+    // Map through the files to return the proper structure
+    return data.map(file => ({
+      name: file.name,
+      path: `prospect-pdf/${prospectId}/${file.name}`,
+    }));
+  } catch (error) {
+    console.error("Error listing files:", error);
+    return [];
+  }
+};
+
 const prospectStorage = {
   generateSignedUrl,
   uploadPdf,
   getPublicUrl,
   downloadPdf,
+  listFiles,
 };
 
 export default prospectStorage;

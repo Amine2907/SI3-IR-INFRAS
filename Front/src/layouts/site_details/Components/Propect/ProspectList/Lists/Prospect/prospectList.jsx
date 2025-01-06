@@ -21,6 +21,7 @@ import ProspectDpService from 'services/site_details/DP/DpService';
 import { statusValidationValues } from './ProspectData';
 import useDpsForProspects from '../DeclPreal/declpreaService';
 import ProspectStorageModal from 'examples/popup/PropsectStoragePopUp';
+import ProspectStorageService from 'services/site_details/Prospect/prospectStorageService';
 function ProspectList({ site }) {
   const { prospectsData, loading, error, fetchProspectsData } = useProspectsData(site);
   const [showModal, setShowModal] = useState(false);
@@ -45,7 +46,13 @@ function ProspectList({ site }) {
     setShowModal(true);
     setIsModalOpen(true);
   };
+
+  // Opening the modal for file upload (ensure prospectId is available)
   const handleOpenModal = () => {
+    if (!selectedprospect?.Proid) {
+      console.error('No prospect selected or prospect ID missing');
+      return;
+    }
     console.log('Opening Modal for Prospect:', selectedprospect);
     setShowUploadModal(true);
   };
@@ -142,18 +149,17 @@ function ProspectList({ site }) {
     if (retenu === false) return 'red';
     return 'gray';
   };
-  // ferch propsetcs files here !
   const fetchProspectFiles = async prospectId => {
     if (!prospectId) {
-      console.error('Prospect ID is required to fetch files.');
+      console.error('Prospect ID is missing!');
       return [];
     }
     try {
-      console.log('Fetching files for prospect ID:', prospectId);
-      const response = await SiteProspectService.getProspectFiles(prospectId);
+      console.log(`Fetching files for prospect ID: ${prospectId}`);
+      const response = await ProspectStorageService.getProspectFiles(prospectId); // Correct API call
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
-        return response.data.files;
+        return response.data.files; // Return the fetched files
       } else {
         console.error('Error fetching files:', response.error);
         return [];
@@ -240,7 +246,7 @@ function ProspectList({ site }) {
           })}
         </TableBody>
       </table>
-      {showUploadModal && (
+      {showUploadModal && selectedprospect?.Proid && (
         <ProspectStorageModal
           prospectId={selectedprospect?.Proid}
           fetchFiles={() => fetchProspectFiles(selectedprospect?.Proid)}
@@ -251,6 +257,7 @@ function ProspectList({ site }) {
           onClose={handleCloseModal}
         />
       )}
+
       {showModal && (
         <CombinedModal
           open={isModalOpen}

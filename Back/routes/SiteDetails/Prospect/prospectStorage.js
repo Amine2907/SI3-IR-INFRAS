@@ -26,6 +26,6 @@ router.get("/download-prospect", prospectStorageCntrl.downloadFileController);
 // Route for retrieving public URLs of prospect files
 router.post(
   "/get-prospect-files",
-  prospectStorageCntrl.getPublicUrlController // Controller for fetching public URLs
+  prospectStorageCntrl.getFilesByProspectController // Controller for fetching public URLs
 );
 export default router;

@@ -8,7 +8,7 @@ import ProspectStorageService from 'services/site_details/Prospect/prospectStora
 
 const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
-  const [formData, setFormData] = useState({}); // Added formData initialization
+  const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -18,12 +18,14 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
         console.error('No prospect ID provided.');
         return;
       }
+      setLoading(true);
       try {
         const filesData = await fetchFiles();
-        console.log('Fetched Files:', filesData);
         setFiles(filesData || []);
       } catch (error) {
         console.error('Error fetching files:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -31,32 +33,16 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
   }, [prospectId, fetchFiles]);
   // Submit form to upload a file
   const handleSubmit = async () => {
-    if (!prospectId) {
-      console.error('No prospect ID provided.');
-      setErrors({ prospectId: 'Prospect ID is required.' });
-      return;
-    }
     const file = files[0]?.file; // Get the first file to upload
     if (!file) {
       setErrors({ file: 'Please upload a file.' });
       return;
     }
     try {
-      console.log('Uploading file for prospect ID:', prospectId);
       const result = await ProspectStorageService.uploadProspectFile(file, prospectId);
-
       if (result.success) {
         console.log('File uploaded successfully:', result.data);
-
-        // Update the local file list
-        setFiles(prevFiles => [
-          ...prevFiles,
-          { id: Date.now(), name: file.name, url: result.data.fileUrl },
-        ]);
-
-        // Reset errors and notify parent
-        setErrors({});
-        onSave && onSave();
+        // Handle the successful upload (e.g., update state, close modal, etc.)
       } else {
         console.error('Error uploading file:', result.error);
         setErrors({ upload: result.error || 'Failed to upload the file.' });
@@ -166,7 +152,7 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
 };
 
 ProspectStorageModal.propTypes = {
-  prospectId: PropTypes.string,
+  prospectId: PropTypes.number,
   fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
