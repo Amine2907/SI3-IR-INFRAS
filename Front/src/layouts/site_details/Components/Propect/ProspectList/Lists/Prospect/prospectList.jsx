@@ -46,10 +46,6 @@ function ProspectList({ site }) {
     setShowModal(false);
     setShowUploadModal(false);
   };
-  const handleUploadPropsect = () => {
-    // uploading file logic here
-    null;
-  };
   useEffect(() => {
     if (prospectsData && prospectsData.length > 0) {
       console.log('Prospects Data:', prospectsData);
@@ -66,8 +62,8 @@ function ProspectList({ site }) {
   // update a site's prospect
   const handleUpdate = async updates => {
     const Proid = selectedprospect?.Proid;
-    // console.log('Sending request with Proid:', Proid);
-    // console.log('Form Data:', updates);
+    console.log('Sending request with Proid:', Proid);
+    console.log('Form Data:', updates);
     if (!Proid) {
       console.error('Le Proid est manquant, impossible de mettre à jour.');
       setAlert({
@@ -138,6 +134,27 @@ function ProspectList({ site }) {
     if (retenu === true) return 'green';
     if (retenu === false) return 'red';
     return 'gray';
+  };
+  // ferch propsetcs files here !
+  const fetchProspectFiles = async () => {
+    try {
+      const Proid = selectedprospect?.Proid;
+      console.log('Sending request with Proid:', Proid);
+      if (!Proid) {
+        console.error('Prospect ID is required to fetch files.');
+        return [];
+      }
+      const response = await SiteProspectService.getProspectFiles(Proid);
+      if (response.success) {
+        return response.data.files;
+      } else {
+        console.error('Error fetching files:', response.error);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching files:', error);
+      return [];
+    }
   };
   if (loading)
     return (
@@ -219,7 +236,9 @@ function ProspectList({ site }) {
       {showUploadModal && (
         <ProspectStorageModal
           prospect={selectedprospect}
-          onSave={handleUploadPropsect}
+          prospectId={selectedprospect?.Proid}
+          fetchFiles={fetchProspectFiles}
+          onSave={handleCloseModal}
           onClose={handleCloseModal}
         />
       )}

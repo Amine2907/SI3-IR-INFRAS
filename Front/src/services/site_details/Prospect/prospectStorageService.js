@@ -2,65 +2,82 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api/pros-storage';
 
-// Upload Prospect File (Store a file in Supabase)
-const uploadProspectFile = async file => {
+// Upload a prospect file to the server
+const uploadProspectFile = async (file, prospectId) => {
   try {
-    // Create a new FormData object
     const formData = new FormData();
-    // Append the file to the FormData object
-    formData.append('file', file); // 'file' is the key that your backend expects
-    // Send the form data as a POST request
+    formData.append('file', file);
+    formData.append('prospectId', prospectId);
     const response = await axios.post(`${API_URL}/upload-prospect`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data', // Let axios handle this for file upload
-      },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.message,
+    };
   }
 };
-// Generate Signed URL for Prospect File (Get a URL for secure access)
+// Get public URLs for all files associated with a prospect
+const getProspectFiles = async prospectId => {
+  try {
+    const response = await axios.post(`${API_URL}/get-prospect-files`, { prospectId });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.message,
+    };
+  }
+};
+// Generate a signed URL for secure file access
 const generateProspectSignedUrl = async filePath => {
   try {
-    const response = await axios.get(`${API_URL}/generate-prospect-files`, {
-      params: { filePath },
-    });
+    const response = await axios.post(`${API_URL}/generate-prospect-files`, { filePath });
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.message,
+    };
   }
 };
-
-// Get Public URL for Prospect File (For publicly accessible files)
-const getProspectPublicUrl = async filePath => {
-  try {
-    const response = await axios.get(`${API_URL}/get-prospect-files`, { params: { filePath } });
-    return { success: true, data: response.data };
-  } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
-  }
-};
-
-// Download Prospect File (Download a file from Supabase)
+// Download a prospect file
 const downloadProspectFile = async filePath => {
   try {
-    const response = await axios.post(
-      `${API_URL}/download-prospect`,
-      { filePath },
-      { responseType: 'blob' }
-    );
+    const response = await axios.get(`${API_URL}/download-prospect`, {
+      params: { filePath }, // Send filePath as a query parameter
+      responseType: 'blob', // Ensure the response is treated as binary
+    });
+
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    console.error('Error downloading file:', error);
+    return { success: false, error: error.response?.data || 'Unknown error' };
   }
 };
 
+// Delete a prospect file
+const deleteProspectFile = async fileId => {
+  try {
+    const response = await axios.post(`${API_URL}/delete-prospect-file`, { fileId });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.message,
+    };
+  }
+};
+
+// Prospect Storage Service: Exports all methods
 const ProspectStorageService = {
   uploadProspectFile,
+  getProspectFiles,
   generateProspectSignedUrl,
-  getProspectPublicUrl,
   downloadProspectFile,
+  deleteProspectFile,
 };
 
 export default ProspectStorageService;

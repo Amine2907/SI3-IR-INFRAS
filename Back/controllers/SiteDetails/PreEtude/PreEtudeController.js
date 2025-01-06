@@ -137,4 +137,4 @@ const PreEtudeController = {
     getPreEtudesById,
     getAllPreEtudeT,
 }
-export default PreEtudeController ; 
+export default PreEtudeController; 

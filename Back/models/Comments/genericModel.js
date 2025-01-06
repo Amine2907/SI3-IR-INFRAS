@@ -41,5 +41,4 @@ class GenericModel {
       return data;
     }
   }
-  
   export default GenericModel;

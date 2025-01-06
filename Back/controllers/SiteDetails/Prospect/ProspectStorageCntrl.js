@@ -1,7 +1,6 @@
 import prospectStorage from "../../../storage/prospect/prospectStorage.js";
-
 // Controller to handle file uploads
- const uploadFileController = async (req, res) => {
+const uploadFileController = async (req, res) => {
   try {
     const file = req.file;
     if (!file) {
@@ -14,14 +13,18 @@ import prospectStorage from "../../../storage/prospect/prospectStorage.js";
       return res.status(500).json({ error: "File upload failed", details: uploadResult.error });
     }
 
-    return res.status(200).json({ message: "File uploaded successfully", path: uploadResult.filePath });
+    return res.status(200).json({
+      message: "File uploaded successfully",
+      path: uploadResult.filePath,
+    });
   } catch (error) {
     console.error("Error in uploadFileController:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 // Controller to generate signed URL for a file
- const generateSignedUrlController = async (req, res) => {
+const generateSignedUrlController = async (req, res) => {
   try {
     const { filePath } = req.body;
 
@@ -41,21 +44,28 @@ import prospectStorage from "../../../storage/prospect/prospectStorage.js";
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 // Controller to download a file
- const downloadFileController = async (req, res) => {
+const downloadFileController = async (req, res) => {
   try {
-    const { filePath } = req.params;
+    const { filePath } = req.query; // Extract filePath from query string
 
     if (!filePath) {
       return res.status(400).json({ error: "File path is required" });
     }
 
+    console.log("Downloading file from path:", filePath); // Debugging log
+
     const fileBlob = await prospectStorage.downloadPdf(filePath);
 
     if (!fileBlob) {
-      return res.status(500).json({ error: "Failed to download file" });
+      return res.status(404).json({ error: "File not found" });
     }
-    res.setHeader("Content-Disposition", `attachment; filename="${filePath.split('/').pop()}"`);
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${filePath.split('/').pop()}"`
+    );
     res.setHeader("Content-Type", "application/pdf");
     return res.status(200).send(fileBlob);
   } catch (error) {
@@ -64,7 +74,7 @@ import prospectStorage from "../../../storage/prospect/prospectStorage.js";
   }
 };
 // Controller to get public URL for a file
- const getPublicUrlController = async (req, res) => {
+const getPublicUrlController = async (req, res) => {
   try {
     const { filePath } = req.body;
 
@@ -84,10 +94,11 @@ import prospectStorage from "../../../storage/prospect/prospectStorage.js";
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 const prospectStorageCntrl = {
-    uploadFileController,
-    downloadFileController,
-    getPublicUrlController,
-    generateSignedUrlController,
-}
+  uploadFileController,
+  downloadFileController,
+  getPublicUrlController,
+  generateSignedUrlController,
+};
 export default prospectStorageCntrl;

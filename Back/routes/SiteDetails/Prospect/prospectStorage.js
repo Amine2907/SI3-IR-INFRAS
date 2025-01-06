@@ -1,17 +1,31 @@
 import express from "express";
-const router = express.Router();
 import prospectStorageCntrl from "../../../controllers/SiteDetails/Prospect/ProspectStorageCntrl.js";
+import multer from "multer";
 
-// Route for file download (POST is more appropriate for handling data)
-router.post('/download-prospect', prospectStorageCntrl.downloadFileController);
+const router = express.Router();
 
-// Route for retrieving public URLs of prospect files (GET is correct here)
-router.get('/get-prospect-files', prospectStorageCntrl.getPublicUrlController);
+// Configure Multer for file uploads (memory storage)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-// Route for uploading prospect files (POST is correct here)
-router.post('/upload-prospect', prospectStorageCntrl.uploadFileController);
+// Route for uploading prospect files
+router.post(
+  "/upload-prospect",
+  upload.single("file"), // Multer middleware to handle single file upload
+  prospectStorageCntrl.uploadFileController // Controller to handle the upload
+);
 
-// Route for generating a signed URL for a prospect file (POST is more appropriate)
-router.post('/generate-prospect-files', prospectStorageCntrl.generateSignedUrlController);
+// Route for generating a signed URL for a prospect file
+router.post(
+  "/generate-prospect-files",
+  prospectStorageCntrl.generateSignedUrlController // Controller for signed URLs
+);
 
-export default router ;
+// Route for downloading a prospect file
+router.get("/download-prospect", prospectStorageCntrl.downloadFileController);
+// Route for retrieving public URLs of prospect files
+router.post(
+  "/get-prospect-files",
+  prospectStorageCntrl.getPublicUrlController // Controller for fetching public URLs
+);
+export default router;
