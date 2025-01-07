@@ -112,7 +112,7 @@ function DemRacList({ site }) {
     }
     try {
       console.log(`Fetching files for DEMRAC ID: ${demRacId}`);
-      const response = await demracsStorageService.deleteDemracsFile(demRacId); // Correct API call
+      const response = await demracsStorageService.getDemracsFiles(demRacId); // Correct API call
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files

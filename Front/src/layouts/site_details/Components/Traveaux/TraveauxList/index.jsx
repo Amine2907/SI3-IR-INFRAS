@@ -19,6 +19,7 @@ import TravUModal from 'examples/popup/TraveauxPopUp';
 import cellStyle from './styles/styles';
 import traveauxStorageModal from 'examples/popup/TravStoragePopUp';
 import TravStorageModal from 'examples/popup/TravStoragePopUp';
+import travStorageService from 'services/site_details/Traveaux/TravStorageService';
 function TraveauxList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -84,7 +85,7 @@ function TraveauxList() {
     }
     try {
       console.log(`Fetching files for prospect ID: ${travId}`);
-      const response = await traveauxStorageModal.getTavFiles(travId); // Correct API call
+      const response = await travStorageService.getTavFiles(travId); // Correct API call
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files

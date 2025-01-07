@@ -19,6 +19,7 @@ import useDevisForSite from './devisService';
 import DevisUModal from 'examples/popup/DevisPopUp';
 import devisStorageModal from 'examples/popup/DevisStoragePopUp';
 import DevisStorageModal from 'examples/popup/DevisStoragePopUp';
+import devisStorageService from 'services/site_details/Devis/DevisStorageService';
 function DevisList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -109,7 +110,7 @@ function DevisList() {
     }
     try {
       console.log(`Fetching files for Devis ID: ${devisId}`);
-      const response = await devisStorageModal.getDevisFiles(devisId); // Correct API call
+      const response = await devisStorageService.getDevisFiles(devisId); // Correct API call
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files
