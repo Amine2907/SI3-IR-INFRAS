@@ -17,7 +17,7 @@ import cellStyle from './styles/styles';
 import SiteDevisService from 'services/site_details/Devis/DevisService';
 import useDevisForSite from './devisService';
 import DevisUModal from 'examples/popup/DevisPopUp';
-import DevisStorageModal from 'examples/popup/DevisStoragePopUp';
+import devisStorageModal from 'examples/popup/DevisStoragePopUp';
 function DevisList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -101,6 +101,26 @@ function DevisList() {
         <AlertDescription>Aucune donnée des devis pour ce site sont disponibles.</AlertDescription>
       </Alert>
     );
+  const fetchDevisFiles = async devisId => {
+    if (!devisId) {
+      console.error('Devis ID is missing!');
+      return [];
+    }
+    try {
+      console.log(`Fetching files for Devis ID: ${devisId}`);
+      const response = await devisStorageModal.getDevisFiles(devisId); // Correct API call
+      if (response.success) {
+        console.log('Files fetched successfully:', response.data.files);
+        return response.data.files; // Return the fetched files
+      } else {
+        console.error('Error fetching files:', response.error);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching files:', error);
+      return [];
+    }
+  };
   return (
     <TableContainer>
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
@@ -175,8 +195,16 @@ function DevisList() {
           onClose={handleCloseModal}
         />
       )}
-      {showStorageModal && (
-        <DevisStorageModal devis={selectedDevis} onSave={handleUpdate} onClose={handleCloseModal} />
+      {showStorageModal && selectedDevis?.ND && (
+        <devisStorageModal
+          devisId={selectedDevis?.ND}
+          fetchFiles={() => fetchDevisFiles(selectedDevis?.ND)}
+          onSave={() => {
+            console.log('File uploaded successfully. Refreshing prospects.');
+            fetchDevisFiles();
+          }}
+          onClose={handleCloseModal}
+        />
       )}
       {/* Display Alert if there's an error */}
       {alert.show && (

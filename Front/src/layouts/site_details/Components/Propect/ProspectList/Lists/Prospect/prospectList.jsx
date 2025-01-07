@@ -35,11 +35,6 @@ function ProspectList({ site }) {
   const Sid = EB;
   const Proid = selectedprospect?.Proid;
   const { fetchDpData } = useDpsForProspects(Sid);
-  useEffect(() => {
-    if (selectedprospect && showUploadModal) {
-      console.log('Prospect selected and modal ready:', selectedprospect);
-    }
-  }, [selectedprospect, showUploadModal]);
   const handleEdit = prospect => {
     console.log('Editing Prospect:', prospect);
     setSelectedprospect(prospect);
@@ -258,7 +253,6 @@ function ProspectList({ site }) {
           onClose={handleCloseModal}
         />
       )}
-
       {showModal && (
         <CombinedModal
           open={isModalOpen}

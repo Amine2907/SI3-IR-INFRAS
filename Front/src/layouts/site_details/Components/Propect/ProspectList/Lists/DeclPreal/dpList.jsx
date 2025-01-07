@@ -18,7 +18,7 @@ import ProspectDpService from 'services/site_details/DP/DpService';
 import DpUModal from 'examples/popup/DeclPreaPopUp/DpPopUp';
 import MDAlert from 'components/MDAlert';
 import DpStorageModal from 'examples/popup/DpStoragePopUp';
-import SiteService from 'services/Site_Services/siteService';
+import DeclPraelStorageService from 'services/site_details/DP/dpStorageService';
 function DeclPreaList() {
   const [showModal, setShowModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -29,20 +29,6 @@ function DeclPreaList() {
   const siteId = EB;
   const [site, setSite] = useState(null);
   const { dpsData, loading, error, fetchDpData } = useDpsForProspects(siteId);
-  // useEffect(() => {
-  //   if (siteId) {
-  //     fetchSiteDetails(siteId);
-  //   }
-  // }, [siteId]);
-  // const fetchSiteDetails = async siteId => {
-  //   const result = await SiteService.getSiteById(siteId);
-  //   if (result.success) {
-  //     console.log('Fetched site details:', result.data);
-  //     setSite(result.data[0]);
-  //   } else {
-  //     console.error('Failed to fetch site details:', result.error);
-  //   }
-  // };
   const handleEdit = dp => {
     setSelecteddp(dp);
     setShowModal(true);
@@ -97,6 +83,26 @@ function DeclPreaList() {
       });
     }
     handleCloseModal();
+  };
+  const fetchDeclPreaFiles = async declPreaId => {
+    if (!declPreaId) {
+      console.error('Prospect ID is missing!');
+      return [];
+    }
+    try {
+      console.log(`Fetching files for prospect ID: ${declPreaId}`);
+      const response = await DeclPraelStorageService.getDpFiles(declPreaId); // Correct API call
+      if (response.success) {
+        console.log('Files fetched successfully:', response.data.files);
+        return response.data.files; // Return the fetched files
+      } else {
+        console.error('Error fetching files:', response.error);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching files:', error);
+      return [];
+    }
   };
   if (loading)
     return (
@@ -160,21 +166,22 @@ function DeclPreaList() {
                     add
                   </Icon>
                 </TableCell>
-                {/* <CommentsList
-                  fetchComments={fetchDpComments}
-                  onAddComment={addDpComment}
-                  onDeleteComment={deleteDpComment}
-                  context={dp.id} // Pass DP ID as context
-                  title="Commentaires"
-                /> */}
               </TableRow>
             );
           })}
         </TableBody>
       </table>
       {showModal && <DpUModal dp={selecteddp} onSave={handleUpdate} onClose={handleCloseModal} />}
-      {showUploadModal && (
-        <DpStorageModal declprea={selecteddp} onSave={handleUploadDp} onClose={handleCloseModal} />
+      {showUploadModal && selecteddp?.Dpid && (
+        <DpStorageModal
+          declPreaId={selecteddp?.Dpid}
+          fetchFiles={() => fetchDeclPreaFiles(selecteddp?.Dpid)}
+          onSave={() => {
+            console.log('File uploaded successfully. Refreshing prospects.');
+            fetchDeclPreaFiles();
+          }}
+          onClose={handleCloseModal}
+        />
       )}
       {/* Display Alert if there's an error */}
       {alert.show && (

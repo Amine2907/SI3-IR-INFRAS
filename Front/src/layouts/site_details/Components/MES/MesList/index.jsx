@@ -18,6 +18,7 @@ import useMesForSite from './mesService';
 import siteMesService from 'services/site_details/MES/MesService';
 import MesStorageModal from 'examples/popup/MesStoragePopUp';
 import MesUModal from 'examples/popup/MesPopUp';
+import mesStorageModal from 'examples/popup/MesStoragePopUp';
 function MiseEnServiceList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -75,6 +76,26 @@ function MiseEnServiceList() {
       });
     }
     handleCloseModal();
+  };
+  const fetchMesFiles = async mesId => {
+    if (!mesId) {
+      console.error('Mise en Service ID is missing!');
+      return [];
+    }
+    try {
+      console.log(`Fetching files for Mise en Service ID: ${mesId}`);
+      const response = await mesStorageModal.getMesFiles(mesId); // Correct API call
+      if (response.success) {
+        console.log('Files fetched successfully:', response.data.files);
+        return response.data.files; // Return the fetched files
+      } else {
+        console.error('Error fetching files:', response.error);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching files:', error);
+      return [];
+    }
   };
   const getDotColor = status_consuel => {
     if (status_consuel === 'En attente') return 'green';
@@ -163,8 +184,16 @@ function MiseEnServiceList() {
           onClose={handleCloseModal}
         />
       )}
-      {showStorageModal && (
-        <MesStorageModal mes={selectedMes} onSave={handleUpdate} onClose={handleCloseModal} />
+      {showStorageModal && selectedMes?.MESid && (
+        <MesStorageModal
+          mesId={selectedMes?.MESid}
+          fetchFiles={() => fetchMesFiles(selectedMes?.MESid)}
+          onSave={() => {
+            console.log('File uploaded successfully. Refreshing prospects.');
+            fetchMesFiles();
+          }}
+          onClose={handleCloseModal}
+        />
       )}
       {/* Display Alert if there's an error */}
       {alert.show && (

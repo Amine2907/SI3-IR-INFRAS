@@ -17,7 +17,7 @@ import cellStyle from './styles/styles';
 import useReglForSite from './reglementService';
 import sitePaiementService from 'services/site_details/Reglement/Paiement/PaiementService';
 import PaieUModal from 'examples/popup/ReglementPopUp';
-import PaieStorageModal from 'examples/popup/ReglStoragePopUp';
+import paiementStorageModal from 'examples/popup/ReglStoragePopUp';
 function ReglementList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -75,6 +75,26 @@ function ReglementList() {
       });
     }
     handleCloseModal();
+  };
+  const fetchPaieFiles = async paieId => {
+    if (!paieId) {
+      console.error('Prospect ID is missing!');
+      return [];
+    }
+    try {
+      console.log(`Fetching files for prospect ID: ${paieId}`);
+      const response = await paiementStorageModal.getPaieFiles(paieId); // Correct API call
+      if (response.success) {
+        console.log('Files fetched successfully:', response.data.files);
+        return response.data.files; // Return the fetched files
+      } else {
+        console.error('Error fetching files:', response.error);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching files:', error);
+      return [];
+    }
   };
   if (loading)
     return (
@@ -159,10 +179,14 @@ function ReglementList() {
           onClose={handleCloseModal}
         />
       )}
-      {showStorageModal && (
-        <PaieStorageModal
-          paiement={selectedPaie}
-          onSave={handleUpdate}
+      {showStorageModal && selectedPaie?.Pid && (
+        <paiementStorageModal
+          paieId={selectedPaie?.Pid}
+          fetchFiles={() => fetchPaieFiles(selectedPaie?.Pid)}
+          onSave={() => {
+            console.log('File uploaded successfully. Refreshing prospects.');
+            fetchPaieFiles();
+          }}
           onClose={handleCloseModal}
         />
       )}

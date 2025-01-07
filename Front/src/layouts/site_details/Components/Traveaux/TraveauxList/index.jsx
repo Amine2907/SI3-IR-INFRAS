@@ -15,9 +15,9 @@ import PropTypes from 'prop-types';
 import MDAlert from 'components/MDAlert';
 import useTravForSite from './traveauxService';
 import siteTravService from 'services/site_details/Traveaux/TraveauxService';
-import TravStorageModal from 'examples/popup/TravStoragePopUp';
 import TravUModal from 'examples/popup/TraveauxPopUp';
 import cellStyle from './styles/styles';
+import traveauxStorageModal from 'examples/popup/TravStoragePopUp';
 function TraveauxList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -75,6 +75,26 @@ function TraveauxList() {
       });
     }
     handleCloseModal();
+  };
+  const fetchTravFiles = async travId => {
+    if (!travId) {
+      console.error('Trav ID is missing!');
+      return [];
+    }
+    try {
+      console.log(`Fetching files for prospect ID: ${travId}`);
+      const response = await traveauxStorageModal.getTavFiles(travId); // Correct API call
+      if (response.success) {
+        console.log('Files fetched successfully:', response.data.files);
+        return response.data.files; // Return the fetched files
+      } else {
+        console.error('Error fetching files:', response.error);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching files:', error);
+      return [];
+    }
   };
   if (loading)
     return (
@@ -152,10 +172,14 @@ function TraveauxList() {
           onClose={handleCloseModal}
         />
       )}
-      {showStorageModal && (
-        <TravStorageModal
-          traveaux={selectedTrav}
-          onSave={handleUpdate}
+      {showStorageModal && selectedTrav?.Tid && (
+        <traveauxStorageModal
+          travId={selectedTrav?.Tid}
+          fetchFiles={() => fetchTravFiles(selectedTrav?.Tid)}
+          onSave={() => {
+            console.log('File uploaded successfully. Refreshing prospects.');
+            fetchTravFiles();
+          }}
           onClose={handleCloseModal}
         />
       )}

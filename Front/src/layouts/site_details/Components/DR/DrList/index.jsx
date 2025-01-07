@@ -18,6 +18,7 @@ import SiteDemracService from 'services/site_details/DR/DrService';
 import usedemracData from './DrService';
 import statusPropValues from './DrData';
 import DrUpdateModal from 'examples/popup/DrPopUp/Update/DrUpdatePopUp';
+import demracsStorageService from 'services/site_details/DR/DrStorageService';
 function DemRacList({ site }) {
   const { demracData, loading, error, fetchDemracData } = usedemracData(site);
   const [showModal, setShowModal] = useState(false);
@@ -101,6 +102,26 @@ function DemRacList({ site }) {
       return 'gray';
     }
     return 'gray';
+  };
+  const fetchDemRacFiles = async demRacId => {
+    if (!demRacId) {
+      console.error('DEMRAC ID is missing!');
+      return [];
+    }
+    try {
+      console.log(`Fetching files for DEMRAC ID: ${demRacId}`);
+      const response = await demracsStorageService.deleteDemracsFile(demRacId); // Correct API call
+      if (response.success) {
+        console.log('Files fetched successfully:', response.data.files);
+        return response.data.files; // Return the fetched files
+      } else {
+        console.error('Error fetching files:', response.error);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching files:', error);
+      return [];
+    }
   };
   if (loading) {
     return (
@@ -199,10 +220,17 @@ function DemRacList({ site }) {
           </table>
         </>
       )}
-      {showUploadModal && (
-        <DrUploadModal demrac={selecteddemrac} onSave={handleUpload} onClose={handleCloseModal} />
+      {showUploadModal && selecteddemrac?.NDRid && (
+        <demracStorageModal
+          demRacId={selecteddemrac?.NDRid}
+          fetchFiles={() => fetchDemRacFiles(selecteddemrac?.NDRid)}
+          onSave={() => {
+            console.log('File uploaded successfully. Refreshing prospects.');
+            fetchDemRacFiles();
+          }}
+          onClose={handleCloseModal}
+        />
       )}
-
       {showModal && (
         <DrUpdateModal
           Sid={Sid}
