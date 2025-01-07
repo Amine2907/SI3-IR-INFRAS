@@ -1,61 +1,83 @@
 import axios from 'axios';
+
 const API_URL = 'http://localhost:5000/api/trav-storage';
 
-// Upload trav File (Store a file in Supabase)
-const uploadTrav = async file => {
+// Upload a trav file to the server
+const uploadTravFile = async (file, travId) => {
   try {
-    // Create a new FormData object
     const formData = new FormData();
-    // Append the file to the FormData object
     formData.append('file', file);
-    // Send the form data as a POST request
+    formData.append('travId', travId);
+
     const response = await axios.post(`${API_URL}/upload-trav`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.travsage };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.travsage,
+    };
   }
 };
-// Generate Signed URL for trav File (Get a URL for secure access)
+// Get public URLs for all files associated with a trav
+const getTavFiles = async travId => {
+  try {
+    const response = await axios.post(`${API_URL}/get-trav-files`, { travId });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.travsage,
+    };
+  }
+};
+// Generate a signed URL for secure file access
 const generateTravSignedUrl = async filePath => {
   try {
-    const response = await axios.get(`${API_URL}/generate-trav-files`, { params: { filePath } });
+    const response = await axios.post(`${API_URL}/generate-trav-files`, { filePath });
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.travsage };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.travsage,
+    };
+  }
+};
+// Download a trav file
+const downloadTravFile = async filePath => {
+  try {
+    const response = await axios.get(`${API_URL}/download-trav`, {
+      params: { filePath },
+      responseType: 'blob',
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    return { success: false, error: error.response?.data || 'Unknown error' };
   }
 };
 
-// Get Public URL for trav File (For publicly accessible files)
-const gettTavPublicUrl = async filePath => {
+// Delete a trav file
+const deleteTravFile = async filePath => {
   try {
-    const response = await axios.get(`${API_URL}/get-trav-files`, { params: { filePath } });
-    return { success: true, data: response.data };
-  } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.travsage };
-  }
-};
+    console.log('Attempting to delete file with path:', filePath);
 
-// Download trav File (Download a file from Supabase)
-const downloadTrav = async filePath => {
-  try {
-    const response = await axios.post(
-      `${API_URL}/download-trav`,
-      { filePath },
-      { responseType: 'blob' }
-    );
+    // Correct way to send file path in the request body
+    const response = await axios.post(`${API_URL}/delete-trav-file`, { filePath });
+
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.travsage };
+    console.error('Error deleting file:', error);
+    return { success: false, error: error.response?.data.error || error.travsage };
   }
 };
+// trav Storage Service: Exports all methods
 const travStorageService = {
-  uploadTrav,
+  uploadTravFile,
+  getTavFiles,
   generateTravSignedUrl,
-  gettTavPublicUrl,
-  downloadTrav,
+  downloadTravFile,
+  deleteTravFile,
 };
 export default travStorageService;

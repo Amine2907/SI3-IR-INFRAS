@@ -1,17 +1,36 @@
 import express from "express";
-const router = express.Router();
 import declPrealStorageCntrl from "../../../controllers/SiteDetails/DP/DpStorageCntrl.js";
+import multer from "multer";
+const router = express.Router();
 
-// Route for downloading a file (should be POST as it can involve file data)
-router.post('/download-dp', declPrealStorageCntrl.downloadFileController);
+// Configure Multer for file uploads (memory storage)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-// Route for getting public URLs for DP files (GET is correct here)
-router.get('/get-dp-files', declPrealStorageCntrl.getPublicUrlController);
+// Route for uploading dp files
+router.post(
+  "/upload-dp",
+  upload.single("file"), // Multer middleware to handle single file upload
+  declPrealStorageCntrl.uploadFileController // Controller to handle the upload
+);
 
-// Route for uploading a DP file (should be POST to handle file uploads)
-router.post('/upload-dp', declPrealStorageCntrl.uploadFileController);
+// Route for generating a signed URL for a dp file
+router.post(
+  "/generate-dp-files",
+  declPrealStorageCntrl.generateSignedUrlController // Controller for signed URLs
+);
 
-// Route for generating a signed URL for a DP file (POST is more appropriate for this action)
-router.post('/generate-dp-files', declPrealStorageCntrl.generateSignedUrlController);
+// Route for downloading a dp file
+router.get("/download-dp", declPrealStorageCntrl.downloadFileController);
+// Route for retrieving public URLs of dp files
+router.post(
+  "/get-dp-files",
+  declPrealStorageCntrl.getFilesByDpController // Controller for fetching public URLs
+);
+// Route for deleting dp file 
+router.post('/delete-dp-file', declPrealStorageCntrl.deleteFileController);
 
 export default router;
+
+
+

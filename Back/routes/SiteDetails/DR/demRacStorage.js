@@ -1,16 +1,35 @@
 import express from "express";
-const router = express.Router();
 import demRacStorageCntrl from "../../../controllers/SiteDetails/DR/DrStorageController.js";
-// Route for downloading a file (should be POST as it can involve file data)
-router.post('/download-demrac', demRacStorageCntrl.downloadFileController);
+import multer from "multer";
+const router = express.Router();
 
-// Route for getting public URLs for DP files (GET is correct here)
-router.get('/get-demrac-files', demRacStorageCntrl.getPublicUrlController);
+// Configure Multer for file uploads (memory storage)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-// Route for uploading a DP file (should be POST to handle file uploads)
-router.post('/upload-demrac', demRacStorageCntrl.uploadFileController);
+// Route for uploading demracs files
+router.post(
+  "/upload-demracs",
+  upload.single("file"), // Multer middleware to handle single file upload
+  demRacStorageCntrl.uploadFileController // Controller to handle the upload
+);
 
-// Route for generating a signed URL for a DP file (POST is more appropriate for this action)
-router.post('/generate-demrac-files', demRacStorageCntrl.generateSignedUrlController);
+// Route for generating a signed URL for a demracs file
+router.post(
+  "/generate-demracs-files",
+  demRacStorageCntrl.generateSignedUrlController // Controller for signed URLs
+);
+
+// Route for downloading a demracs file
+router.get("/download-demracs", demRacStorageCntrl.downloadFileController);
+// Route for retrieving public URLs of demracs files
+router.post(
+  "/get-demracs-files",
+  demRacStorageCntrl.getFilesByDemRacController // Controller for fetching public URLs
+);
+// Route for deleting demracs file 
+router.post('/delete-demracs-file', demRacStorageCntrl.deleteFileController);
 
 export default router;
+
+

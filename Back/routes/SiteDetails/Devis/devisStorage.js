@@ -1,16 +1,35 @@
 import express from "express";
 const router = express.Router();
 import devisStorageCntrl from "../../../controllers/SiteDetails/Devis/DevisStorageCntrl.js";
-// Route for downloading a file (should be POST as it can involve file data)
-router.post('/download-devis', devisStorageCntrl.downloadFileController);
+import multer from "multer";
+// Configure Multer for file uploads (memory storage)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-// Route for getting public URLs for DP files (GET is correct here)
-router.get('/get-devis-files', devisStorageCntrl.getPublicUrlController);
+// Route for uploading devis files
+router.post(
+  "/upload-devis",
+  upload.single("file"), // Multer middleware to handle single file upload
+  devisStorageCntrl.uploadFileController // Controller to handle the upload
+);
 
-// Route for uploading a DP file (should be POST to handle file uploads)
-router.post('/upload-devis', devisStorageCntrl.uploadFileController);
+// Route for generating a signed URL for a devis file
+router.post(
+  "/generate-devis-files",
+  devisStorageCntrl.generateSignedUrlController // Controller for signed URLs
+);
 
-// Route for generating a signed URL for a DP file (POST is more appropriate for this action)
-router.post('/generate-devis-files', devisStorageCntrl.generateSignedUrlController);
+// Route for downloading a devis file
+router.get("/download-devis", devisStorageCntrl.downloadFileController);
+// Route for retrieving public URLs of devis files
+router.post(
+  "/get-devis-files",
+  devisStorageCntrl.getFilesByDevisController // Controller for fetching public URLs
+);
+// Route for deleting devis file 
+router.post('/delete-devis-file', devisStorageCntrl.deleteFileController);
 
 export default router;
+
+
+

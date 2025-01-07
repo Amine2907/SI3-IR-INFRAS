@@ -1,16 +1,33 @@
 import express from "express";
-const router = express.Router();
+import multer from "multer";
 import paiementStorageCntrl from "../../../../controllers/SiteDetails/Reglement/Paiement/PaiementStorageCntrl.js";
-// Route for downloading a file (should be POST as it can involve file data)
-router.post('/download-paie', paiementStorageCntrl.downloadFileController);
+const router = express.Router();
 
-// Route for getting public URLs for DP files (GET is correct here)
-router.get('/get-paie-files', paiementStorageCntrl.getPublicUrlController);
+// Configure Multer for file uploads (memory storage)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-// Route for uploading a DP file (should be POST to handle file uploads)
-router.post('/upload-paie', paiementStorageCntrl.uploadFileController);
+// Route for uploading paie files
+router.post(
+  "/upload-paie",
+  upload.single("file"), // Multer middleware to handle single file upload
+  paiementStorageCntrl.uploadFileController // Controller to handle the upload
+);
 
-// Route for generating a signed URL for a DP file (POST is more appropriate for this action)
-router.post('/generate-paie-files', paiementStorageCntrl.generateSignedUrlController);
+// Route for generating a signed URL for a paie file
+router.post(
+  "/generate-paie-files",
+  paiementStorageCntrl.generateSignedUrlController // Controller for signed URLs
+);
+
+// Route for downloading a paie file
+router.get("/download-paie", paiementStorageCntrl.downloadFileController);
+// Route for retrieving public URLs of paie files
+router.post(
+  "/get-paie-files",
+  paiementStorageCntrl.getFilesByPaieController // Controller for fetching public URLs
+);
+// Route for deleting paie file 
+router.post('/delete-paie-file', paiementStorageCntrl.deleteFileController);
 
 export default router;

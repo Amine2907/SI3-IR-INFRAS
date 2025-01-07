@@ -1,61 +1,83 @@
 import axios from 'axios';
+
 const API_URL = 'http://localhost:5000/api/mes-storage';
 
-// Upload mes File (Store a file in Supabase)
-const uploadMes = async file => {
+// Upload a mes file to the server
+const uploadMesFile = async (file, mesId) => {
   try {
-    // Create a new FormData object
     const formData = new FormData();
-    // Append the file to the FormData object
     formData.append('file', file);
-    // Send the form data as a POST request
+    formData.append('mesId', mesId);
+
     const response = await axios.post(`${API_URL}/upload-mes`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.message,
+    };
   }
 };
-// Generate Signed URL for mes File (Get a URL for secure access)
+// Get public URLs for all files associated with a mes
+const getMesFiles = async mesId => {
+  try {
+    const response = await axios.post(`${API_URL}/get-mes-files`, { mesId });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.message,
+    };
+  }
+};
+// Generate a signed URL for secure file access
 const generateMesSignedUrl = async filePath => {
   try {
-    const response = await axios.get(`${API_URL}/generate-mes-files`, { params: { filePath } });
+    const response = await axios.post(`${API_URL}/generate-mes-files`, { filePath });
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.message,
+    };
+  }
+};
+// Download a mes file
+const downloadMesFile = async filePath => {
+  try {
+    const response = await axios.get(`${API_URL}/download-mes`, {
+      params: { filePath },
+      responseType: 'blob',
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    return { success: false, error: error.response?.data || 'Unknown error' };
   }
 };
 
-// Get Public URL for mes File (For publicly accessible files)
-const getMesPublicUrl = async filePath => {
+// Delete a mes file
+const deleteMesFile = async filePath => {
   try {
-    const response = await axios.get(`${API_URL}/get-mes-files`, { params: { filePath } });
-    return { success: true, data: response.data };
-  } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
-  }
-};
+    console.log('Attempting to delete file with path:', filePath);
 
-// Download mes File (Download a file from Supabase)
-const downloadMes = async filePath => {
-  try {
-    const response = await axios.post(
-      `${API_URL}/download-mes`,
-      { filePath },
-      { responseType: 'blob' }
-    );
+    // Correct way to send file path in the request body
+    const response = await axios.post(`${API_URL}/delete-mes-file`, { filePath });
+
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    console.error('Error deleting file:', error);
+    return { success: false, error: error.response?.data.error || error.message };
   }
 };
+// mes Storage Service: Exports all methods
 const mesStorageService = {
-  uploadMes,
+  uploadMesFile,
+  getMesFiles,
   generateMesSignedUrl,
-  getMesPublicUrl,
-  downloadMes,
+  downloadMesFile,
+  deleteMesFile,
 };
 export default mesStorageService;

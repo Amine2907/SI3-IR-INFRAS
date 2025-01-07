@@ -1,16 +1,34 @@
 import express from "express";
+import traveauxStorageCntrl from "../../../controllers/SiteDetails/Traveaux/TraveauxStorageCntrl.js";
+import multer from "multer";
+
 const router = express.Router();
-import travStorage from "../../../storage/Traveaux/travStorage.js";
-// Route for downloading a file (should be POST as it can involve file data)
-router.post('/download-trav', travStorage.downloadPdf);
 
-// Route for getting public URLs for DP files (GET is correct here)
-router.get('/get-trav-files', travStorage.getPublicUrl);
+// Configure Multer for file uploads (memory storage)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-// Route for uploading a DP file (should be POST to handle file uploads)
-router.post('/upload-trav', travStorage.uploadPdf);
+// Route for uploading trav files
+router.post(
+  "/upload-trav",
+  upload.single("file"), // Multer middleware to handle single file upload
+  traveauxStorageCntrl.uploadFileController // Controller to handle the upload
+);
 
-// Route for generating a signed URL for a DP file (POST is more appropriate for this action)
-router.post('/generate-trav-files', travStorage.generateSignedUrl);
+// Route for generating a signed URL for a trav file
+router.post(
+  "/generate-trav-files",
+  traveauxStorageCntrl.generateSignedUrlController // Controller for signed URLs
+);
+
+// Route for downloading a trav file
+router.get("/download-trav", traveauxStorageCntrl.downloadFileController);
+// Route for retrieving public URLs of trav files
+router.post(
+  "/get-trav-files",
+  traveauxStorageCntrl.getFilesByTravController // Controller for fetching public URLs
+);
+// Route for deleting trav file 
+router.post('/delete-trav-file', traveauxStorageCntrl.deleteFileController);
 
 export default router;

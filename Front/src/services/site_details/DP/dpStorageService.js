@@ -1,61 +1,84 @@
 import axios from 'axios';
+
 const API_URL = 'http://localhost:5000/api/dp-storage';
 
-// Upload Dp File (Store a file in Supabase)
-const uploadDp = async file => {
+// Upload a dp file to the server
+const uploadDpFile = async (file, dpId) => {
   try {
-    // Create a new FormData object
     const formData = new FormData();
-    // Append the file to the FormData object
     formData.append('file', file);
-    // Send the form data as a POST request
+    formData.append('dpId', dpId);
+
     const response = await axios.post(`${API_URL}/upload-dp`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.message,
+    };
   }
 };
-// Generate Signed URL for Dp File (Get a URL for secure access)
-const generateDpSignedUrl = async filePath => {
+// Get public URLs for all files associated with a dp
+const getDpFiles = async dpId => {
   try {
-    const response = await axios.get(`${API_URL}/generate-dp-files`, { params: { filePath } });
+    const response = await axios.post(`${API_URL}/get-dp-files`, { dpId });
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.message,
+    };
+  }
+};
+// Generate a signed URL for secure file access
+const generatedpSignedUrl = async filePath => {
+  try {
+    const response = await axios.post(`${API_URL}/generate-dp-files`, { filePath });
+    return { success: true, data: response.data };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.message,
+    };
+  }
+};
+// Download a dp file
+const downlaodDpFile = async filePath => {
+  try {
+    const response = await axios.get(`${API_URL}/download-dp`, {
+      params: { filePath },
+      responseType: 'blob',
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    return { success: false, error: error.response?.data || 'Unknown error' };
   }
 };
 
-// Get Public URL for Dp File (For publicly accessible files)
-const getDpPublicUrl = async filePath => {
+// Delete a dp file
+const deleteDpFile = async filePath => {
   try {
-    const response = await axios.get(`${API_URL}/get-dp-files`, { params: { filePath } });
+    console.log('Attempting to delete file with path:', filePath);
+
+    // Correct way to send file path in the request body
+    const response = await axios.post(`${API_URL}/delete-dp-file`, { filePath });
+
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    console.error('Error deleting file:', error);
+    return { success: false, error: error.response?.data.error || error.message };
   }
 };
 
-// Download Dp File (Download a file from Supabase)
-const downloadDp = async filePath => {
-  try {
-    const response = await axios.post(
-      `${API_URL}/download-dp`,
-      { filePath },
-      { responseType: 'blob' }
-    );
-    return { success: true, data: response.data };
-  } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
-  }
+// dp Storage Service: Exports all methods
+const DeclPraelStorageService = {
+  uploadDpFile,
+  getDpFiles,
+  generatedpSignedUrl,
+  downlaodDpFile,
+  deleteDpFile,
 };
-const DpStorageService = {
-  uploadDp,
-  generateDpSignedUrl,
-  getDpPublicUrl,
-  downloadDp,
-};
-export default DpStorageService;
+export default DeclPraelStorageService;
