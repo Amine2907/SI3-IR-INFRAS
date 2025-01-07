@@ -31,5 +31,4 @@ router.post(
 // 
 router.post('/delete-prospect-file', prospectStorageCntrl.deleteFileController);
 
-
 export default router;

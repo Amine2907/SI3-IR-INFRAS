@@ -14,37 +14,26 @@ const generateSignedUrl = async (filePath) => {
     return null;
   }
 };
-const uploadPdf = async (file, prospectId) => {
+const uploadPdf = async (file, filePath) => {
   try {
-    // Validate that prospectId is a number
-    if (!prospectId) {
-      throw new Error('Invalid prospectId: It should be a valid number');
-    }
-    // Convert prospectId to string for constructing the file path
-    const prospectIdStr = String(prospectId);
-
-    // Add a unique identifier (timestamp or UUID) to avoid conflict
-    const uniqueName = `${Date.now()}-${file.originalname}`;
-    const filePath = `prospect-pdf/${prospectIdStr}/${uniqueName}`;
-
     // Perform file upload using Supabase storage
     const { data, error } = await supabase.storage
       .from("prospect-pdf")
       .upload(filePath, file.buffer, {
         cacheControl: "3600",
         contentType: file.mimetype,
+        upsert: true,
       });
 
     if (error) throw error;
 
-    // Return file path if successful
     return { success: true, filePath: data.path };
-
   } catch (error) {
     console.error("Error uploading file:", error);
     return { success: false, error: error.message || error };
   }
 };
+
 const getPublicUrl = (filePath) => {
   try {
     const { data, error } = supabase.storage
@@ -75,7 +64,6 @@ const downloadPdf = async (filePath) => {
       console.error("Error downloading file:", error);
       throw new Error(error.message || "Error downloading file");
     }
-
     return data;
   } catch (error) {
     console.error("Error in downloadPdf:", error);

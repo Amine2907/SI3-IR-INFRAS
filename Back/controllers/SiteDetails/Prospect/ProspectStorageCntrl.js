@@ -2,25 +2,30 @@ import prospectStorage from "../../../storage/prospect/prospectStorage.js";
 // Controller to handle file uploads
 const uploadFileController = async (req, res) => {
   try {
-    const { file } = req; // Access the uploaded file using req.file (not req.body)
-    const { prospectId } = req.body; // Prospect ID will still come from the body
+    const { file } = req;  // Access the uploaded file using req.file (not req.body)
+    const { prospectId } = req.body;  // Prospect ID comes from the request body
 
-    // Check if the prospectId is a valid number
+    // Ensure that a file and prospectId are provided
+    if (!file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
     if (!prospectId || isNaN(prospectId)) {
       return res.status(400).json({ error: 'Invalid prospectId: It should be a valid number' });
     }
 
-    // Generate a unique file name using the current timestamp
-    const timestamp = Date.now();
-    const uniqueFileName = `${timestamp}-${file.originalname}`;
-    
+    // Use the file name as the unique file name
+    const uniqueFileName = file.originalname;  // Use the original file name
     const prospectIdStr = String(prospectId);
-    const filePath = `${prospectIdStr}/${uniqueFileName}`;
 
-    // Call the upload function with the correct file path
+    // Define the file path: 'prospect-pdf/{prospectId}/{originalFileName}'
+    const filePath = `prospect-pdf/${prospectIdStr}/${uniqueFileName}`;
+
+    console.log("Uploading file to path:", filePath);
+
+    // Upload the file to Supabase storage
     const uploadResult = await prospectStorage.uploadPdf(file, filePath);
 
-    // Check if the upload was successful
     if (uploadResult.success) {
       return res.status(200).json({
         message: 'File uploaded successfully',
@@ -34,6 +39,7 @@ const uploadFileController = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 // Controller to generate signed URL for a file
 const generateSignedUrlController = async (req, res) => {
   try {
@@ -62,8 +68,7 @@ const downloadFileController = async (req, res) => {
     if (!filePath) {
       return res.status(400).json({ error: "File path is required" });
     }
-    
-    console.log("Received file path:", filePath);  // Log the full file path to confirm it's correct
+    console.log("Received file path:", filePath);
 
     const fileBlob = await prospectStorage.downloadPdf(filePath);
     

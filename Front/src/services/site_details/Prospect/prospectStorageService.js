@@ -7,7 +7,7 @@ const uploadProspectFile = async (file, prospectId) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('prospectId', prospectId); // Attach the prospect ID
+    formData.append('prospectId', prospectId);
 
     const response = await axios.post(`${API_URL}/upload-prospect`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -51,7 +51,6 @@ const downloadProspectFile = async filePath => {
       params: { filePath },
       responseType: 'blob',
     });
-
     return { success: true, data: response.data };
   } catch (error) {
     console.error('Error downloading file:', error);

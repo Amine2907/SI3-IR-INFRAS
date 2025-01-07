@@ -67,10 +67,11 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
         console.error('File path is required for download');
         return;
       }
-
-      const filePath = file.path; // Ensure you're passing the correct file path here
+      // Construct the full file path that works in Postman (match the correct format)
+      const filePath = file.path; // Ensure this is the correct file path structure
       console.log('Downloading file from:', filePath);
 
+      // Call the API to download the file using the correct path
       const result = await ProspectStorageService.downloadProspectFile(filePath);
 
       if (result.success) {
