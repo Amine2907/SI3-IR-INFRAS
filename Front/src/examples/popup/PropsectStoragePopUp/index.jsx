@@ -5,12 +5,16 @@ import styles from './styles.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
 import ProspectStorageService from 'services/site_details/Prospect/prospectStorageService';
+import WarningPopUp from '../userPopUp/WariningPopUp';
 
 const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [fileToDelete, setFileToDelete] = useState(null); // Track the file to delete
+  const DeleteMessage = 'Etes vous sure vous voulez supprimer ce fichier !';
 
   useEffect(() => {
     const fetchFilesForProspect = async () => {
@@ -31,6 +35,7 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
 
     fetchFilesForProspect();
   }, [prospectId, fetchFiles]);
+
   // Submit form to upload a file
   const handleSubmit = async () => {
     const file = files[0]?.file; // Get the first file to upload
@@ -52,12 +57,45 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
       setErrors({ upload: 'An unexpected error occurred. Please try again.' });
     }
   };
+
   // Add new file
   const handleAddFile = event => {
     const newFile = event.target.files[0];
     if (newFile) {
-      setFiles([{ id: Date.now(), name: newFile.name, file: newFile }]); // Store file data locally
+      setFiles([{ id: Date.now(), name: newFile.name, file: newFile }]);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowDeleteModal(false);
+    setFileToDelete(null);
+  };
+
+  // Trigger the delete confirmation popup
+  const handleDeleteFile = async file => {
+    setFileToDelete(file);
+    setShowDeleteModal(true);
+  };
+
+  // Delete the file after confirmation
+  const handleConfirmDelete = async () => {
+    if (fileToDelete?.path) {
+      const filePath = fileToDelete.path;
+      console.log('Deleting file with path:', filePath);
+      try {
+        const result = await ProspectStorageService.deleteProspectFile(filePath);
+
+        if (result.success) {
+          console.log('File deleted successfully');
+          setFiles(prevFiles => prevFiles.filter(item => item.path !== filePath)); // Remove file from the UI
+        } else {
+          console.error('Error deleting file:', result.error);
+        }
+      } catch (error) {
+        console.error('Error deleting file:', error);
+      }
+    }
+    handleCloseModal();
   };
 
   // Download a file
@@ -88,35 +126,12 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
     }
   };
 
-  // Handle delete button click from the frontend
-  const handleDeleteFile = async file => {
-    if (!file?.path) {
-      console.error('File path is required for deletion');
-      return;
-    }
-    const filePath = file.path;
-    console.log('Deleting file with path:', filePath);
-    try {
-      const result = await ProspectStorageService.deleteProspectFile(filePath);
-
-      if (result.success) {
-        console.log('File deleted successfully');
-        setFiles(prevFiles => prevFiles.filter(item => item.path !== filePath)); // Remove file from the UI
-      } else {
-        console.error('Error deleting file:', result.error);
-      }
-    } catch (error) {
-      console.error('Error deleting file:', error);
-    }
-  };
-
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <Typography variant="h6" gutterBottom align="center">
           Fichiers du Prospect
         </Typography>
-
         {/* List of files */}
         <div className={styles.fileList}>
           {loading && <p>Loading files...</p>}
@@ -147,7 +162,6 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
             ))}
           {!loading && files.length === 0 && <p>Aucun fichier disponible.</p>}
         </div>
-
         {/* Add a new file */}
         <div className={styles.addFile}>
           <input
@@ -162,7 +176,6 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
             </MDButton>
           </label>
         </div>
-
         {/* Form buttons */}
         <div className={styles.buttonContainer}>
           <MDButton onClick={handleSubmit} variant="gradient" color="dark">
@@ -173,6 +186,14 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
           </MDButton>
         </div>
       </div>
+      {/* Delete confirmation modal */}
+      {showDeleteModal && (
+        <WarningPopUp
+          message={DeleteMessage}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCloseModal}
+        />
+      )}
     </div>
   );
 };
@@ -183,5 +204,4 @@ ProspectStorageModal.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-
 export default ProspectStorageModal;
