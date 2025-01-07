@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import DeclPraelStorageService from 'services/site_details/DP/dpStorageService';
 
-const declPrealModal = ({ declPreaId, fetchFiles, onSave, onClose }) => {
+const DpStorageModal = ({ declPreaId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -196,10 +196,10 @@ const declPrealModal = ({ declPreaId, fetchFiles, onSave, onClose }) => {
     </div>
   );
 };
-declPrealModal.propTypes = {
+DpStorageModal.propTypes = {
   declPreaId: PropTypes.number,
   fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-export default declPrealModal;
+export default DpStorageModal;

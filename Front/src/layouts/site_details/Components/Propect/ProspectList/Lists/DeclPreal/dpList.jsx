@@ -17,8 +17,8 @@ import useDpsForProspects from './declpreaService';
 import ProspectDpService from 'services/site_details/DP/DpService';
 import DpUModal from 'examples/popup/DeclPreaPopUp/DpPopUp';
 import MDAlert from 'components/MDAlert';
-import DpStorageModal from 'examples/popup/DpStoragePopUp';
 import DeclPraelStorageService from 'services/site_details/DP/dpStorageService';
+import DpStorageModal from 'examples/popup/DpStoragePopUp';
 function DeclPreaList() {
   const [showModal, setShowModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -34,15 +34,16 @@ function DeclPreaList() {
     setShowModal(true);
   };
   const handleOpenModal = () => {
+    if (!selecteddp?.DPid) {
+      console.error('No prospect selected or prospect ID missing');
+      return;
+    }
+    console.log('Opening Modal for Prospect:', selecteddp);
     setShowUploadModal(true);
   };
   const handleCloseModal = () => {
     setShowModal(false);
     setShowUploadModal(false);
-  };
-  const handleUploadDp = () => {
-    // Upload logic here
-    null;
   };
   const handleUpdate = async updates => {
     const DPid = selecteddp?.DPid;
@@ -91,10 +92,10 @@ function DeclPreaList() {
     }
     try {
       console.log(`Fetching files for prospect ID: ${declPreaId}`);
-      const response = await DeclPraelStorageService.getDpFiles(declPreaId); // Correct API call
+      const response = await DeclPraelStorageService.getDpFiles(declPreaId);
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
-        return response.data.files; // Return the fetched files
+        return response.data.files;
       } else {
         console.error('Error fetching files:', response.error);
         return [];
@@ -172,10 +173,10 @@ function DeclPreaList() {
         </TableBody>
       </table>
       {showModal && <DpUModal dp={selecteddp} onSave={handleUpdate} onClose={handleCloseModal} />}
-      {showUploadModal && selecteddp?.Dpid && (
+      {showUploadModal && selecteddp?.DPid && (
         <DpStorageModal
-          declPreaId={selecteddp?.Dpid}
-          fetchFiles={() => fetchDeclPreaFiles(selecteddp?.Dpid)}
+          declPreaId={selecteddp?.DPid}
+          fetchFiles={() => fetchDeclPreaFiles(selecteddp?.DPid)}
           onSave={() => {
             console.log('File uploaded successfully. Refreshing prospects.');
             fetchDeclPreaFiles();

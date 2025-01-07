@@ -18,6 +18,7 @@ import SiteDevisService from 'services/site_details/Devis/DevisService';
 import useDevisForSite from './devisService';
 import DevisUModal from 'examples/popup/DevisPopUp';
 import devisStorageModal from 'examples/popup/DevisStoragePopUp';
+import DevisStorageModal from 'examples/popup/DevisStoragePopUp';
 function DevisList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -196,7 +197,7 @@ function DevisList() {
         />
       )}
       {showStorageModal && selectedDevis?.ND && (
-        <devisStorageModal
+        <DevisStorageModal
           devisId={selectedDevis?.ND}
           fetchFiles={() => fetchDevisFiles(selectedDevis?.ND)}
           onSave={() => {

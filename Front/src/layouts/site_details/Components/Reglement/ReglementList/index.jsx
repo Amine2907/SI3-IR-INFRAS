@@ -18,6 +18,8 @@ import useReglForSite from './reglementService';
 import sitePaiementService from 'services/site_details/Reglement/Paiement/PaiementService';
 import PaieUModal from 'examples/popup/ReglementPopUp';
 import paiementStorageModal from 'examples/popup/ReglStoragePopUp';
+import paieStorageService from 'services/site_details/Reglement/Paiement/PaieStorageService';
+import PaieStorageModal from 'examples/popup/ReglStoragePopUp';
 function ReglementList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -83,7 +85,7 @@ function ReglementList() {
     }
     try {
       console.log(`Fetching files for prospect ID: ${paieId}`);
-      const response = await paiementStorageModal.getPaieFiles(paieId); // Correct API call
+      const response = await paieStorageService.getPaieFiles(paieId); // Correct API call
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files
@@ -180,7 +182,7 @@ function ReglementList() {
         />
       )}
       {showStorageModal && selectedPaie?.Pid && (
-        <paiementStorageModal
+        <PaieStorageModal
           paieId={selectedPaie?.Pid}
           fetchFiles={() => fetchPaieFiles(selectedPaie?.Pid)}
           onSave={() => {

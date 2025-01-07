@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import travStorageService from 'services/site_details/Traveaux/TravStorageService';
 
-const traveauxStorageModal = ({ travId, fetchFiles, onSave, onClose }) => {
+const TravStorageModal = ({ travId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -197,10 +197,10 @@ const traveauxStorageModal = ({ travId, fetchFiles, onSave, onClose }) => {
     </div>
   );
 };
-traveauxStorageModal.propTypes = {
+TravStorageModal.propTypes = {
   travId: PropTypes.number,
   fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-export default traveauxStorageModal;
+export default TravStorageModal;

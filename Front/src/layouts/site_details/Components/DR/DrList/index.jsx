@@ -17,8 +17,10 @@ import PropTypes from 'prop-types';
 import SiteDemracService from 'services/site_details/DR/DrService';
 import usedemracData from './DrService';
 import statusPropValues from './DrData';
+import demracStorageModal from 'examples/popup/DrStoragePopUp';
 import DrUpdateModal from 'examples/popup/DrPopUp/Update/DrUpdatePopUp';
 import demracsStorageService from 'services/site_details/DR/DrStorageService';
+import DemracStorageModal from 'examples/popup/DrStoragePopUp';
 function DemRacList({ site }) {
   const { demracData, loading, error, fetchDemracData } = usedemracData(site);
   const [showModal, setShowModal] = useState(false);
@@ -221,7 +223,7 @@ function DemRacList({ site }) {
         </>
       )}
       {showUploadModal && selecteddemrac?.NDRid && (
-        <demracStorageModal
+        <DemracStorageModal
           demRacId={selecteddemrac?.NDRid}
           fetchFiles={() => fetchDemRacFiles(selecteddemrac?.NDRid)}
           onSave={() => {

@@ -18,6 +18,7 @@ import siteTravService from 'services/site_details/Traveaux/TraveauxService';
 import TravUModal from 'examples/popup/TraveauxPopUp';
 import cellStyle from './styles/styles';
 import traveauxStorageModal from 'examples/popup/TravStoragePopUp';
+import TravStorageModal from 'examples/popup/TravStoragePopUp';
 function TraveauxList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -173,7 +174,7 @@ function TraveauxList() {
         />
       )}
       {showStorageModal && selectedTrav?.Tid && (
-        <traveauxStorageModal
+        <TravStorageModal
           travId={selectedTrav?.Tid}
           fetchFiles={() => fetchTravFiles(selectedTrav?.Tid)}
           onSave={() => {

@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import demracsStorageService from 'services/site_details/DR/DrStorageService';
 
-const demracStorageModal = ({ demracId, fetchFiles, onSave, onClose }) => {
+const DemracStorageModal = ({ demracId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -197,10 +197,10 @@ const demracStorageModal = ({ demracId, fetchFiles, onSave, onClose }) => {
     </div>
   );
 };
-demracStorageModal.propTypes = {
+DemracStorageModal.propTypes = {
   demracId: PropTypes.number,
   fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-export default demracStorageModal;
+export default DemracStorageModal;

@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import devisStorageService from 'services/site_details/Devis/DevisStorageService';
 
-const devisStorageModal = ({ devisId, fetchFiles, onSave, onClose }) => {
+const DevisStorageModal = ({ devisId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -196,10 +196,10 @@ const devisStorageModal = ({ devisId, fetchFiles, onSave, onClose }) => {
     </div>
   );
 };
-devisStorageModal.propTypes = {
+DevisStorageModal.propTypes = {
   devisId: PropTypes.number,
   fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-export default devisStorageModal;
+export default DevisStorageModal;

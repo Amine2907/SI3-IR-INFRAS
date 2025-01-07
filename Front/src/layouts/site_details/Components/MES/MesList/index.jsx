@@ -18,7 +18,7 @@ import useMesForSite from './mesService';
 import siteMesService from 'services/site_details/MES/MesService';
 import MesStorageModal from 'examples/popup/MesStoragePopUp';
 import MesUModal from 'examples/popup/MesPopUp';
-import mesStorageModal from 'examples/popup/MesStoragePopUp';
+import mesStorageService from 'services/site_details/MES/MesStorageService';
 function MiseEnServiceList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -84,7 +84,7 @@ function MiseEnServiceList() {
     }
     try {
       console.log(`Fetching files for Mise en Service ID: ${mesId}`);
-      const response = await mesStorageModal.getMesFiles(mesId); // Correct API call
+      const response = await mesStorageService.getMesFiles(mesId); // Correct API call
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files

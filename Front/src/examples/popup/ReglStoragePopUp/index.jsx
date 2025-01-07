@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import paieStorageService from 'services/site_details/Reglement/Paiement/PaieStorageService';
 
-const paiementStorageModal = ({ paieId, fetchFiles, onSave, onClose }) => {
+const PaieStorageModal = ({ paieId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -196,10 +196,10 @@ const paiementStorageModal = ({ paieId, fetchFiles, onSave, onClose }) => {
     </div>
   );
 };
-paiementStorageModal.propTypes = {
+PaieStorageModal.propTypes = {
   paieId: PropTypes.number,
   fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-export default paiementStorageModal;
+export default PaieStorageModal;
