@@ -22,15 +22,17 @@ const uploadPdf = async (file, prospectId) => {
     }
     // Convert prospectId to string for constructing the file path
     const prospectIdStr = String(prospectId);
-    const filePath = `${prospectIdStr}/${file.originalname}`;
+
+    // Add a unique identifier (timestamp or UUID) to avoid conflict
+    const uniqueName = `${Date.now()}-${file.originalname}`;
+    const filePath = `prospect-pdf/${prospectIdStr}/${uniqueName}`;
 
     // Perform file upload using Supabase storage
     const { data, error } = await supabase.storage
       .from("prospect-pdf")
       .upload(filePath, file.buffer, {
         cacheControl: "3600",
-        upsert: false,  // Set to true if you want to overwrite the file
-        contentType: file.mimetype,  // Set the content type of the file
+        contentType: file.mimetype,
       });
 
     if (error) throw error;
@@ -43,7 +45,6 @@ const uploadPdf = async (file, prospectId) => {
     return { success: false, error: error.message || error };
   }
 };
-
 const getPublicUrl = (filePath) => {
   try {
     const { data, error } = supabase.storage
@@ -62,23 +63,25 @@ const getPublicUrl = (filePath) => {
 const downloadPdf = async (filePath) => {
   try {
     console.log("Attempting to download file from path:", filePath);
-    // Ensure the file path is correctly formatted
-    const encodedFilePath = filePath;  // No need to double encode
-
+    
+    // Make sure filePath has the correct structure
     const { data, error } = await supabase.storage
-      .from("prospect-pdf")
-      .download(encodedFilePath);  // Download file from the provided path
+      .from("prospect-pdf")  // Ensure this matches your bucket name
+      .download(filePath);
 
     if (error) {
       console.error("Error downloading file:", error);
       throw new Error(error.message || "Error downloading file");
     }
+
     return data;
   } catch (error) {
     console.error("Error in downloadPdf:", error);
     return null;
   }
 };
+
+
 const deleteFile = async (filePath) => {
   try {
     // Delete the file from Supabase storage

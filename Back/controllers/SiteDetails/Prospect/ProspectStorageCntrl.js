@@ -4,12 +4,18 @@ const uploadFileController = async (req, res) => {
   try {
     const { file } = req; // Access the uploaded file using req.file (not req.body)
     const { prospectId } = req.body; // Prospect ID will still come from the body
+
     // Check if the prospectId is a valid number
     if (!prospectId || isNaN(prospectId)) {
       return res.status(400).json({ error: 'Invalid prospectId: It should be a valid number' });
     }
+
+    // Generate a unique file name using the current timestamp
+    const timestamp = Date.now();
+    const uniqueFileName = `${timestamp}-${file.originalname}`;
+    
     const prospectIdStr = String(prospectId);
-    const filePath = `${prospectIdStr}/${file.originalname}`; 
+    const filePath = `${prospectIdStr}/${uniqueFileName}`;
 
     // Call the upload function with the correct file path
     const uploadResult = await prospectStorage.uploadPdf(file, filePath);
@@ -49,18 +55,15 @@ const generateSignedUrlController = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
 // Controller to download a file
 const downloadFileController = async (req, res) => {
   try {
     const { filePath } = req.query; // Extract filePath from query string
-
     if (!filePath) {
       return res.status(400).json({ error: "File path is required" });
     }
-
     console.log("Downloading file from path:", filePath);
-
+    
     // Call the download function
     const fileBlob = await prospectStorage.downloadPdf(filePath);
 
@@ -68,7 +71,7 @@ const downloadFileController = async (req, res) => {
       return res.status(404).json({ error: "File not found" });
     }
 
-    // Set appropriate headers and send the file as response
+    // Set appropriate headers and send the file as a response
     res.setHeader("Content-Disposition", `attachment; filename="${filePath.split('/').pop()}"`);
     res.setHeader("Content-Type", "application/pdf");
     return res.status(200).send(fileBlob);
@@ -77,7 +80,6 @@ const downloadFileController = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 const getFilesByProspectController = async (req, res) => {
   const { prospectId } = req.body;

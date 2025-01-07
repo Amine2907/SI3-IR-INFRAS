@@ -51,6 +51,7 @@ const downloadProspectFile = async filePath => {
       params: { filePath },
       responseType: 'blob',
     });
+
     return { success: true, data: response.data };
   } catch (error) {
     console.error('Error downloading file:', error);
@@ -83,5 +84,4 @@ const ProspectStorageService = {
   downloadProspectFile,
   deleteProspectFile,
 };
-
 export default ProspectStorageService;

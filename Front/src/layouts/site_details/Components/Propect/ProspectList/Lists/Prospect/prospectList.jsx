@@ -169,6 +169,7 @@ function ProspectList({ site }) {
       return [];
     }
   };
+
   if (loading)
     return (
       <Alert variant="destructive" className="mt-4">

@@ -63,14 +63,27 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
   // Download a file
   const handleDownloadFile = async file => {
     try {
-      // Ensure correct file path is passed here
-      const result = await ProspectStorageService.downloadProspectFile(file.path);
+      // Ensure the file path exists for download
+      if (!file?.path) {
+        console.error('File path is required for download');
+        return;
+      }
+      const filePath = file.path;
 
+      // Download the file using your service
+      const result = await ProspectStorageService.downloadProspectFile(filePath);
+
+      // Check if the download was successful
       if (result.success) {
+        // Create a blob from the data received
         const blob = new Blob([result.data], { type: 'application/pdf' });
+
+        // Create a temporary link element to trigger the download
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
-        link.download = file.name; // The file name in the download dialog
+        link.download = file.name; // Name of the file in the download dialog
+
+        // Simulate a click to download the file
         link.click();
       } else {
         console.error('Error downloading file:', result.error);
@@ -79,6 +92,7 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
       console.error('Error downloading file:', error);
     }
   };
+
   // Handle delete button click from the frontend
   // Delete file handler
   const handleDeleteFile = async file => {
