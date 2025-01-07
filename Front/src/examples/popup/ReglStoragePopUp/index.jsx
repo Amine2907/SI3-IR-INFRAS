@@ -4,112 +4,164 @@ import PropTypes from 'prop-types';
 import styles from './styles.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
-const PaieStorageModal = ({ paiement, onSave, onClose }) => {
-  const [formData, setFormData] = useState(paiement || {});
-  const [files, setFiles] = useState([]); // List of files
+import WarningPopUp from '../userPopUp/WariningPopUp';
+import paieStorageService from 'services/site_details/Reglement/Paiement/PaieStorageService';
+
+const paiementStorageModal = ({ paieId, fetchFiles, onSave, onClose }) => {
+  const [files, setFiles] = useState([]);
+  const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [fileToDelete, setFileToDelete] = useState(null); // Track the file to delete
+  const DeleteMessage = 'Etes vous sure vous voulez supprimer ce fichier !';
+
   useEffect(() => {
-    const fetchFiles = async () => {
+    const fetchFilesForPaiement = async () => {
+      if (!paieId) {
+        console.error('No prospect ID provided.');
+        return;
+      }
+      setLoading(true);
       try {
-        // const response = await paiementStorageService.generatepaiementSignedUrl();
-        if (response.success) {
-          setFiles(
-            response.data.map(file => ({
-              id: file.id,
-              name: file.name,
-              url: file.signedUrl,
-            }))
-          );
-        } else {
-          console.error('Error fetching paiement files:', response.error);
-        }
+        const filesData = await fetchFiles();
+        setFiles(filesData || []);
       } catch (error) {
-        console.error('Error fetching paiement files:', error);
+        console.error('Error fetching files:', error);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchFiles();
-  }, []);
-  // Form validation
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.nom) newErrors.nom = true;
-    return newErrors;
-  };
-  // Submit form
+    fetchFilesForPaiement();
+  }, [paieId, fetchFiles]);
+
+  // Submit form to upload a file
   const handleSubmit = async () => {
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    const file = files[0]?.file; // Get the first file to upload
+    if (!file) {
+      setErrors({ file: 'Please upload a file.' });
       return;
     }
-    if (files.length === 0) {
-      setErrors({ ...newErrors, file: 'Please upload a file' });
-      return;
-    }
-    const file = files[0]; // Get the first file from the files array
-    // Call the uploadpaiement function
-    // const result = await paiementStorageService.uploadpaiement(file);
-    if (result.success) {
-      // Handle successful upload
-      console.log('File uploaded successfully:', result.data);
-    } else {
-      // Handle failed upload
-      console.error('Error uploading file:', result.error);
+    try {
+      const result = await paieStorageService.uploadPaieFile(file, paieId);
+      if (result.success) {
+        console.log('File uploaded successfully:', result.data);
+        // Handle the successful upload (e.g., update state, close modal, etc.)
+      } else {
+        console.error('Error uploading file:', result.error);
+        setErrors({ upload: result.error || 'Failed to upload the file.' });
+      }
+    } catch (error) {
+      console.error('Unexpected error uploading file:', error);
+      setErrors({ upload: 'An unexpected error occurred. Please try again.' });
     }
   };
+
   // Add new file
   const handleAddFile = event => {
     const newFile = event.target.files[0];
     if (newFile) {
-      setFiles([{ id: Date.now(), name: newFile.name, url: URL.createObjectURL(newFile) }]);
+      setFiles([{ id: Date.now(), name: newFile.name, file: newFile }]);
     }
   };
-  // Download a file
-  const handleDownloadFile = file => {
-    const link = document.createElement('a');
-    link.href = file.url;
-    link.download = file.name;
-    link.click();
+
+  const handleCloseModal = () => {
+    setShowDeleteModal(false);
+    setFileToDelete(null);
   };
-  // Delete a file
-  const handleDeleteFile = fileId => {
-    setFiles(prevFiles => prevFiles.filter(file => file.id !== fileId));
+
+  // Trigger the delete confirmation popup
+  const handleDeleteFile = async file => {
+    setFileToDelete(file);
+    setShowDeleteModal(true);
+  };
+
+  // Delete the file after confirmation
+  const handleConfirmDelete = async () => {
+    if (fileToDelete?.path) {
+      const filePath = fileToDelete.path;
+      console.log('Deleting file with path:', filePath);
+      try {
+        const result = await paieStorageService.deletePaieFile(filePath);
+
+        if (result.success) {
+          console.log('File deleted successfully');
+          setFiles(prevFiles => prevFiles.filter(item => item.path !== filePath)); // Remove file from the UI
+        } else {
+          console.error('Error deleting file:', result.error);
+        }
+      } catch (error) {
+        console.error('Error deleting file:', error);
+      }
+    }
+    handleCloseModal();
+  };
+
+  // Download a file
+  const handleDownloadFile = async file => {
+    try {
+      if (!file?.path) {
+        console.error('File path is required for download');
+        return;
+      }
+      // Construct the full file path that works in Postman (match the correct format)
+      const filePath = file.path;
+      console.log('Downloading file from:', filePath);
+
+      // Call the API to download the file using the correct path
+      const result = await paieStorageService.downloadPaieFile(filePath);
+
+      if (result.success) {
+        const blob = new Blob([result.data], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = file.name; // The name for the downloaded file
+        link.click();
+      } else {
+        console.error('Error downloading file:', result.error);
+      }
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
   };
 
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <Typography variant="h6" gutterBottom align="center">
-          Paiement Fichier
+          Fichiers du Paiements
         </Typography>
         {/* List of files */}
         <div className={styles.fileList}>
-          {files.map(file => (
-            <div key={file.id} className={styles.fileItem}>
-              <span>{file.name}</span>
-              <div>
-                <MDButton
-                  onClick={() => handleDownloadFile(file)}
-                  variant="gradient"
-                  color="success"
-                  size="small"
-                >
-                  Enregistrer
-                </MDButton>
-                <MDButton
-                  onClick={() => handleDeleteFile(file.id)}
-                  variant="gradient"
-                  color="error"
-                  size="small"
-                  style={{ marginLeft: '10px' }}
-                >
-                  Supprimer
-                </MDButton>
+          {loading && <p>Loading files...</p>}
+          {!loading &&
+            files.map(file => (
+              <div key={file.id} className={styles.fileItem}>
+                <span>{file.name}</span>
+                <div>
+                  <MDButton
+                    onClick={() => handleDownloadFile(file)}
+                    variant="gradient"
+                    color="success"
+                    size="small"
+                  >
+                    Télécharger
+                  </MDButton>
+                  <MDButton
+                    onClick={() => handleDeleteFile(file)}
+                    variant="gradient"
+                    color="error"
+                    size="small"
+                    style={{ marginLeft: '10px' }}
+                  >
+                    Supprimer
+                  </MDButton>
+                </div>
               </div>
-            </div>
-          ))}
-          {files.length === 0 && <p>No files available. Fetch or add files.</p>}
+            ))}
+          {!loading && files.length === 0 && <p>Aucun fichier disponible.</p>}
         </div>
+        {/* Add a new file */}
         <div className={styles.addFile}>
           <input
             id="file-upload"
@@ -119,13 +171,13 @@ const PaieStorageModal = ({ paiement, onSave, onClose }) => {
           />
           <label htmlFor="file-upload">
             <MDButton variant="gradient" color="dark" component="span">
-              Ajouter un neauveau fichier
+              Ajouter un nouveau fichier
             </MDButton>
           </label>
         </div>
         {/* Form buttons */}
         <div className={styles.buttonContainer}>
-          <MDButton onClick={onSave} variant="gradient" color="dark">
+          <MDButton onClick={handleSubmit} variant="gradient" color="dark">
             Enregistrer
           </MDButton>
           <MDButton onClick={onClose} variant="gradient" color="dark">
@@ -133,12 +185,21 @@ const PaieStorageModal = ({ paiement, onSave, onClose }) => {
           </MDButton>
         </div>
       </div>
+      {/* Delete confirmation modal */}
+      {showDeleteModal && (
+        <WarningPopUp
+          message={DeleteMessage}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCloseModal}
+        />
+      )}
     </div>
   );
 };
-PaieStorageModal.propTypes = {
-  paiement: PropTypes.object,
+paiementStorageModal.propTypes = {
+  paieId: PropTypes.number,
+  fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-export default PaieStorageModal;
+export default paiementStorageModal;
