@@ -99,14 +99,14 @@ const getFilesByProspectController = async (req, res) => {
   }
 };
 const deleteFileController = async (req, res) => {
-  const { filePath } = req.body;
+  const { filePath } = req.body; 
 
   if (!filePath) {
     return res.status(400).json({ error: "File path is required" });
   }
 
   try {
-    const result = await prospectStorage.deleteFile(filePath); // Call the delete function
+    const result = await prospectStorage.deleteFile(filePath); 
 
     if (result.success) {
       return res.status(200).json({ message: "File deleted successfully" });
@@ -118,6 +118,7 @@ const deleteFileController = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 const prospectStorageCntrl = {
   uploadFileController,

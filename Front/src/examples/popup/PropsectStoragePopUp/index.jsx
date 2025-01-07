@@ -94,13 +94,14 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
       console.error('File path is required for deletion');
       return;
     }
-    console.log('Deleting file with path:', file.path);
+    const filePath = file.path;
+    console.log('Deleting file with path:', filePath);
     try {
-      const result = await ProspectStorageService.deleteProspectFile(file.path);
+      const result = await ProspectStorageService.deleteProspectFile(filePath);
 
       if (result.success) {
         console.log('File deleted successfully');
-        setFiles(prevFiles => prevFiles.filter(item => item.path !== file.path)); // Remove deleted file from UI
+        setFiles(prevFiles => prevFiles.filter(item => item.path !== filePath)); // Remove file from the UI
       } else {
         console.error('Error deleting file:', result.error);
       }
@@ -133,7 +134,7 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
                     Télécharger
                   </MDButton>
                   <MDButton
-                    onClick={() => handleDeleteFile(file.id)}
+                    onClick={() => handleDeleteFile(file)}
                     variant="gradient"
                     color="error"
                     size="small"

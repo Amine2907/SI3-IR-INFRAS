@@ -73,11 +73,11 @@ const downloadPdf = async (filePath) => {
 
 const deleteFile = async (filePath) => {
   try {
+    console.log("Attempting to deleting file from path:", filePath);
     // Delete the file from Supabase storage
     const { data, error } = await supabase.storage
       .from("prospect-pdf")
-      .remove([filePath]); 
-
+      .remove(filePath); 
     if (error) {
       throw error;
     }
@@ -93,7 +93,7 @@ const listFiles = async (prospectId) => {
   try {
     // Ensure prospectId is a string when constructing the path
     const folderPath = `prospect-pdf/${prospectId}`;
-    console.log(`Fetching files from folder: ${folderPath}`); // Add logging here to debug the path
+    console.log(`Fetching files from folder: ${folderPath}`);
 
     // Use the Supabase client to list files
     const { data, error } = await supabase.storage
