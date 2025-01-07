@@ -28,7 +28,7 @@ router.post(
   "/get-prospect-files",
   prospectStorageCntrl.getFilesByProspectController // Controller for fetching public URLs
 );
-// 
+// Route for deleting prospect file 
 router.post('/delete-prospect-file', prospectStorageCntrl.deleteFileController);
 
 export default router;

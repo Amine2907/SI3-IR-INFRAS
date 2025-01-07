@@ -62,16 +62,12 @@ const downloadProspectFile = async filePath => {
 const deleteProspectFile = async filePath => {
   try {
     console.log('Attempting to delete file with path:', filePath);
-
-    // Call your API endpoint to delete the file using the file path
     const response = await axios.post(`${API_URL}/delete-prospect-file`, { filePath });
 
     return { success: true, data: response.data };
   } catch (error) {
-    return {
-      success: false,
-      error: error.response ? error.response.data.error : error.message,
-    };
+    console.error('Error deleting file:', error);
+    return { success: false, error: error.response?.data.error || error.message };
   }
 };
 

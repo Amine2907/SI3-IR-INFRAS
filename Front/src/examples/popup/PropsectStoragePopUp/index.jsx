@@ -68,7 +68,7 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
         return;
       }
       // Construct the full file path that works in Postman (match the correct format)
-      const filePath = file.path; // Ensure this is the correct file path structure
+      const filePath = file.path;
       console.log('Downloading file from:', filePath);
 
       // Call the API to download the file using the correct path
@@ -89,18 +89,18 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
   };
 
   // Handle delete button click from the frontend
-  // Delete file handler
   const handleDeleteFile = async file => {
     if (!file?.path) {
       console.error('File path is required for deletion');
       return;
     }
+    console.log('Deleting file with path:', file.path);
     try {
       const result = await ProspectStorageService.deleteProspectFile(file.path);
+
       if (result.success) {
         console.log('File deleted successfully');
-        // Optionally, remove the file from the UI list or re-fetch files
-        setFiles(prevFiles => prevFiles.filter(item => item.path !== file.path));
+        setFiles(prevFiles => prevFiles.filter(item => item.path !== file.path)); // Remove deleted file from UI
       } else {
         console.error('Error deleting file:', result.error);
       }
@@ -108,6 +108,7 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
       console.error('Error deleting file:', error);
     }
   };
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>

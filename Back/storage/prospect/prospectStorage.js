@@ -89,7 +89,6 @@ const deleteFile = async (filePath) => {
   }
 };
 
-
 const listFiles = async (prospectId) => {
   try {
     // Ensure prospectId is a string when constructing the path
