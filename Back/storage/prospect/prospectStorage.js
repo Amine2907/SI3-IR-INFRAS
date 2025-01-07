@@ -63,11 +63,13 @@ const getPublicUrl = (filePath) => {
 const downloadPdf = async (filePath) => {
   try {
     console.log("Attempting to download file from path:", filePath);
-    
-    // Make sure filePath has the correct structure
+    // Ensure that the file path has only one 'prospect-pdf/' prefix
+    const fixedFilePath = filePath.startsWith('prospect-pdf/') ? filePath : `prospect-pdf/${filePath}`;
+    console.log(fixedFilePath);
+
     const { data, error } = await supabase.storage
-      .from("prospect-pdf")  // Ensure this matches your bucket name
-      .download(filePath);
+      .from("prospect-pdf")
+      .download(fixedFilePath);
 
     if (error) {
       console.error("Error downloading file:", error);
@@ -80,7 +82,6 @@ const downloadPdf = async (filePath) => {
     return null;
   }
 };
-
 
 const deleteFile = async (filePath) => {
   try {

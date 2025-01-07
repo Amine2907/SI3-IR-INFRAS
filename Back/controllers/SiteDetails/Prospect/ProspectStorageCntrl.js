@@ -58,20 +58,19 @@ const generateSignedUrlController = async (req, res) => {
 // Controller to download a file
 const downloadFileController = async (req, res) => {
   try {
-    const { filePath } = req.query; // Extract filePath from query string
+    const { filePath } = req.query;
     if (!filePath) {
       return res.status(400).json({ error: "File path is required" });
     }
-    console.log("Downloading file from path:", filePath);
     
-    // Call the download function
-    const fileBlob = await prospectStorage.downloadPdf(filePath);
+    console.log("Received file path:", filePath);  // Log the full file path to confirm it's correct
 
+    const fileBlob = await prospectStorage.downloadPdf(filePath);
+    
     if (!fileBlob) {
       return res.status(404).json({ error: "File not found" });
     }
-
-    // Set appropriate headers and send the file as a response
+    
     res.setHeader("Content-Disposition", `attachment; filename="${filePath.split('/').pop()}"`);
     res.setHeader("Content-Type", "application/pdf");
     return res.status(200).send(fileBlob);

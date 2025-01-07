@@ -63,27 +63,21 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
   // Download a file
   const handleDownloadFile = async file => {
     try {
-      // Ensure the file path exists for download
       if (!file?.path) {
         console.error('File path is required for download');
         return;
       }
-      const filePath = file.path;
 
-      // Download the file using your service
+      const filePath = file.path; // Ensure you're passing the correct file path here
+      console.log('Downloading file from:', filePath);
+
       const result = await ProspectStorageService.downloadProspectFile(filePath);
 
-      // Check if the download was successful
       if (result.success) {
-        // Create a blob from the data received
         const blob = new Blob([result.data], { type: 'application/pdf' });
-
-        // Create a temporary link element to trigger the download
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
-        link.download = file.name; // Name of the file in the download dialog
-
-        // Simulate a click to download the file
+        link.download = file.name; // The name for the downloaded file
         link.click();
       } else {
         console.error('Error downloading file:', result.error);
@@ -100,10 +94,8 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
       console.error('File path is required for deletion');
       return;
     }
-
     try {
       const result = await ProspectStorageService.deleteProspectFile(file.path);
-
       if (result.success) {
         console.log('File deleted successfully');
         // Optionally, remove the file from the UI list or re-fetch files
