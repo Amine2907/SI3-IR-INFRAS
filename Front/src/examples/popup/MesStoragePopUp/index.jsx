@@ -125,7 +125,6 @@ const mesStorageModal = ({ mesId, fetchFiles, onSave, onClose }) => {
       console.error('Error downloading file:', error);
     }
   };
-
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>

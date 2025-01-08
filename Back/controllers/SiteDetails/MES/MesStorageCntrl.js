@@ -19,7 +19,7 @@ const uploadFileController = async (req, res) => {
     const mesIdStr = String(mesId);
 
     // Define the file path: 'travs-pdf/{mesId}/{originalFileName}'
-    const filePath = `travs-pdf/${mesIdStr}/${uniqueFileName}`;
+    const filePath = `mes-pdf/${mesIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
 
@@ -104,7 +104,6 @@ const deleteFileController = async (req, res) => {
   if (!filePath) {
     return res.status(400).json({ error: "File path is required" });
   }
-
   try {
     const result = await mesStorage.deleteFile(filePath); 
 

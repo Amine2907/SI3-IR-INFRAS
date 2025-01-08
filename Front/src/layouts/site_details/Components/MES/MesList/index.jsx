@@ -84,7 +84,7 @@ function MiseEnServiceList() {
     }
     try {
       console.log(`Fetching files for Mise en Service ID: ${mesId}`);
-      const response = await mesStorageService.getMesFiles(mesId); // Correct API call
+      const response = await mesStorageService.getMesFiles(mesId);
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files

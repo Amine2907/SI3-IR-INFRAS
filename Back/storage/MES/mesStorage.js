@@ -4,7 +4,7 @@ const generateSignedUrl = async (filePath) => {
   try {
     const { data, error } = await supabase.storage
       .from("mise-en-service-pdf") 
-      .createSignedUrl(filePath, 60); // URL expires in 60 seconds
+      .createSignedUrl(filePath, 60);
 
     if (error) throw error;
 
@@ -53,7 +53,7 @@ const downloadPdf = async (filePath) => {
   try {
     console.log("Attempting to download file from path:", filePath);
     // Ensure that the file path has only one 'mise-en-service-pdf/' prefix
-    const fixedFilePath = filePath.startsWith('mise-en-service-pdf/') ? filePath : `mise-en-service-pdf/${filePath}`;
+    const fixedFilePath = filePath.startsWith('mes-pdf/') ? filePath : `mes-pdf/${filePath}`;
     console.log(fixedFilePath);
 
     const { data, error } = await supabase.storage
@@ -92,7 +92,7 @@ const deleteFile = async (filePath) => {
 const listFiles = async (mesId) => {
   try {
     // Ensure mesId is a string when constructing the path
-    const folderPath = `mise-en-service-pdf/${mesId}`;
+    const folderPath = `mes-pdf/${mesId}`;
     console.log(`Fetching files from folder: ${folderPath}`);
 
     // Use the Supabase client to list files
@@ -108,7 +108,7 @@ const listFiles = async (mesId) => {
     // Map through the files to return the proper structure
     return data.map(file => ({
       name: file.name,
-      path: `mise-en-service-pdf/${mesId}/${file.name}`,
+      path: `mes-pdf/${mesId}/${file.name}`,
     }));
   } catch (error) {
     console.error("Error listing files:", error);
