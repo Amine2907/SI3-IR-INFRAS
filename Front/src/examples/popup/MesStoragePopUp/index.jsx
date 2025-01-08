@@ -38,7 +38,7 @@ const mesStorageModal = ({ mesId, fetchFiles, onSave, onClose }) => {
 
   // Submit form to upload a file
   const handleSubmit = async () => {
-    const file = files[0]?.file; // Get the first file to upload
+    const file = files[0]?.file;
     if (!file) {
       setErrors({ file: 'Please upload a file.' });
       return;

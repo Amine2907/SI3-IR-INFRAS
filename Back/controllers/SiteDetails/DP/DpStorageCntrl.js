@@ -4,18 +4,15 @@ const uploadFileController = async (req, res) => {
   try {
     const { file } = req;  // Access the uploaded file using req.file (not req.body)
     const { declPreaId } = req.body;  // Dp ID comes from the request body
-
     // Ensure that a file and declPreaId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-
     if (!declPreaId || isNaN(declPreaId)) {
       return res.status(400).json({ error: 'Invalid declPreaId: It should be a valid number' });
     }
-
     // Use the file name as the unique file name
-    const uniqueFileName = file.originalname;  // Use the original file name
+    const uniqueFileName = file.originalname;
     const declPreaIdStr = String(declPreaId);
 
     // Define the file path: 'declPreal-pdf/{declPreaId}/{originalFileName}'
@@ -25,7 +22,6 @@ const uploadFileController = async (req, res) => {
 
     // Upload the file to Supabase storage
     const uploadResult = await declPrealStorage.uploadPdf(file, filePath);
-
     if (uploadResult.success) {
       return res.status(200).json({
         message: 'File uploaded successfully',

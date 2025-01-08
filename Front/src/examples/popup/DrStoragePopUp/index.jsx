@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import demracsStorageService from 'services/site_details/DR/DrStorageService';
 
-const DemracStorageModal = ({ demracId, fetchFiles, onSave, onClose }) => {
+const DemracStorageModal = ({ demRacId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -18,7 +18,7 @@ const DemracStorageModal = ({ demracId, fetchFiles, onSave, onClose }) => {
 
   useEffect(() => {
     const fetchFilesForDemracs = async () => {
-      if (!demracId) {
+      if (!demRacId) {
         console.error('No prospect ID provided.');
         return;
       }
@@ -34,7 +34,7 @@ const DemracStorageModal = ({ demracId, fetchFiles, onSave, onClose }) => {
     };
 
     fetchFilesForDemracs();
-  }, [demracId, fetchFiles]);
+  }, [demRacId, fetchFiles]);
 
   // Submit form to upload a file
   const handleSubmit = async () => {
@@ -44,10 +44,9 @@ const DemracStorageModal = ({ demracId, fetchFiles, onSave, onClose }) => {
       return;
     }
     try {
-      const result = await demracsStorageService.uploadDemracsFile(file, demracId);
+      const result = await demracsStorageService.uploadDemracsFile(file, demRacId);
       if (result.success) {
         console.log('File uploaded successfully:', result.data);
-        // Handle the successful upload (e.g., update state, close modal, etc.)
       } else {
         console.error('Error uploading file:', result.error);
         setErrors({ upload: result.error || 'Failed to upload the file.' });
@@ -57,7 +56,6 @@ const DemracStorageModal = ({ demracId, fetchFiles, onSave, onClose }) => {
       setErrors({ upload: 'An unexpected error occurred. Please try again.' });
     }
   };
-
   // Add new file
   const handleAddFile = event => {
     const newFile = event.target.files[0];
@@ -198,7 +196,7 @@ const DemracStorageModal = ({ demracId, fetchFiles, onSave, onClose }) => {
   );
 };
 DemracStorageModal.propTypes = {
-  demracId: PropTypes.number,
+  demRacId: PropTypes.number,
   fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

@@ -36,7 +36,6 @@ function ProspectList({ site }) {
   const Proid = selectedprospect?.Proid;
   const { fetchDpData } = useDpsForProspects(Sid);
   const handleEdit = prospect => {
-    console.log('Editing Prospect:', prospect);
     setSelectedprospect(prospect);
     setShowModal(true);
     setIsModalOpen(true);

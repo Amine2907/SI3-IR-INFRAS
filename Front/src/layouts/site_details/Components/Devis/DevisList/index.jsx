@@ -17,7 +17,6 @@ import cellStyle from './styles/styles';
 import SiteDevisService from 'services/site_details/Devis/DevisService';
 import useDevisForSite from './devisService';
 import DevisUModal from 'examples/popup/DevisPopUp';
-import devisStorageModal from 'examples/popup/DevisStoragePopUp';
 import DevisStorageModal from 'examples/popup/DevisStoragePopUp';
 import devisStorageService from 'services/site_details/Devis/DevisStorageService';
 function DevisList() {

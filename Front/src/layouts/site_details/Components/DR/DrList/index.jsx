@@ -17,7 +17,6 @@ import PropTypes from 'prop-types';
 import SiteDemracService from 'services/site_details/DR/DrService';
 import usedemracData from './DrService';
 import statusPropValues from './DrData';
-import demracStorageModal from 'examples/popup/DrStoragePopUp';
 import DrUpdateModal from 'examples/popup/DrPopUp/Update/DrUpdatePopUp';
 import demracsStorageService from 'services/site_details/DR/DrStorageService';
 import DemracStorageModal from 'examples/popup/DrStoragePopUp';
@@ -45,10 +44,6 @@ function DemRacList({ site }) {
   }, [site, fetchDemracData]);
   const handleOpenModal = () => {
     setshowUploadModal(true);
-  };
-  const handleUpload = () => {
-    // uplaoding logic here
-    null;
   };
   // update a site's demrac
   const handleUpdate = async updates => {
@@ -112,7 +107,7 @@ function DemRacList({ site }) {
     }
     try {
       console.log(`Fetching files for DEMRAC ID: ${demRacId}`);
-      const response = await demracsStorageService.getDemracsFiles(demRacId); // Correct API call
+      const response = await demracsStorageService.getDemracsFiles(demRacId);
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files
@@ -241,7 +236,6 @@ function DemRacList({ site }) {
           onClose={handleCloseModal}
         />
       )}
-
       {alert.show && (
         <MDAlert
           color={alert.type}
