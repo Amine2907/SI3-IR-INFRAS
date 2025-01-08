@@ -9,4 +9,3 @@ export const entityMapping = {
     'Traveaux' : 'Tid',
     'MES' : 'MESid',
   };
-  

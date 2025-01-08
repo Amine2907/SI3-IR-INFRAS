@@ -62,5 +62,4 @@ const commentModel = {
   addComment,
   getComments,
 };
-
 export default commentModel;
