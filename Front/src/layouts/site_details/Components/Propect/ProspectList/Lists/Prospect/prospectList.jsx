@@ -236,14 +236,12 @@ function ProspectList({ site }) {
                     add
                   </Icon>
                 </TableCell>
+                <CommentSection entityName="Prospect" entityId={selectedprospect?.Proid} />
               </TableRow>
             );
           })}
         </TableBody>
       </table>
-      {selectedprospect && (
-        <CommentSection entityName="Prospect" entityId={selectedprospect.Proid} />
-      )}
       {showUploadModal && selectedprospect?.Proid && (
         <ProspectStorageModal
           prospectId={selectedprospect?.Proid}
