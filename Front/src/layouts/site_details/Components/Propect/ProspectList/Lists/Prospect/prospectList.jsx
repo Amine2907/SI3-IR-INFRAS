@@ -40,14 +40,9 @@ function ProspectList({ site }) {
     setShowModal(true);
     setIsModalOpen(true);
   };
-
   // Opening the modal for file upload (ensure prospectId is available)
-  const handleOpenModal = () => {
-    if (!selectedprospect?.Proid) {
-      console.error('No prospect selected or prospect ID missing');
-      return;
-    }
-    console.log('Opening Modal for Prospect:', selectedprospect);
+  const handleOpenModal = prospect => {
+    setSelectedprospect(prospect);
     setShowUploadModal(true);
   };
   const handleCloseModal = () => {
@@ -232,7 +227,11 @@ function ProspectList({ site }) {
                   </Icon>
                 </TableCell>
                 <TableCell title="Ajouter Prospect " placement="top">
-                  <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={handleOpenModal}>
+                  <Icon
+                    sx={{ cursor: 'pointer' }}
+                    fontSize="small"
+                    onClick={() => handleOpenModal(prospect)}
+                  >
                     add
                   </Icon>
                 </TableCell>

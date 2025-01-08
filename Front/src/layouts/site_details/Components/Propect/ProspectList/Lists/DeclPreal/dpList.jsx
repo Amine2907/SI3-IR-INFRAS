@@ -33,12 +33,8 @@ function DeclPreaList() {
     setSelecteddp(dp);
     setShowModal(true);
   };
-  const handleOpenModal = () => {
-    if (!selecteddp?.DPid) {
-      console.error('No prospect selected or prospect ID missing');
-      return;
-    }
-    console.log('Opening Modal for Prospect:', selecteddp);
+  const handleOpenModal = dp => {
+    setSelecteddp(dp);
     setShowUploadModal(true);
   };
   const handleCloseModal = () => {
@@ -163,7 +159,11 @@ function DeclPreaList() {
                 </TableCell>
                 <TableCell title="Ajouter DP " placement="top">
                   {' '}
-                  <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={handleOpenModal}>
+                  <Icon
+                    sx={{ cursor: 'pointer' }}
+                    fontSize="small"
+                    onClick={() => handleOpenModal(dp)}
+                  >
                     add
                   </Icon>
                 </TableCell>

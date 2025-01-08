@@ -35,12 +35,8 @@ function PreEtudeList() {
     setIsModalOpen(true);
   };
   // Opening the modal for file upload (ensure prospectId is available)
-  const handleOpenModal = () => {
-    if (!selectedpreEtude?.PREid) {
-      console.error('No preEtude selected or prospect ID missing');
-      return;
-    }
-    console.log('Opening Modal for Prospect:', selectedpreEtude);
+  const handleOpenModal = preEtude => {
+    setSelectedpreEtude(preEtude);
     setShowStorageModal(true);
   };
   const handleCloseModal = () => {
@@ -178,7 +174,11 @@ function PreEtudeList() {
                   </Icon>
                 </TableCell>
                 <TableCell title="Ajouter preEtude" placement="top">
-                  <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={handleOpenModal}>
+                  <Icon
+                    sx={{ cursor: 'pointer' }}
+                    fontSize="small"
+                    onClick={() => handleOpenModal(preEtude)}
+                  >
                     add
                   </Icon>
                 </TableCell>

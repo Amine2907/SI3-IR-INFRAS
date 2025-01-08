@@ -42,7 +42,8 @@ function DemRacList({ site }) {
       fetchDemracData();
     }
   }, [site, fetchDemracData]);
-  const handleOpenModal = () => {
+  const handleOpenModal = demrac => {
+    setSelecteddemrac(demrac);
     setshowUploadModal(true);
   };
   // update a site's demrac
@@ -206,7 +207,11 @@ function DemRacList({ site }) {
                       </Icon>
                     </TableCell>
                     <TableCell title="Ajouter demrac " placement="top">
-                      <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={handleOpenModal}>
+                      <Icon
+                        sx={{ cursor: 'pointer' }}
+                        fontSize="small"
+                        onClick={() => handleOpenModal(demrac)}
+                      >
                         add
                       </Icon>
                     </TableCell>
