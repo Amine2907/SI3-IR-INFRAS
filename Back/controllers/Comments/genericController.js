@@ -22,11 +22,9 @@ const addComment = async (req, res) => {
 // Get comments for an entity
 const getComments = async (req, res) => {
   const { entityName, entityId } = req.query;
-
   if (!entityName || !entityId) {
     return res.status(400).json({ error: 'Missing required parameters' });
   }
-
   try {
     const comments = await commentModel.getComments(entityName, entityId);
     res.status(200).json(comments);

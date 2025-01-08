@@ -33,5 +33,4 @@ const commentService = {
   addComment,
   getComments,
 };
-
 export default commentService;
