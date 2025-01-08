@@ -1,19 +1,12 @@
+// routes/commentRoutes.js
 import express from "express";
 const router = express.Router();
-import genericController from "../../controllers/Comments/genericController.js";
-// Create a new record in any table
-router.post('/:table', genericController.create);
+import commentController from "../../controllers/Comments/genericController.js";
 
-// Get all records from any table
-router.get('/:table', genericController.getAll);
+// Route to add a comment
+router.post('/comments', commentController.addComment);
 
-// Get a single record by ID from any table
-router.get('/:table/:id', genericController.getById);
-
-// Update a record by ID in any table
-router.put('/:table/:id', genericController.update);
-
-// Delete a record by ID from any table
-router.delete('/:table/:id', genericController.delete);
+// Route to get comments for an entity
+router.get('/comments', commentController.getComments);
 
 export default router;

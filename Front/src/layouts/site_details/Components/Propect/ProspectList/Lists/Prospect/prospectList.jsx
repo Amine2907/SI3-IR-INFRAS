@@ -22,6 +22,7 @@ import { statusValidationValues } from './ProspectData';
 import useDpsForProspects from '../DeclPreal/declpreaService';
 import ProspectStorageModal from 'examples/popup/PropsectStoragePopUp';
 import ProspectStorageService from 'services/site_details/Prospect/prospectStorageService';
+import CommentSection from 'examples/Cards/Commentaires';
 function ProspectList({ site }) {
   const { prospectsData, loading, error, fetchProspectsData } = useProspectsData(site);
   const [showModal, setShowModal] = useState(false);
@@ -240,6 +241,9 @@ function ProspectList({ site }) {
           })}
         </TableBody>
       </table>
+      {selectedprospect && (
+        <CommentSection entityName="Prospect" entityId={selectedprospect.Proid} />
+      )}
       {showUploadModal && selectedprospect?.Proid && (
         <ProspectStorageModal
           prospectId={selectedprospect?.Proid}

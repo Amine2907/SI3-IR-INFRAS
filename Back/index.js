@@ -58,7 +58,7 @@ app.use('/api/facture',factureRoutes);
 app.use('/api/traveaux',traveauxRoutes);
 app.use('/api/mes',miseEnServiceRoutes);
 app.use('/api/paie',paieRoutes);
-app.use('/api/com',CommentsRoutes);
+app.use('/api/coms',CommentsRoutes);
 app.use('/api/site-fields',siteFields);
 // Use Storing Routes 
 app.use('/api/dem-rac-storage',demRacStorageRoutes);

@@ -1,44 +1,44 @@
-import { supabase } from "../../config/supabaseClient.js";
-class GenericModel {
-    constructor(tableName) {
-      this.tableName = tableName;
-    }
-  
-    async findAll() {
-      const { data, error } = await supabase.from(this.tableName).select('*');
-      if (error) throw new Error(error.message);
-      return data;
-    }
-  
-    async findById(id) {
-      const { data, error } = await supabase
-        .from(this.tableName)
-        .select('*')
-        .eq('id', id)
-        .single();
-      if (error) throw new Error(error.message);
-      return data;
-    }
-  
-    async create(payload) {
-      const { data, error } = await supabase.from(this.tableName).insert([payload]);
-      if (error) throw new Error(error.message);
-      return data;
-    }
-  
-    async update(id, payload) {
-      const { data, error } = await supabase
-        .from(this.tableName)
-        .update(payload)
-        .eq('id', id);
-      if (error) throw new Error(error.message);
-      return data;
-    }
-  
-    async delete(id) {
-      const { data, error } = await supabase.from(this.tableName).delete().eq('id', id);
-      if (error) throw new Error(error.message);
-      return data;
-    }
+// models/commentModel.js
+import { supabase } from '../../config/supabaseClient.js';
+
+// Model for adding a comment to an entity's `commentaires` column
+const addComment = async (entityName, entityId, comment) => {
+  try {
+    const { data, error } = await supabase
+      .from(entityName)
+      .update({
+        commentaires: supabase.raw('array_append(commentaires, ?)', [comment]),
+      })
+      .eq('id', entityId);
+
+    if (error) throw error;
+
+    return data;  // Return updated entity
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    return null;
   }
-  export default GenericModel;
+};
+
+// Model for fetching comments for a specific entity
+const getComments = async (entityName, entityId) => {
+  try {
+    const { data, error } = await supabase
+      .from(entityName)
+      .select('commentaires')
+      .eq('id', entityId);
+
+    if (error) throw error;
+
+    return data ? data[0]?.commentaires : [];
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    return [];
+  }
+};
+const commentModel = {
+  addComment ,
+  getComments
+}
+export default commentModel
+
