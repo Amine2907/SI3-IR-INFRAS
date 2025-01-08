@@ -18,6 +18,7 @@ import cellStyle from './styles/styles';
 import usepreEtudesForSite from './preEtdueService';
 import PreEtModal from 'examples/popup/PreEtudePopUp';
 import PreEtudeStorageModal from 'examples/popup/PreEtudeStoragePopUp';
+import preEtudeStorageService from 'services/site_details/PreEtude/preEtudeStorageService';
 function PreEtudeList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -33,8 +34,13 @@ function PreEtudeList() {
     setShowModal(true);
     setIsModalOpen(true);
   };
-  const handleUpload = preEtude => {
-    setSelectedpreEtude(preEtude);
+  // Opening the modal for file upload (ensure prospectId is available)
+  const handleOpenModal = () => {
+    if (!selectedpreEtude?.PREid) {
+      console.error('No preEtude selected or prospect ID missing');
+      return;
+    }
+    console.log('Opening Modal for Prospect:', selectedpreEtude);
     setShowStorageModal(true);
   };
   const handleCloseModal = () => {
@@ -78,6 +84,26 @@ function PreEtudeList() {
       });
     }
     handleCloseModal();
+  };
+  const fetchPreEtudeFiles = async preEtudeId => {
+    if (!preEtudeId) {
+      console.error('preEtude ID is missing!');
+      return [];
+    }
+    try {
+      console.log(`Fetching files for preEtude ID: ${preEtudeId}`);
+      const response = await preEtudeStorageService.getPreEtudeFiles(preEtudeId); // Correct API call
+      if (response.success) {
+        console.log('Files fetched successfully:', response.data.files);
+        return response.data.files; // Return the fetched files
+      } else {
+        console.error('Error fetching files:', response.error);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching files:', error);
+      return [];
+    }
   };
   const getDotColor = type_rac => {
     if (type_rac === 'Simple') return 'green';
@@ -152,11 +178,7 @@ function PreEtudeList() {
                   </Icon>
                 </TableCell>
                 <TableCell title="Ajouter preEtude" placement="top">
-                  <Icon
-                    sx={{ cursor: 'pointer' }}
-                    fontSize="small"
-                    onClick={() => handleUpload(preEtude)}
-                  >
+                  <Icon sx={{ cursor: 'pointer' }} fontSize="small" onClick={handleOpenModal}>
                     add
                   </Icon>
                 </TableCell>
@@ -173,10 +195,14 @@ function PreEtudeList() {
           onClose={handleCloseModal}
         />
       )}
-      {showStorageModal && (
+      {showStorageModal && selectedpreEtude?.PREid && (
         <PreEtudeStorageModal
-          preEtude={selectedpreEtude}
-          onSave={handleUpdate}
+          preEtudeId={selectedpreEtude?.PREid}
+          fetchFiles={() => fetchPreEtudeFiles(selectedpreEtude?.PREid)}
+          onSave={() => {
+            console.log('File uploaded successfully. Refreshing prospects.');
+            fetchPreEtudeFiles();
+          }}
           onClose={handleCloseModal}
         />
       )}

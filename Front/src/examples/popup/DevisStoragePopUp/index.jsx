@@ -32,7 +32,6 @@ const DevisStorageModal = ({ devisId, fetchFiles, onSave, onClose }) => {
         setLoading(false);
       }
     };
-
     fecthFilesForDevis();
   }, [devisId, fetchFiles]);
 
