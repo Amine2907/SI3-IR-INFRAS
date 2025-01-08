@@ -236,7 +236,7 @@ function ProspectList({ site }) {
                     add
                   </Icon>
                 </TableCell>
-                <CommentSection entityName="Prospect" entityId={selectedprospect?.Proid} />
+                <CommentSection entityName="Prospect" entityId={prospect.Proid} />
               </TableRow>
             );
           })}

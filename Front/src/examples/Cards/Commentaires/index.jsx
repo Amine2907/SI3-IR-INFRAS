@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types'; // Import prop-types
+import PropTypes from 'prop-types';
 import {
   TextField,
   List,
@@ -10,17 +10,21 @@ import {
   Box,
 } from '@mui/material';
 import commentService from 'services/Commentary/commentService';
+
 const CommentSection = ({ entityName, entityId }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const [loading, setLoading] = useState(true); // Manage loading state for fetching comments
-  const [isSaving, setIsSaving] = useState(false); // Manage saving state
+  const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Fetch comments for the given entity
   useEffect(() => {
     const fetchComments = async () => {
+      console.log('Fetching comments for entityName:', entityName);
+      console.log('Fetching comments for entityId:', entityId);
       try {
         const fetchedComments = await commentService.getComments(entityName, entityId);
+        console.log('Fetched Comments:', fetchedComments); // Log the fetched comments
         setComments(fetchedComments);
         setLoading(false);
       } catch (error) {
@@ -28,40 +32,44 @@ const CommentSection = ({ entityName, entityId }) => {
         setLoading(false);
       }
     };
-    fetchComments();
+    // Fetch comments when entityName or entityId changes
+    if (entityName && entityId) {
+      fetchComments();
+    }
   }, [entityName, entityId]);
 
   // Handle the input change for adding a new comment
   const handleCommentChange = event => {
     setNewComment(event.target.value);
+    console.log('New Comment being typed:', event.target.value);
   };
 
   // Submit the comment
   const handleCommentSubmit = async () => {
     if (!newComment) return;
+    console.log('Entity Name:', entityName);
+    console.log('Entity ID:', entityId); // Log entityName and entityId
 
-    setIsSaving(true); // Start saving
-
+    setIsSaving(true);
+    console.log('Submitting new comment:', newComment);
     try {
       const result = await commentService.addComment(entityName, entityId, newComment);
-      setComments([result.comment, ...comments]); // Add the new comment to the beginning of the list
-      setNewComment(''); // Reset the input field
+      setComments([result.comment, ...comments]);
+      setNewComment('');
     } catch (error) {
       console.error('Error adding comment:', error);
     } finally {
-      setIsSaving(false); // Stop saving
+      setIsSaving(false);
     }
   };
 
   const handleDeleteComment = async comment => {
-    // Call the delete function from your service (assuming you have it)
-    console.log('Deleting comment:', comment);
-    // Implement delete functionality here
+    console.log('Deleting comment:', comment); // Log the comment to be deleted
+    // Handle delete comment logic here
   };
 
   return (
     <Box>
-      {/* Loading indicator */}
       {loading ? (
         <CircularProgress />
       ) : (
@@ -83,7 +91,6 @@ const CommentSection = ({ entityName, entityId }) => {
               </ListItem>
             ))}
           </List>
-
           {/* Input for new comment */}
           <TextField
             label="Add a Comment"
@@ -112,7 +119,6 @@ const CommentSection = ({ entityName, entityId }) => {
     </Box>
   );
 };
-
 // Define the PropTypes for the component
 CommentSection.propTypes = {
   entityName: PropTypes.string.isRequired,

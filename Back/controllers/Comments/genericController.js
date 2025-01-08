@@ -3,13 +3,17 @@ import commentModel from '../../models/Comments/genericModel.js';
 // Add a comment to an entity
 const addComment = async (req, res) => {
   const { entityName, entityId, comment } = req.body;
+  
+  console.log('Received request:', { entityName, entityId, comment });  // Log the incoming data
 
   if (!entityName || !entityId || !comment) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
+
   try {
     const result = await commentModel.addComment(entityName, entityId, comment);
     if (!result) {
+      console.log('Failed to add comment');  // Log if something goes wrong while adding the comment
       return res.status(500).json({ error: 'Failed to add comment' });
     }
     res.status(200).json(result);
@@ -22,6 +26,7 @@ const addComment = async (req, res) => {
 // Get comments for an entity
 const getComments = async (req, res) => {
   const { entityName, entityId } = req.query;
+  console.log('Received request:', { entityName, entityId });
   if (!entityName || !entityId) {
     return res.status(400).json({ error: 'Missing required parameters' });
   }
