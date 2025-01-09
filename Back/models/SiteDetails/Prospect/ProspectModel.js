@@ -30,8 +30,9 @@ const createProspect = async (EB, prospectData) => {
         }
       }
       // User can add only one prospect which colunm is_active equal to True ! 
-      if (prospectData.is_active === true)  {
-        console.log('Prospect has active DP');
+      if (prospectData.hasOwnProperty('is_active') &&
+      prospectData.is_active === true)  {
+        console.log('Site has active Propspect');
         const { data: existingProspect, error: checkError } = await supabase
           .from('Prospect')
           .select('*')

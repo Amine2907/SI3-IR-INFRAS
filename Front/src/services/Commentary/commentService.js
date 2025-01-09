@@ -4,17 +4,22 @@ const API_URL = 'http://localhost:5000/api/coms';
 // Add a comment for a specific entity (POST request)
 const addComment = async (entityName, comment, user, Sid) => {
   try {
-    console.log('Sending POST request to:', `${API_URL}/comments`);
+    console.log('Sending POST request to:', `${API_URL}/comments`, {
+      entityName,
+      comment,
+      user,
+      Sid,
+    });
     const response = await axios.post(`${API_URL}/comments`, {
       entityName,
       comment,
       user,
       Sid,
     });
-    console.log('Comment added successfully:', response.data); // Log response from the backend
+    console.log('Comment added successfully:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error adding comment:', error);
+    console.error('Error adding comment:', error.response?.data || error.message);
     throw error;
   }
 };

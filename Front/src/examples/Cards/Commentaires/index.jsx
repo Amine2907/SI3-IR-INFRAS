@@ -25,6 +25,7 @@ const CommentSection = ({ entityName, Sid }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
+        console.log('Fetching comments for:', { entityName, Sid });
         const fetchedComments = await commentService.getComments(entityName, Sid);
         setComments(fetchedComments || []); // Ensure comments is always an array
       } catch (error) {
@@ -57,6 +58,7 @@ const CommentSection = ({ entityName, Sid }) => {
     })`;
     setIsSaving(true);
     try {
+      console.log('Fetching comments for:', { entityName, Sid });
       await commentService.addComment(entityName, commentWithDate, user.email, Sid);
       // Update the state with the new comment
       setComments([commentWithDate, ...comments]);

@@ -36,10 +36,24 @@ const getComments = async (entityName, Sid) => {
       .from(entityName)
       .select('commentaires')
       .eq('EB_fk', Sid);
+
     if (error) throw error;
-    return data ? data[0]?.commentaires : [];
+
+    if (!data || data.length === 0) {
+      console.warn('No comments found for entity:', entityName, 'Sid:', Sid);
+      return []; // Return an empty array if no rows are found
+    }
+    // Filter out rows where `commentaires` is null
+    const validComments = data
+      .map(row => row.commentaires)
+      .filter(comments => comments !== null); // Remove null values
+
+    // Flatten the array if necessary (if `commentaires` is an array of arrays)
+    const flattenedComments = validComments.flat();
+    console.log('Valid comments fetched from database:', flattenedComments);
+    return flattenedComments;
   } catch (error) {
-    console.error('Error fetching comments:', error);
+    console.error('Error fetching comments from database:', error);
     return [];
   }
 };
