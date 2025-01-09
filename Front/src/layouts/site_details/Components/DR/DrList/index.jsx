@@ -20,6 +20,7 @@ import statusPropValues from './DrData';
 import DrUpdateModal from 'examples/popup/DrPopUp/Update/DrUpdatePopUp';
 import demracsStorageService from 'services/site_details/DR/DrStorageService';
 import DemracStorageModal from 'examples/popup/DrStoragePopUp';
+import CommentSection from 'examples/Cards/Commentaires';
 function DemRacList({ site }) {
   const { demracData, loading, error, fetchDemracData } = usedemracData(site);
   const [showModal, setShowModal] = useState(false);
@@ -220,6 +221,9 @@ function DemRacList({ site }) {
               })}
             </TableBody>
           </table>
+          <Box mt={4}>
+            <CommentSection entityName="DR" Sid={Sid} />
+          </Box>
         </>
       )}
       {showUploadModal && selecteddemrac?.NDRid && (

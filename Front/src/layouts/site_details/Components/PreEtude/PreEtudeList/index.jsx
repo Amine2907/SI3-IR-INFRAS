@@ -19,6 +19,7 @@ import usepreEtudesForSite from './preEtdueService';
 import PreEtModal from 'examples/popup/PreEtudePopUp';
 import PreEtudeStorageModal from 'examples/popup/PreEtudeStoragePopUp';
 import preEtudeStorageService from 'services/site_details/PreEtude/preEtudeStorageService';
+import CommentSection from 'examples/Cards/Commentaires';
 function PreEtudeList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -187,6 +188,9 @@ function PreEtudeList() {
           })}
         </TableBody>
       </table>
+      <Box mt={4}>
+        <CommentSection entityName="PreEtude" Sid={siteId} />
+      </Box>
       {showModal && (
         <PreEtModal
           Sid={siteId}

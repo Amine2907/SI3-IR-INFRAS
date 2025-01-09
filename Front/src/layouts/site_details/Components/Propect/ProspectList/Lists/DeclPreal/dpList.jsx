@@ -19,6 +19,7 @@ import DpUModal from 'examples/popup/DeclPreaPopUp/DpPopUp';
 import MDAlert from 'components/MDAlert';
 import DeclPraelStorageService from 'services/site_details/DP/dpStorageService';
 import DpStorageModal from 'examples/popup/DpStoragePopUp';
+import CommentSection from 'examples/Cards/Commentaires';
 function DeclPreaList() {
   const [showModal, setShowModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -172,6 +173,9 @@ function DeclPreaList() {
           })}
         </TableBody>
       </table>
+      <Box mt={4}>
+        <CommentSection entityName="DP" Sid={siteId} />
+      </Box>
       {showModal && <DpUModal dp={selecteddp} onSave={handleUpdate} onClose={handleCloseModal} />}
       {showUploadModal && selecteddp?.DPid && (
         <DpStorageModal

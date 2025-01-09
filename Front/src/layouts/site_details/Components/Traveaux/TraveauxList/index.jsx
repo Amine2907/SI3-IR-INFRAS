@@ -20,6 +20,7 @@ import cellStyle from './styles/styles';
 import traveauxStorageModal from 'examples/popup/TravStoragePopUp';
 import TravStorageModal from 'examples/popup/TravStoragePopUp';
 import travStorageService from 'services/site_details/Traveaux/TravStorageService';
+import CommentSection from 'examples/Cards/Commentaires';
 function TraveauxList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -166,6 +167,9 @@ function TraveauxList() {
           })}
         </TableBody>
       </table>
+      <Box mt={4}>
+        <CommentSection entityName="Traveaux" Sid={siteId} />
+      </Box>
       {showModal && (
         <TravUModal
           Sid={siteId}

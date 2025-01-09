@@ -19,6 +19,7 @@ import siteMesService from 'services/site_details/MES/MesService';
 import MesStorageModal from 'examples/popup/MesStoragePopUp';
 import MesUModal from 'examples/popup/MesPopUp';
 import mesStorageService from 'services/site_details/MES/MesStorageService';
+import CommentSection from 'examples/Cards/Commentaires';
 function MiseEnServiceList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -176,6 +177,9 @@ function MiseEnServiceList() {
           })}
         </TableBody>
       </table>
+      <Box mt={4}>
+        <CommentSection entityName="MES" Sid={siteId} />
+      </Box>
       {showModal && (
         <MesUModal
           Sid={siteId}

@@ -1,13 +1,12 @@
 import { supabase } from '../../config/supabaseClient.js';
 
 // Model for adding a comment to an entity's `commentaires` column
-const addComment = async (entityName, comment) => {
+const addComment = async (entityName, comment , Sid) => {
   try {
     // Fetch the current comments array
     const { data, error: fetchError } = await supabase
       .from(entityName)
       .select('commentaires')
-      .single();
     if (fetchError) throw fetchError;
     // If no comments exist, initialize as an empty array
     const currentComments = Array.isArray(data.commentaires) ? data.commentaires : [];
@@ -20,6 +19,7 @@ const addComment = async (entityName, comment) => {
       .update({
         commentaires: updatedComments,
       })
+      .eq('EB_fk',Sid)
 
     if (updateError) throw updateError;
 

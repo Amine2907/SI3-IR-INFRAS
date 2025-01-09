@@ -19,6 +19,7 @@ import useDevisForSite from './devisService';
 import DevisUModal from 'examples/popup/DevisPopUp';
 import DevisStorageModal from 'examples/popup/DevisStoragePopUp';
 import devisStorageService from 'services/site_details/Devis/DevisStorageService';
+import CommentSection from 'examples/Cards/Commentaires';
 function DevisList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -188,6 +189,9 @@ function DevisList() {
           })}
         </TableBody>
       </table>
+      <Box mt={4}>
+        <CommentSection entityName="Devis" Sid={siteId} />
+      </Box>
       {showModal && (
         <DevisUModal
           Sid={siteId}

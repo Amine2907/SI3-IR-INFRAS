@@ -3,8 +3,8 @@ import commentModel from '../../models/Comments/genericModel.js';
 import { supabase } from '../../config/supabaseClient.js';
 // Add a comment to an entity
 const addComment = async (req, res) => {
-  const { entityName,  comment } = req.body;
-  if (!entityName || !comment) {
+  const { entityName,  comment , Sid } = req.body;
+  if (!entityName || !comment || !Sid) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
   try {
@@ -15,7 +15,7 @@ const addComment = async (req, res) => {
       return res.status(401).json({ error: 'User not authenticated' });
     }
     // Add the comment to the database (in the `commentaires` column of the entity)
-    const result = await commentModel.addComment(entityName, comment);
+    const result = await commentModel.addComment(entityName, comment , Sid);
     if (!result) {
       console.log('Failed to add comment');
       return res.status(500).json({ error: 'Failed to add comment' });

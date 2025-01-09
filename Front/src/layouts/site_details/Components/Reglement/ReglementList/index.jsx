@@ -20,6 +20,7 @@ import PaieUModal from 'examples/popup/ReglementPopUp';
 import paiementStorageModal from 'examples/popup/ReglStoragePopUp';
 import paieStorageService from 'services/site_details/Reglement/Paiement/PaieStorageService';
 import PaieStorageModal from 'examples/popup/ReglStoragePopUp';
+import CommentSection from 'examples/Cards/Commentaires';
 function ReglementList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -173,6 +174,9 @@ function ReglementList() {
           })}
         </TableBody>
       </table>
+      <Box mt={4}>
+        <CommentSection entityName="Paiements" Sid={siteId} />
+      </Box>
       {showModal && (
         <PaieUModal
           Sid={siteId}

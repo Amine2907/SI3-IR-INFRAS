@@ -57,7 +57,7 @@ const CommentSection = ({ entityName, Sid }) => {
     })`;
     setIsSaving(true);
     try {
-      await commentService.addComment(entityName, commentWithDate, user.email);
+      await commentService.addComment(entityName, commentWithDate, user.email, Sid);
       // Update the state with the new comment
       setComments([commentWithDate, ...comments]);
       setNewComment(''); // Clear the input
@@ -67,7 +67,6 @@ const CommentSection = ({ entityName, Sid }) => {
       setIsSaving(false);
     }
   };
-
   return (
     <Box>
       <Typography variant="h6" sx={{ mb: 2 }}>
@@ -96,10 +95,9 @@ const CommentSection = ({ entityName, Sid }) => {
           Effacer
         </MDButton>
       </Box>
-
       {comments.length === 0 ? (
         <Alert variant="destructive">
-          <AlertDescription>Pas de commentaires pour ce site.</AlertDescription>
+          <AlertDescription>Pas de commentaires pour ce Site.</AlertDescription>
         </Alert>
       ) : (
         <TableContainer component={Paper} sx={{ backgroundColor: 'transparent' }}>
