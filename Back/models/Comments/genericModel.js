@@ -38,26 +38,19 @@ const addComment = async (entityName, entityId, comment) => {
   }
 };
 // Model for fetching comments for a specific entity
-const getComments = async (entityName, entityId) => {
+const getComments = async (entityName, Sid) => {
   try {
-    const primaryKey = entityMapping[entityName];
-    if (!primaryKey) {
-      throw new Error(`Invalid entity name: ${entityName}`);
-    }
     const { data, error } = await supabase
       .from(entityName)
       .select('commentaires')
-      .eq(primaryKey, entityId);
-
+      .eq('EB_fk', Sid);
     if (error) throw error;
-
     return data ? data[0]?.commentaires : [];
   } catch (error) {
     console.error('Error fetching comments:', error);
     return [];
   }
 };
-
 const commentModel = {
   addComment,
   getComments,

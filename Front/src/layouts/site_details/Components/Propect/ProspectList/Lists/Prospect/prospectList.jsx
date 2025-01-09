@@ -28,6 +28,7 @@ function ProspectList({ site }) {
   const [showModal, setShowModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [comments, setComments] = useState([]);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
   const { EB } = location.state || {};
@@ -203,18 +204,7 @@ function ProspectList({ site }) {
             const statusValidation = statusValidationValues[prospect.status_validation_fk] || 'N/A';
             return (
               <TableRow key={prospect.Proid}>
-                <TableCell
-                  sx={{
-                    cursor: 'pointer',
-                    fontWeight: selectedprospect?.Proid === prospect.Proid ? 'bold' : 'normal',
-                    '&:hover': {
-                      fontWeight: 'bold',
-                    },
-                  }}
-                  onClick={() => setSelectedprospect(prospect)}
-                >
-                  {prospect.nom || 'N/A'}
-                </TableCell>
+                <TableCell>{prospect.nom || 'N/A'}</TableCell>
                 <TableCell>{statusValidation}</TableCell>
                 <TableCell>{prospect.longitude || 'N/A'}</TableCell>
                 <TableCell>{prospect.latitude || 'N/A'}</TableCell>
@@ -252,16 +242,9 @@ function ProspectList({ site }) {
           })}
         </TableBody>
       </table>
-      {/* Comment Section for Selected Prospect */}
-      {/* {selectedprospect && ( */}
       <Box mt={4}>
-        <CommentSection
-          entityName="Prospect"
-          entityId={selectedprospect?.Proid}
-          entitySubName={selectedprospect?.nom}
-        />
+        <CommentSection entityName="Prospect" entityId={selectedprospect?.Proid} Sid={Sid} />
       </Box>
-      {/* )} */}
       {showUploadModal && selectedprospect?.Proid && (
         <ProspectStorageModal
           prospectId={selectedprospect?.Proid}

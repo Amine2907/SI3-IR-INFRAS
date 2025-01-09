@@ -12,26 +12,28 @@ import {
 } from '@mui/material';
 import commentService from 'services/Commentary/commentService';
 import { cellStyle, commentStyle } from './styles';
-const CommentSection = ({ entityName, entityId, entitySubName }) => {
+import { Alert, AlertDescription } from 'components/ui/alert';
+const CommentSection = ({ entityName, entityId, Sid }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
     const fetchComments = async () => {
       console.log('Fetching comments for entityName:', entityName);
-      console.log('Fetching comments for entityId:', entityId);
+      console.log('Fetching comments for entityId:', Sid);
       try {
-        const fetchedComments = await commentService.getComments(entityName, entityId);
-        setComments(fetchedComments);
+        const fetchedComments = await commentService.getComments(entityName, Sid);
+        setComments(fetchedComments || []); // Ensure comments is always an array
       } catch (error) {
         console.error('Error fetching comments:', error);
+        setComments([]); // Default to an empty array on error
       }
     };
-    // Fetch comments when entityName or entityId changes
-    if (entityName && entityId) {
+    // Fetch comments when entityName or Sid changes
+    if (entityName && Sid) {
       fetchComments();
     }
-  }, [entityName, entityId]);
+  }, [entityName, Sid]);
 
   // Handle the input change for adding a new comment
   const handleCommentChange = event => {
@@ -41,25 +43,31 @@ const CommentSection = ({ entityName, entityId, entitySubName }) => {
   // Submit the comment
   const handleCommentSubmit = async () => {
     if (!newComment) return;
+
+    // Get the current date and time
+    const currentDate = new Date().toLocaleString(); // You can format this as needed
+
+    // Combine the comment with the current date
+    const commentWithDate = `${newComment} (Added on: ${currentDate})`;
+
     console.log('Entity Name:', entityName);
     console.log('Entity ID:', entityId);
 
     setIsSaving(true);
-    console.log('Submitting new comment:', newComment);
+    console.log('Submitting new comment:', commentWithDate);
+
     try {
-      const result = await commentService.addComment(entityName, entityId, newComment);
-      setComments([result.comment, ...comments]);
-      setNewComment('');
+      // Add the comment with date to the array of comments in the `commentaires` column
+      await commentService.addComment(entityName, entityId, commentWithDate);
+
+      // Add the new comment to the list of comments (no need for separate date logic)
+      setComments([commentWithDate, ...comments]);
+      setNewComment(''); // Clear the input
     } catch (error) {
       console.error('Error adding comment:', error);
     } finally {
       setIsSaving(false);
     }
-  };
-
-  const handleDeleteComment = async comment => {
-    console.log('Deleting comment:', comment);
-    // Handle delete comment logic here
   };
   return (
     <Box>
@@ -85,32 +93,35 @@ const CommentSection = ({ entityName, entityId, entitySubName }) => {
         <Button onClick={() => setNewComment('')} variant="outlined" color="secondary">
           Clear
         </Button>
+        {/* Conditional rendering of Alert if no comments */}
+        {comments.length === 0 && (
+          <Alert variant="destructive" className="mt-4">
+            <AlertDescription>Pas de commentaires pour ce site.</AlertDescription>
+          </Alert>
+        )}
       </Box>
       <List>
         {comments.length > 0 && (
           <TableRow>
-            <TableCell sx={cellStyle}>Associe a </TableCell>
+            <TableCell sx={cellStyle}>Utilsateur</TableCell>
             <TableCell sx={cellStyle}>Date</TableCell>
             <TableCell sx={cellStyle}>Commentaire</TableCell>
           </TableRow>
         )}
-        {comments.map((comment, index) => (
-          <ListItem key={index}>
-            <TableRow key={index}>
-              <TableCell>{entitySubName || 'N/A'}</TableCell>
-              <TableCell>{'comment'}</TableCell>
-              <TableCell sx={commentStyle}>{comment || 'N/A'}</TableCell>
-            </TableRow>
-            <Button
-              onClick={() => handleDeleteComment(comment)}
-              color="error"
-              variant="outlined"
-              size="small"
-            >
-              Supprimer
-            </Button>
-          </ListItem>
-        ))}
+        {comments.map((comment, index) => {
+          const dateMatch = comment.match(/\(Added on: (.*?)\)/);
+          const date = dateMatch ? dateMatch[1] : 'N/A';
+          return (
+            <ListItem key={index}>
+              <TableRow>
+                <TableCell>{date}</TableCell>
+                <TableCell sx={commentStyle}>
+                  {comment.replace(/\(Added on: .*\)/, '') || 'N/A'}
+                </TableCell>
+              </TableRow>
+            </ListItem>
+          );
+        })}
       </List>
     </Box>
   );
@@ -119,6 +130,6 @@ const CommentSection = ({ entityName, entityId, entitySubName }) => {
 CommentSection.propTypes = {
   entityName: PropTypes.string.isRequired,
   entityId: PropTypes.number.isRequired,
-  entitySubName: PropTypes.string.isRequired,
+  Sid: PropTypes.number.isRequired,
 };
 export default CommentSection;

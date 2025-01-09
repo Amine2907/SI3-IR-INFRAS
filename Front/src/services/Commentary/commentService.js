@@ -19,13 +19,13 @@ const addComment = async (entityName, entityId, comment) => {
 };
 
 // Get comments for a specific entity (GET request)
-const getComments = async (entityName, entityId) => {
+const getComments = async (entityName, Sid) => {
   try {
     console.log('Sending GET request to:', `${API_URL}/comments`);
     const response = await axios.get(`${API_URL}/comments`, {
-      params: { entityName, entityId },
+      params: { entityName, Sid },
     });
-    console.log('Fetched comments successfully:', response.data); // Log response data from the backend
+    console.log('Fetched comments successfully:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching comments:', error);
