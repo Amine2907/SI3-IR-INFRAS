@@ -203,7 +203,18 @@ function ProspectList({ site }) {
             const statusValidation = statusValidationValues[prospect.status_validation_fk] || 'N/A';
             return (
               <TableRow key={prospect.Proid}>
-                <TableCell>{prospect.nom || 'N/A'}</TableCell>
+                <TableCell
+                  sx={{
+                    cursor: 'pointer',
+                    fontWeight: selectedprospect?.Proid === prospect.Proid ? 'bold' : 'normal',
+                    '&:hover': {
+                      fontWeight: 'bold',
+                    },
+                  }}
+                  onClick={() => setSelectedprospect(prospect)}
+                >
+                  {prospect.nom || 'N/A'}
+                </TableCell>
                 <TableCell>{statusValidation}</TableCell>
                 <TableCell>{prospect.longitude || 'N/A'}</TableCell>
                 <TableCell>{prospect.latitude || 'N/A'}</TableCell>

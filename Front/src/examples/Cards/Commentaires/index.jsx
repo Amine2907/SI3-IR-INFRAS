@@ -5,19 +5,16 @@ import {
   List,
   ListItem,
   Button,
-  CircularProgress,
   Typography,
   Box,
   TableCell,
   TableRow,
 } from '@mui/material';
 import commentService from 'services/Commentary/commentService';
-import cellStyle from './styles';
-
+import { cellStyle, commentStyle } from './styles';
 const CommentSection = ({ entityName, entityId, entitySubName }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-  const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
     const fetchComments = async () => {
@@ -25,12 +22,9 @@ const CommentSection = ({ entityName, entityId, entitySubName }) => {
       console.log('Fetching comments for entityId:', entityId);
       try {
         const fetchedComments = await commentService.getComments(entityName, entityId);
-        console.log('Fetched Comments:', fetchedComments); // Log the fetched comments
         setComments(fetchedComments);
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching comments:', error);
-        setLoading(false);
       }
     };
     // Fetch comments when entityName or entityId changes
@@ -44,7 +38,6 @@ const CommentSection = ({ entityName, entityId, entitySubName }) => {
     setNewComment(event.target.value);
     console.log('New Comment being typed:', event.target.value);
   };
-
   // Submit the comment
   const handleCommentSubmit = async () => {
     if (!newComment) return;
@@ -68,70 +61,57 @@ const CommentSection = ({ entityName, entityId, entitySubName }) => {
     console.log('Deleting comment:', comment);
     // Handle delete comment logic here
   };
-
   return (
     <Box>
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <>
-          {/* Input for new comment */}
-          <Typography variant="h6">Ajouter un Commentaire</Typography>
-          <TextField
-            label="Ajouter un commentaire"
-            fullWidth
-            multiline
-            rows={4}
-            value={newComment}
-            onChange={handleCommentChange}
-            disabled={isSaving} // Disable input while saving
-          />
-          <Box mt={2} display="flex" justifyContent="space-between">
+      <Typography variant="h6">Commentaires</Typography>
+      <TextField
+        label="Ajouter un commentaire"
+        fullWidth
+        multiline
+        rows={4}
+        value={newComment}
+        onChange={handleCommentChange}
+        disabled={isSaving}
+      />
+      <Box mt={2} display="flex" justifyContent="space-between">
+        <Button
+          onClick={handleCommentSubmit}
+          variant="contained"
+          color="primary"
+          disabled={isSaving || !newComment}
+        >
+          {isSaving ? 'Saving...' : 'Enregistrer'}
+        </Button>
+        <Button onClick={() => setNewComment('')} variant="outlined" color="secondary">
+          Clear
+        </Button>
+      </Box>
+      <List>
+        {comments.length > 0 && (
+          <TableRow>
+            <TableCell sx={cellStyle}>Associe a </TableCell>
+            <TableCell sx={cellStyle}>Date</TableCell>
+            <TableCell sx={cellStyle}>Commentaire</TableCell>
+          </TableRow>
+        )}
+        {comments.map((comment, index) => (
+          <ListItem key={index}>
+            <TableRow key={index}>
+              <TableCell>{entitySubName || 'N/A'}</TableCell>
+              <TableCell>{'comment'}</TableCell>
+              <TableCell sx={commentStyle}>{comment || 'N/A'}</TableCell>
+            </TableRow>
             <Button
-              onClick={handleCommentSubmit}
-              variant="contained"
-              color="primary"
-              disabled={isSaving || !newComment}
+              onClick={() => handleDeleteComment(comment)}
+              color="error"
+              variant="outlined"
+              size="small"
             >
-              {isSaving ? 'Saving...' : 'Enregistrer'}
+              Supprimer
             </Button>
-            <Button onClick={() => setNewComment('')} variant="outlined" color="secondary">
-              Clear
-            </Button>
-          </Box>
-
-          {/* List of existing comments */}
-          <Typography variant="h6" mt={4}>
-            Commentaires
-          </Typography>
-          <List>
-            {comments.length > 0 && (
-              <TableRow>
-                <TableCell sx={cellStyle}>Associe a </TableCell>
-                <TableCell sx={cellStyle}>Date</TableCell>
-                <TableCell sx={cellStyle}>Commentaire</TableCell>
-              </TableRow>
-            )}
-            {comments.map((comment, index) => (
-              <ListItem key={index}>
-                <TableRow key={index}>
-                  <TableCell>{entitySubName || 'N/A'}</TableCell>
-                  <TableCell>{comment.date}</TableCell>
-                  <TableCell>{comment || 'N/A'}</TableCell>
-                </TableRow>
-                <Button
-                  onClick={() => handleDeleteComment(comment)}
-                  color="error"
-                  variant="outlined"
-                  size="small"
-                >
-                  Supprimer
-                </Button>
-              </ListItem>
-            ))}
-          </List>
-        </>
-      )}
+          </ListItem>
+        ))}
+      </List>
     </Box>
   );
 };
@@ -141,5 +121,4 @@ CommentSection.propTypes = {
   entityId: PropTypes.number.isRequired,
   entitySubName: PropTypes.string.isRequired,
 };
-
 export default CommentSection;

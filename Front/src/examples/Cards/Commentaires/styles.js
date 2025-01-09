@@ -1,6 +1,10 @@
-const cellStyle = {
+export const cellStyle = {
   color: 'white',
   fontWeight: 'bold',
   textAlign: 'left',
+  width: '33%',
 };
-export default cellStyle;
+export const commentStyle = {
+  width: '100%',
+  textAlign: 'left',
+};
