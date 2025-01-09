@@ -146,7 +146,7 @@ function ProspectList({ site }) {
     }
     try {
       console.log(`Fetching files for prospect ID: ${prospectId}`);
-      const response = await ProspectStorageService.getProspectFiles(prospectId); // Correct API call
+      const response = await ProspectStorageService.getProspectFiles(prospectId);
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files
@@ -202,7 +202,7 @@ function ProspectList({ site }) {
           {prospectsData.map(prospect => {
             const statusValidation = statusValidationValues[prospect.status_validation_fk] || 'N/A';
             return (
-              <TableRow key={prospect.id}>
+              <TableRow key={prospect.Proid}>
                 <TableCell>{prospect.nom || 'N/A'}</TableCell>
                 <TableCell>{statusValidation}</TableCell>
                 <TableCell>{prospect.longitude || 'N/A'}</TableCell>
@@ -236,12 +236,21 @@ function ProspectList({ site }) {
                     add
                   </Icon>
                 </TableCell>
-                <CommentSection entityName="Prospect" entityId={prospect.Proid} />
               </TableRow>
             );
           })}
         </TableBody>
       </table>
+      {/* Comment Section for Selected Prospect */}
+      {/* {selectedprospect && ( */}
+      <Box mt={4}>
+        <CommentSection
+          entityName="Prospect"
+          entityId={selectedprospect?.Proid}
+          entitySubName={selectedprospect?.nom}
+        />
+      </Box>
+      {/* )} */}
       {showUploadModal && selectedprospect?.Proid && (
         <ProspectStorageModal
           prospectId={selectedprospect?.Proid}

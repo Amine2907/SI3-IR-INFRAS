@@ -8,16 +8,17 @@ import {
   CircularProgress,
   Typography,
   Box,
+  TableCell,
+  TableRow,
 } from '@mui/material';
 import commentService from 'services/Commentary/commentService';
+import cellStyle from './styles';
 
-const CommentSection = ({ entityName, entityId }) => {
+const CommentSection = ({ entityName, entityId, entitySubName }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-
-  // Fetch comments for the given entity
   useEffect(() => {
     const fetchComments = async () => {
       console.log('Fetching comments for entityName:', entityName);
@@ -48,7 +49,7 @@ const CommentSection = ({ entityName, entityId }) => {
   const handleCommentSubmit = async () => {
     if (!newComment) return;
     console.log('Entity Name:', entityName);
-    console.log('Entity ID:', entityId); // Log entityName and entityId
+    console.log('Entity ID:', entityId);
 
     setIsSaving(true);
     console.log('Submitting new comment:', newComment);
@@ -64,7 +65,7 @@ const CommentSection = ({ entityName, entityId }) => {
   };
 
   const handleDeleteComment = async comment => {
-    console.log('Deleting comment:', comment); // Log the comment to be deleted
+    console.log('Deleting comment:', comment);
     // Handle delete comment logic here
   };
 
@@ -74,26 +75,10 @@ const CommentSection = ({ entityName, entityId }) => {
         <CircularProgress />
       ) : (
         <>
-          {/* List of existing comments */}
-          <Typography variant="h6">Comments</Typography>
-          <List>
-            {comments.map((comment, index) => (
-              <ListItem key={index}>
-                <Typography variant="body2">{comment}</Typography>
-                <Button
-                  onClick={() => handleDeleteComment(comment)}
-                  color="error"
-                  variant="outlined"
-                  size="small"
-                >
-                  Delete
-                </Button>
-              </ListItem>
-            ))}
-          </List>
           {/* Input for new comment */}
+          <Typography variant="h6">Ajouter un Commentaire</Typography>
           <TextField
-            label="Add a Comment"
+            label="Ajouter un commentaire"
             fullWidth
             multiline
             rows={4}
@@ -114,6 +99,37 @@ const CommentSection = ({ entityName, entityId }) => {
               Clear
             </Button>
           </Box>
+
+          {/* List of existing comments */}
+          <Typography variant="h6" mt={4}>
+            Commentaires
+          </Typography>
+          <List>
+            {comments.length > 0 && (
+              <TableRow>
+                <TableCell sx={cellStyle}>Associe a </TableCell>
+                <TableCell sx={cellStyle}>Date</TableCell>
+                <TableCell sx={cellStyle}>Commentaire</TableCell>
+              </TableRow>
+            )}
+            {comments.map((comment, index) => (
+              <ListItem key={index}>
+                <TableRow key={index}>
+                  <TableCell>{entitySubName || 'N/A'}</TableCell>
+                  <TableCell>{comment.date}</TableCell>
+                  <TableCell>{comment || 'N/A'}</TableCell>
+                </TableRow>
+                <Button
+                  onClick={() => handleDeleteComment(comment)}
+                  color="error"
+                  variant="outlined"
+                  size="small"
+                >
+                  Supprimer
+                </Button>
+              </ListItem>
+            ))}
+          </List>
         </>
       )}
     </Box>
@@ -123,6 +139,7 @@ const CommentSection = ({ entityName, entityId }) => {
 CommentSection.propTypes = {
   entityName: PropTypes.string.isRequired,
   entityId: PropTypes.number.isRequired,
+  entitySubName: PropTypes.string.isRequired,
 };
 
 export default CommentSection;
