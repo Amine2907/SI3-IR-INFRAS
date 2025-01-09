@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  TextField,
-  List,
-  ListItem,
-  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  Paper,
   Typography,
   Box,
-  TableCell,
   TableRow,
+  TextField,
 } from '@mui/material';
 import commentService from 'services/Commentary/commentService';
 import { cellStyle, commentStyle } from './styles';
 import { Alert, AlertDescription } from 'components/ui/alert';
-const CommentSection = ({ entityName, entityId, Sid }) => {
+import { useAuth } from 'context/Auth/AuthContext';
+import MDButton from 'components/MDButton';
+const CommentSection = ({ entityName, Sid }) => {
+  const { user, loading: authLoading } = useAuth();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
     const fetchComments = async () => {
-      console.log('Fetching comments for entityName:', entityName);
-      console.log('Fetching comments for entityId:', Sid);
       try {
         const fetchedComments = await commentService.getComments(entityName, Sid);
         setComments(fetchedComments || []); // Ensure comments is always an array
@@ -34,7 +37,6 @@ const CommentSection = ({ entityName, entityId, Sid }) => {
       fetchComments();
     }
   }, [entityName, Sid]);
-
   // Handle the input change for adding a new comment
   const handleCommentChange = event => {
     setNewComment(event.target.value);
@@ -43,24 +45,20 @@ const CommentSection = ({ entityName, entityId, Sid }) => {
   // Submit the comment
   const handleCommentSubmit = async () => {
     if (!newComment) return;
-
+    // Ensure the user is available from AuthContext
+    if (authLoading || !user) {
+      console.error('No user logged in');
+      return;
+    }
     // Get the current date and time
-    const currentDate = new Date().toLocaleString(); // You can format this as needed
-
-    // Combine the comment with the current date
-    const commentWithDate = `${newComment} (Added on: ${currentDate})`;
-
-    console.log('Entity Name:', entityName);
-    console.log('Entity ID:', entityId);
-
+    const currentDate = new Date().toLocaleString();
+    const commentWithDate = `${newComment} (Added on: ${currentDate}) (Added by: ${
+      user.email || 'Unknown'
+    })`;
     setIsSaving(true);
-    console.log('Submitting new comment:', commentWithDate);
-
     try {
-      // Add the comment with date to the array of comments in the `commentaires` column
-      await commentService.addComment(entityName, entityId, commentWithDate);
-
-      // Add the new comment to the list of comments (no need for separate date logic)
+      await commentService.addComment(entityName, commentWithDate, user.email);
+      // Update the state with the new comment
       setComments([commentWithDate, ...comments]);
       setNewComment(''); // Clear the input
     } catch (error) {
@@ -69,9 +67,12 @@ const CommentSection = ({ entityName, entityId, Sid }) => {
       setIsSaving(false);
     }
   };
+
   return (
     <Box>
-      <Typography variant="h6">Commentaires</Typography>
+      <Typography variant="h6" sx={{ mb: 2 }}>
+        Commentaires
+      </Typography>
       <TextField
         label="Ajouter un commentaire"
         fullWidth
@@ -80,56 +81,65 @@ const CommentSection = ({ entityName, entityId, Sid }) => {
         value={newComment}
         onChange={handleCommentChange}
         disabled={isSaving}
+        sx={{ mb: 2 }}
       />
-      <Box mt={2} display="flex" justifyContent="space-between">
-        <Button
+      <Box mb={2} display="flex" justifyContent="space-between">
+        <MDButton
           onClick={handleCommentSubmit}
           variant="contained"
-          color="primary"
+          color="dark"
           disabled={isSaving || !newComment}
         >
           {isSaving ? 'Saving...' : 'Enregistrer'}
-        </Button>
-        <Button onClick={() => setNewComment('')} variant="outlined" color="secondary">
-          Clear
-        </Button>
-        {/* Conditional rendering of Alert if no comments */}
-        {comments.length === 0 && (
-          <Alert variant="destructive" className="mt-4">
-            <AlertDescription>Pas de commentaires pour ce site.</AlertDescription>
-          </Alert>
-        )}
+        </MDButton>
+        <MDButton onClick={() => setNewComment('')} variant="outlined" color="secondary">
+          Effacer
+        </MDButton>
       </Box>
-      <List>
-        {comments.length > 0 && (
-          <TableRow>
-            <TableCell sx={cellStyle}>Utilsateur</TableCell>
-            <TableCell sx={cellStyle}>Date</TableCell>
-            <TableCell sx={cellStyle}>Commentaire</TableCell>
-          </TableRow>
-        )}
-        {comments.map((comment, index) => {
-          const dateMatch = comment.match(/\(Added on: (.*?)\)/);
-          const date = dateMatch ? dateMatch[1] : 'N/A';
-          return (
-            <ListItem key={index}>
+
+      {comments.length === 0 ? (
+        <Alert variant="destructive">
+          <AlertDescription>Pas de commentaires pour ce site.</AlertDescription>
+        </Alert>
+      ) : (
+        <TableContainer component={Paper} sx={{ backgroundColor: 'transparent' }}>
+          <Table>
+            <TableHead>
               <TableRow>
-                <TableCell>{date}</TableCell>
-                <TableCell sx={commentStyle}>
-                  {comment.replace(/\(Added on: .*\)/, '') || 'N/A'}
-                </TableCell>
+                <TableCell sx={cellStyle}>Utilisateur</TableCell>
+                <TableCell sx={cellStyle}>Date</TableCell>
+                <TableCell sx={cellStyle}>Commentaire</TableCell>
               </TableRow>
-            </ListItem>
-          );
-        })}
-      </List>
+            </TableHead>
+            <TableBody>
+              {comments.map((comment, index) => {
+                const dateMatch = comment.match(/\(Added on: (.*?)\)/);
+                const date = dateMatch ? dateMatch[1] : 'N/A';
+                const userMatch = comment.match(/\(Added by: (.*?)\)/);
+                const user = userMatch ? userMatch[1] : 'Unknown';
+                const commentText =
+                  comment
+                    .replace(/\(Added on: .*?\)/, '')
+                    .replace(/\(Added by: .*?\)/, '')
+                    .trim() || 'N/A';
+
+                return (
+                  <TableRow key={index}>
+                    <TableCell sx={commentStyle}>{user}</TableCell>
+                    <TableCell sx={commentStyle}>{date}</TableCell>
+                    <TableCell sx={commentStyle}>{commentText}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Box>
   );
 };
-// Define the PropTypes for the component
 CommentSection.propTypes = {
   entityName: PropTypes.string.isRequired,
-  entityId: PropTypes.number.isRequired,
   Sid: PropTypes.number.isRequired,
 };
 export default CommentSection;

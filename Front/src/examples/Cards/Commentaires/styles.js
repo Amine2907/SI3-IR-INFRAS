@@ -1,10 +1,19 @@
 export const cellStyle = {
-  color: 'white',
+  padding: '8px 16px',
+  textAlign: 'left',
+  verticalAlign: 'middle',
+  wordWrap: 'break-word',
+  width: '33%', // Equal width distribution
+  whiteSpace: 'nowrap',
+  borderBottom: '1px solid rgba(224, 224, 224, 0.4)',
   fontWeight: 'bold',
-  textAlign: 'left',
-  width: '33%',
 };
+
 export const commentStyle = {
-  width: '100%',
+  padding: '8px 16px',
+  color: 'white',
   textAlign: 'left',
+  width: '33%', // Equal width distribution
+  wordWrap: 'break-word',
+  borderBottom: '1px solid rgba(224, 224, 224, 0.2)',
 };

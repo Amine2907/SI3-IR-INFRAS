@@ -1,20 +1,13 @@
 import { supabase } from '../../config/supabaseClient.js';
-import {entityMapping} from './entityMapping.js';
 
 // Model for adding a comment to an entity's `commentaires` column
-const addComment = async (entityName, entityId, comment) => {
+const addComment = async (entityName, comment) => {
   try {
-    const primaryKey = entityMapping[entityName];
-    if (!primaryKey) {
-      throw new Error(`Invalid entity name: ${entityName}`);
-    }
     // Fetch the current comments array
     const { data, error: fetchError } = await supabase
       .from(entityName)
       .select('commentaires')
-      .eq(primaryKey, entityId)
       .single();
-
     if (fetchError) throw fetchError;
     // If no comments exist, initialize as an empty array
     const currentComments = Array.isArray(data.commentaires) ? data.commentaires : [];
@@ -27,7 +20,6 @@ const addComment = async (entityName, entityId, comment) => {
       .update({
         commentaires: updatedComments,
       })
-      .eq(primaryKey, entityId);
 
     if (updateError) throw updateError;
 

@@ -28,7 +28,6 @@ function ProspectList({ site }) {
   const [showModal, setShowModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [comments, setComments] = useState([]);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
   const { EB } = location.state || {};
@@ -160,7 +159,6 @@ function ProspectList({ site }) {
       return [];
     }
   };
-
   if (loading)
     return (
       <Alert variant="destructive" className="mt-4">
@@ -243,7 +241,7 @@ function ProspectList({ site }) {
         </TableBody>
       </table>
       <Box mt={4}>
-        <CommentSection entityName="Prospect" entityId={selectedprospect?.Proid} Sid={Sid} />
+        <CommentSection entityName="Prospect" Sid={Sid} />
       </Box>
       {showUploadModal && selectedprospect?.Proid && (
         <ProspectStorageModal
