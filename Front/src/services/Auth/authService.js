@@ -65,6 +65,15 @@ const updatePassword = async (newPassword, accessToken, refresh_token) => {
       : new Error('An error occurred while updating password');
   }
 };
+// Function to sign the user out
+const signOutUser = async userId => {
+  try {
+    const response = await axios.post(`${API_URL}/sign-out`, { userId });
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : new Error('An error occurred while signing out');
+  }
+};
 // Exporting functions (for call AuthService.func)
 const AuthService = {
   signIn,
@@ -72,5 +81,6 @@ const AuthService = {
   isAuthenticated,
   resetPassword,
   updatePassword,
+  signOutUser,
 };
 export default AuthService;

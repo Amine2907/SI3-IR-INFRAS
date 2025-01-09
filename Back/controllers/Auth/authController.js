@@ -113,3 +113,17 @@ export const handleUpdatePassword = async (req, res) => {
     return res.status(500).json({ success: false, error: 'Internal server error.' });
   }
 };
+export const logUserOut = async (req, res) => {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      // Log and return an error response if the logout fails
+      console.error('Error logging out:', error.message);
+      return res.status(500).json({ success: false, error: error.message });
+    }
+    return res.status(200).json({ success: true, message: 'User logged out successfully' });
+  } catch (err) {
+    console.error('Unexpected error during logout:', err.message);
+    return res.status(500).json({ success: false, error: 'An unexpected error occurred' });
+  }
+};

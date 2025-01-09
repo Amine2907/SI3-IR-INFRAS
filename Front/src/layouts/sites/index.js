@@ -8,12 +8,12 @@
 // Material Dashboard 2 React example components
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
 import Footer from 'examples/Footer';
-import SiteNavbar from 'examples/Navbars/SitesNavbar';
 import SiteList from 'examples/Lists/SiteList/SiteList';
+import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 function Sites() {
   return (
     <DashboardLayout>
-      <SiteNavbar />
+      <DashboardNavbar />
       <SiteList />
       <Footer />
     </DashboardLayout>

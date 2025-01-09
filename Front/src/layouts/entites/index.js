@@ -8,12 +8,12 @@
 // Material Dashboard 2 React example components
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
 import Footer from 'examples/Footer';
-import EntiteNavBr from 'examples/Navbars/EntiteNavbar';
 import EntiteList from 'examples/Lists/EntitesList/EntiteList';
+import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 function Entites() {
   return (
     <DashboardLayout>
-      <EntiteNavBr />
+      <DashboardNavbar />
       <EntiteList />
       <Footer />
     </DashboardLayout>

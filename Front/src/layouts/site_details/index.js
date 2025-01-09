@@ -10,7 +10,7 @@ import SiteInfoCard from 'examples/Cards/SiteInfoCard';
 import SiteService from 'services/Site_Services/siteService';
 import { AlertDescription, Alert } from 'components/ui/alert';
 import SiteModal from 'examples/popup/SitePopUp';
-import SiteInfoNavbar from 'examples/Navbars/SiteInfoNavbar';
+import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 function SiteDetails() {
   const location = useLocation();
   const { EB } = location.state || {};
@@ -70,7 +70,7 @@ function SiteDetails() {
   if (!EB) {
     return (
       <DashboardLayout>
-        <SiteInfoNavbar />
+        <DashboardNavbar />
         <MDBox mb={2} />
         <MDBox px={3}>
           <Alert variant="destructive" className="mt-4">
@@ -85,7 +85,7 @@ function SiteDetails() {
   }
   return (
     <DashboardLayout>
-      <SiteInfoNavbar />
+      <DashboardNavbar />
       <MDBox px={3} py={2}>
         <Grid container spacing={2} alignItems="flex-start">
           <Grid item xs={12} style={{ marginBottom: '-20px' }}></Grid>
