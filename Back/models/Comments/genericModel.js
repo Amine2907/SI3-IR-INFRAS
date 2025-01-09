@@ -1,28 +1,29 @@
 import { supabase } from '../../config/supabaseClient.js';
 
 // Model for adding a comment to an entity's `commentaires` column
-const addComment = async (entityName, comment , Sid) => {
+const addComment = async (entityName, comment, Sid) => {
   try {
-    // Fetch the current comments array
+    // Fetch the first matching row based on Sid
     const { data, error: fetchError } = await supabase
       .from(entityName)
-      .select('commentaires')
+      .select('commentaires') 
+      .eq('EB_fk', Sid)
+      .limit(1)
+      .single();
     if (fetchError) throw fetchError;
-    // If no comments exist, initialize as an empty array
+    // Ensure `commentaires` is initialized as an array
     const currentComments = Array.isArray(data.commentaires) ? data.commentaires : [];
     // Append the new comment to the existing comments array
-    const updatedComments = [...currentComments, comment]; // Appending the new comment
-
+    const updatedComments = [...currentComments, comment];
     // Update the entity with the new comments array
     const { error: updateError } = await supabase
       .from(entityName)
       .update({
         commentaires: updatedComments,
       })
-      .eq('EB_fk',Sid)
+      .eq('EB_fk', Sid );
 
     if (updateError) throw updateError;
-
     return { success: true, message: 'Comment added successfully.' };
   } catch (error) {
     console.error('Error adding comment:', error);
@@ -35,25 +36,17 @@ const getComments = async (entityName, Sid) => {
     const { data, error } = await supabase
       .from(entityName)
       .select('commentaires')
-      .eq('EB_fk', Sid);
-
+      .eq('EB_fk', Sid) 
+      .limit(1)
+      .single();
     if (error) throw error;
-
-    if (!data || data.length === 0) {
-      console.warn('No comments found for entity:', entityName, 'Sid:', Sid);
-      return []; // Return an empty array if no rows are found
+    if (!data || !data.commentaires) {
+      console.warn('No comments found for the first row in entity:', entityName, 'Sid:', Sid);
+      return [];
     }
-    // Filter out rows where `commentaires` is null
-    const validComments = data
-      .map(row => row.commentaires)
-      .filter(comments => comments !== null); // Remove null values
-
-    // Flatten the array if necessary (if `commentaires` is an array of arrays)
-    const flattenedComments = validComments.flat();
-    console.log('Valid comments fetched from database:', flattenedComments);
-    return flattenedComments;
+    return data.commentaires;
   } catch (error) {
-    console.error('Error fetching comments from database:', error);
+    console.error('Error fetching comments from the first row:', error);
     return [];
   }
 };
