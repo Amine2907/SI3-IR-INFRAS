@@ -68,7 +68,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
       status_validation_fk: formData.status_validation_fk,
       status_site_sfr: formData.status_site_sfr,
       cout_estime: formData.cout_estime,
-      is_active: true,
+      is_active: isActive,
       retenu: isRetenu,
     };
     onSave({ Sid, prospectData });

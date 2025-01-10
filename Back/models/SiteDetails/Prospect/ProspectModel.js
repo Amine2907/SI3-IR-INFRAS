@@ -30,21 +30,23 @@ const createProspect = async (EB, prospectData) => {
         }
       }
       // User can add only one prospect which colunm is_active equal to True ! 
-      if (prospectData.hasOwnProperty('is_active') &&
-      prospectData.is_active === true)  {
-        console.log('Site has active Propspect');
-        const { data: existingProspect, error: checkError } = await supabase
-          .from('Prospect')
-          .select('*')
-          .eq('EB_fk', EB)  // Match using EB_fk  (the site identifier)
-          .eq('is_active', true);  // Ensure we have only one prospect which have is_active = True 
-        if (checkError) {
-          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
-        }
-        if (existingProspect && existingProspect.length > 0) {
-          throw new Error("This Site have already one prospect with active status already exists for this site.");
-        }
+    // Only check for active prospects if the incoming data has is_active === true
+    if (prospectData.is_active === true) {
+      console.log('Checking for active prospect in the same site...');
+      const { data: existingProspect, error: checkError } = await supabase
+        .from('Prospect')
+        .select('*')
+        .eq('EB_fk', EB) // Match using EB_fk (the site identifier)
+        .eq('is_active', true); // Ensure no other prospect is active
+      if (checkError) {
+        throw new Error(`Error fetching existing active prospects: ${checkError.message}`);
       }
+      if (existingProspect && existingProspect.length > 0) {
+        throw new Error(
+          "An active prospect already exists for this site. Please deactivate it before creating another."
+        );
+      }
+    }
       // Now insert the new prospect into the 'Prospect' table, using the EB_fk field
       const { data: prospect, error: contactError } = await supabase
         .from('Prospect')
