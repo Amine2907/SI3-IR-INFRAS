@@ -132,7 +132,6 @@ const EntiteList = () => {
     setShowModal(false); // Hide modal
     fetchActiveEntites(); // Refresh entity list after adding/editing
   };
-
   // Function to handle saving entity
   const handleSave = async data => {
     let result;
@@ -165,8 +164,11 @@ const EntiteList = () => {
   };
 
   // Function to close the alert
-  const handleCloseAlert = () => {
-    setAlert({ show: false, message: '', type: '' });
+  const handleCloseAlert = (setAlert, timeout = 10000) => {
+    const timer = setTimeout(() => {
+      setAlert({ show: false, message: '', type: '' });
+    }, timeout);
+    return () => clearTimeout(timer);
   };
   // Search Role
   const handleRoleChange = e => {

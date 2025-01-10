@@ -67,7 +67,10 @@ const ContactList = () => {
     const result = await handleSave(
       data,
       selectedContact,
-      setAlert,
+      newAlert => {
+        setAlert(newAlert);
+        setTimeout(() => setAlert({ show: false, message: '', type: '' }), 10000);
+      },
       isActive,
       setContacts,
       setNoResultsMessage,

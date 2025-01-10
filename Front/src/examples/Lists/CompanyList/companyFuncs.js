@@ -101,6 +101,9 @@ export const handleSave = async (
 };
 
 // Close alert function
-export const handleCloseAlert = setAlert => {
-  setAlert({ show: false, message: '', type: '' });
+export const handleCloseAlert = (setAlert, timeout = 10000) => {
+  const timer = setTimeout(() => {
+    setAlert({ show: false, message: '', type: '' });
+  }, timeout);
+  return () => clearTimeout(timer);
 };

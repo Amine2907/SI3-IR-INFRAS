@@ -38,6 +38,16 @@ function DemRacList({ site }) {
     setShowModal(false);
     setshowUploadModal(false);
   };
+  const handleCloseAlert = () => {
+    setTimeout(() => {
+      setAlert({ show: false, message: '', type: '' });
+    }, 10000); // Set timer to 10 seconds
+  };
+  useEffect(() => {
+    if (alert.show) {
+      handleCloseAlert();
+    }
+  }, [alert.show]);
   useEffect(() => {
     if (Sid) {
       fetchDemracData();

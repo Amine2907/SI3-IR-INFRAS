@@ -42,6 +42,16 @@ function ReglementList() {
     setShowModal(false);
     setShowStorageModal(false);
   };
+  const handleCloseAlert = () => {
+    setTimeout(() => {
+      setAlert({ show: false, message: '', type: '' });
+    }, 10000); // Auto-dismiss after 10 seconds
+  };
+  useEffect(() => {
+    if (alert.show) {
+      handleCloseAlert();
+    }
+  }, [alert.show]);
   const handleUpdate = async updates => {
     const reglId = selectedPaie?.Pid;
     console.log('Sending update for reglId:', reglId, 'Updates:', updates);
@@ -201,7 +211,7 @@ function ReglementList() {
         <MDAlert
           color={alert.type}
           dismissible
-          onClose={() => setAlert({ show: false })}
+          onClose={() => setAlert({ show: false })} // Manual close
           style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
         >
           {alert.message}

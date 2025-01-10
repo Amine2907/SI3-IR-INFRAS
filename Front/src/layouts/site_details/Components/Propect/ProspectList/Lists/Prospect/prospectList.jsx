@@ -50,6 +50,16 @@ function ProspectList({ site }) {
     setShowModal(false);
     setShowUploadModal(false);
   };
+  const handleCloseAlert = () => {
+    setTimeout(() => {
+      setAlert({ show: false, message: '', type: '' });
+    }, 10000); // Auto-dismiss after 10 seconds
+  };
+  useEffect(() => {
+    if (alert.show) {
+      handleCloseAlert();
+    }
+  }, [alert.show]);
   useEffect(() => {
     if (prospectsData && prospectsData.length > 0) {
       console.log('Prospects Data:', prospectsData);
@@ -270,7 +280,7 @@ function ProspectList({ site }) {
         <MDAlert
           color={alert.type}
           dismissible
-          onClose={() => setAlert({ show: false })}
+          onClose={() => setAlert({ show: false })} // Manual close
           style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
         >
           {alert.message}

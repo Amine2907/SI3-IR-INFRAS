@@ -119,7 +119,7 @@ const CompanyList = () => {
         <MDAlert
           color={alert.type}
           dismissible
-          onClose={() => handleCloseAlert(setAlert)}
+          onClose={() => handleCloseAlert(setAlert, 10000)}
           style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
         >
           {alert.message}

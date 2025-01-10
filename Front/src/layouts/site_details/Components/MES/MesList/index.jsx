@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TableContainer,
   TableCell,
@@ -41,6 +41,16 @@ function MiseEnServiceList() {
     setShowModal(false);
     setShowStorageModal(false);
   };
+  const handleCloseAlert = () => {
+    setTimeout(() => {
+      setAlert({ show: false, message: '', type: '' });
+    }, 10000); // Auto-dismiss after 10 seconds
+  };
+  useEffect(() => {
+    if (alert.show) {
+      handleCloseAlert();
+    }
+  }, [alert.show]);
   const handleUpdate = async updates => {
     const mesId = selectedMes?.MESid;
     console.log('Sending update for mesId:', mesId, 'Updates:', updates);
@@ -204,7 +214,7 @@ function MiseEnServiceList() {
         <MDAlert
           color={alert.type}
           dismissible
-          onClose={() => setAlert({ show: false })}
+          onClose={() => setAlert({ show: false })} // Manual close
           style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
         >
           {alert.message}

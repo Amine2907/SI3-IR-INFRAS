@@ -1,6 +1,6 @@
 import { supabase } from "../../../config/supabaseClient.js";
 import { status_validation } from "./ProspectData.js";
-// create Prospect Model 
+// create Prospect Model
 const createProspect = async (EB, prospectData) => {
     try {
         console.log('Incoming data for createProspect:', prospectData);
@@ -20,11 +20,9 @@ const createProspect = async (EB, prospectData) => {
           .select('*')
           .eq('EB_fk', EB)  // Match using EB_fk (the site identifier)
           .eq('status_validation_fk', 25);  // Ensure no other prospect with status 'Prospect Validé' exists for this site
-  
         if (checkError) {
           throw new Error(`Error fetching existing prospect: ${checkError.message}`);
         }
-  
         if (existingProspect && existingProspect.length > 0) {
           throw new Error("A prospect with status 'Prospect Validé' already exists for this site.");
         }

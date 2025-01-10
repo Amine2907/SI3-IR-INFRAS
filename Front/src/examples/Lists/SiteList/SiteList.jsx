@@ -249,6 +249,16 @@ const SiteList = () => {
       fetchActivesites(); // Clear filters if all fields are empty
     }
   }, [searchQuery]);
+
+  useEffect(() => {
+    if (alert.show) {
+      const timer = setTimeout(() => {
+        setAlert({ show: false, message: '', type: '' });
+      }, 10000); // Auto-dismiss after 10 seconds
+
+      return () => clearTimeout(timer); // Cleanup timer
+    }
+  }, [alert]);
   return (
     <div className="Site-list">
       <Card id="search-Site">

@@ -36,7 +36,15 @@ function Settings({ setUserData }) {
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData]);
+  useEffect(() => {
+    if (alert.show) {
+      const timer = setTimeout(() => {
+        handleCloseAlert(); // Close the alert after 10 seconds
+      }, 10000); // 10 seconds
 
+      return () => clearTimeout(timer); // Cleanup the timer on component unmount or when alert changes
+    }
+  }, [alert]);
   // Define icons for each profile parameter
   const profileIcons = {
     'Compte créé le ': 'calendar_today',
