@@ -3,13 +3,14 @@ import { supabase } from "../../../config/supabaseClient.js";
 const getValidatePropsect = async (selectedNoDr) => {
     try {
         console.log('Fetching data for no_dr:', selectedNoDr);
+
         const { data, error } = await supabase
             .from('Devis')
             .select(`
                 no_dr,
-                DR!inner (
+                DR (
                     Pro_fk,
-                    Prospect!inner (
+                    Prospect (
                         section,
                         parcelle
                     )
@@ -22,43 +23,41 @@ const getValidatePropsect = async (selectedNoDr) => {
             throw new Error('Error fetching devis details: ' + error.message);
         }
 
+        console.log('Raw fetched data:', data); // Log raw data
+
         if (!data || data.length === 0) {
             console.log('No data found for no_dr:', selectedNoDr);
             return [];
         }
 
-        console.log('Fetched data:', data);
+        const row = data[0];
+        const section = row.DR?.Prospect?.section || null;
+        const parcelle = row.DR?.Prospect?.parcelle || null;
+        const Pro_fk = row.DR?.Pro_fk || null;
 
-        // Extract details for each row
-        const results = await Promise.all(data.map(async (row) => {
-            const section = row.DR?.Prospect?.section;
-            const parcelle = row.DR?.Prospect?.parcelle;
-            const Pro_fk = row.DR?.Pro_fk;
+        console.log(`Fetched details: Section: ${section}, Parcelle: ${parcelle}, Pro_fk: ${Pro_fk}`);
 
-            if (!Pro_fk) {
-                console.warn(`Missing Pro_fk for row:`, row);
-                return { no_dr: row.no_dr, section, parcelle, numero_DP: null };
-            }
+        if (!Pro_fk) {
+            console.warn(`Missing Pro_fk for no_dr: ${selectedNoDr}`);
+            return { no_dr: selectedNoDr, section, parcelle, numero_DP: null };
+        }
 
-            const { data: dpData, error: dpError } = await supabase
-                .from('DP')
-                .select('numero_DP')
-                .eq('PRid_fk', Pro_fk)
-                .single();
+        const { data: dpData, error: dpError } = await supabase
+            .from('DP')
+            .select('numero_DP')
+            .eq('PRid_fk', Pro_fk)
+            .single();
 
-            if (dpError) {
-                console.error('Error fetching DP data:', dpError.message);
-                throw new Error('Error fetching DP data: ' + dpError.message);
-            }
+        if (dpError) {
+            console.error('Error fetching DP data:', dpError.message);
+            throw new Error('Error fetching DP data: ' + dpError.message);
+        }
 
-            const numero_DP = dpData?.numero_DP;
+        const numero_DP = dpData?.numero_DP || null;
 
-            return { no_dr: row.no_dr, section, parcelle, numero_DP };
-        }));
+        console.log('Fetched DP details:', { numero_DP });
 
-        console.log('Extracted data:', results);
-
-        return results;
+        return { no_dr: selectedNoDr, section, parcelle, numero_DP };
     } catch (err) {
         console.error('Error in getValidatePropsect:', err.message);
         throw err;
@@ -136,35 +135,34 @@ const createDevis = async (EB, devisData) => {
             console.log(`No Devis found with ND ${devisData.ND}, proceeding with insert.`);
         }
 
+        // Check for related data
         const selectedNoDr = devisData.no_dr;
         const fetchedDetails = await getValidatePropsect(selectedNoDr);
-        
-        if (!fetchedDetails) {
-            throw new Error('No details found for the selected no_dr.');
-        }
-        
-        const { section, parcelle, numero_DP } = fetchedDetails;
-        
-        console.log('Fetched details:', fetchedDetails);
-        console.log('Provided data:', { section: devisData.section, parcelle: devisData.parcelle, numero_DP: devisData.numero_DP });
-        
-        console.log('Validation check:');
-        console.log('Fetched:', { section, parcelle, numero_DP });
-        console.log('Provided:', { section: devisData.section, parcelle: devisData.parcelle, numero_DP: devisData.numero_DP });
 
-        if (
-            section?.toString() !== devisData.section ||
-            parcelle?.toString() !== devisData.parcelle ||
-            numero_DP?.toString() !== devisData.numero_DP
-        ) {
-            console.log('Validation failed. Fetched:', { section, parcelle, numero_DP });
-            console.log('Provided:', { section: devisData.section, parcelle: devisData.parcelle, numero_DP: devisData.numero_DP });
-            throw new Error(
-                'Validation failed: The provided section, parcelle, or numero_DP does not match the database records.'
-            );
+        // Skip validation if this is the first Devis
+        if (!fetchedDetails || Object.keys(fetchedDetails).length === 0) {
+            console.warn('No related data found for the first Devis. Skipping validation.');
+        } else {
+            // Validation logic
+            const { section, parcelle, numero_DP } = fetchedDetails;
+
+            if (
+                section?.toString() !== devisData.section ||
+                parcelle?.toString() !== devisData.parcelle ||
+                numero_DP?.toString() !== devisData.numero_DP
+            ) {
+                console.error(
+                    'Validation failed. Mismatch detected:',
+                    '\nFetched:', { section, parcelle, numero_DP },
+                    '\nProvided:', { section: devisData.section, parcelle: devisData.parcelle, numero_DP: devisData.numero_DP }
+                );
+                throw new Error(
+                    'Validation failed: Fetched data does not match provided data. See logs for details.'
+                );
+            }
         }
 
-        // Prepare the data for insertion
+        // Insert the new Devis
         const newDevisData = {
             no_dr: devisData.no_dr,
             ND: devisData.ND,
@@ -184,21 +182,15 @@ const createDevis = async (EB, devisData) => {
             section: devisData.section,
             parcelle: devisData.parcelle
         };
-        // Insert into Devis table
-        const { data: devis, error: contactError } = await supabase
+
+        const { data: devis, error: insertError } = await supabase
             .from('Devis')
             .insert([{ EB_fk: EB, ...newDevisData }])
             .select();
 
-        if (contactError) throw contactError;
+        if (insertError) throw insertError;
 
-        // Link Devis with the site
-        const Did = devis[0].ND;
-        const { error: siteDevisError } = await supabase
-            .from('Site-Devis')
-            .insert([{ Sid: EB, Did }]);
-
-        if (siteDevisError) throw siteDevisError;
+        console.log('Devis created successfully:', devis[0]);
 
         return { success: true, data: devis[0] };
     } catch (error) {
