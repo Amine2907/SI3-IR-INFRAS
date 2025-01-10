@@ -205,21 +205,21 @@ const SiteCard = ({ site, onEdit }) => {
                   </MDTypography>
                 </MDBox>
                 {/* Active Status */}
-                <MDBox display="flex" alignItems="center">
-                  <Icon sx={{ mr: 1 }}>check_circle</Icon>
-                  <MDTypography variant="subtitle2" color="textSecondary">
-                    <strong>Status:</strong> {site.is_active ? 'Active' : 'Inactive'}
-                  </MDTypography>
-                </MDBox>
-                <MDBox display="flex" flexDirection="column" mt={2}>
-                  {Object.entries(hasFiles).map(([key, value]) => (
-                    <MDBox display="flex" alignItems="center" key={key} mt={1}>
-                      <Checkbox checked={value} disabled />
-                      <MDTypography variant="h6" fontWeight="medium">
-                        {key.toUpperCase()}
-                      </MDTypography>
-                    </MDBox>
-                  ))}
+                <MDBox display="flex" flexDirection="row" flexWrap="wrap" mt={2} gap={2}>
+                  {hasFiles && Object.entries(hasFiles).length > 0 ? (
+                    Object.entries(hasFiles).map(([key, value]) => (
+                      <MDBox display="flex" alignItems="center" key={key} mr={2}>
+                        <Checkbox checked={value} disabled />
+                        <MDTypography variant="h6" fontWeight="medium">
+                          {key.toUpperCase()}
+                        </MDTypography>
+                      </MDBox>
+                    ))
+                  ) : (
+                    <MDTypography variant="h6" fontWeight="medium">
+                      No File Statuses Found or Loading...
+                    </MDTypography>
+                  )}
                 </MDBox>
                 {/* Collapsible Section for Extra Information */}
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
