@@ -74,7 +74,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
       recipisse_depot_DP: formData.recipisse_depot_DP,
       status_go_traveauxP: formData.status_go_traveauxP,
       status_go_traveauxR: formData.status_go_traveauxR,
-      is_active: true, // Always true
+      is_active: isActive,
       relance: isRelance,
     };
     onSave({ Proid, dpData });
