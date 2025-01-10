@@ -6,13 +6,14 @@ import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import paieStorageService from 'services/site_details/Reglement/Paiement/PaieStorageService';
-
+import MDAlert from 'components/MDAlert';
 const PaieStorageModal = ({ paieId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [fileToDelete, setFileToDelete] = useState(null); // Track the file to delete
   const DeleteMessage = 'Etes vous sure vous voulez supprimer ce fichier !';
 
@@ -45,14 +46,30 @@ const PaieStorageModal = ({ paieId, fetchFiles, onSave, onClose }) => {
     try {
       const result = await paieStorageService.uploadPaieFile(file, paieId);
       if (result.success) {
+        setAlert({
+          show: true,
+          message: 'Fichier ajouté avec succès.',
+          type: 'success',
+        });
         console.log('File uploaded successfully:', result.data);
         // Handle the successful upload (e.g., update state, close modal, etc.)
       } else {
         console.error('Error uploading file:', result.error);
+        setAlert({
+          show: true,
+          message: result.error || "Échec de l'ajout du fichier.",
+          type: 'error',
+        });
         setErrors({ upload: result.error || 'Failed to upload the file.' });
       }
     } catch (error) {
       console.error('Unexpected error uploading file:', error);
+      setAlert({
+        show: true,
+        message: "Une erreur inattendue s'est produite. Veuillez réessayer.",
+        type: 'error',
+      });
+
       setErrors({ upload: 'An unexpected error occurred. Please try again.' });
     }
   };
@@ -86,11 +103,26 @@ const PaieStorageModal = ({ paieId, fetchFiles, onSave, onClose }) => {
 
         if (result.success) {
           console.log('File deleted successfully');
+          setAlert({
+            show: true,
+            message: 'Fichier supprimé avec succès.',
+            type: 'success',
+          });
           setFiles(prevFiles => prevFiles.filter(item => item.path !== filePath)); // Remove file from the UI
         } else {
+          setAlert({
+            show: true,
+            message: result.error || 'Échec de la suppression du fichier.',
+            type: 'error',
+          });
           console.error('Error deleting file:', result.error);
         }
       } catch (error) {
+        setAlert({
+          show: true,
+          message: "Une erreur inattendue s'est produite lors de la suppression.",
+          type: 'error',
+        });
         console.error('Error deleting file:', error);
       }
     }
@@ -192,6 +224,16 @@ const PaieStorageModal = ({ paieId, fetchFiles, onSave, onClose }) => {
           onConfirm={handleConfirmDelete}
           onCancel={handleCloseModal}
         />
+      )}
+      {alert.show && (
+        <MDAlert
+          color={alert.type}
+          dismissible
+          onClose={() => setAlert({ show: false })}
+          style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
+        >
+          {alert.message}
+        </MDAlert>
       )}
     </div>
   );
