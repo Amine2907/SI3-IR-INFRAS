@@ -3,11 +3,12 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/dem-rac-storage';
 
 // Upload a demracs file to the server
-const uploadDemracsFile = async (file, demRacId) => {
+const uploadDemracsFile = async (file, demRacId, Sid) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('demRacId', demRacId);
+    formData.append('Sid', Sid);
 
     const response = await axios.post(`${API_URL}/upload-demracs`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -21,9 +22,9 @@ const uploadDemracsFile = async (file, demRacId) => {
   }
 };
 // Get public URLs for all files associated with a demracs
-const getDemracsFiles = async demRacId => {
+const getDemracsFiles = async (demRacId, Sid) => {
   try {
-    const response = await axios.post(`${API_URL}/get-demracs-files`, { demRacId });
+    const response = await axios.post(`${API_URL}/get-demracs-files`, { demRacId, Sid });
     return { success: true, data: response.data };
   } catch (error) {
     return {
@@ -57,7 +58,6 @@ const downlaodDemracsFile = async filePath => {
     return { success: false, error: error.response?.data || 'Unknown error' };
   }
 };
-
 // Delete a demracs file
 const deleteDemracsFile = async filePath => {
   try {
@@ -72,7 +72,6 @@ const deleteDemracsFile = async filePath => {
     return { success: false, error: error.response?.data.error || error.message };
   }
 };
-
 // demracs Storage Service: Exports all methods
 const demracsStorageService = {
   uploadDemracsFile,

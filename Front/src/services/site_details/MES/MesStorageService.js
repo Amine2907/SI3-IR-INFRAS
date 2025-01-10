@@ -3,11 +3,12 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/mes-storage';
 
 // Upload a mes file to the server
-const uploadMesFile = async (file, mesId) => {
+const uploadMesFile = async (file, mesId, Sid) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('mesId', mesId);
+    formData.append('Sid', Sid);
 
     const response = await axios.post(`${API_URL}/upload-mes`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -21,9 +22,9 @@ const uploadMesFile = async (file, mesId) => {
   }
 };
 // Get public URLs for all files associated with a mes
-const getMesFiles = async mesId => {
+const getMesFiles = async (mesId, Sid) => {
   try {
-    const response = await axios.post(`${API_URL}/get-mes-files`, { mesId });
+    const response = await axios.post(`${API_URL}/get-mes-files`, { mesId, Sid });
     return { success: true, data: response.data };
   } catch (error) {
     return {

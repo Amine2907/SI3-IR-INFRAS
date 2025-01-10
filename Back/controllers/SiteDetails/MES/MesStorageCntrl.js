@@ -3,11 +3,14 @@ import mesStorage from "../../../storage/MES/mesStorage.js";
 const uploadFileController = async (req, res) => {
   try {
     const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { mesId } = req.body;  // Mise en Service ID  comes from the request body
+    const { mesId,Sid } = req.body;  // Mise en Service ID  comes from the request body
 
     // Ensure that a file and mesId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
+    }
+    if (!Sid) {
+      return res.status(400).json({ error: 'Sid is required' });
     }
 
     if (!mesId || isNaN(mesId)) {
@@ -17,9 +20,9 @@ const uploadFileController = async (req, res) => {
     // Use the file name as the unique file name
     const uniqueFileName = file.originalname;  // Use the original file name
     const mesIdStr = String(mesId);
-
+    const sidStr = String(Sid);
     // Define the file path: 'travs-pdf/{mesId}/{originalFileName}'
-    const filePath = `mes-pdf/${mesIdStr}/${uniqueFileName}`;
+    const filePath = `mes-pdf/${sidStr}/${mesIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
 
@@ -86,12 +89,15 @@ const downloadFileController = async (req, res) => {
 };
 
 const getFilesByMesController = async (req, res) => {
-  const { mesId } = req.body;
+  const { mesId,Sid} = req.body;
   if (!mesId) {
     return res.status(400).json({ error: "Mise en Service ID  is required" });
   }
+  if (!Sid) {
+    return res.status(400).json({ error: "Sid  is required" });
+  }
   try {
-    const files = await mesStorage.listFiles(mesId);
+    const files = await mesStorage.listFiles(mesId,Sid);
     return res.status(200).json({ files });
   } catch (error) {
     console.error("Error fetching files:", error);

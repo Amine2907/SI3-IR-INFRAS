@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import demracsStorageService from 'services/site_details/DR/DrStorageService';
 
-const DemracStorageModal = ({ demRacId, fetchFiles, onSave, onClose }) => {
+const DemracStorageModal = ({ Sid, demRacId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -20,6 +20,10 @@ const DemracStorageModal = ({ demRacId, fetchFiles, onSave, onClose }) => {
     const fetchFilesForDemracs = async () => {
       if (!demRacId) {
         console.error('No prospect ID provided.');
+        return;
+      }
+      if (!Sid) {
+        console.error('No Sid  provided.');
         return;
       }
       setLoading(true);
@@ -44,7 +48,7 @@ const DemracStorageModal = ({ demRacId, fetchFiles, onSave, onClose }) => {
       return;
     }
     try {
-      const result = await demracsStorageService.uploadDemracsFile(file, demRacId);
+      const result = await demracsStorageService.uploadDemracsFile(file, demRacId, Sid);
       if (result.success) {
         console.log('File uploaded successfully:', result.data);
       } else {
@@ -197,6 +201,7 @@ const DemracStorageModal = ({ demRacId, fetchFiles, onSave, onClose }) => {
 };
 DemracStorageModal.propTypes = {
   demRacId: PropTypes.number,
+  Sid: PropTypes.string,
   fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

@@ -126,9 +126,13 @@ function DevisList() {
       console.error('Devis ID is missing!');
       return [];
     }
+    if (!siteId) {
+      console.error('Site id  is missing!');
+      return [];
+    }
     try {
       console.log(`Fetching files for Devis ID: ${devisId}`);
-      const response = await devisStorageService.getDevisFiles(devisId); // Correct API call
+      const response = await devisStorageService.getDevisFiles(devisId, siteId);
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files
@@ -220,6 +224,7 @@ function DevisList() {
       )}
       {showStorageModal && selectedDevis?.ND && (
         <DevisStorageModal
+          Sid={siteId}
           devisId={selectedDevis?.ND}
           fetchFiles={() => fetchDevisFiles(selectedDevis?.ND)}
           onSave={() => {

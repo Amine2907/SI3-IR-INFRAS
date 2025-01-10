@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import mesStorageService from 'services/site_details/MES/MesStorageService';
 
-const mesStorageModal = ({ mesId, fetchFiles, onSave, onClose }) => {
+const mesStorageModal = ({ Sid, mesId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -19,6 +19,10 @@ const mesStorageModal = ({ mesId, fetchFiles, onSave, onClose }) => {
   useEffect(() => {
     const fetchFilesForMes = async () => {
       if (!mesId) {
+        console.error('No prospect ID provided.');
+        return;
+      }
+      if (!Sid) {
         console.error('No prospect ID provided.');
         return;
       }
@@ -44,7 +48,7 @@ const mesStorageModal = ({ mesId, fetchFiles, onSave, onClose }) => {
       return;
     }
     try {
-      const result = await mesStorageService.uploadMesFile(file, mesId);
+      const result = await mesStorageService.uploadMesFile(file, mesId, Sid);
       if (result.success) {
         console.log('File uploaded successfully:', result.data);
         // Handle the successful upload (e.g., update state, close modal, etc.)
@@ -198,6 +202,7 @@ const mesStorageModal = ({ mesId, fetchFiles, onSave, onClose }) => {
 };
 mesStorageModal.propTypes = {
   mesId: PropTypes.number,
+  Sid: PropTypes.string,
   fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

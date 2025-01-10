@@ -93,9 +93,13 @@ function MiseEnServiceList() {
       console.error('Mise en Service ID is missing!');
       return [];
     }
+    if (!siteId) {
+      console.error('Site id  is missing!');
+      return [];
+    }
     try {
       console.log(`Fetching files for Mise en Service ID: ${mesId}`);
-      const response = await mesStorageService.getMesFiles(mesId);
+      const response = await mesStorageService.getMesFiles(mesId, siteId);
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files
@@ -200,6 +204,7 @@ function MiseEnServiceList() {
       )}
       {showStorageModal && selectedMes?.MESid && (
         <MesStorageModal
+          Sid={siteId}
           mesId={selectedMes?.MESid}
           fetchFiles={() => fetchMesFiles(selectedMes?.MESid)}
           onSave={() => {

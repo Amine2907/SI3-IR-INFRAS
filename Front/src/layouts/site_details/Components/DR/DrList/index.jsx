@@ -117,9 +117,13 @@ function DemRacList({ site }) {
       console.error('DEMRAC ID is missing!');
       return [];
     }
+    if (!Sid) {
+      console.error('DEMRAC ID is missing!');
+      return [];
+    }
     try {
       console.log(`Fetching files for DEMRAC ID: ${demRacId}`);
-      const response = await demracsStorageService.getDemracsFiles(demRacId);
+      const response = await demracsStorageService.getDemracsFiles(demRacId, Sid);
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files
@@ -238,6 +242,7 @@ function DemRacList({ site }) {
       )}
       {showUploadModal && selecteddemrac?.NDRid && (
         <DemracStorageModal
+          Sid={Sid}
           demRacId={selecteddemrac?.NDRid}
           fetchFiles={() => fetchDemRacFiles(selecteddemrac?.NDRid)}
           onSave={() => {

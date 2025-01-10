@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import devisStorageService from 'services/site_details/Devis/DevisStorageService';
 
-const DevisStorageModal = ({ devisId, fetchFiles, onSave, onClose }) => {
+const DevisStorageModal = ({ Sid, devisId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -20,6 +20,10 @@ const DevisStorageModal = ({ devisId, fetchFiles, onSave, onClose }) => {
     const fecthFilesForDevis = async () => {
       if (!devisId) {
         console.error('No prospect ID provided.');
+        return;
+      }
+      if (!Sid) {
+        console.error('No Sid  provided.');
         return;
       }
       setLoading(true);
@@ -43,7 +47,7 @@ const DevisStorageModal = ({ devisId, fetchFiles, onSave, onClose }) => {
       return;
     }
     try {
-      const result = await devisStorageService.uploadDevisFile(file, devisId);
+      const result = await devisStorageService.uploadDevisFile(file, devisId, Sid);
       if (result.success) {
         console.log('File uploaded successfully:', result.data);
         // Handle the successful upload (e.g., update state, close modal, etc.)
@@ -197,6 +201,7 @@ const DevisStorageModal = ({ devisId, fetchFiles, onSave, onClose }) => {
 };
 DevisStorageModal.propTypes = {
   devisId: PropTypes.number,
+  Sid: PropTypes.string,
   fetchFiles: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

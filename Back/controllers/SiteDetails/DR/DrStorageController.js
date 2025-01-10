@@ -3,10 +3,13 @@ import demRacStorage from "../../../storage/demRacc/drStorage.js";
 const uploadFileController = async (req, res) => {
   try {
     const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { demRacId } = req.body;  // Demrac ID  comes from the request body
+    const { demRacId , Sid  } = req.body;  // Demrac ID  comes from the request body
     // Ensure that a file and demRacId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
+    }
+    if (!Sid) {
+      return res.status(400).json({ error: 'Invalid Sid' });
     }
     if (!demRacId) {
       return res.status(400).json({ error: 'Invalid demRacId' });
@@ -15,9 +18,9 @@ const uploadFileController = async (req, res) => {
     // Use the file name as the unique file name
     const uniqueFileName = file.originalname;  // Use the original file name
     const demRacIdStr = String(demRacId);
-
+    const SidStr =  String(Sid);
     // Define the file path: 'demrac-pdf/{demRacId}/{originalFileName}'
-    const filePath = `demrac-pdf/${demRacIdStr}/${uniqueFileName}`;
+    const filePath = `demrac-pdf/${SidStr}/${demRacIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
 
@@ -84,12 +87,15 @@ const downloadFileController = async (req, res) => {
 };
 
 const getFilesByDemRacController = async (req, res) => {
-  const { demRacId } = req.body;
+  const { demRacId,Sid } = req.body;
   if (!demRacId) {
     return res.status(400).json({ error: "Demrac ID  is required" });
   }
+  if (!Sid) {
+    return res.status(400).json({ error: "Sid  is required" });
+  }
   try {
-    const files = await demRacStorage.listFiles(demRacId);
+    const files = await demRacStorage.listFiles(demRacId,Sid);
     return res.status(200).json({ files });
   } catch (error) {
     console.error("Error fetching files:", error);

@@ -3,7 +3,7 @@ import devisStorage from "../../../storage/Devis/devisStorage.js";
 const uploadFileController = async (req, res) => {
   try {
     const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { devisId } = req.body;  // Devis ID  comes from the request body
+    const { devisId,Sid  } = req.body;  // Devis ID  comes from the request body
     // Ensure that a file and devisId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -11,12 +11,15 @@ const uploadFileController = async (req, res) => {
     if (!devisId) {
       return res.status(400).json({ error: 'Invalid devisId' });
     }
+    if (!Sid) {
+      return res.status(400).json({ error: 'Invalid Sid' });
+    }
     // Use the file name as the unique file name
     const uniqueFileName = file.originalname;  // Use the original file name
     const devisIdStr = String(devisId);
-
+    const sidStr = String(Sid);
     // Define the file path: 'devis-pdf/{devisId}/{originalFileName}'
-    const filePath = `devis_pdf/${devisIdStr}/${uniqueFileName}`;
+    const filePath = `devis_pdf/${sidStr}/${devisIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
 
@@ -83,12 +86,15 @@ const downloadFileController = async (req, res) => {
 };
 
 const getFilesByDevisController = async (req, res) => {
-  const { devisId } = req.body;
+  const { devisId,Sid  } = req.body;
   if (!devisId) {
     return res.status(400).json({ error: "Devis ID  is required" });
   }
+  if (!Sid) {
+    return res.status(400).json({ error: "Sid ID  is required" });
+  }
   try {
-    const files = await devisStorage.listFiles(devisId);
+    const files = await devisStorage.listFiles(devisId,Sid);
     return res.status(200).json({ files });
   } catch (error) {
     console.error("Error fetching files:", error);

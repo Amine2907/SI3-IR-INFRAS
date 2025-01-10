@@ -3,12 +3,12 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/devis-storage';
 
 // Upload a devis file to the server
-const uploadDevisFile = async (file, devisId) => {
+const uploadDevisFile = async (file, devisId, Sid) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('devisId', devisId);
-
+    formData.append('Sid', Sid);
     const response = await axios.post(`${API_URL}/upload-devis`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
@@ -21,9 +21,9 @@ const uploadDevisFile = async (file, devisId) => {
   }
 };
 // Get public URLs for all files associated with a devis
-const getDevisFiles = async devisId => {
+const getDevisFiles = async (devisId, Sid) => {
   try {
-    const response = await axios.post(`${API_URL}/get-devis-files`, { devisId });
+    const response = await axios.post(`${API_URL}/get-devis-files`, { devisId, Sid });
     return { success: true, data: response.data };
   } catch (error) {
     return {
