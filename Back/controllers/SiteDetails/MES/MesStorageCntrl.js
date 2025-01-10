@@ -78,7 +78,6 @@ const downloadFileController = async (req, res) => {
     if (!fileBlob) {
       return res.status(404).json({ error: "File not found" });
     }
-    
     res.setHeader("Content-Disposition", `attachment; filename="${filePath.split('/').pop()}"`);
     res.setHeader("Content-Type", "application/pdf");
     return res.status(200).send(fileBlob);
@@ -87,7 +86,6 @@ const downloadFileController = async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
 const getFilesByMesController = async (req, res) => {
   const { mesId,Sid} = req.body;
   if (!mesId) {

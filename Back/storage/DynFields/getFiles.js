@@ -4,8 +4,6 @@ const checkFilesExistWithoutId = async (component, Sid) => {
   try {
     // Construct the folder path dynamically
     const folderPath = `${component}-pdf/${Sid}`;
-    console.log(`Checking files in folder: ${folderPath}`);
-
     // List files in the folder
     const { data, error } = await supabase.storage
       .from(component + "-pdf") // Use static bucket name
