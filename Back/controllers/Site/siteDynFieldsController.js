@@ -3,7 +3,6 @@ const getPropsectRetenu = async (req, res) => {
     try {
       const Sid = req.params.Sid;
       const data = await siteDynFieldsModel.getPropsectretenu(Sid);
-      
       // Check if data is empty
       if (!data || data.length === 0) {
         return res.status(404).json({ error: 'No data found for the provided Sid' });

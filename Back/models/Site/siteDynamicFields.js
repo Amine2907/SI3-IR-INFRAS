@@ -5,31 +5,38 @@ const getPropsectretenu  = async (Sid) => {
     .from('Prospect')
     .select('retenu')
     .eq('is_active', true)
-    .eq('EB_fk',Sid);
+    .eq('EB_fk',Sid)
+    .eq('status_validation_fk',25);
   if (error) {
-    console.error('Supabase Error Details:', error); // Log detailed error
+    console.error('Supabase Error Details:', error);
     throw error;
   }
-  return data; // Make sure data is properly returned
+  return data;
 };
-const getDrDate = async (Sid) => {
-    const { data, error } = await supabase
+const getDrDate = async (EB_fk) => {
+  const { data, error } = await supabase
       .from('DR')
-      .select('date_dr')
-      .eq('is_active', true)
-      .eq('EB_fk', Sid);
-    if (error) {
-        console.error('Supabase Error Details (getDrDate):', error);
-        return { success: false, error: 'Error fetching DR date.' };
-    }
+      .select(`
+          date_dr, 
+          Prospect(status_validation_fk)
+      `) 
+      .eq('EB_fk', EB_fk) 
+      .eq('Prospect.status_validation_fk', 25);
 
-    const validDates = data.filter((record) => record.date_dr !== null);
-    if (validDates.length > 0) {
-        return { success: true, data: validDates[0].date_dr };
-    } else {
-        return { success: false, error: 'No valid DR dates found.' };
-    }
+  if (error) {
+      console.error('Supabase Error Details (getDrDateWithJoin):', error);
+      return { success: false, error: 'Error fetching DR date.' };
+  }
+
+  // Filter out null dates
+  const validDates = data.filter((record) => record.date_dr !== null);
+  if (validDates.length > 0) {
+      return { success: true, data: validDates[0].date_dr };
+  } else {
+      return { success: false, error: 'No valid DR dates found.' };
+  }
 };
+
   const getDevisRecDate = async (Sid) => {
       const { data, error } = await supabase
         .from('Devis')
