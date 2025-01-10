@@ -1,19 +1,21 @@
 import { supabase } from "../../config/supabaseClient.js";
 
-const checkFilesExistWithoutId = async (component) => {
+const checkFilesExistWithoutId = async (component, Sid) => {
   try {
-    const folderPath = `${component}-pdf`;
-    // console.log(`Checking files in folder: ${folderPath}`);
-    
-    // List all subfolders and files in the component's root folder
-    const { data, error } = await supabase.storage.from(folderPath).list();
+    // Construct the folder path dynamically
+    const folderPath = `${component}-pdf/${Sid}`;
+    console.log(`Checking files in folder: ${folderPath}`);
+
+    // List files in the folder
+    const { data, error } = await supabase.storage
+      .from(component + "-pdf") // Use static bucket name
+      .list(folderPath);
 
     if (error) {
       console.error(`Error checking files for ${component}:`, error);
       return { success: false, hasFiles: false };
     }
-
-    // Check if any files or folders exist in the root folder
+    // Check if any files exist
     const hasFiles = data && data.length > 0;
     return { success: true, hasFiles };
   } catch (error) {
@@ -21,7 +23,6 @@ const checkFilesExistWithoutId = async (component) => {
     return { success: false, hasFiles: false };
   }
 };
-
 const fileDynFieldsModel = {
   checkFilesExistWithoutId,
 };

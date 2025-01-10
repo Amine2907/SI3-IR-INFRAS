@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api/check-files';
 
-const checkAllFilesStatus = async () => {
+const checkAllFilesStatus = async Sid => {
   try {
-    const response = await axios.get(`${API_URL}/`);
+    const response = await axios.get(`${API_URL}/${Sid}`);
     return response.data.fileStatuses;
   } catch (error) {
     console.error('Error checking files for all components:', error.message);
@@ -15,5 +15,4 @@ const checkAllFilesStatus = async () => {
 const checkFilesService = {
   checkAllFilesStatus,
 };
-
 export default checkFilesService;

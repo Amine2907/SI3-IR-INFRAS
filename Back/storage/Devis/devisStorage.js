@@ -3,7 +3,7 @@ import { supabase } from "../../config/supabaseClient.js";
 const generateSignedUrl = async (filePath) => {
   try {
     const { data, error } = await supabase.storage
-      .from("devis_pdf") 
+      .from("devis-pdf") 
       .createSignedUrl(filePath, 60); // URL expires in 60 seconds
 
     if (error) throw error;
@@ -18,7 +18,7 @@ const uploadPdf = async (file, filePath) => {
   try {
     // Perform file upload using Supabase storage
     const { data, error } = await supabase.storage
-      .from("devis_pdf")
+      .from("devis-pdf")
       .upload(filePath, file.buffer, {
         cacheControl: "3600",
         contentType: file.mimetype,
@@ -37,7 +37,7 @@ const uploadPdf = async (file, filePath) => {
 const getPublicUrl = (filePath) => {
   try {
     const { data, error } = supabase.storage
-      .from("devis_pdf") 
+      .from("devis-pdf") 
       .getPublicUrl(filePath);
 
     if (error) throw error;
@@ -52,12 +52,12 @@ const getPublicUrl = (filePath) => {
 const downloadPdf = async (filePath) => {
   try {
     console.log("Attempting to download file from path:", filePath);
-    // Ensure that the file path has only one 'devis_pdf/' prefix
-    const fixedFilePath = filePath.startsWith('devis_pdf/') ? filePath : `devis_pdf/${filePath}`;
+    // Ensure that the file path has only one 'devis-pdf/' prefix
+    const fixedFilePath = filePath.startsWith('devis-pdf/') ? filePath : `devis-pdf/${filePath}`;
     console.log(fixedFilePath);
 
     const { data, error } = await supabase.storage
-      .from("devis_pdf")
+      .from("devis-pdf")
       .download(fixedFilePath);
 
     if (error) {
@@ -76,7 +76,7 @@ const deleteFile = async (filePath) => {
     console.log("Attempting to deleting file from path:", filePath);
     // Delete the file from Supabase storage
     const { data, error } = await supabase.storage
-      .from("devis_pdf")
+      .from("devis-pdf")
       .remove(filePath); 
     if (error) {
       throw error;
@@ -92,12 +92,12 @@ const deleteFile = async (filePath) => {
 const listFiles = async (devisId,Sid) => {
   try {
     // Ensure devisId is a string when constructing the path
-    const folderPath = `devis_pdf/${Sid}/${devisId}`;
+    const folderPath = `devis-pdf/${Sid}/${devisId}`;
     console.log(`Fetching files from folder: ${folderPath}`);
 
     // Use the Supabase client to list files
     const { data, error } = await supabase.storage
-      .from("devis_pdf")
+      .from("devis-pdf")
       .list(folderPath);
 
     if (error) {
@@ -108,7 +108,7 @@ const listFiles = async (devisId,Sid) => {
     // Map through the files to return the proper structure
     return data.map(file => ({
       name: file.name,
-      path: `devis_pdf/${Sid}/${devisId}/${file.name}`,
+      path: `devis-pdf/${Sid}/${devisId}/${file.name}`,
     }));
   } catch (error) {
     console.error("Error listing files:", error);

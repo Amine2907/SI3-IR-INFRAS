@@ -96,16 +96,21 @@ const SiteCard = ({ site, onEdit }) => {
   //
   useEffect(() => {
     const fetchFileStatus = async () => {
+      if (!Sid) {
+        console.warn('Sid is not provided. Cannot fetch file statuses.');
+        return; // Exit if Sid is undefined or null
+      }
       try {
-        const fileStatuses = await checkFilesService.checkAllFilesStatus();
+        const fileStatuses = await checkFilesService.checkAllFilesStatus(Sid);
         console.log('File Statuses:', fileStatuses); // Debug the response
         setHasFiles(fileStatuses); // Update state with the result
       } catch (error) {
         console.error('Error fetching file statuses:', error);
       }
     };
-    fetchFileStatus();
-  }, []);
+
+    fetchFileStatus(); // Call the function
+  }, [Sid]); // Dependency array ensures this runs when Sid changes
   return (
     <Grid item xs={12}>
       <Card id="site_card">

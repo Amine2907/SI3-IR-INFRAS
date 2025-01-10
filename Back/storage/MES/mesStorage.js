@@ -3,7 +3,7 @@ import { supabase } from "../../config/supabaseClient.js";
 const generateSignedUrl = async (filePath) => {
   try {
     const { data, error } = await supabase.storage
-      .from("mise-en-service-pdf") 
+      .from("mes-pdf") 
       .createSignedUrl(filePath, 60);
 
     if (error) throw error;
@@ -18,7 +18,7 @@ const uploadPdf = async (file, filePath) => {
   try {
     // Perform file upload using Supabase storage
     const { data, error } = await supabase.storage
-      .from("mise-en-service-pdf")
+      .from("mes-pdf")
       .upload(filePath, file.buffer, {
         cacheControl: "3600",
         contentType: file.mimetype,
@@ -37,7 +37,7 @@ const uploadPdf = async (file, filePath) => {
 const getPublicUrl = (filePath) => {
   try {
     const { data, error } = supabase.storage
-      .from("mise-en-service-pdf") 
+      .from("mes-pdf") 
       .getPublicUrl(filePath);
 
     if (error) throw error;
@@ -52,12 +52,12 @@ const getPublicUrl = (filePath) => {
 const downloadPdf = async (filePath) => {
   try {
     console.log("Attempting to download file from path:", filePath);
-    // Ensure that the file path has only one 'mise-en-service-pdf/' prefix
+    // Ensure that the file path has only one 'mes-pdf/' prefix
     const fixedFilePath = filePath.startsWith('mes-pdf/') ? filePath : `mes-pdf/${filePath}`;
     console.log(fixedFilePath);
 
     const { data, error } = await supabase.storage
-      .from("mise-en-service-pdf")
+      .from("mes-pdf")
       .download(fixedFilePath);
 
     if (error) {
@@ -76,7 +76,7 @@ const deleteFile = async (filePath) => {
     console.log("Attempting to deleting file from path:", filePath);
     // Delete the file from Supabase storage
     const { data, error } = await supabase.storage
-      .from("mise-en-service-pdf")
+      .from("mes-pdf")
       .remove(filePath); 
     if (error) {
       throw error;
@@ -97,7 +97,7 @@ const listFiles = async (mesId,Sid) => {
 
     // Use the Supabase client to list files
     const { data, error } = await supabase.storage
-      .from("mise-en-service-pdf")
+      .from("mes-pdf")
       .list(folderPath);
 
     if (error) {
@@ -123,5 +123,4 @@ const mesStorage = {
   listFiles,
   deleteFile,
 };
-
 export default mesStorage;

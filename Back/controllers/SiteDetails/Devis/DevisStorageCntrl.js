@@ -19,7 +19,7 @@ const uploadFileController = async (req, res) => {
     const devisIdStr = String(devisId);
     const sidStr = String(Sid);
     // Define the file path: 'devis-pdf/{devisId}/{originalFileName}'
-    const filePath = `devis_pdf/${sidStr}/${devisIdStr}/${uniqueFileName}`;
+    const filePath = `devis-pdf/${sidStr}/${devisIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
 
