@@ -1,5 +1,6 @@
 import { supabase } from "../../config/supabaseClient.js";
 
+// Get retenu of porpsect (dynamic field )
 const getPropsectretenu  = async (Sid) => {
   const { data, error } = await supabase
     .from('Prospect')
@@ -13,6 +14,7 @@ const getPropsectretenu  = async (Sid) => {
   }
   return data;
 };
+// Get date demande de raccordement (dynamic field )
 const getDrDate = async (EB_fk) => {
   const { data, error } = await supabase
       .from('DR')
@@ -24,7 +26,7 @@ const getDrDate = async (EB_fk) => {
       .eq('Prospect.status_validation_fk', 25);
 
   if (error) {
-      console.error('Supabase Error Details (getDrDateWithJoin):', error);
+      console.error('Supabase Error Details (getDrDate):', error);
       return { success: false, error: 'Error fetching DR date.' };
   }
 
@@ -36,48 +38,54 @@ const getDrDate = async (EB_fk) => {
       return { success: false, error: 'No valid DR dates found.' };
   }
 };
+// Get devis reception date ( dynamic field )
+const getDevisRecDate = async (Sid) => {
+  const { data, error } = await supabase
+      .from('Devis')
+      .select(`
+          reception_date, 
+          DR(is_active, Prospect(status_validation_fk))
+      `)
+      .eq('EB_fk', Sid) 
+      .eq('DR.is_active', true)
+      .eq('DR.Prospect.status_validation_fk', 25);
 
-  const getDevisRecDate = async (Sid) => {
-      const { data, error } = await supabase
-        .from('Devis')
-        .select('reception_date')
-        .eq('is_active', true)
-        .eq('EB_fk', Sid);
-  
-      if (error) {
-        console.error('Supabase Error Details (getDevisRecDate):', error);
-        throw error;
-      }
-      const validDates = data.filter((record) => record.reception_date !== null);
-      if (validDates.length > 0) {
-          return { success: true, data: validDates[0].reception_date };
-      } else {
-          return { success: false, error: 'No valid Devis dates found.' };
-      }
-  };
-  const getReglementDate = async (Sid) => {
-    try {
-      const { data, error } = await supabase
-        .from('Paiements')
-        .select('reglement_date')
-        .eq('is_active', true)
-        .eq('EB_fk', Sid);
-  
-      if (error) {
-        console.error('Supabase Error Details (getReglementDate):', error);
-        throw error;
-      }
-        const validDates = data.filter((record) => record.reglement_date !== null);
-      if (validDates.length > 0) {
-          return { success: true, data: validDates[0].reglement_date };
-      } else {
-          return { success: false, error: 'No valid Devis dates found.' };
-      }
-    } catch (error) {
-      console.error('Error in getReglementDate:', error.message);
-      throw new Error('An error occurred while fetching reglement date.');
+  if (error) {
+      console.error('Supabase Error Details (getDevisRecDate):', error);
+      throw new Error('Error fetching reception date.');
+  }
+  // Filter valid reception dates
+  const validDates = data.filter((record) => record.reception_date !== null);
+  if (validDates.length > 0) {
+      return { success: true, data: validDates[0].reception_date };
+  } else {
+      return { success: false, error: 'No valid reception dates found.' };
+  }
+};
+// Get reglement date (dynamic field)
+const getReglementDate = async (Sid) => {
+  try {
+    const { data, error } = await supabase
+      .from('Paiements')
+      .select('reglement_date')
+      .eq('is_active', true)
+      .eq('EB_fk', Sid);
+    if (error) {
+      console.error('Supabase Error Details (getReglementDate):', error);
+      throw error;
     }
-  };
+      const validDates = data.filter((record) => record.reglement_date !== null);
+    if (validDates.length > 0) {
+        return { success: true, data: validDates[0].reglement_date };
+    } else {
+        return { success: false, error: 'No valid Devis dates found.' };
+    }
+  } catch (error) {
+    console.error('Error in getReglementDate:', error.message);
+    throw new Error('An error occurred while fetching reglement date.');
+  }
+};
+// Get MES REEL (dynamic field)
   const getMesReel = async (Sid) => {
     const { data, error } = await supabase
       .from('MES')
