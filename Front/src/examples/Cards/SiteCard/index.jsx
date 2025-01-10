@@ -22,11 +22,6 @@ const SiteCard = ({ site, onEdit }) => {
   const [companyName, setCompanyName] = useState('N/A');
   const [isExpanded, setIsExpanded] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [checkedValues, setCheckedValues] = useState({
-    drPg: true,
-    devisPg: true,
-    mesPg: true,
-  });
   const [hasFiles, setHasFiles] = useState({
     prospect: false,
     dp: false,
@@ -102,26 +97,21 @@ const SiteCard = ({ site, onEdit }) => {
     setReglementDate(formData.reglementDate || 'N/A');
     setMesDate(formData.mesDate || 'N/A');
   }, [formData]);
+  //
   useEffect(() => {
     const fetchFileStatus = async () => {
-      const components = [
-        { name: 'demrac', id: site.drId },
-        { name: 'devis', id: site.devisId },
-        { name: 'mes', id: site.mesId },
-      ];
-
-      const fileStatus = {};
-      for (const { name, id } of components) {
-        if (id) {
-          fileStatus[name] = await checkFilesService.checkFilesForComponent(name, id);
-        } else {
-          fileStatus[name] = false;
-        }
+      try {
+        const fileStatuses = await checkFilesService.checkAllFilesStatus(Sid);
+        console.log('File Statuses:', fileStatuses); // Debug the response
+        setHasFiles(fileStatuses); // Update state with the result
+      } catch (error) {
+        console.error('Error fetching file statuses:', error);
       }
-      setHasFiles(fileStatus);
     };
-    fetchFileStatus();
-  }, [site]);
+    if (Sid) {
+      fetchFileStatus();
+    }
+  }, [Sid]);
   return (
     <Grid item xs={12}>
       <Card id="site_card">
