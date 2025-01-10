@@ -8,7 +8,6 @@ const checkFilesExistWithoutId = async (component, Sid) => {
     const { data, error } = await supabase.storage
       .from(component + "-pdf") // Use static bucket name
       .list(folderPath);
-
     if (error) {
       console.error(`Error checking files for ${component}:`, error);
       return { success: false, hasFiles: false };

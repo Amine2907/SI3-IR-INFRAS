@@ -65,23 +65,21 @@ const SiteList = () => {
           site.status_site_fk,
           site.Acteur_ENEDIS_id,
         ]
-          .filter(Boolean)
-          .map(field => field.toString().toLowerCase())
+          .filter(Boolean) // Remove undefined/null values
+          .map(field => field.toString().toLowerCase()) // Convert to lowercase for comparison
           .join(' ');
         return combinedFields.includes(lowerCaseQuery);
       });
     }
-
     // Filter by Dropdowns
     if (Object.keys(searchQuery).length > 0) {
       filteredSites = filteredSites.filter(site =>
         Object.entries(searchQuery).every(([key, value]) => {
           if (!value) return true; // Skip if the field is not set
-          return site[key] && site[key].toString() === value.toString();
+          return site[key] && site[key].toString().toLowerCase() === value.toString().toLowerCase();
         })
       );
     }
-
     return filteredSites;
   };
   const filteredSites = renderSearch();
