@@ -7,7 +7,6 @@ const getPropsectRetenu = async (req, res) => {
       if (!data || data.length === 0) {
         return res.status(404).json({ error: 'No data found for the provided Sid' });
       }
-  
       return res.status(200).json(data);
     } catch (error) {
       console.error('Error fetching Prospect Retenu:', error.message);

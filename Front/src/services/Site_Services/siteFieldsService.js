@@ -3,41 +3,53 @@ const API_URL = 'http://localhost:5000/api/site-fields';
 const getPropsectRetenu = async Sid => {
   try {
     const response = await axios.get(`${API_URL}/${Sid}/prospect-retenu`);
-    return response.data;
+    console.log('getPropsectRetenu response:', response.data);
+    return { retenu: true };
   } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return { retenu: false };
+    }
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
 const getDrDate = async Sid => {
   try {
     const response = await axios.get(`${API_URL}/${Sid}/dr-date`);
-    return response.data;
+    return { drDate: response.data || 'N/A' };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    return { drDate: 'N/A' };
   }
 };
 const getDevisDate = async Sid => {
   try {
     const response = await axios.get(`${API_URL}/${Sid}/devis-date`);
-    return response.data;
+    console.log('getDevisDate response:', response.data);
+    return { devisDate: response.data || 'N/A' };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    console.error('Error in getDevisDate:', error.message);
+    return { devisDate: 'N/A' };
   }
 };
+
 const getReglementDate = async Sid => {
   try {
     const response = await axios.get(`${API_URL}/${Sid}/reglement-date`);
-    return response.data;
+    console.log('getReglementDate response:', response.data);
+    return { reglementDate: response.data || 'N/A' };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    console.error('Error in getReglementDate:', error.message);
+    return { reglementDate: 'N/A' };
   }
 };
+
 const getMesDate = async Sid => {
   try {
     const response = await axios.get(`${API_URL}/${Sid}/mes-date`);
-    return response.data;
+    console.log('getMesDate response:', response.data);
+    return { mesDate: response.data.MES_reel || 'N/A' };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    console.error('Error in getMesDate:', error.message);
+    return { mesDate: 'N/A' };
   }
 };
 const SiteFieldsService = {

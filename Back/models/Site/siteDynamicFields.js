@@ -41,26 +41,20 @@ const getDrDate = async (EB_fk) => {
 // Get devis reception date ( dynamic field )
 const getDevisRecDate = async (Sid) => {
   const { data, error } = await supabase
-      .from('Devis')
-      .select(`
-          reception_date, 
-          DR(is_active, Prospect(status_validation_fk))
-      `)
-      .eq('EB_fk', Sid) 
-      .eq('DR.is_active', true)
-      .eq('DR.Prospect.status_validation_fk', 25);
+    .from('Devis')
+    .select('reception_date, DR(is_active, Prospect(status_validation_fk))')
+    .eq('EB_fk', Sid)
+    .eq('DR.is_active', true)
+    .eq('DR.Prospect.status_validation_fk', 25);
 
-  if (error) {
-      console.error('Supabase Error Details (getDevisRecDate):', error);
-      throw new Error('Error fetching reception date.');
+  if (error || data.length === 0) {
+    return { success: false, data: 'N/A' };
   }
-  // Filter valid reception dates
+
   const validDates = data.filter((record) => record.reception_date !== null);
-  if (validDates.length > 0) {
-      return { success: true, data: validDates[0].reception_date };
-  } else {
-      return { success: false, error: 'No valid reception dates found.' };
-  }
+  return validDates.length > 0
+    ? { success: true, data: validDates[0].reception_date }
+    : { success: false, data: 'N/A' };
 };
 // Get reglement date (dynamic field)
 const getReglementDate = async (Sid) => {

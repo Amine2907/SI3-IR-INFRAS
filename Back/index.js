@@ -32,6 +32,7 @@ import paieStorageRoutes from './routes/SiteDetails/Reglement/Paiement/paieStora
 import factureStorageRoutes from './routes/SiteDetails/Reglement/Facture/factureStorage.js';
 import travStorageRoutes from './routes/SiteDetails/Traveaux/travsStorage.js';
 import miseEnServiceStorageRoutes from './routes/SiteDetails/MES/mesStorage.js';
+import checkFilesRoutes from './routes/SiteDetails/DynFields/getFilesRoute.js';
 // Express Setup
 const app = express();
 app.use(cors({
@@ -70,6 +71,7 @@ app.use('/api/trav-storage',travStorageRoutes);
 app.use('/api/fac-storage',factureStorageRoutes);
 app.use('/api/paie-storage',paieStorageRoutes);
 app.use('/api/mes-storage',miseEnServiceStorageRoutes);
+app.use('/api/check-files',checkFilesRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });

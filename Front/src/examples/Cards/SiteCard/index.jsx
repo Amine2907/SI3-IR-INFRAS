@@ -14,6 +14,7 @@ import MDTypography from 'components/MDTypography';
 import { useMaterialUIController } from '../../../context/index';
 import { program, Status_Site, priority, fetchCompanyNameById } from './CardData';
 import SiteFieldsService from 'services/Site_Services/siteFieldsService';
+import checkFilesService from 'services/site_details/DynFields/checkFilesService';
 const SiteCard = ({ site, onEdit }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -25,6 +26,15 @@ const SiteCard = ({ site, onEdit }) => {
     drPg: true,
     devisPg: true,
     mesPg: true,
+  });
+  const [hasFiles, setHasFiles] = useState({
+    prospect: false,
+    dp: false,
+    dr: false,
+    devis: false,
+    reglement: false,
+    travaux: false,
+    mes: false,
   });
   // State to hold data fetched from SiteFieldsService
   const [prospectRetenu, setProspectRetenu] = useState('N/A');
@@ -56,83 +66,62 @@ const SiteCard = ({ site, onEdit }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Prospect Retenu
-        console.log('Fetching Prospect Retenu...');
         const prospectResponse = await SiteFieldsService.getPropsectRetenu(Sid);
-        console.log('Prospect Response:', prospectResponse);
-        const retenu =
-          Array.isArray(prospectResponse) && prospectResponse[0]?.retenu !== undefined
-            ? prospectResponse[0].retenu
-            : 'N/A';
-        setFormData(prev => ({ ...prev, retenu }));
-
-        // DR Date
-        console.log('Fetching DR Date...');
         const drResponse = await SiteFieldsService.getDrDate(Sid);
-        console.log('DR Date Response:', drResponse);
-        const drDate = drResponse?.success ? drResponse.data : 'N/A';
-        setFormData(prev => ({ ...prev, drDate }));
-
-        // Devis Date
-        console.log('Fetching Devis Date...');
         const devisResponse = await SiteFieldsService.getDevisDate(Sid);
-        console.log('Devis Date Response:', devisResponse);
-        const devisDate = devisResponse?.success ? devisResponse.data : 'N/A';
-        setFormData(prev => ({ ...prev, devisDate }));
-
-        // Reglement Date
-        console.log('Fetching Reglement Date...');
         const reglementResponse = await SiteFieldsService.getReglementDate(Sid);
-        console.log('Reglement Date Response:', reglementResponse);
-        const reglementDate = reglementResponse?.success ? reglementResponse.data : 'N/A';
-        setFormData(prev => ({ ...prev, reglementDate }));
-
-        // MES Date
-        console.log('Fetching MES Date...');
         const mesResponse = await SiteFieldsService.getMesDate(Sid);
-        console.log('MES Date Response:', mesResponse);
-        const mesDate = mesResponse?.success ? mesResponse.data : 'N/A';
-        setFormData(prev => ({ ...prev, mesDate }));
+
+        console.log('Responses:', {
+          prospectResponse,
+          drResponse,
+          devisResponse,
+          reglementResponse,
+          mesResponse,
+        });
+
+        setFormData({
+          retenu: prospectResponse?.retenu || false,
+          drDate: drResponse?.drDate || 'N/A',
+          devisDate: devisResponse?.devisDate || 'N/A',
+          reglementDate: reglementResponse?.reglementDate || 'N/A',
+          mesDate: mesResponse?.mesDate || 'N/A',
+        });
       } catch (error) {
         console.error('Error fetching site fields data:', error);
       }
     };
-
-    fetchData();
+    if (Sid) {
+      fetchData();
+    }
   }, [Sid]);
-
   useEffect(() => {
-    // Update Prospect Retenu
-    if (formData.prospectRetenu) {
-      setProspectRetenu(formData.prospectRetenu);
-    }
+    setProspectRetenu(formData.retenu || 'N/A');
+    setDrDate(formData.drDate || 'N/A');
+    setDevisDate(formData.devisDate || 'N/A');
+    setReglementDate(formData.reglementDate || 'N/A');
+    setMesDate(formData.mesDate || 'N/A');
+  }, [formData]);
+  useEffect(() => {
+    const fetchFileStatus = async () => {
+      const components = [
+        { name: 'demrac', id: site.drId },
+        { name: 'devis', id: site.devisId },
+        { name: 'mes', id: site.mesId },
+      ];
 
-    // Update DR Date
-    if (formData.drDate) {
-      setDrDate(formData.drDate);
-    }
-
-    // Update Devis Date
-    if (formData.devisDate) {
-      setDevisDate(formData.devisDate);
-    }
-
-    // Update Règlement Date
-    if (formData.reglementDate) {
-      setReglementDate(formData.reglementDate);
-    }
-
-    // Update MES Date
-    if (formData.mesDate) {
-      setMesDate(formData.mesDate);
-    }
-  }, [
-    formData.prospectRetenu,
-    formData.drDate,
-    formData.devisDate,
-    formData.reglementDate,
-    formData.mesDate,
-  ]);
+      const fileStatus = {};
+      for (const { name, id } of components) {
+        if (id) {
+          fileStatus[name] = await checkFilesService.checkFilesForComponent(name, id);
+        } else {
+          fileStatus[name] = false;
+        }
+      }
+      setHasFiles(fileStatus);
+    };
+    fetchFileStatus();
+  }, [site]);
   return (
     <Grid item xs={12}>
       <Card id="site_card">
@@ -238,39 +227,22 @@ const SiteCard = ({ site, onEdit }) => {
                     <strong>Status:</strong> {site.is_active ? 'Active' : 'Inactive'}
                   </MDTypography>
                 </MDBox>
-                {/* Checkbox Options */}
-                <MDBox display="flex" alignItems="center">
-                  <Checkbox
-                    checked={checkedValues.drPg}
-                    onChange={handleCheckboxChange}
-                    name="drPg"
-                  />
-                  <MDTypography variant="h6" fontWeight="medium">
-                    DR PG
-                  </MDTypography>
-                  <Checkbox
-                    checked={checkedValues.devisPg}
-                    onChange={handleCheckboxChange}
-                    name="devisPg"
-                  />
-                  <MDTypography variant="h6" fontWeight="medium">
-                    DEVIS PG
-                  </MDTypography>
-                  <Checkbox
-                    checked={checkedValues.mesPg}
-                    onChange={handleCheckboxChange}
-                    name="mesPg"
-                  />
-                  <MDTypography variant="h6" fontWeight="medium">
-                    MES PG
-                  </MDTypography>
+                <MDBox display="flex" flexDirection="column" mt={2}>
+                  {Object.entries(hasFiles).map(([key, value]) => (
+                    <MDBox display="flex" alignItems="center" key={key} mt={1}>
+                      <Checkbox checked={value} disabled />
+                      <MDTypography variant="h6" fontWeight="medium">
+                        {key.toUpperCase()}
+                      </MDTypography>
+                    </MDBox>
+                  ))}
                 </MDBox>
                 {/* Collapsible Section for Extra Information */}
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                   <MDBox display="flex" alignItems="center" mt={2}>
                     <Icon sx={{ mr: 1 }}>person</Icon>
                     <MDTypography variant="h6" fontWeight="medium">
-                      <strong>Prospect Retenu:</strong> {formData.retenu || 'N/A'}
+                      <strong>Prospect Retenu:</strong> {formData.retenu ? 'Oui' : 'Non'}
                     </MDTypography>
                   </MDBox>
                   <MDBox display="flex" alignItems="center" mt={2}>

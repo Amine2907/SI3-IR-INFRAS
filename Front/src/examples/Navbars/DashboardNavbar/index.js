@@ -156,7 +156,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   // };
   const handleExit = () => {
     navigate('/auth');
-  }
+  };
   return (
     <AppBar
       position={absolute ? 'absolute' : navbarType}
