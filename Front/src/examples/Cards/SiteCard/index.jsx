@@ -23,12 +23,8 @@ const SiteCard = ({ site, onEdit }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [hasFiles, setHasFiles] = useState({
-    prospect: false,
-    dp: false,
     dr: false,
     devis: false,
-    reglement: false,
-    travaux: false,
     mes: false,
   });
   // State to hold data fetched from SiteFieldsService
@@ -101,17 +97,15 @@ const SiteCard = ({ site, onEdit }) => {
   useEffect(() => {
     const fetchFileStatus = async () => {
       try {
-        const fileStatuses = await checkFilesService.checkAllFilesStatus(Sid);
+        const fileStatuses = await checkFilesService.checkAllFilesStatus();
         console.log('File Statuses:', fileStatuses); // Debug the response
         setHasFiles(fileStatuses); // Update state with the result
       } catch (error) {
         console.error('Error fetching file statuses:', error);
       }
     };
-    if (Sid) {
-      fetchFileStatus();
-    }
-  }, [Sid]);
+    fetchFileStatus();
+  }, []);
   return (
     <Grid item xs={12}>
       <Card id="site_card">

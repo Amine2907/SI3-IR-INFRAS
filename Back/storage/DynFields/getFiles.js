@@ -3,7 +3,7 @@ import { supabase } from "../../config/supabaseClient.js";
 const checkFilesExistWithoutId = async (component) => {
   try {
     const folderPath = `${component}-pdf`;
-    console.log(`Checking files in folder: ${folderPath}`);
+    // console.log(`Checking files in folder: ${folderPath}`);
     
     // List all subfolders and files in the component's root folder
     const { data, error } = await supabase.storage.from(folderPath).list();

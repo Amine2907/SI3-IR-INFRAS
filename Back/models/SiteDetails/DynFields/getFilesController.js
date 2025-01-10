@@ -1,7 +1,7 @@
 import fileDynFieldsModel from "../../../storage/DynFields/getFiles.js";
 const checkFilesForAllComponent = async (req, res) => {
     try {
-      const components = ["prospect", "declPreal","demrac", "devis", "paie", "travs","mes"];
+      const components = ["demrac", "devis","mes"];
       const fileStatuses = {};
       for (const component of components) {
         const result = await fileDynFieldsModel.checkFilesExistWithoutId(component);
