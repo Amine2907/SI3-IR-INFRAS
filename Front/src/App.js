@@ -29,10 +29,12 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import ResetPasswordForm from 'layouts/authentification/ResetPasswordForm';
 import ConfirmSignup from 'layouts/authentification/ConfirmSignUp';
-import Billing from 'layouts/billing';
 import Contacts from 'layouts/contacts';
 import Profile from 'layouts/profile';
 import Entites from 'layouts/entites';
+import SiteDetails from 'layouts/site_details';
+import SiteInfoCard from 'examples/Cards/SiteInfoCard';
+import Sites from 'layouts/sites';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
@@ -156,14 +158,6 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
           }
         />
         <Route
-          path="/billing"
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Billing />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/contacts"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
@@ -184,6 +178,30 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/site-infos"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <SiteDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/sites"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Sites />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/sites/:Sid/contacts"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <SiteInfoCard />
             </ProtectedRoute>
           }
         />

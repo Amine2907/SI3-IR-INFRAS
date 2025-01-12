@@ -1,13 +1,3 @@
-/**
- * This component renders the contact list page.
- *
- * It renders a card with a form to search contacts by name, first name, and mission.
- * It renders a button to add a new contact.
- * It renders a list of contacts, with a card for each contact.
- * It renders a toggle to activate or desactivate the contact.
- * It renders a modal to add or edit a contact.
- * It also renders a feedback alert for actions.
- */
 import React, { useEffect, useState } from 'react';
 import ContactCard from 'examples/Cards/ConatctCards/ContactCard';
 // @mui material components
@@ -22,24 +12,14 @@ import { Grid, Switch } from '@mui/material';
 import MDAlert from 'components/MDAlert';
 import ContactModal from 'examples/popup/ContactPopUp/ContactPopUpl';
 import { Alert, AlertDescription } from 'components/ui/alert';
-import {
-  fetchActiveContacts,
-  fetchInactiveContacts,
-  handleSave,
-  handleSearchContacts,
-  handleSearchChange,
-} from './contactsFuncs';
+import { fetchActiveContacts, fetchInactiveContacts, handleSave } from './contactsFuncs';
 const ContactList = () => {
   const [contacts, setContacts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [isActive, setIsActive] = useState(true);
-  const [searchQuery, setSearchQuery] = useState({
-    nom: '',
-    prenom: '',
-    mission: '',
-  });
+  const [searchQuery, setSearchQuery] = useState('');
   const [noResultsMessage, setNoResultsMessage] = useState('');
 
   useEffect(() => {
@@ -51,7 +31,32 @@ const ContactList = () => {
     setShowModal(true); // Show modal for adding a new contact
     fetchActiveContacts(setContacts, setNoResultsMessage);
   };
+  const handleSearchChange = e => {
+    const { value } = e.target;
+    setSearchQuery(value);
 
+    // Filter contacts based on the search query
+    if (value) {
+      const filteredContacts = contacts.filter(contact => {
+        const lowercasedSearchQuery = value.toLowerCase();
+        return (
+          contact.nom.toLowerCase().includes(lowercasedSearchQuery) ||
+          contact.prenom.toLowerCase().includes(lowercasedSearchQuery) ||
+          contact.mission.toLowerCase().includes(lowercasedSearchQuery)
+        );
+      });
+
+      setContacts(filteredContacts);
+      if (filteredContacts.length === 0) {
+        setNoResultsMessage('Aucune contact trouvée pour les critères de recherche spécifiés');
+      } else {
+        setNoResultsMessage('');
+      }
+    } else {
+      // If search query is empty, fetch the active contacts again
+      fetchActiveContacts(setContacts, setNoResultsMessage);
+    }
+  };
   const handleModalClose = () => {
     setShowModal(false);
     fetchActiveContacts(setContacts, setNoResultsMessage); // Refresh contact list
@@ -62,7 +67,10 @@ const ContactList = () => {
     const result = await handleSave(
       data,
       selectedContact,
-      setAlert,
+      newAlert => {
+        setAlert(newAlert);
+        setTimeout(() => setAlert({ show: false, message: '', type: '' }), 10000);
+      },
       isActive,
       setContacts,
       setNoResultsMessage,
@@ -74,17 +82,6 @@ const ContactList = () => {
       handleToggleActiveInactive();
       setIsActive(true);
     }
-  };
-  // Handle search change
-  const handleChange = e => {
-    handleSearchChange(
-      e,
-      searchQuery,
-      setSearchQuery,
-      setContacts,
-      setNoResultsMessage,
-      handleSearchContacts
-    );
   };
   const handleToggleActiveInactive = () => {
     setIsActive(prevIsActive => {
@@ -105,27 +102,11 @@ const ContactList = () => {
           <MDBox pr={1}>
             <div className="contact-list">
               <MDInput
-                label="Recherche par nom"
-                name="nom"
-                value={searchQuery.nom}
-                onChange={handleChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
+                label="Recherche par nom, prénom, mission"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                style={{ width: '100%', marginBottom: '10px' }}
               />
-              <MDInput
-                label="Recherche par prénom"
-                name="prenom"
-                value={searchQuery.prenom}
-                onChange={handleChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par mission"
-                name="mission"
-                value={searchQuery.mission}
-                onChange={handleChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-
               <MDButton
                 onClick={() => {
                   setNoResultsMessage('');

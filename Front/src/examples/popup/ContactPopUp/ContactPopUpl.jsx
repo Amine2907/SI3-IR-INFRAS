@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch } from '@mui/material';
+import { InputLabel, Switch } from '@mui/material';
 const ContactModal = ({ contact, onSave, onClose }) => {
   const [formData, setFormData] = useState(contact || {});
   const [isActive, setIsActive] = useState(contact ? contact.is_active : true);
@@ -103,7 +103,7 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
         <div>
-          <label>{isActive ? 'Active' : 'Inactive'}</label>
+          <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
           <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
             {' '}
             {isActive ? 'Active' : 'Inactive'}

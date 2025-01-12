@@ -23,12 +23,14 @@
     "default-param-last": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/jsx-props-no-spreading": [
-      1,
-      {
-        "custom": "ignore"
-      }
-    ],
+    // "react/jsx-props-no-spreading": [
+    //   "error",
+    //   {
+    //     "custom": "ignore",
+    //     "html": "ignore"
+    //   }
+    // ],
+    "react/jsx-props-no-spreading": "off",
     "react/jsx-curly-spacing": [2, "never"]
   },
   "settings": { "react": {

@@ -1,0 +1,31 @@
+/* PopUp.module.css */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure the modal is on top of other elements */
+}
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 400px; /* Adjust width as needed */
+  position: relative; /* Relative positioning for inner content */
+}
+h3 {
+  margin-bottom: 15px;
+}
+input {
+  font-size: 14px; /* Smaller font size */
+  padding: 8px; /* Less padding */
+  margin-bottom: 8px; /* Reduced margin */
+  box-sizing: border-box; /* Include padding in width */
+}
+button {
+  margin-right: 10px;
+}

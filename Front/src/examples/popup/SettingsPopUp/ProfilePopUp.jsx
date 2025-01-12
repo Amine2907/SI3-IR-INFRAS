@@ -5,7 +5,7 @@
  * @param {Function} onClose A function that is called when the user clicks the close button.
  * @returns A JSX element representing the modal.
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../style.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
@@ -16,13 +16,32 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
+import SiteService from 'services/Site_Services/siteService';
 const ProfileModal = ({ userData, onSave, onClose }) => {
   const [formData, setFormData] = useState(userData || {});
   const [isActive] = useState(userData ? userData.is_active : true);
   const [errors, setErrors] = useState({});
+  const [activeCompanies, setActiveCompanies] = useState([]);
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  useEffect(() => {
+    const fetchActiveCompanies = async () => {
+      try {
+        const result = await SiteService.getActiveCompanies();
+        if (result.success) {
+          setActiveCompanies(result.data);
+        } else {
+          console.error('Error fetching active companies:', result.error);
+          setActiveCompanies([]);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error.message);
+        setActiveCompanies([]);
+      }
+    };
+    fetchActiveCompanies();
+  }, []);
   const handleSubmit = () => {
     const newErrors = {};
     if (!formData.firstname) newErrors.firstname = true;
@@ -31,7 +50,13 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
       setErrors(newErrors);
       return;
     }
-    onSave({ ...formData, is_active: isActive });
+    // Map the selected company ID back to its name
+    const selectedCompany = activeCompanies.find(company => company.ENTid === formData.entreprise);
+    onSave({
+      ...formData,
+      entreprise: selectedCompany ? selectedCompany.nom : '',
+      is_active: isActive,
+    });
   };
   return (
     <div className={styles.modal}>
@@ -39,105 +64,127 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           Modifier profil
         </MDTypography>
-        <MDInput
-          name="firstname"
-          value={formData.firstname || ''}
-          onChange={handleChange}
-          placeholder="Prenom*"
-          style={{
-            marginBottom: '5px',
-            width: '320px',
-            marginTop: '10px',
-            borderColor: errors.firstname ? 'red' : '',
-          }}
-          required
-        />
-        <MDInput
-          name="lastname"
-          value={formData.lastname || ''}
-          onChange={handleChange}
-          placeholder="Nom*"
-          style={{
-            marginBottom: '5px',
-            width: '320px',
-            marginTop: '10px',
-            borderColor: errors.firstname ? 'red' : '',
-          }}
-          required
-        />
-        <FormControl
-          fullWidth
-          style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-          required
-        >
-          <Select
-            name="genre"
-            value={formData.genre || ''}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '320px' }}>
+          <MDInput
+            name="firstname"
+            value={formData.firstname || ''}
             onChange={handleChange}
-            displayEmpty
+            placeholder="Prenom*"
             style={{
-              padding: '10px',
-              fontSize: '14px',
-              borderColor: errors.genre ? 'red' : '',
+              marginBottom: '5px',
+              width: '320px',
+              marginTop: '10px',
+              borderColor: errors.firstname ? 'red' : '',
             }}
             required
-          >
-            <MenuItem value="" disabled>
-              -- Choisir genre --
-            </MenuItem>
-            <MenuItem value="Homme">Homme</MenuItem>
-            <MenuItem value="Femme">Femme</MenuItem>
-          </Select>
-        </FormControl>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DesktopDatePicker
-            label="Date de naissance"
-            name="Date de naissance"
-            value={formData.date_de_naissance ? dayjs(formData.date_de_naissance) : null}
-            onChange={newValue => {
-              handleChange({
-                target: {
-                  name: 'date_de_naissance',
-                  value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                },
-              });
-            }}
-            style={{ marginBottom: '10px', width: '320px' }}
           />
-        </LocalizationProvider>
-        <MDInput
-          name="entreprise"
-          value={formData.entreprise || ''}
-          onChange={handleChange}
-          placeholder="Entreprise"
-          style={{ marginBottom: '5px', width: '320px' }}
-        ></MDInput>
-        <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
-          <Select
-            name="department"
-            value={formData.department || ''}
+          <MDInput
+            name="lastname"
+            value={formData.lastname || ''}
             onChange={handleChange}
-            displayEmpty
+            placeholder="Nom*"
             style={{
-              padding: '10px',
-              fontSize: '14px',
-              borderColor: errors.department ? 'red' : '',
+              marginBottom: '5px',
+              width: '320px',
+              marginTop: '10px',
+              borderColor: errors.firstname ? 'red' : '',
             }}
             required
+          />
+          <FormControl
+            fullWidth
+            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+            required
           >
-            <MenuItem value="" disabled>
-              -- Choisir le département--
-            </MenuItem>
-            <MenuItem value="RH">RH</MenuItem>
-            <MenuItem value="Direction">Direction</MenuItem>
-            <MenuItem value="Contrôle De Gestion">Contrôle De Gestion</MenuItem>
-            <MenuItem value="Informatique">Informatique</MenuItem>
-            <MenuItem value="Conception">Conception</MenuItem>
-            <MenuItem value="Énergie">Énergie</MenuItem>
-            <MenuItem value="Finance">Finance</MenuItem>
-            <MenuItem value="Étude Prix">Étude Prix</MenuItem>
-          </Select>
-        </FormControl>
+            <Select
+              name="genre"
+              value={formData.genre || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.genre ? 'red' : '',
+              }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir genre --
+              </MenuItem>
+              <MenuItem value="Homme">Homme</MenuItem>
+              <MenuItem value="Femme">Femme</MenuItem>
+            </Select>
+          </FormControl>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DesktopDatePicker
+              label="Date de naissance"
+              name="Date de naissance"
+              value={formData.date_de_naissance ? dayjs(formData.date_de_naissance) : null}
+              onChange={newValue => {
+                handleChange({
+                  target: {
+                    name: 'date_de_naissance',
+                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                  },
+                });
+              }}
+              style={{ marginBottom: '10px', width: '100%' }}
+            />
+          </LocalizationProvider>
+          <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+            <Select
+              name="entreprise"
+              value={formData.entreprise || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.department ? 'red' : '',
+              }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir une entreprise --
+              </MenuItem>
+              {activeCompanies.length > 0 ? (
+                activeCompanies.map(company => (
+                  <MenuItem key={company.nom} value={company.ENTid}>
+                    {company.nom}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="">Pas des entreprises actives</MenuItem>
+              )}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+            <Select
+              name="department"
+              value={formData.department || ''}
+              onChange={handleChange}
+              displayEmpty
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.department ? 'red' : '',
+              }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir le département--
+              </MenuItem>
+              <MenuItem value="RH">RH</MenuItem>
+              <MenuItem value="Direction">Direction</MenuItem>
+              <MenuItem value="Contrôle De Gestion">Contrôle De Gestion</MenuItem>
+              <MenuItem value="Informatique">Informatique</MenuItem>
+              <MenuItem value="Conception">Conception</MenuItem>
+              <MenuItem value="Énergie">Énergie</MenuItem>
+              <MenuItem value="Finance">Finance</MenuItem>
+              <MenuItem value="Étude Prix">Étude Prix</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
         <MDButton
           onClick={handleSubmit}
           variant="gradient"

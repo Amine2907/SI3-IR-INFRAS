@@ -8,12 +8,12 @@
 // Material Dashboard 2 React example components
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
 import Footer from 'examples/Footer';
-import ContactNavBar from 'examples/Navbars/ConatctNavbar';
 import ContactList from 'examples/Lists/ContactList/ContactList';
+import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 function Contacts() {
   return (
     <DashboardLayout>
-      <ContactNavBar />
+      <DashboardNavbar />
       <ContactList />
       <Footer />
     </DashboardLayout>

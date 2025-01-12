@@ -1,7 +1,8 @@
+/* eslint-disable */
 import { useState, useEffect } from 'react';
 
 // react-router components
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 // prop-types is a library for typechecking of props.
 import PropTypes from 'prop-types';
@@ -12,7 +13,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import Icon from '@mui/material/Icon';
-
+import MDAlert from 'components/MDAlert';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 
@@ -29,6 +30,11 @@ import {
   navbarMobileMenu,
 } from 'examples/Navbars/DashboardNavbar/styles';
 
+import { Tooltip } from '@mui/material';
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import AuthService from 'services/Auth/authService';
+import { useAuth } from 'context/Auth/AuthContext';
 // Material Dashboard 2 React context
 import {
   useMaterialUIController,
@@ -38,11 +44,19 @@ import {
 } from '../../../context/index';
 
 function DashboardNavbar({ absolute, light, isMini }) {
+  const { user } = useAuth();
+  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split('/').slice(1);
+  const navigate = useNavigate();
+
+  // Function to handle the "Go Back" navigation
+  const handleGoBack = () => {
+    navigate('/sites');
+  };
 
   useEffect(() => {
     // Setting the navbar type
@@ -72,7 +86,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
-  const handleOpenMenu = event => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
 
   // Render the notifications menu
@@ -93,7 +106,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
       <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
     </Menu>
   );
-
   // Styles for the navbar icons
   const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
     color: () => {
@@ -106,7 +118,45 @@ function DashboardNavbar({ absolute, light, isMini }) {
       return colorValue;
     },
   });
-
+  // const handleLogOut = async () => {
+  //   const userId = user?.id;
+  //   if (!userId) {
+  //     setAlert({
+  //       show: true,
+  //       message: 'User ID is not available. Unable to log out.',
+  //       type: 'error',
+  //     });
+  //     return;
+  //   }
+  //   try {
+  //     // Call the AuthService to log out the user
+  //     const response = await AuthService.signOutUser(userId);
+  //     if (response.success) {
+  //       setAlert({ show: true, message: 'Logout successful.', type: 'success' });
+  //       // Clear local data and navigate to login page
+  //       localStorage.removeItem('accessToken');
+  //       localStorage.removeItem('refreshToken');
+  //       setTimeout(() => {
+  //         navigate('/authentication/sign-in/basic');
+  //       }, 2000);
+  //     } else {
+  //       setAlert({
+  //         show: true,
+  //         message: response.error?.message || 'Failed to log out. Please try again.',
+  //         type: 'error',
+  //       });
+  //     }
+  //   } catch (error) {
+  //     setAlert({
+  //       show: true,
+  //       message: `An error occurred: ${error.message || 'Unknown error'}`,
+  //       type: 'error',
+  //     });
+  //   }
+  // };
+  const handleExit = () => {
+    navigate('/auth');
+  };
   return (
     <AppBar
       position={absolute ? 'absolute' : navbarType}
@@ -115,16 +165,25 @@ function DashboardNavbar({ absolute, light, isMini }) {
     >
       <Toolbar sx={theme => navbarContainer(theme)}>
         <MDBox color="inherit" mb={{ xs: 1, md: 0 }} sx={theme => navbarRow(theme, { isMini })}>
+          {route.includes('site-infos') && (
+            <Tooltip title="Return to previous page" arrow>
+              <IconButton
+                onClick={handleGoBack}
+                aria-label="go back"
+                style={{ marginLeft: '-8px' }}
+              >
+                <ArrowLeft />
+              </IconButton>
+            </Tooltip>
+          )}
           <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
         </MDBox>
         {isMini ? null : (
           <MDBox sx={theme => navbarRow(theme, { isMini })}>
             <MDBox color={light ? 'white' : 'inherit'}>
-              <Link to="/authentication/sign-in/basic">
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
-                </IconButton>
-              </Link>
+              <IconButton sx={navbarIconButton} size="small" disableRipple onClick={handleExit}>
+                <Icon sx={iconsStyle}>logout</Icon>
+              </IconButton>
               <IconButton
                 size="small"
                 disableRipple
@@ -145,23 +204,22 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon sx={iconsStyle}>settings</Icon>
               </IconButton>
-              <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarIconButton}
-                aria-controls="notification-menu"
-                aria-haspopup="true"
-                variant="contained"
-                onClick={handleOpenMenu}
-              >
-                <Icon sx={iconsStyle}>notifications</Icon>
-              </IconButton>
               {renderMenu()}
             </MDBox>
           </MDBox>
         )}
       </Toolbar>
+      {/* Display Alert if there's an error */}
+      {alert.show && (
+        <MDAlert
+          color={alert.type}
+          dismissible
+          onClose={() => setAlert({ show: false })}
+          style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 9999 }}
+        >
+          {alert.message}
+        </MDAlert>
+      )}
     </AppBar>
   );
 }

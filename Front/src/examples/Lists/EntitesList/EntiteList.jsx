@@ -11,7 +11,7 @@
  * - selectedEntity: The currently selected entity for editing, or null for adding a new entity.
  * - alert: Object containing alert visibility, message, and type.
  * - isActive: Boolean indicating whether active entities are displayed.
- * - searchQuery: Object containing search fields for filtering entities.
+ * - setSearchTerm: Object containing search fields for filtering entities.
  * - noResultsMessage: Message displayed when no entities match the search criteria.
  *
  * Functions:
@@ -30,7 +30,7 @@
  * The component uses Material Dashboard 2 React components and Material UI for styling.
  */
 import React, { useEffect, useState } from 'react';
-import entityService from 'services/entityService';
+import entityService from 'services/Entites/entityService';
 // @mui material components
 import Card from '@mui/material/Card';
 import Icon from '@mui/material/Icon';
@@ -51,46 +51,39 @@ const EntiteList = () => {
   const [selectedEntity, setSelectedEntity] = useState(null);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const [isActive, setIsActive] = useState(true);
-  const [searchQuery, setSearchQuery] = useState({
-    nom: '',
-    ville: '',
-    region: '',
-    code_postal: '',
-    role: '',
-  });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
   const [noResultsMessage, setNoResultsMessage] = useState('');
-  // Function to render the search results
   const renderSearch = () => {
-    if (
-      searchQuery.nom.length > 0 ||
-      searchQuery.ville.length > 0 ||
-      searchQuery.region.length > 0 ||
-      searchQuery.code_postal.length > 0 ||
-      searchQuery.role.length > 0
-    ) {
-      const filteredEntites = entites.filter(entite => {
-        const nom = entite.nom
-          ? entite.nom.toLowerCase().includes(searchQuery.nom.toLowerCase())
-          : false;
-        const ville = entite.ville
-          ? entite.ville.toLowerCase().includes(searchQuery.ville.toLowerCase())
-          : false;
-        const region = entite.region
-          ? entite.region.toLowerCase().includes(searchQuery.region.toLowerCase())
-          : false;
-        const code_postal = entite.code_postal
-          ? entite.code_postal.toLowerCase().includes(searchQuery.code_postal.toLowerCase())
-          : false;
-        const role = entite.role
-          ? entite.role.toLowerCase().includes(searchQuery.role.toLowerCase())
-          : false;
-        return nom || ville || region || code_postal || role;
-      });
+    let filteredEntites = entites;
 
-      return filteredEntites; // Return filtered entities
+    // Filter by Search Term
+    if (typeof searchTerm === 'string' && searchTerm.trim().length > 0) {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      filteredEntites = filteredEntites.filter(entite => {
+        return (
+          (entite.nom && entite.nom.toLowerCase().includes(lowerCaseSearchTerm)) ||
+          (entite.ville && entite.ville.toLowerCase().includes(lowerCaseSearchTerm)) ||
+          (entite.region && entite.region.toLowerCase().includes(lowerCaseSearchTerm)) ||
+          (entite.code_postal && entite.code_postal.toLowerCase().includes(lowerCaseSearchTerm)) ||
+          (entite.role && entite.role.toLowerCase().includes(lowerCaseSearchTerm))
+        );
+      });
     }
-    return entites; // Return original entities if no search query
+    // Filter by Role
+    if (selectedRole.trim()) {
+      filteredEntites = filteredEntites.filter(entite => entite.role === selectedRole);
+    }
+    return filteredEntites;
   };
+  useEffect(() => {
+    const filtered = renderSearch();
+    if (filtered.length === 0) {
+      setNoResultsMessage('Aucune entité trouvée pour les critères de recherche spécifiés.');
+    } else {
+      setNoResultsMessage(''); // Clear the message if results are found
+    }
+  }, [searchTerm, selectedRole, entites]);
   const roles = [
     'Fournisseur',
     'CSPS',
@@ -106,10 +99,8 @@ const EntiteList = () => {
     setNoResultsMessage('');
     const result = await entityService.getActiveEntites();
     if (result.success) {
-      setEntites(result.data); // Update your entites state here
-      if (result.data.length === 0) {
-        setNoResultsMessage('Aucune entité active trouvée.');
-      }
+      setEntites(result.data);
+      setNoResultsMessage(result.data.length === 0 ? 'Aucune entité inactive trouvée.' : '');
     } else {
       console.error(result.error);
       setNoResultsMessage(
@@ -121,9 +112,7 @@ const EntiteList = () => {
     const result = await entityService.getInactiveEntites();
     if (result.success) {
       setEntites(result.data);
-      if (result.data.length === 0) {
-        setNoResultsMessage('Aucune entité inactive trouvée.');
-      } // Update your entites state here
+      setNoResultsMessage(result.data.length === 0 ? 'Aucune entité inactive trouvée.' : '');
     } else {
       console.error(result.error);
       setNoResultsMessage(
@@ -143,7 +132,6 @@ const EntiteList = () => {
     setShowModal(false); // Hide modal
     fetchActiveEntites(); // Refresh entity list after adding/editing
   };
-
   // Function to handle saving entity
   const handleSave = async data => {
     let result;
@@ -176,48 +164,43 @@ const EntiteList = () => {
   };
 
   // Function to close the alert
-  const handleCloseAlert = () => {
-    setAlert({ show: false, message: '', type: '' });
+  const handleCloseAlert = (setAlert, timeout = 10000) => {
+    const timer = setTimeout(() => {
+      setAlert({ show: false, message: '', type: '' });
+    }, timeout);
+    return () => clearTimeout(timer);
   };
   // Search Role
   const handleRoleChange = e => {
-    const { name, value } = e.target;
-    console.log(`Changing ${name} to ${value}`);
-    setSearchQuery(prev => ({ ...prev, [name]: value }));
+    const value = e.target.value;
+    setSelectedRole(value); // Update the dropdown state
+    setSearchTerm(value); // Update searchTerm state to trigger filtering
   };
   // Search functionality
   const handleSearchChange = e => {
-    const { name, value } = e.target; // Destructure name and value from the event target
-    // Update searchQuery with the new value
-    setSearchQuery(prev => {
-      const updatedQuery = { ...prev, [name]: value }; // Update only the field that changed
-      console.log('Updated searchQuery:', updatedQuery); // Log the updated searchQuery
-      return updatedQuery; // Return the updated state
-    });
-    // If the input is cleared, fetch active entities
-    if (value === '') {
-      fetchActiveEntites();
-    } else {
-      handleSearchEntities(); // Otherwise, fetch entities based on the search query
+    const value = e.target.value;
+    setSearchTerm(value); // Update searchTerm state
+    if (value.trim() === '') {
+      fetchActiveEntites(); // Fetch all entities if search bar is cleared
     }
   };
   const handleSearchEntities = async () => {
     try {
-      if (!searchQuery || typeof searchQuery !== 'object') {
-        console.error('Invalid searchQuery: searchQuery must be an object');
+      if (!setSearchTerm || typeof setSearchTerm !== 'object') {
+        console.error('Invalid setSearchTerm: setSearchTerm must be an object');
         return;
       }
-      const result = await entityService.searchEntities(searchQuery);
+      const result = await entityService.searchEntities(setSearchTerm);
       if (result.success) {
         setEntites(result.data);
-        // Show message if no contacts are found
-        if (result.data.length === 0) {
-          setNoResultsMessage('Aucune entité trouvée pour les critères de recherche spécifiés.');
-        } else {
-          setNoResultsMessage(''); // Clear message if results are found
-        }
+        setNoResultsMessage(
+          result.data.length === 0
+            ? 'Aucune entité trouvée pour les critères de recherche spécifiés.'
+            : ''
+        );
       } else {
         console.error(result.error);
+        setNoResultsMessage('Erreur lors de la recherche. Veuillez réessayer plus tard.');
       }
     } catch (error) {
       console.error('Error while searching entities:', error);
@@ -233,59 +216,44 @@ const EntiteList = () => {
       } else {
         fetchInactiveEntites();
       }
-      setNoResultsMessage(''); // clear the no results message if any
+      setNoResultsMessage(''); // clear the no results message
       return newIsActive; // Update the state
     });
   };
   useEffect(() => {
-    console.log('Updated searchQuery:', searchQuery); // Ensure `searchQuery` is updated
+    console.log('Updated setSearchTerm:', setSearchTerm); // Ensure `setSearchTerm` is updated
     if (
-      searchQuery.nom ||
-      searchQuery.ville ||
-      searchQuery.region ||
-      searchQuery.code_postal ||
-      searchQuery.role
+      setSearchTerm.nom ||
+      setSearchTerm.ville ||
+      setSearchTerm.region ||
+      setSearchTerm.code_postal ||
+      setSearchTerm.role
     ) {
       handleSearchEntities();
     } else {
       fetchActiveEntites(); // Clear filters if all fields are empty
     }
-  }, [searchQuery]);
+  }, [setSearchTerm]);
   // Render filtered entities
   const filteredEntites = renderSearch();
+  const clearSearch = () => {
+    setSearchTerm(''); // Clear the search bar
+    setSelectedRole(''); // Clear the dropdown value
+    fetchActiveEntites(); // Fetch all entities
+  };
   return (
     <div className="entite-list">
       <Card id="search-entite">
         <MDBox pt={2} px={2} display="flex" justifyContent="space-between" alignItems="center">
           <MDBox pr={1}>
             <div className="entite-list">
+              {/* Search Bar */}
               <MDInput
-                label="Recherche par nom"
-                name="nom"
-                value={searchQuery.nom}
+                label="Recherche par nom, ville, region, code postal"
+                name="searchTerm"
+                value={searchTerm}
                 onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par ville"
-                name="ville"
-                value={searchQuery.ville}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par region"
-                name="region"
-                value={searchQuery.region}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
-              />
-              <MDInput
-                label="Recherche par code postal"
-                name="code_postal"
-                value={searchQuery.code_postal}
-                onChange={handleSearchChange}
-                style={{ marginBottom: '10px', marginRight: '10px' }}
+                style={{ width: '100%', marginBottom: '10px' }}
               />
               {/* Dropdown for Role Selection */}
               <FormControl variant="outlined" style={{ marginBottom: '10px', marginRight: '10px' }}>
@@ -295,7 +263,7 @@ const EntiteList = () => {
                 <Select
                   labelId="role-select-label"
                   name="role"
-                  value={searchQuery.role}
+                  value={selectedRole} // Bind to selectedRole state
                   onChange={handleRoleChange}
                   label="Role"
                 >
@@ -306,14 +274,7 @@ const EntiteList = () => {
                   ))}
                 </Select>
               </FormControl>
-              <MDButton
-                onClick={() => {
-                  setNoResultsMessage('');
-                  setSearchQuery({ nom: '', ville: '', region: '', code_postal: '', role: '' });
-                }}
-                variant="gradient"
-                color="dark"
-              >
+              <MDButton onClick={() => clearSearch()} variant="gradient" color="dark">
                 Effacer la recherche
               </MDButton>
             </div>
@@ -334,24 +295,24 @@ const EntiteList = () => {
             style={{ marginRight: '10px' }}
           />
           <Grid container spacing={3}>
-            {filteredEntites.map(entite => (
-              <Grid item xs={12} sm={8} md={4} key={entite.id}>
-                <EntiteCard
-                  entite={entite}
-                  onEdit={() => {
-                    setSelectedEntity(entite);
-                    setShowModal(true);
-                  }}
-                />
-              </Grid>
-            ))}
+            {filteredEntites.length > 0
+              ? filteredEntites.map(entite => (
+                  <Grid item xs={12} sm={8} md={4} key={entite.id}>
+                    <EntiteCard
+                      entite={entite}
+                      onEdit={() => {
+                        setSelectedEntity(entite);
+                        setShowModal(true);
+                      }}
+                    />
+                  </Grid>
+                ))
+              : noResultsMessage && (
+                  <Alert variant="destructive" className="mt-4">
+                    <AlertDescription>{noResultsMessage}</AlertDescription>
+                  </Alert>
+                )}
           </Grid>
-          {/* Conditionally render the no results alert */}
-          {noResultsMessage && (
-            <Alert variant="destructive" className="mt-4">
-              <AlertDescription>{noResultsMessage}</AlertDescription>
-            </Alert>
-          )}
         </MDBox>
       </Card>
       {showModal && (

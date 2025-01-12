@@ -7,7 +7,7 @@
  * handleCloseAlert: closes any alerts
  * handleSearchCompanies: searches companies by name or siret
  */
-import CompanyService from 'services/CompanyService';
+import CompanyService from 'services/Comapnies/CompanyService';
 
 // Fetch active companies
 export const fetchActiveCompanies = async (setCompanies, setAlert, setNoResultsMessage) => {
@@ -101,6 +101,9 @@ export const handleSave = async (
 };
 
 // Close alert function
-export const handleCloseAlert = setAlert => {
-  setAlert({ show: false, message: '', type: '' });
+export const handleCloseAlert = (setAlert, timeout = 10000) => {
+  const timer = setTimeout(() => {
+    setAlert({ show: false, message: '', type: '' });
+  }, timeout);
+  return () => clearTimeout(timer);
 };

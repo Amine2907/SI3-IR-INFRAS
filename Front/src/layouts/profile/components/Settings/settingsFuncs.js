@@ -27,7 +27,7 @@
  *   - togglePasswordVisibility: A function to toggle the password visibility
  */
 import { useState, useCallback } from 'react';
-import settingsService from 'services/settingsService';
+import settingsService from 'services/Settings/settingsService';
 import { useAuth } from 'context/Auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 function SettingsFunctions(setUserData) {

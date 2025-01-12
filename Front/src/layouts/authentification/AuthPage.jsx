@@ -23,6 +23,10 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'components/ui/tabs';
 import AuthService from 'services/authService';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
+<<<<<<< HEAD
+=======
+import AuthService from 'services/Auth/authService';
+>>>>>>> 51345e251cfd8a0cc2445baf7bdee27328722086
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'context/Auth/AuthContext';
 import { Alert, AlertDescription } from 'components/ui/alert';

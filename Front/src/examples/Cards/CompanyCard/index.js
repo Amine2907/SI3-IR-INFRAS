@@ -1,23 +1,36 @@
-/**
- * CompanyCard component
- *
- * This component renders a card displaying company information of an entity.
- * It uses Material Dashboard 2 React components for styling and layout.
- *
- * Props:
- * - company: An object containing the company's information.
- *   - name (string): The name of the company (required).
- *
- * The component retrieves the `darkMode` state from the Material UI controller context
- * to adjust styling based on the current theme mode.
- *
- * Dependencies:
- * - React
- * - PropTypes for prop type validation
- * - Material UI components: Grid, Tooltip, Icon, Card
- * - Material Dashboard 2 React components: MDBox, MDTypography
- * - useMaterialUIController for accessing the UI controller context
- */
+// Description :
+// Le composant CompanyCard affiche une carte contenant des informations sur une entreprise. Il utilise des composants de Material UI pour la mise en page et le style. Ce composant permet de visualiser les informations essentielles d'une entreprise telles que son nom, son site web, son numéro SIRET, ses départements et son état actif/inactif. Il inclut également une icône d'édition pour permettre la modification des informations de l'entreprise.
+
+// Props :
+// company (objet, requis): Un objet contenant les informations de l'entreprise à afficher. Il doit contenir les propriétés suivantes :
+
+// nom (string): Le nom de l'entreprise.
+// site_web (string): L'URL du site web de l'entreprise.
+// department (string ou tableau de strings): Les départements auxquels appartient l'entreprise. Si plusieurs départements, ils sont affichés sous forme de liste séparée par des virgules.
+// siret (string): Le numéro SIRET de l'entreprise.
+// is_active (booléen): L'état d'activité de l'entreprise, où true signifie actif et false inactif.
+// onEdit (fonction, requis): Une fonction qui est exécutée lorsque l'utilisateur clique sur l'icône d'édition. Elle permet de gérer l'ouverture du formulaire d'édition pour l'entreprise.
+
+// Dépendances :
+// React : Utilisé pour la création du composant fonctionnel.
+// PropTypes : Utilisé pour valider les types des props.
+// Material UI : Utilisé pour les composants visuels comme Grid, Tooltip, Icon, Card, etc.
+// Material Dashboard 2 React : Utilisation des composants MDBox et MDTypography pour un meilleur rendu et style.
+// useMaterialUIController : Permet d'accéder à l'état darkMode du contexte de l'interface utilisateur, afin d'ajuster le style en fonction du mode clair ou sombre.
+// Fonctionnalité :
+// Affichage des informations de l'entreprise :
+
+// Le nom de l'entreprise est affiché avec une icône de bureau.
+// Le site web de l'entreprise est affiché avec une icône de globe.
+// Le numéro SIRET de l'entreprise est affiché avec une icône de société.
+// Les départements de l'entreprise sont affichés avec une icône d'appartement. Si plusieurs départements existent, ils sont affichés séparément par des virgules.
+// L'état de l'entreprise (actif/inactif) est affiché avec une icône de statut.
+// Édition de l'entreprise :
+
+// Le composant inclut une icône d'édition qui, lorsqu'elle est cliquée, exécute la fonction onEdit, permettant ainsi d'éditer les informations de l'entreprise.
+// Mode sombre/clair :
+
+// Le style de l'interface s'adapte au mode actuel (sombre ou clair), contrôlé par l'état darkMode du contexte useMaterialUIController.
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
