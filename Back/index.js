@@ -80,7 +80,8 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 // Start Server
-const PORT = process.env.PORT || 5000;
+// const PORT = process.env.PORT || 5000;
+const PORT = "https://si3-ir-infras.onrender.com";
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
 });
