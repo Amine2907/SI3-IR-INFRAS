@@ -81,7 +81,7 @@ app.use((err, req, res, next) => {
 });
 // Start Server
 // const PORT = process.env.PORT || 5000;
-const PORT = "https://si3-ir-infras.onrender.com";
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
 });
