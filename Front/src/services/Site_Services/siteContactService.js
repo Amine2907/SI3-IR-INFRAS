@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/siteContact';
+const API_URL = 'https://si3-ir-infras.onrender.com/api/siteContact';
 const addExistingSiteContacts = async ({ Sid, Cids }) => {
   try {
     // Ensure Sid and Cids are not undefined

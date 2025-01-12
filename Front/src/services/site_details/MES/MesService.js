@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/mes';
+const API_URL = 'https://si3-ir-infras.onrender.com/api/mes';
 // Create mes Service
 const createMes = async ({ Sid, mesData }) => {
   try {

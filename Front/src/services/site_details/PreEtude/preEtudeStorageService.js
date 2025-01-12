@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/pre-storage';
+const API_URL = 'https://si3-ir-infras.onrender.com/api/pre-storage';
 
 // Upload a preEtude file to the server
 const uploadPreEtudeFile = async (file, preEtudeId) => {

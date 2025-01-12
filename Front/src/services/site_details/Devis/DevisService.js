@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/devis';
+const API_URL = 'https://si3-ir-infras.onrender.com/api/devis';
 // Create Devis Service
 const createDevis = async ({ Sid, devisData }) => {
   try {
