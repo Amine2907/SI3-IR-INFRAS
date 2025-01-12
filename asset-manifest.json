@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/SI3-IR-INFRAS/static/css/main.f1603a1b.css",
-    "main.js": "/SI3-IR-INFRAS/static/js/main.1500be43.js",
+    "main.js": "/SI3-IR-INFRAS/static/js/main.dfeda84e.js",
     "static/media/fa-solid-900.ttf": "/SI3-IR-INFRAS/static/media/fa-solid-900.2582b0e4bcf85eceead0.ttf",
     "static/media/fa-brands-400.ttf": "/SI3-IR-INFRAS/static/media/fa-brands-400.1815e00441357e01619e.ttf",
     "static/media/fa-solid-900.woff2": "/SI3-IR-INFRAS/static/media/fa-solid-900.2463b90d9a316e4e5294.woff2",
@@ -12,10 +12,10 @@
     "static/media/fa-v4compatibility.woff2": "/SI3-IR-INFRAS/static/media/fa-v4compatibility.ea8f94e1d22e0d35ccd4.woff2",
     "index.html": "/SI3-IR-INFRAS/index.html",
     "main.f1603a1b.css.map": "/SI3-IR-INFRAS/static/css/main.f1603a1b.css.map",
-    "main.1500be43.js.map": "/SI3-IR-INFRAS/static/js/main.1500be43.js.map"
+    "main.dfeda84e.js.map": "/SI3-IR-INFRAS/static/js/main.dfeda84e.js.map"
   },
   "entrypoints": [
     "static/css/main.f1603a1b.css",
-    "static/js/main.1500be43.js"
+    "static/js/main.dfeda84e.js"
   ]
 }
