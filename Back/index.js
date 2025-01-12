@@ -36,7 +36,7 @@ import checkFilesRoutes from './routes/SiteDetails/DynFields/getFilesRoute.js';
 // Express Setup
 const app = express();
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: '*',
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
