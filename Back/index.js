@@ -36,8 +36,10 @@ import checkFilesRoutes from './routes/SiteDetails/DynFields/getFilesRoute.js';
 // Express Setup
 const app = express();
 app.use(cors({
-  origin: '*',
-}));
+  origin: 'https://amine0320.github.io',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
