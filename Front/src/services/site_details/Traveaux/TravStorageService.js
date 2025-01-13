@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://si3-ir-infras.onrender.com/api/trav-storage';
+const API_URL = 'http://localhost:5000/api/trav-storage';
 
 // Upload a trav file to the server
 const uploadTravFile = async (file, travId) => {

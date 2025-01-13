@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'https://si3-ir-infras.onrender.com/api/prospect';
+const API_URL = 'http://localhost:5000/api/prospect';
 // Create Prospect Service
 const createProspect = async ({ Sid, prospectData }) => {
   try {

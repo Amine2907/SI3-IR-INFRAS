@@ -13,7 +13,7 @@
  * - searchEntities: searches contacts in the database
  */
 import axios from 'axios';
-const API_URL = 'https://si3-ir-infras.onrender.com/api/entites';
+const API_URL = 'http://localhost:5000/api/entites';
 // import dotenv from 'dotenv';
 // dotenv.config();
 // const API_URL = process.env.ENTITES_API_URL;

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://si3-ir-infras.onrender.com/api/paie-storage';
+const API_URL = 'http://localhost:5000/api/paie-storage';
 
 // Upload a paie file to the server
 const uploadPaieFile = async (file, paieId) => {

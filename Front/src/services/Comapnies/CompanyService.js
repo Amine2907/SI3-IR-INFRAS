@@ -13,7 +13,7 @@
  * - getInactiveCompanys: gets all the inactive Companys in the database
  */
 import axios from 'axios';
-const API_URL = 'https://si3-ir-infras.onrender.com/api/companies';
+const API_URL = 'http://localhost:5000/api/companies';
 
 // Create Company
 const createCompany = async data => {

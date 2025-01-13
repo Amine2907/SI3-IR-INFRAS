@@ -80,12 +80,8 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 // Start Server
-// const PORT = process.env.PORT || 5000;
-const PORT = process.env.PORT || 5000;
+// sending Api of test backend (secured)
+const PORT = process.env.PORT || 5000  ;
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
 });
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-fetch(`${BACKEND_URL}/api/your-endpoint`)
-  .then(response => response.json())
-  .then(data => console.log(data));

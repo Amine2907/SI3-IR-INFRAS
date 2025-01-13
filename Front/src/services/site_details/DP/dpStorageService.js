@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://si3-ir-infras.onrender.com/api/dp-storage';
+const API_URL = 'http://localhost:5000/api/dp-storage';
 
 // Upload a dp file to the server
 const uploadDpFile = async (file, declPreaId) => {

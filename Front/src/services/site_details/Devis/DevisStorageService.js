@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://si3-ir-infras.onrender.com/api/devis-storage';
+const API_URL = 'http://localhost:5000/api/devis-storage';
 
 // Upload a devis file to the server
 const uploadDevisFile = async (file, devisId, Sid) => {

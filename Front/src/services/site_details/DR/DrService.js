@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'https://si3-ir-infras.onrender.com/api/dem-rac';
+const API_URL = 'http://localhost:5000/api/dem-rac';
 // Create Prospect Service
 const createDemRac = async ({ Sid, demracData }) => {
   try {

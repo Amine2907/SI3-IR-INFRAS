@@ -16,7 +16,7 @@ import axios from 'axios';
 // import dotenv from 'dotenv';
 // dotenv.config();
 // const API_URL = process.env.BACK_COMPANIES_API || 'your-Site-api-url';
-const API_URL = 'https://si3-ir-infras.onrender.com/api/site';
+const API_URL = 'http://localhost:5000/api/site';
 // Create Site
 const createSite = async data => {
   try {

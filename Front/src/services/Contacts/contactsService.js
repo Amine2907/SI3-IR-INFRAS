@@ -13,7 +13,7 @@
  * - getInactiveContacts: gets all the inactive contacts in the database
  */
 import axios from 'axios';
-const API_URL = 'https://si3-ir-infras.onrender.com/api/contacts';
+const API_URL = 'http://localhost:5000/api/contacts';
 // import dotenv from 'dotenv';
 // dotenv.config();
 // const API_URL = process.env.CONTACTS_API_URL;
