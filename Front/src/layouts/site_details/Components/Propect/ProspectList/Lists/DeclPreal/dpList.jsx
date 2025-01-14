@@ -54,7 +54,6 @@ function DeclPreaList() {
   }, [alert.show]);
   const handleUpdate = async updates => {
     const DPid = selecteddp?.DPid;
-    // console.log('Sending update for DPid:', DPid, 'Updates:', updates);
     if (!DPid) {
       console.error('DPid is missing, cannot update.');
       setAlert({
