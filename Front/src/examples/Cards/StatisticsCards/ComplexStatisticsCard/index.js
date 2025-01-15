@@ -12,7 +12,7 @@ import MDTypography from 'components/MDTypography';
 
 function ComplexStatisticsCard({ color, title, count, icon }) {
   return (
-    <Card style={{ width: '20rem' }}>
+    <Card>
       <MDBox display="flex" justifyContent="space-between" pt={1} px={2}>
         <MDBox
           variant="gradient"
