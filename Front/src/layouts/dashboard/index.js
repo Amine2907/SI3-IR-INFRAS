@@ -13,10 +13,6 @@ import ComplexStatisticsCard from 'examples/Cards/StatisticsCards/ComplexStatist
 import reportsBarChartData from 'layouts/dashboard/data/reportsBarChartData';
 import reportsLineChartData from 'layouts/dashboard/data/reportsLineChartData';
 
-// Dashboard components
-// import Projects from 'layouts/dashboard/components/Projects';
-// import OrdersOverview from 'layouts/dashboard/components/OrdersOverview';
-
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
   return (
@@ -26,17 +22,22 @@ function Dashboard() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard color="dark" icon="weekend" title="Bookings" count={281} />
+              <ComplexStatisticsCard color="dark" icon="weekend" title="DR Produit" count={281} />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard icon="leaderboard" title="Today's Users" count="2,300" />
+              <ComplexStatisticsCard icon="leaderboard" title="Devis recu" count="2,300" />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard color="success" icon="store" title="Revenue" count="34k" />
+              <ComplexStatisticsCard
+                color="success"
+                icon="store"
+                title="Devis en attente"
+                count="34k"
+              />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
@@ -44,7 +45,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Devis en attente ( validation operateur )"
                 count="+91"
               />
             </MDBox>
@@ -54,7 +55,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Devis signe"
                 count="+91"
               />
             </MDBox>
@@ -64,7 +65,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Reglement OK"
                 count="+91"
               />
             </MDBox>
@@ -74,7 +75,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Reglement en attente"
                 count="+91"
               />
             </MDBox>
@@ -84,7 +85,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Planification Extension"
                 count="+91"
               />
             </MDBox>
@@ -94,7 +95,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Extension OK"
                 count="+91"
               />
             </MDBox>
@@ -104,7 +105,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Planification Branchement"
                 count="+91"
               />
             </MDBox>
@@ -114,7 +115,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Branchement OK"
                 count="+91"
               />
             </MDBox>
@@ -124,7 +125,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Consuel recu"
                 count="+91"
               />
             </MDBox>
@@ -134,7 +135,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Demande de MES realisee"
                 count="+91"
               />
             </MDBox>
@@ -144,7 +145,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Consuel en attente"
                 count="+91"
               />
             </MDBox>
@@ -154,7 +155,7 @@ function Dashboard() {
               <ComplexStatisticsCard
                 color="primary"
                 icon="person_add"
-                title="Followers"
+                title="Demande de MES en attente"
                 count="+91"
               />
             </MDBox>
@@ -207,17 +208,3 @@ function Dashboard() {
   );
 }
 export default Dashboard;
-//You can use this later
-{
-  /* <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
-              <Projects />
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
-            </Grid> */
-}
-{
-  /* </Grid>
-        </MDBox> */
-}
