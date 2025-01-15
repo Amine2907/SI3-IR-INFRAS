@@ -166,7 +166,7 @@ const dashboardService = {
   countConsuelRecu,
   countDemandeMESRealisee,
   countConsuelEnAttente,
-  countDemandeMESEnAttente
+  countDemandeMESEnAttente,
 };
 
 export default dashboardService;

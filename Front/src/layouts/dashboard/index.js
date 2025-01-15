@@ -1,20 +1,91 @@
-// @mui material components
+import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
-// Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
-// Material Dashboard 2 React example components
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
 import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 import Footer from 'examples/Footer';
-import ReportsBarChart from 'examples/Charts/BarCharts/ReportsBarChart';
-import ReportsLineChart from 'examples/Charts/LineCharts/ReportsLineChart';
 import ComplexStatisticsCard from 'examples/Cards/StatisticsCards/ComplexStatisticsCard';
-// Data
-import reportsBarChartData from 'layouts/dashboard/data/reportsBarChartData';
-import reportsLineChartData from 'layouts/dashboard/data/reportsLineChartData';
-
+import dashboardService from 'services/Dashboard/dashService';
 function Dashboard() {
-  const { sales, tasks } = reportsLineChartData;
+  const [data, setData] = useState({
+    drProduit: 0,
+    devisRecu: 0,
+    devisEnAttente: 0,
+    devisValidationOperateur: 0,
+    devisSigne: 0,
+    reglementOk: 0,
+    reglementEnAttente: 0,
+    planificationExtension: 0,
+    extensionOk: 0,
+    planificationBranchement: 0,
+    branchementOk: 0,
+    consuelRecu: 0,
+    demandeMESRealisee: 0,
+    consuelEnAttente: 0,
+    demandeMESEnAttente: 0,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [
+          drProduit,
+          devisRecu,
+          devisEnAttente,
+          devisValidationOperateur,
+          devisSigne,
+          reglementOk,
+          reglementEnAttente,
+          planificationExtension,
+          extensionOk,
+          planificationBranchement,
+          branchementOk,
+          consuelRecu,
+          demandeMESRealisee,
+          consuelEnAttente,
+          demandeMESEnAttente,
+        ] = await Promise.all([
+          dashboardService.countDr(),
+          dashboardService.countDevisRecu(),
+          dashboardService.countDevisEnAttente(),
+          dashboardService.countDevisValidationOpérateur(),
+          dashboardService.countDevisSigne(),
+          dashboardService.countReglementOk(),
+          dashboardService.countReglementEnAttente(),
+          dashboardService.countPlanificationExtension(),
+          dashboardService.countExtensionOk(),
+          dashboardService.countPlanificationBranchements(),
+          dashboardService.countBranchementOk(),
+          dashboardService.countConsuelRecu(),
+          dashboardService.countDemandeMESRealisee(),
+          dashboardService.countConsuelEnAttente(),
+          dashboardService.countDemandeMESEnAttente(),
+        ]);
+
+        setData({
+          drProduit: drProduit.data,
+          devisRecu: devisRecu.data,
+          devisEnAttente: devisEnAttente.data,
+          devisValidationOperateur: devisValidationOperateur.data,
+          devisSigne: devisSigne.data,
+          reglementOk: reglementOk.data,
+          reglementEnAttente: reglementEnAttente.data,
+          planificationExtension: planificationExtension.data,
+          extensionOk: extensionOk.data,
+          planificationBranchement: planificationBranchement.data,
+          branchementOk: branchementOk.data,
+          consuelRecu: consuelRecu.data,
+          demandeMESRealisee: demandeMESRealisee.data,
+          consuelEnAttente: consuelEnAttente.data,
+          demandeMESEnAttente: demandeMESEnAttente.data,
+        });
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -22,12 +93,17 @@ function Dashboard() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard color="dark" icon="weekend" title="DR Produit" count={281} />
+              <ComplexStatisticsCard
+                color="dark"
+                icon="weekend"
+                title="DR Produit"
+                count={data.drProduit}
+              />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard icon="leaderboard" title="Devis recu" count="2,300" />
+              <ComplexStatisticsCard icon="leaderboard" title="Devis recu" count={data.devisRecu} />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
@@ -36,7 +112,7 @@ function Dashboard() {
                 color="success"
                 icon="store"
                 title="Devis en attente"
-                count="34k"
+                count={data.devisEnAttente}
               />
             </MDBox>
           </Grid>
@@ -46,7 +122,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Devis en attente ( validation operateur )"
-                count="+91"
+                count={data.devisValidationOperateur}
               />
             </MDBox>
           </Grid>
@@ -56,7 +132,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Devis signe"
-                count="+91"
+                count={data.devisSigne}
               />
             </MDBox>
           </Grid>
@@ -66,7 +142,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Reglement OK"
-                count="+91"
+                count={data.reglementOk}
               />
             </MDBox>
           </Grid>
@@ -76,7 +152,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Reglement en attente"
-                count="+91"
+                count={data.reglementEnAttente}
               />
             </MDBox>
           </Grid>
@@ -86,7 +162,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Planification Extension"
-                count="+91"
+                count={data.planificationExtension}
               />
             </MDBox>
           </Grid>
@@ -96,7 +172,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Extension OK"
-                count="+91"
+                count={data.extensionOk}
               />
             </MDBox>
           </Grid>
@@ -106,7 +182,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Planification Branchement"
-                count="+91"
+                count={data.planificationBranchement}
               />
             </MDBox>
           </Grid>
@@ -116,7 +192,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Branchement OK"
-                count="+91"
+                count={data.branchementOk}
               />
             </MDBox>
           </Grid>
@@ -126,7 +202,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Consuel recu"
-                count="+91"
+                count={data.consuelRecu}
               />
             </MDBox>
           </Grid>
@@ -136,7 +212,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Demande de MES realisee"
-                count="+91"
+                count={data.demandeMESRealisee}
               />
             </MDBox>
           </Grid>
@@ -146,7 +222,7 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Consuel en attente"
-                count="+91"
+                count={data.consuelEnAttente}
               />
             </MDBox>
           </Grid>
@@ -156,52 +232,11 @@ function Dashboard() {
                 color="primary"
                 icon="person_add"
                 title="Demande de MES en attente"
-                count="+91"
+                count={data.demandeMESEnAttente}
               />
             </MDBox>
           </Grid>
         </Grid>
-        <MDBox mt={4.5}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={tasks}
-                />
-              </MDBox>
-            </Grid>
-          </Grid>
-        </MDBox>
       </MDBox>
       <Footer />
     </DashboardLayout>
