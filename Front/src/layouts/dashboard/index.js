@@ -10,6 +10,7 @@ import ReportsBarChart from 'examples/Charts/BarCharts/ReportsBarChart';
 <<<<<<< HEAD
 import ReportsLineChart from 'examples/Charts/LineCharts/ReportsLineChart';
 import ComplexStatisticsCard from 'examples/Cards/StatisticsCards/ComplexStatisticsCard';
+<<<<<<< HEAD
 // Data
 import reportsBarChartData from 'layouts/dashboard/data/reportsBarChartData';
 import reportsLineChartData from 'layouts/dashboard/data/reportsLineChartData';
@@ -20,6 +21,12 @@ import reportsLineChartData from 'layouts/dashboard/data/reportsLineChartData';
 
 =======
 >>>>>>> 3ff10d1 (Adjusting Dashboard Frontend)
+=======
+import dashboardService from 'services/Dashboard/dashService';
+import reportsBarChartData from './data/reportsBarChartData';
+import ReportsLineChart from 'examples/Charts/LineCharts/ReportsLineChart';
+import ReportsBarChart from 'examples/Charts/BarCharts/ReportsBarChart';
+>>>>>>> ec9e373 (Dashboard Part 5)
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
   return (
@@ -187,7 +194,11 @@ function Dashboard() {
                     </>
                   }
                   date="updated 4 min ago"
+<<<<<<< HEAD
                   chart={sales}
+=======
+                  chart={''}
+>>>>>>> ec9e373 (Dashboard Part 5)
                 />
               </MDBox>
             </Grid>
@@ -198,7 +209,11 @@ function Dashboard() {
                   title="completed tasks"
                   description="Last Campaign Performance"
                   date="just updated"
+<<<<<<< HEAD
                   chart={tasks}
+=======
+                  chart={''}
+>>>>>>> ec9e373 (Dashboard Part 5)
                 />
               </MDBox>
             </Grid>
