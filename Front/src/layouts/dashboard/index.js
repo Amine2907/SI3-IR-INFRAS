@@ -9,7 +9,6 @@ import dashboardService from 'services/Dashboard/dashService';
 import reportsBarChartData from './data/reportsBarChartData';
 import ReportsLineChart from 'examples/Charts/LineCharts/ReportsLineChart';
 import ReportsBarChart from 'examples/Charts/BarCharts/ReportsBarChart';
-
 function Dashboard() {
   const [data, setData] = useState({
     drProduit: 0,
@@ -92,7 +91,7 @@ function Dashboard() {
       <DashboardNavbar />
       <MDBox py={3}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={3}>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
