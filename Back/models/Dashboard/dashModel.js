@@ -1,14 +1,15 @@
 import { supabase } from "../../config/supabaseClient.js";
 
-// 1. Calculer Dr 
+// 1. Calculer DR 
 const countDr = async () => {
     try {
-        const { data, error } = await supabase
-            .from('Dr')
-            .select('count(*)')
+        const { count, error } = await supabase
+            .from('DR')
+            .select('*', { count: 'exact' })
             .eq('is_active', true);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -17,27 +18,30 @@ const countDr = async () => {
 // 2. Calculer Devis Reçu
 const countDevisRecu = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('Devis')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
-            .neq('reception_date', null);
+            .not('reception_date', 'is', null);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
 };
+
 // 3. Calculer Devis En Attente
 const countDevisEnAttente = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('Devis')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
-            .or('reception_date.is.null, reception_date.is.not.null');
+            .is('reception_date', null);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -46,13 +50,14 @@ const countDevisEnAttente = async () => {
 // 4. Calculer Devis Signé
 const countDevisSigne = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('Devis')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
-            .neq('date_envoi', null);
+            .not('envoi_date', 'is', null);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -61,15 +66,16 @@ const countDevisSigne = async () => {
 // 5. Devis en Attente Validation Opérateur
 const countDevisValidationOpérateur = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('Devis')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
-            .neq('date_reception', null)
-            .gt('Montant', 25000)
+            .not('reception_date', 'is', null)
+            .gt('montant', 25000)
             .eq('validation_par_sfr', false);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -78,13 +84,14 @@ const countDevisValidationOpérateur = async () => {
 // 6. Règlement OK
 const countReglementOk = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('Paiements')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
-            .neq('reglement_date', null);
+            .not('reglement_date', 'is', null);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -93,13 +100,14 @@ const countReglementOk = async () => {
 // 7. Règlement en Attente
 const countReglementEnAttente = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('Paiements')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
-            .or('TDR_envoi_date.is.null, TDR_envoi_date.is.null');
+            .is('TDR_envoi_date', null);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -108,14 +116,15 @@ const countReglementEnAttente = async () => {
 // 8. Planification Extension
 const countPlanificationExtension = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('Traveaux')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
-            .neq('extension_prev', null)
-            .eq('extension_reel', null);
+            .not('extension_prev', 'is', null)
+            .is('extension_reel', null);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -124,13 +133,14 @@ const countPlanificationExtension = async () => {
 // 9. Extension OK
 const countExtensionOk = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('Traveaux')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
-            .neq('extension_reel', null);
+            .not('extension_reel', 'is', null);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -139,14 +149,15 @@ const countExtensionOk = async () => {
 // 10. Planification Branchements
 const countPlanificationBranchements = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('Traveaux')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
-            .neq('branchement_prev', null)
-            .eq('branchement_reel', null);
+            .not('branchement_prev', 'is', null)
+            .is('branchement_reel', null);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -155,13 +166,14 @@ const countPlanificationBranchements = async () => {
 // 11. Branchement OK
 const countBranchementOk = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('Traveaux')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
-            .neq('branchement_reel', null);
+            .not('branchement_reel', 'is', null);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -170,13 +182,14 @@ const countBranchementOk = async () => {
 // 12. Consuel Reçu
 const countConsuelRecu = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('MES')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
             .eq('status_consuel', 'ok');
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -185,13 +198,14 @@ const countConsuelRecu = async () => {
 // 13. Demande de MES Réalisée
 const countDemandeMESRealisee = async () => {
     try {
-        const { data, error } = await supabase
+        const { count, error } = await supabase
             .from('MES')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
-            .neq('MES_reel', null);
+            .not('MES_reel', 'is', null);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
@@ -200,34 +214,52 @@ const countDemandeMESRealisee = async () => {
 // 14. Consuel en Attente
 const countConsuelEnAttente = async () => {
     try {
-        const { data, error } = await supabase
+        // First, get the ids of valid Traveaux
+        const { data: validTraveauxIds, error: traveauxError } = await supabase
+            .from('Traveaux')
+            .select('Tid')
+            .eq('is_active', true)
+            .not('branchement_reel', 'is', null);
+        if (traveauxError) throw traveauxError;
+        // If no valid Traveaux found, return 0
+        if (!validTraveauxIds || validTraveauxIds.length === 0) {
+            return { success: true, data: 0 };
+        }
+        // Extract Tid values from the result
+        const validTids = validTraveauxIds.map(t => t.Tid);
+        console.log('Valid Traveaux IDs:', validTids);
+        // Now, count MES records
+        const { count, error: mesError } = await supabase
             .from('MES')
-            .select('count(*)')
+            .select('*', { count: 'exact' })
             .eq('is_active', true)
             .eq('status_consuel', 'En attente')
-            .join('Traveaux', 'MES.branchement_reel', 'Traveaux.branchement_reel');
+            .in('traveaux_id', validTids);
+
+        if (mesError) throw mesError;
+
+        return { success: true, data: count || 0 };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+};
+// 15. Demande de MES en Attente
+const countDemandeMESEnAttente = async () => {
+    try {
+        const { count, error } = await supabase
+            .from('MES')
+            .select('*', { count: 'exact' })
+            .eq('is_active', true)
+            .eq('status_consuel', 'ok')
+            .is('MES_reel', null);
+
         if (error) throw error;
-        return { success: true, data: data[0].count };
+        return { success: true, data: count || 0 };
     } catch (error) {
         return { success: false, error: error.message };
     }
 };
 
-// 15. Demande de MES en Attente
-const countDemandeMESEnAttente = async () => {
-    try {
-        const { data, error } = await supabase
-            .from('MES')
-            .select('count(*)')
-            .eq('is_active', true)
-            .eq('status_consuel', 'ok')
-            .neq('MES_reel', null);
-        if (error) throw error;
-        return { success: true, data: data[0].count };
-    } catch (error) {
-        return { success: false, error: error.message };
-    }
-};
 const dashboardModel = {
     countDr,
     countDevisRecu,
@@ -247,3 +279,4 @@ const dashboardModel = {
 };
 
 export default dashboardModel;
+
