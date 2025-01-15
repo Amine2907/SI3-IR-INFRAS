@@ -9,6 +9,7 @@ import dashboardService from 'services/Dashboard/dashService';
 import reportsBarChartData from './data/reportsBarChartData';
 import ReportsLineChart from 'examples/Charts/LineCharts/ReportsLineChart';
 import ReportsBarChart from 'examples/Charts/BarCharts/ReportsBarChart';
+
 function Dashboard() {
   const [data, setData] = useState({
     drProduit: 0,
@@ -27,7 +28,6 @@ function Dashboard() {
     consuelEnAttente: 0,
     demandeMESEnAttente: 0,
   });
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -64,7 +64,6 @@ function Dashboard() {
           dashboardService.countConsuelEnAttente(),
           dashboardService.countDemandeMESEnAttente(),
         ]);
-
         setData({
           drProduit: drProduit.data,
           devisRecu: devisRecu.data,
@@ -86,7 +85,6 @@ function Dashboard() {
         console.error('Error fetching data: ', error);
       }
     };
-
     fetchData();
   }, []);
   return (
@@ -263,7 +261,7 @@ function Dashboard() {
                       (<strong>+15%</strong>) increase in today sales.
                     </>
                   }
-                  date="updated 4 min ago"
+                  date=""
                   chart={''}
                 />
               </MDBox>
