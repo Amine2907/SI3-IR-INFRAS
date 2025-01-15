@@ -1,5 +1,4 @@
 import { supabase } from "../../config/supabaseClient.js";
-
 // 1. Calculer DR 
 const countDr = async () => {
     try {
@@ -162,7 +161,6 @@ const countPlanificationBranchements = async () => {
         return { success: false, error: error.message };
     }
 };
-
 // 11. Branchement OK
 const countBranchementOk = async () => {
     try {
@@ -259,7 +257,6 @@ const countDemandeMESEnAttente = async () => {
         return { success: false, error: error.message };
     }
 };
-
 const dashboardModel = {
     countDr,
     countDevisRecu,
@@ -277,6 +274,5 @@ const dashboardModel = {
     countConsuelEnAttente,
     countDemandeMESEnAttente
 };
-
 export default dashboardModel;
 
