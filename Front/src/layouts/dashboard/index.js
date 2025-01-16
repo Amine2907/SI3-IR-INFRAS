@@ -4,9 +4,6 @@ import MDBox from 'components/MDBox';
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
 import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 import Footer from 'examples/Footer';
-
-// Data
-
 // Dashboard components
 // import Projects from 'layouts/dashboard/components/Projects';
 // import OrdersOverview from 'layouts/dashboard/components/OrdersOverview';
