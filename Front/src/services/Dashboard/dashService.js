@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'https://si3-ir-infras.onrender.com/api/dashboard';
+const API_URL = 'https://si3-ir-infras.onrender.com/api/dash';
 
 // Count Dr
 const countDr = async () => {
