@@ -89,12 +89,8 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000  ;
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
-<<<<<<< HEAD
 });
 // const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 fetch(`https://si3-ir-infras.onrender.com/api/your-endpoint`)
   .then(response => response.json())
   .then(data => console.log(data));
-=======
-});
->>>>>>> 34a10714f433639b7d4502c9a1769c91c9709ab0

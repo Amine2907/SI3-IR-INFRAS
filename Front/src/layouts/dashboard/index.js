@@ -4,12 +4,10 @@ import MDBox from 'components/MDBox';
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
 import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 import Footer from 'examples/Footer';
-<<<<<<< HEAD
 import ReportsBarChart from 'examples/Charts/BarCharts/ReportsBarChart';
-<<<<<<< HEAD
+
 import ReportsLineChart from 'examples/Charts/LineCharts/ReportsLineChart';
 import ComplexStatisticsCard from 'examples/Cards/StatisticsCards/ComplexStatisticsCard';
-<<<<<<< HEAD
 // Data
 import reportsBarChartData from 'layouts/dashboard/data/reportsBarChartData';
 import reportsLineChartData from 'layouts/dashboard/data/reportsLineChartData';
@@ -18,20 +16,12 @@ import reportsLineChartData from 'layouts/dashboard/data/reportsLineChartData';
 // import Projects from 'layouts/dashboard/components/Projects';
 // import OrdersOverview from 'layouts/dashboard/components/OrdersOverview';
 
-=======
->>>>>>> 3ff10d1 (Adjusting Dashboard Frontend)
-=======
-=======
+
 import ComplexStatisticsCard from 'examples/Cards/StatisticsCards/ComplexStatisticsCard';
->>>>>>> 34a10714f433639b7d4502c9a1769c91c9709ab0
 import dashboardService from 'services/Dashboard/dashService';
 import reportsBarChartData from './data/reportsBarChartData';
 import ReportsLineChart from 'examples/Charts/LineCharts/ReportsLineChart';
 import ReportsBarChart from 'examples/Charts/BarCharts/ReportsBarChart';
-<<<<<<< HEAD
->>>>>>> ec9e373 (Dashboard Part 5)
-=======
->>>>>>> 34a10714f433639b7d4502c9a1769c91c9709ab0
 function Dashboard() {
   const [data, setData] = useState({
     drProduit: 0,
@@ -283,17 +273,17 @@ function Dashboard() {
                       (<strong>+15%</strong>) increase in today sales.
                     </>
                   }
-<<<<<<< HEAD
-                  date="updated 4 min ago"
-<<<<<<< HEAD
-                  chart={sales}
-=======
-                  chart={''}
->>>>>>> ec9e373 (Dashboard Part 5)
-=======
+
+  
+
+      
+
+     
+
+
                   date=""
                   chart={''}
->>>>>>> 34a10714f433639b7d4502c9a1769c91c9709ab0
+
                 />
               </MDBox>
             </Grid>
@@ -304,15 +294,13 @@ function Dashboard() {
                   title="completed tasks"
                   description="Last Campaign Performance"
                   date="just updated"
-<<<<<<< HEAD
-<<<<<<< HEAD
-                  chart={tasks}
-=======
+
+    
+
                   chart={''}
->>>>>>> ec9e373 (Dashboard Part 5)
-=======
-                  chart={''}
->>>>>>> 34a10714f433639b7d4502c9a1769c91c9709ab0
+
+
+
                 />
               </MDBox>
             </Grid>
