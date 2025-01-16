@@ -1,26 +1,21 @@
-/**
- * This module defines routes based on user roles
- * Routes are protected by the roleMiddleware function which verifies the user's role
- * before allowing access to the route
- */
-import express from 'express';
-import roleMiddleware from '../../middleware/roleMiddleware.js'
+import express from "express";
 const router = express.Router();
-// Define routes based on user roles
-router.get('/system-admin', roleMiddleware(['system admin']), (req, res) => {
-  res.json({ message: 'Welcome to the System Admin Dashboard' });
-});
-router.get('/company-admin', roleMiddleware(['company admin']), (req, res) => {
-  res.json({ message: 'Welcome to the Company Admin Dashboard' });
-});
+import dashboardController from "../../controllers/Dashboard/dashContoller.js";
 
-router.get('/manager', roleMiddleware(['manager']), (req, res) => {
-  res.json({ message: 'Welcome to the Manager Dashboard' });
-});
-router.get('/employee', roleMiddleware(['employee']), (req, res) => {
-  res.json({ message: 'Welcome to the Employee Dashboard' });
-});
-router.get('/visitor', roleMiddleware(['visitor']), (req, res) => {
-  res.json({ message: 'Welcome to the Visitor Dashboard' });
-});
+router.get('/dr', dashboardController.countDr);
+router.get('/devis-recu', dashboardController.countDevisRecu);
+router.get('/devis-en-attente', dashboardController.countDevisEnAttente);
+router.get('/devis-signe', dashboardController.countDevisSigne);
+router.get('/devis-validation-operateur', dashboardController.countDevisValidationOpérateur);
+router.get('/reglement-ok', dashboardController.countReglementOk);
+router.get('/reglement-en-attente', dashboardController.countReglementEnAttente);
+router.get('/planification-extension', dashboardController.countPlanificationExtension);
+router.get('/extension-ok', dashboardController.countExtensionOk);
+router.get('/planification-branchements', dashboardController.countPlanificationBranchements);
+router.get('/branchement-ok', dashboardController.countBranchementOk);
+router.get('/consuel-recu', dashboardController.countConsuelRecu);
+router.get('/demande-mes-realisee', dashboardController.countDemandeMESRealisee);
+router.get('/consuel-en-attente', dashboardController.countConsuelEnAttente);
+router.get('/demande-mes-en-attente', dashboardController.countDemandeMESEnAttente);
+
 export default router;

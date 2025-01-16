@@ -22,6 +22,8 @@ import miseEnServiceRoutes from './routes/SiteDetails/MES/miseEnService.js';
 import paieRoutes from './routes/SiteDetails/Reglement/Paiement/paiements.js';
 import CommentsRoutes from './routes/Comments/comments.js';
 import siteFields from './routes/Site/siteFields.js';
+// Dasboard Routes 
+import dashRoutes from './routes/Dashboard/dashboard.js';
 // Storing Routes 
 import prospectStorageRoutes from './routes/SiteDetails/Prospect/prospectStorage.js';
 import demRacStorageRoutes from './routes/SiteDetails/DR/demRacStorage.js';
@@ -63,6 +65,7 @@ app.use('/api/mes',miseEnServiceRoutes);
 app.use('/api/paie',paieRoutes);
 app.use('/api/coms',CommentsRoutes);
 app.use('/api/site-fields',siteFields);
+app.use('/api/dash',dashRoutes);
 // Use Storing Routes 
 app.use('/api/dem-rac-storage',demRacStorageRoutes);
 app.use('/api/dp-storage',dpStorageRoutes);
@@ -82,12 +85,16 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 // Start Server
-// const PORT = process.env.PORT || 5000;
-const PORT = process.env.PORT || 5000;
+// sending Api of test backend (secured)
+const PORT = process.env.PORT || 5000  ;
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
+<<<<<<< HEAD
 });
 // const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 fetch(`https://si3-ir-infras.onrender.com/api/your-endpoint`)
   .then(response => response.json())
   .then(data => console.log(data));
+=======
+});
+>>>>>>> 34a10714f433639b7d4502c9a1769c91c9709ab0
