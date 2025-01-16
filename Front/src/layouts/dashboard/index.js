@@ -124,6 +124,7 @@ function Dashboard() {
                 icon="store"
                 title="Devis en attente"
                 count={data.devisEnAttente}
+                onClick={() => handleCardClick('devisEnAttente')}
               />
             </MDBox>
           </Grid>
@@ -134,6 +135,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Devis en attente ( validation operateur )"
                 count={data.devisValidationOperateur}
+                onClick={() => handleCardClick('devisEnAttenteOp')}
               />
             </MDBox>
           </Grid>
@@ -144,6 +146,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Devis signe"
                 count={data.devisSigne}
+                onClick={() => handleCardClick('devisSigne')}
               />
             </MDBox>
           </Grid>
@@ -154,6 +157,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Reglement OK"
                 count={data.reglementOk}
+                onClick={() => handleCardClick('reglementOk')}
               />
             </MDBox>
           </Grid>
@@ -164,6 +168,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Reglement en attente"
                 count={data.reglementEnAttente}
+                onClick={() => handleCardClick('reglementAttente')}
               />
             </MDBox>
           </Grid>
@@ -174,6 +179,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Planification Extension"
                 count={data.planificationExtension}
+                onClick={() => handleCardClick('planificationExtension')}
               />
             </MDBox>
           </Grid>
@@ -184,6 +190,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Extension OK"
                 count={data.extensionOk}
+                onClick={() => handleCardClick('extensionOk')}
               />
             </MDBox>
           </Grid>
@@ -194,6 +201,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Planification Branchement"
                 count={data.planificationBranchement}
+                onClick={() => handleCardClick('planificationBranchement')}
               />
             </MDBox>
           </Grid>
@@ -204,6 +212,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Branchement OK"
                 count={data.branchementOk}
+                onClick={() => handleCardClick('branchementOk')}
               />
             </MDBox>
           </Grid>
@@ -214,6 +223,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Consuel recu"
                 count={data.consuelRecu}
+                onClick={() => handleCardClick('consuelRecu')}
               />
             </MDBox>
           </Grid>
@@ -224,6 +234,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Demande de MES realisee"
                 count={data.demandeMESRealisee}
+                onClick={() => handleCardClick('demandeMesRealisee')}
               />
             </MDBox>
           </Grid>
@@ -234,6 +245,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Consuel en attente"
                 count={data.consuelEnAttente}
+                onClick={() => handleCardClick('consuelEnAttente')}
               />
             </MDBox>
           </Grid>
@@ -244,6 +256,7 @@ function Dashboard() {
                 icon="person_add"
                 title="Demande de MES en attente"
                 count={data.demandeMESEnAttente}
+                onClick={() => handleCardClick('demandeMesEnAttente')}
               />
             </MDBox>
           </Grid>
