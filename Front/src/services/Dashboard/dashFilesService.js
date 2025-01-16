@@ -12,10 +12,14 @@ const getDrData = async () => {
   }
 };
 // Download DR data as Excel file
-const downloadDrExcel = async () => {
+const downloadExcel = async type => {
   try {
+    if (!type) {
+      console.error('Type is missing or undefined');
+      return;
+    }
     const response = await axios({
-      url: `${API_URL}/download-dr-excel`,
+      url: `${API_URL}/download-excel/${type}`,
       method: 'GET',
       responseType: 'blob',
     });
@@ -26,7 +30,7 @@ const downloadDrExcel = async () => {
     // Create a link to trigger the download
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'dr_produit.xlsx';
+    link.download = `${type}_data.xlsx`; // The downloaded file will have the type in the filename
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -36,6 +40,6 @@ const downloadDrExcel = async () => {
 };
 const dashFilesService = {
   getDrData,
-  downloadDrExcel,
+  downloadExcel,
 };
 export default dashFilesService;

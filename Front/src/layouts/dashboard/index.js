@@ -87,21 +87,9 @@ function Dashboard() {
     };
     fetchData();
   }, []);
-  const handleCardClick = actionType => {
-    // Use a switch or if-else to handle multiple service calls
-    switch (actionType) {
-      case 'drProduit':
-        dashFilesService.downloadDrExcel();
-        break;
-      case 'devisRecu':
-        dashFilesService.downloadDevisRecuExcel();
-        break;
-      case 'devisEnAttente':
-        dashFilesService.downloadDevisEnAttenteExcel();
-        break;
-      default:
-        console.log('No matching service for the given action type');
-    }
+  const handleCardClick = type => {
+    console.log('Clicked type:', type);
+    dashFilesService.downloadExcel(type);
   };
   return (
     <DashboardLayout>
@@ -121,7 +109,12 @@ function Dashboard() {
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard icon="leaderboard" title="Devis recu" count={data.devisRecu} />
+              <ComplexStatisticsCard
+                icon="leaderboard"
+                title="Devis recu"
+                count={data.devisRecu}
+                onClick={() => handleCardClick('devisRecu')}
+              />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>

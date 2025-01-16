@@ -15,22 +15,45 @@ const getDrData = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 };
+const getDevisRecuData = async (req, res) => {
+    try {
+        const result = await DashFiles.getDeviRecuWithSite();
+        if (!result.success) {
+            return res.status(500).json({ error: result.error });
+        }
+
+        return res.status(200).json(result.data);
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
 
 // Controller to generate and download Excel file
-export const downloadDrExcel = async (req, res) => {
+export const downloadExcel = async (req, res) => {
     try {
-      // Fetch the DR data
-      const drDataResult = await DashFiles.getDrDataWithSite();
+      const { type } = req.params; // Get the dynamic type from the URL
   
-      if (!drDataResult.success) {
-        return res.status(500).json({ message: 'Error fetching DR data' });
+      let data;
+
+      // Fetch the data based on the type
+      if (type === 'drProduit') {
+        data = await DashFiles.getDrDataWithSite();
+      } else if (type === 'devisRecu') {
+        data = await DashFiles.getDeviRecuWithSite();
+      } else {
+        return res.status(400).json({ message: 'Invalid type' });
       }
   
-      // Generate the Excel file using the data
-      const fileBuffer = DashFiles.generateExcelFile(drDataResult.data);
+      // If fetching the data fails
+      if (!data.success) {
+        return res.status(500).json({ message: 'Error fetching data for the type' });
+      }
+  
+      // Generate the Excel file
+      const fileBuffer = DashFiles.generateExcelFile(data.data);
   
       // Set headers for file download
-      res.setHeader('Content-Disposition', 'attachment; filename=dr_produit.xlsx');
+      res.setHeader('Content-Disposition', `attachment; filename=${type}_data.xlsx`);
       res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
   
       // Send the file buffer as response
@@ -40,8 +63,10 @@ export const downloadDrExcel = async (req, res) => {
       res.status(500).json({ message: 'Error generating the Excel file', error: error.message });
     }
   };
+
 const DashFilesController = {
     getDrData,
-    downloadDrExcel,
+    getDevisRecuData,
+    downloadExcel,
 }
 export default DashFilesController;
