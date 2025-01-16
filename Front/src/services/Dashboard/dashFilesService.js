@@ -19,11 +19,11 @@ const downloadDrExcel = async () => {
       method: 'GET',
       responseType: 'blob',
     });
-
-    // Create a link element to trigger download
+    // Create a Blob from the response data
     const blob = new Blob([response.data], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
+    // Create a link to trigger the download
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = 'dr_produit.xlsx';

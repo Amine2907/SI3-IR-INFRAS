@@ -3,7 +3,7 @@ import XLSX from 'xlsx';
 
 const getDrDataWithSite = async () => {
     try {
-        // Get the data with the join on Site table
+        // Fetch DR data and Site-related fields
         const { data, error } = await supabase
             .from('DR')
             .select(`
@@ -23,12 +23,47 @@ const getDrDataWithSite = async () => {
 
         if (error) throw error;
 
-        return { success: true, data };
+        // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
+        const drDataWithMappedValues = await Promise.all(data.map(async (item) => {
+            // Fetch the corresponding 'nom' from 'Entite' where Eid matches gestionnaire_de_reseau
+            const { data: entiteData, error: entiteError } = await supabase
+                .from('Entite')
+                .select('nom')
+                .eq('Eid', item.gestionnaire_de_reseau)
+                .single(); // We expect only one result for each gestionnaire_de_reseau value
+
+            if (entiteError) {
+                console.error('Error fetching Entite:', entiteError);
+            }
+
+            // Fetch the corresponding 'SPR_desc' from 'SPR' table where SPRid matches SPRid_FK
+            const { data: sprData, error: sprError } = await supabase
+                .from('SPR')
+                .select('SPR_desc')
+                .eq('SPRid', item.SPRid_FK)
+                .single();
+
+            if (sprError) {
+                console.error('Error fetching SPR:', sprError);
+            }
+            // Return the mapped data, with NULL handling
+            return {
+                EB: item.Site ? item.Site.EB : 'NULL', 
+                G2R: item.Site ? item.Site.G2R : 'NULL',
+                nom: item.Site ? item.Site.nom : 'NULL',
+                NDRid: item.NDRid,
+                Ko_Dp: item.Ko_Dp || 'NULL',
+                date_dr: item.date_dr || 'NULL',
+                type_rac: item.type_rac || 'NULL',
+                gestionnaire_de_reseau_nom: entiteData ? entiteData.nom : 'NULL',
+                SPR_desc: sprData ? sprData.SPR_desc : 'NULL',
+            };
+        }));
+        return { success: true, data: drDataWithMappedValues };
     } catch (error) {
         return { success: false, error: error.message };
     }
 };
-
 // Function to generate an Excel file from the data
 const generateExcelFile = (data) => {
     // Generate a worksheet from the data
