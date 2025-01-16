@@ -92,5 +92,11 @@ app.listen(PORT, () => {
 });
 // const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 fetch(`https://si3-ir-infras.onrender.com/api/your-endpoint`)
-  .then(response => response.json())
-  .then(data => console.log(data));
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
