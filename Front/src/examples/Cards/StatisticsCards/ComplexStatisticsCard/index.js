@@ -5,12 +5,12 @@ import PropTypes from 'prop-types';
 import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Icon from '@mui/material/Icon';
-
+import { Button } from '@mui/material';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 
-function ComplexStatisticsCard({ color, title, count, icon }) {
+function ComplexStatisticsCard({ color, title, count, icon, onClick }) {
   return (
     <Card>
       <MDBox display="flex" justifyContent="space-between" pt={1} px={2}>
@@ -27,6 +27,17 @@ function ComplexStatisticsCard({ color, title, count, icon }) {
           height="3rem"
           mt={-3}
         >
+          <Button
+            onClick={onClick} // This will call the passed onClick function when clicked
+            sx={{
+              width: '100%', // Make the button take the full width of the card
+              textAlign: 'left', // Align text to the left for better layout
+              padding: 0, // Remove padding to keep the layout clean
+              '&:hover': {
+                backgroundColor: 'transparent', // Remove the button's hover background to keep card styling intact
+              },
+            }}
+          ></Button>
           <Icon fontSize="medium" color="inherit">
             {icon}
           </Icon>
@@ -76,6 +87,7 @@ ComplexStatisticsCard.propTypes = {
     label: PropTypes.string,
   }),
   icon: PropTypes.node.isRequired,
+  onClick: PropTypes.func,
 };
 
 export default ComplexStatisticsCard;

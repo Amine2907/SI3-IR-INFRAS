@@ -17,26 +17,25 @@ const getDrData = async (req, res) => {
 };
 
 // Controller to generate and download Excel file
-const downloadDrExcel = async (req, res) => {
+export const downloadDrExcel = async (req, res) => {
     try {
-        const result = await DashFiles.getDrDataWithSite();
-        if (!result.success) {
-            return res.status(500).json({ error: result.error });
-        }
-
-        // Generate Excel file from data
-        const fileBuffer = generateExcelFile(result.data);
-
-        // Set the response headers for file download
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', 'attachment; filename="dr_data.xlsx"');
-
-        // Send the Excel file
-        res.send(fileBuffer);
+      // Fetch data to be included in the Excel file (example: 'DR' table data)
+      const drData = await getDrData();
+  
+      // Convert data to Excel format
+      const ws = writeFile(drData, { bookType: 'xlsx', type: 'buffer' });
+  
+      // Set headers to indicate a file download
+      res.setHeader('Content-Disposition', 'attachment; filename=dr_produit.xlsx');
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  
+      // Send the file as the response
+      res.send(ws);
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+      console.error('Error generating the Excel file:', error);
+      res.status(500).json({ message: 'Error generating the Excel file', error: error.message });
     }
-};
+  };
 const DashFilesController = {
     getDrData,
     downloadDrExcel,

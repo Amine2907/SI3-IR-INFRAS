@@ -9,6 +9,7 @@ import dashboardService from 'services/Dashboard/dashService';
 import reportsBarChartData from './data/reportsBarChartData';
 import ReportsLineChart from 'examples/Charts/LineCharts/ReportsLineChart';
 import ReportsBarChart from 'examples/Charts/BarCharts/ReportsBarChart';
+import dashFilesService from 'services/Dashboard/dashFilesService';
 function Dashboard() {
   const [data, setData] = useState({
     drProduit: 0,
@@ -86,6 +87,22 @@ function Dashboard() {
     };
     fetchData();
   }, []);
+  const handleCardClick = actionType => {
+    // Use a switch or if-else to handle multiple service calls
+    switch (actionType) {
+      case 'drProduit':
+        dashFilesService.downloadDrExcel();
+        break;
+      case 'devisRecu':
+        dashFilesService.downloadDevisRecuExcel();
+        break;
+      case 'devisEnAttente':
+        dashFilesService.downloadDevisEnAttenteExcel();
+        break;
+      default:
+        console.log('No matching service for the given action type');
+    }
+  };
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -98,6 +115,7 @@ function Dashboard() {
                 icon="weekend"
                 title="DR Produit"
                 count={data.drProduit}
+                onClick={() => handleCardClick('drProduit')}
               />
             </MDBox>
           </Grid>
