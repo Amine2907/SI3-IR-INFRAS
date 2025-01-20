@@ -4,7 +4,11 @@ FROM node:16
 # Step 2: Set the working directory in the container
 WORKDIR /app
 
+<<<<<<< HEAD
 # Step 3: Copy package.json and package-lock.json from the root folder
+=======
+# Step 3: Copy package.json and package-lock.json
+>>>>>>> 58da7c77f7ff7184744954034c80a6423b1d7fd4
 COPY back/package*.json ./
 
 # Step 4: Install the backend dependencies
