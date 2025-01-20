@@ -1,0 +1,40 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches:
+      - production # This will trigger the workflow when changes are pushed to the 'production' branch
+  pull_request:
+    branches:
+      - production # This will also trigger the workflow on pull requests to the 'production' branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # This specifies that the workflow will run on an Ubuntu runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2 # Checkout the code from the repository
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1 # Set up Docker Buildx for multi-platform builds
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2 # Cache Docker layers to speed up the build process
+        with:
+          path: ~/.docker/buildx-cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
+
+      - name: Build Docker image for Backend
+        run: |
+          docker build -f Back/Dockerfile -t backend:latest .  # Build the backend Docker image using the Dockerfile in the 'Back' folder
+
+      - name: Log in to DockerHub
+        run: |
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin  # Login to DockerHub using GitHub secrets
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push backend:latest  # Push the backend image to Docker Hub
