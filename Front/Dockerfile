@@ -7,10 +7,7 @@ WORKDIR /app
 COPY front/package*.json ./
 
 # Install dependencies
-<<<<<<< HEAD
-=======
 COPY front/package*.json ./
->>>>>>> 58da7c77f7ff7184744954034c80a6423b1d7fd4
 RUN npm install
 
 # Copy the rest of the frontend files
