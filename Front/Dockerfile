@@ -4,11 +4,11 @@ FROM node:16 AS build
 WORKDIR /app
 
 # Install dependencies
-COPY package*.json ./
+COPY front/package*.json ./  
 RUN npm install
 
-# Copy the rest of the frontend files
-COPY . .
+# Copy the rest of the frontend files from the front folder
+COPY front/ .  
 
 # Build the React app
 RUN npm run build
