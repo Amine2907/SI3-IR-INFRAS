@@ -1,33 +1,6 @@
 import DashFiles from '../../models/Dashboard/filesModel.js';
 import fs from 'fs';
 import path from 'path';
-
-// Controller to get DR data with Site data
-const getDrData = async (req, res) => {
-    try {
-        const result = await DashFiles.getDrDataWithSite();
-        if (!result.success) {
-            return res.status(500).json({ error: result.error });
-        }
-
-        return res.status(200).json(result.data);
-    } catch (error) {
-        return res.status(500).json({ error: error.message });
-    }
-};
-const getDevisRecuData = async (req, res) => {
-    try {
-        const result = await DashFiles.getDeviRecuWithSite();
-        if (!result.success) {
-            return res.status(500).json({ error: result.error });
-        }
-
-        return res.status(200).json(result.data);
-    } catch (error) {
-        return res.status(500).json({ error: error.message });
-    }
-};
-
 // Controller to generate and download Excel file
 export const downloadExcel = async (req, res) => {
     try {
@@ -89,8 +62,6 @@ export const downloadExcel = async (req, res) => {
   };
 
 const DashFilesController = {
-    getDrData,
-    getDevisRecuData,
     downloadExcel,
 }
 export default DashFilesController;

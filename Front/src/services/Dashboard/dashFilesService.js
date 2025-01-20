@@ -1,16 +1,6 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api/dash-files';
-
-// Fetch DR data
-const getDrData = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/dr-data`);
-    return response.data;
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
 // Download DR data as Excel file
 const downloadExcel = async type => {
   try {
@@ -39,7 +29,6 @@ const downloadExcel = async type => {
   }
 };
 const dashFilesService = {
-  getDrData,
   downloadExcel,
 };
 export default dashFilesService;
