@@ -3,10 +3,10 @@ name: Backend CI/CD
 on:
   push:
     branches:
-      - production # This will trigger the workflow when changes are pushed to the 'production' branch
+      - Pr # This will trigger the workflow when changes are pushed to the 'Pr' branch
   pull_request:
     branches:
-      - production # This will also trigger the workflow on pull requests to the 'production' branch
+      - Pr # This will also trigger the workflow on pull requests to the 'Pr' branch
 
 jobs:
   build:
