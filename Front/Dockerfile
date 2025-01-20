@@ -6,12 +6,11 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the container's working directory
 COPY front/package*.json ./
 
-# Install dependencies
-COPY front/package*.json ./
+# Install frontend dependencies
 RUN npm install
 
 # Copy the rest of the frontend files
-COPY front/ .
+COPY ./front/ .
 
 # Build the React app
 RUN npm run build
@@ -25,4 +24,5 @@ COPY --from=build /app/build /usr/share/nginx/html
 # Expose port 80 for Nginx
 EXPOSE 80
 
+# Start Nginx to serve the React app
 CMD ["nginx", "-g", "daemon off;"]

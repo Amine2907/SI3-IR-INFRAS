@@ -4,17 +4,17 @@ FROM node:16
 # Step 2: Set the working directory in the container
 WORKDIR /app
 
-# Step 3: Copy package.json and package-lock.json
+# Step 3: Copy package.json and package-lock.json from the 'back' folder
 COPY back/package*.json ./
 
 # Step 4: Install the backend dependencies
 RUN npm install
 
-# Step 5: Copy the rest of the application code from the backend folder
-COPY back/ . 
+# Step 5: Copy the rest of the backend application code
+COPY ./back/ .
 
 # Step 6: Expose the backend server port
 EXPOSE 5000
 
-# Step 7: Define the command to run your app
+# Step 7: Define the command to run the backend app
 CMD ["npm", "start"]
