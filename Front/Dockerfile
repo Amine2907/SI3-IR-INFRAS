@@ -10,7 +10,7 @@ COPY front/package*.json ./
 RUN npm install
 
 # Copy the rest of the frontend files
-COPY ./front/ .
+COPY ./front/ /app/
 
 # Build the React app
 RUN npm run build

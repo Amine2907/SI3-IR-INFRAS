@@ -11,7 +11,7 @@ COPY back/package*.json ./
 RUN npm install
 
 # Step 5: Copy the rest of the backend application code
-COPY ./back/ .
+COPY ./back/ /app/
 
 # Step 6: Expose the backend server port
 EXPOSE 5000
