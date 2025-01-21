@@ -29,7 +29,7 @@ jobs:
 
       - name: Build Docker image for Frontend
         run: |
-          docker build -f ./front/Dockerfile -t frontend:latest .  # Updated path to Dockerfile in 'front' directory
+          docker build -f Front/Dockerfile -t frontend:latest .  # Updated path to Dockerfile in 'front' directory
 
       - name: Log in to DockerHub
         run: |
