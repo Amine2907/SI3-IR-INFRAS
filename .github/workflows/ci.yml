@@ -3,10 +3,10 @@ name: Build and Push Docker Images
 on:
   push:
     branches:
-      - main
+      - Pr
   pull_request:
     branches:
-      - main
+      - Pr
 
 jobs:
   build:
