@@ -11,35 +11,32 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      # Step 1: Check out the code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      # Step 3: Install Docker Compose
-      - name: Install Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: ~/.docker/buildx-cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
 
-      # Step 4: Log in to Docker Hub
-      - name: Log in to Docker Hub
+      - name: Check directory structure
         run: |
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          ls -R
 
-      # Step 5: Build and push the backend Docker image
-      - name: Build backend Docker image
+      - name: Build Docker image for Backend
         run: |
           docker-compose -f docker-compose.yml build backend
-          docker-compose -f docker-compose.yml push backend
+        working-directory: ./SI3
 
-      # Step 6: Build and push the frontend Docker image
-      - name: Build frontend Docker image
+      - name: Build Docker image for Frontend
         run: |
           docker-compose -f docker-compose.yml build frontend
-          docker-compose -f docker-compose.yml push frontend
+        working-directory: ./SI3
