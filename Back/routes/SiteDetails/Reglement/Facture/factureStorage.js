@@ -1,16 +1,34 @@
 import express from "express";
 const router = express.Router();
 import factureStorageCntrl from "../../../../controllers/SiteDetails/Reglement/Facture/FactureStorageCntrl.js";
-// Route for downloading a file (should be POST as it can involve file data)
-router.post('/download-facture', factureStorageCntrl.downloadFileController);
+import express from "express";
+import multer from "multer";
 
-// Route for getting public URLs for DP files (GET is correct here)
-router.get('/get-facture-files', factureStorageCntrl.getPublicUrlController);
+// Configure Multer for file uploads (memory storage)
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-// Route for uploading a DP file (should be POST to handle file uploads)
-router.post('/upload-facture', factureStorageCntrl.uploadFileController);
+// Route for uploading facture files
+router.post(
+  "/upload-facture",
+  upload.single("file"), // Multer middleware to handle single file upload
+  factureStorageCntrl.uploadFileController // Controller to handle the upload
+);
 
-// Route for generating a signed URL for a DP file (POST is more appropriate for this action)
-router.post('/generate-facture-files', factureStorageCntrl.generateSignedUrlController);
+// Route for generating a signed URL for a facture file
+router.post(
+  "/generate-facture-files",
+  factureStorageCntrl.generateSignedUrlController // Controller for signed URLs
+);
+
+// Route for downloading a facture file
+router.get("/download-facture", factureStorageCntrl.downloadFileController);
+// Route for retrieving public URLs of facture files
+router.post(
+  "/get-facture-files",
+  factureStorageCntrl.getFilesByfactureController // Controller for fetching public URLs
+);
+// Route for deleting facture file 
+router.post('/delete-facture-file', factureStorageCntrl.deleteFileController);
 
 export default router;

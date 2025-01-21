@@ -59,6 +59,7 @@ function Header() {
                     { label: 'Règlement', icon: 'payment' },
                     { label: 'Traveaux', icon: 'build' },
                     { label: 'MES', icon: 'settings' },
+                    { label: 'Facture', icon: 'payment' },
                   ].map((tab, index) => (
                     <Tab
                       key={index}
