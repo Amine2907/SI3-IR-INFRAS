@@ -28,7 +28,7 @@ jobs:
 
       - name: Build Docker image for Frontend
         run: |
-          docker build -f Front/Dockerfile -t frontend:latest .
+          docker build -f front/Dockerfile -t frontend:latest .
 
       - name: Log in to DockerHub
         run: |
