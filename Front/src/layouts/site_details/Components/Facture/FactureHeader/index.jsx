@@ -6,8 +6,8 @@ import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
 import MDAlert from 'components/MDAlert';
 import useFactureForSite from '../FactureList/factureService';
-import siteFactureService from 'services/site_details/MES/MesService';
 import FactureAddingModal from '../FactureAdding';
+import siteFactureService from 'services/site_details/Reglement/Facture/FactureService';
 function FactureHeader() {
   const [alert, setAlert] = useState(false);
   const [selectedFacture, setSelectedFacture] = useState(null);

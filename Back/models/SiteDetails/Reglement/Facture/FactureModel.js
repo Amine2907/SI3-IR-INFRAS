@@ -1,6 +1,6 @@
 import { supabase } from "../../../../config/supabaseClient.js";
 // create Facture Model 
-const createFacture = async (Devis_fk, factureData) => {
+const createFacture = async (Sid, factureData) => {
     try {
         // User can add only one reglement which colunm is_active equal to True ! 
       if (factureData.is_active === true)  {
@@ -20,7 +20,7 @@ const createFacture = async (Devis_fk, factureData) => {
       // Now insert the new Facture into the 'Devis' table, using the PRid_fk field
       const { data: Facture, error: contactError } = await supabase
         .from('Facture')
-        .insert([{ Dfk: Devis_fk, ...factureData }])
+        .insert([{ EB_fk: Sid, ...factureData }])
         .select();
       if (contactError) {
         throw contactError;
@@ -29,16 +29,16 @@ const createFacture = async (Devis_fk, factureData) => {
       const Facturefk = Facture[0].Fid;
       // Now associate the Facture with the Site by inserting into 'Site-Facture' association table
       const { data: siteFacture, error: devisFactureError  } = await supabase
-        .from('Devis-Facture')
-        .insert([{ Did: Devis_fk, Facturefk }]);
+        .from('Site-Facture')
+        .insert([{ Sid: Sid, Fid:Facturefk }]);
       if (devisFactureError ) {
         throw devisFactureError ;
       }
-      // Return the successfully created Facture and the association details
+      // Return the successfully created Facture aFid the association details
       return { success: true, data: { Facture: Facture[0], siteFacture } };
     } catch (error) {
       console.error('Error in createFacture:', error.message);
-      throw error; // Rethrow error for higher-level handling
+      throw error; // Rethrow error for higher-level haFidling
     }
   };
 // get all Factures
@@ -72,13 +72,13 @@ const getFactureById = async (id) => {
         }
 }
 // get active Factures
-const getActiveFacture = async (devisID) => {
+const getActiveFacture = async (factureId) => {
         try {
             const { data, error } = await supabase
             .from('Facture')
             .select('*')
             .eq('is_active', true)
-            .eq('ND',devisID);
+            .eq('Fid',factureId);
             ;
             if (error) {
                 throw error;
@@ -89,13 +89,13 @@ const getActiveFacture = async (devisID) => {
         }
 }
 // get inactive Factures
-const getInactiveFacture = async (devisID) => {
+const getInactiveFacture = async (factureId) => {
     try {
         const { data, error } = await supabase
         .from('Facture')
         .select('*')
         .eq('is_active', false)
-        .eq('ND',devisID);
+        .eq('Fid',factureId);
         if (error) {
             throw error;
         }
