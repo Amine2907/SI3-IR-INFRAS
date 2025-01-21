@@ -15,13 +15,18 @@ const generateSignedUrl = async (filePath) => {
 };
 const uploadPdf = async (file, filePath) => {
   try {
+    // Ensure file path is encoded to prevent issues with special characters
+    const encodedFilePath = encodeURIComponent(filePath);
+
+    console.log("Uploading file to path:", encodedFilePath);
+
     // Perform file upload using Supabase storage
     const { data, error } = await supabase.storage
       .from("facture-pdf")
-      .upload(filePath, file.buffer, {
+      .upload(encodedFilePath, file.buffer, {
         cacheControl: "3600",
-        contentType: file.mimetype,
-        upsert: true,
+        contentType: file.mimetype,  // Use the mimetype provided by the file
+        upsert: true,  // Ensure that the file will overwrite the existing one
       });
 
     if (error) throw error;

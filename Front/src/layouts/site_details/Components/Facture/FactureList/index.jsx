@@ -28,7 +28,7 @@ function FactureList() {
   const { EB } = location.state || {};
   const [selectedFacture, setSelectedFacture] = useState(null);
   const siteId = EB;
-  const { factureData, loading, error, fetchFatureData } = usefactureForSite(siteId);
+  const { factureData, loading, error, fetchFactureData } = usefactureForSite(siteId);
   const handleEdit = facture => {
     setSelectedFacture(facture);
     setShowModal(true);
@@ -52,7 +52,7 @@ function FactureList() {
     }
   }, [alert.show]);
   const handleUpdate = async updates => {
-    const factureId = selectedFacture?.factureId;
+    const factureId = selectedFacture?.Fid;
     console.log('Sending update for factureId:', factureId, 'Updates:', updates);
     if (!factureId) {
       console.error('factureId is missing, cannot update.');
@@ -69,7 +69,7 @@ function FactureList() {
       if (result.success) {
         successfacturesage = 'facture modifiee avec succès !';
         setAlert({ show: true, facturesage: successfacturesage, type: 'success' });
-        fetchFatureData();
+        fetchFactureData();
         handleCloseModal();
       } else {
         setAlert({
@@ -191,11 +191,11 @@ function FactureList() {
           onClose={handleCloseModal}
         />
       )}
-      {showStorageModal && selectedFacture?.factureId && (
+      {showStorageModal && selectedFacture?.Fid && (
         <FactureStorageModal
           Sid={siteId}
-          factureId={selectedFacture?.factureId}
-          fetchFiles={() => fetchfactureFiles(selectedFacture?.factureId)}
+          factureId={selectedFacture?.Fid}
+          fetchFiles={() => fetchfactureFiles(selectedFacture?.Fid)}
           onSave={() => {
             console.log('File uploaded successfully. Refreshing prospects.');
             fetchfactureFiles();

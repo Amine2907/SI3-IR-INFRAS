@@ -2,24 +2,23 @@ import factureStorage from "../../../../storage/Reglement/Facture/factureStorage
 // Controller to handle file uploads
 const uploadFileController = async (req, res) => {
   try {
-    const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { factureId } = req.body;  // Paie ID  comes from the request body
+    const { file } = req;  // Access the uploaded file
+    const { factureId } = req.body;  // factureId comes from the request body
 
     // Ensure that a file and factureId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-
-    if (!factureId || isNaN(factureId)) {
+    if (!factureId) {
       return res.status(400).json({ error: 'Invalid factureId: It should be a valid number' });
     }
 
-    // Use the file name as the unique file name
-    const uniqueFileName = file.originalname;  // Use the original file name
+    // Ensure factureId is a string and handle special characters in the file name
+    const uniqueFileName = encodeURIComponent(file.originalname);  // Encode special characters in the original filename
     const factureIdStr = String(factureId);
 
-    // Define the file path: 'paie-pdf/{factureId}/{originalFileName}'
-    const filePath = `paie-pdf/${factureIdStr}/${uniqueFileName}`;
+    // Define the file path: 'facture-pdf/{factureId}/{originalFileName}'
+    const filePath = `facture-pdf/${factureIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
 
@@ -70,12 +69,15 @@ const downloadFileController = async (req, res) => {
     }
     console.log("Received file path:", filePath);
 
-    const fileBlob = await factureStorage.downloadPdf(filePath);
-    
+    // Ensure the file path is encoded correctly
+    const fixedFilePath = filePath.startsWith('facture-pdf/') ? filePath : `facture-pdf/${filePath}`;
+
+    const fileBlob = await factureStorage.downloadPdf(fixedFilePath);
+
     if (!fileBlob) {
       return res.status(404).json({ error: "File not found" });
     }
-    
+
     res.setHeader("Content-Disposition", `attachment; filename="${filePath.split('/').pop()}"`);
     res.setHeader("Content-Type", "application/pdf");
     return res.status(200).send(fileBlob);
@@ -88,7 +90,7 @@ const downloadFileController = async (req, res) => {
 const getFilesByFactureController = async (req, res) => {
   const { factureId } = req.body;
   if (!factureId) {
-    return res.status(400).json({ error: "Paie ID  is required" });
+    return res.status(400).json({ error: "facture ID  is required" });
   }
   try {
     const files = await factureStorage.listFiles(factureId);

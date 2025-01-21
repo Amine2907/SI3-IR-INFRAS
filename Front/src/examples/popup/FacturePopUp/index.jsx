@@ -10,7 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
-import siteFactureService from 'services/site_details/Reglement/Facture/FactureService';
+import SiteDevisService from 'services/site_details/Devis/DevisService';
 const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
   const [formData, setFormData] = useState(facture);
   const [isActive, setIsActive] = useState(facture ? facture.is_active : true);
@@ -37,7 +37,7 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
   useEffect(() => {
     const fetchActiveDevis = async () => {
       try {
-        const result = await siteFactureService.getActiveDevis(Sid);
+        const result = await SiteDevisService.getActiveDevis(Sid);
         // Ensure result.success is checked, and data is validated.
         if (result.success && Array.isArray(result.data)) {
           setActiveDevis(result.data); // Valid array

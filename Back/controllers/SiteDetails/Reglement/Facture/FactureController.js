@@ -18,7 +18,7 @@ const createFacture = async (req, res) => {
       }
     // Return a success response with the created data
     return res.status(201).json({
-        message: 'Factire successfully created and associated with Devis.',
+        message: 'Facture successfully created and associated with Devis.',
         data: result.data,
       });
     } catch (error) {

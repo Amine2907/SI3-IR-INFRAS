@@ -2,37 +2,23 @@ import { supabase } from "../../../../config/supabaseClient.js";
 // create Facture Model 
 const createFacture = async (Sid, factureData) => {
     try {
-        // User can add only one reglement which colunm is_active equal to True ! 
-      if (factureData.is_active === true)  {
-        const { data: exisitngFacture, error: checkError } = await supabase
-          .from('Facture')
-          .select('*')
-          .eq('EB_fk', Sid)  // Match using EB_fk  (the site identifier)
-          .eq('is_active', true);  // Ensure we have only one prospect which have is_active = True 
-        if (checkError) {
-          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
-        }
-        if (exisitngFacture && exisitngFacture.length > 0) {
-          throw new Error("This Site have already one reglement with active status already exists for this site.");
-        }
-      }
         console.log('Incoming data for create facture:', factureData);
       // Now insert the new Facture into the 'Devis' table, using the PRid_fk field
-      const { data: Facture, error: contactError } = await supabase
+      const { data: Facture, error: factureError } = await supabase
         .from('Facture')
         .insert([{ EB_fk: Sid, ...factureData }])
         .select();
-      if (contactError) {
-        throw contactError;
+      if (factureError) {
+        throw factureError;
       }
       // Extract the newly created Facture ID (Proid)
       const Facturefk = Facture[0].Fid;
       // Now associate the Facture with the Site by inserting into 'Site-Facture' association table
-      const { data: siteFacture, error: devisFactureError  } = await supabase
-        .from('Site-Facture')
+      const { data: siteFacture, error: siteFactureError  } = await supabase
+        .from('Site-facture')
         .insert([{ Sid: Sid, Fid:Facturefk }]);
-      if (devisFactureError ) {
-        throw devisFactureError ;
+      if (siteFactureError ) {
+        throw siteFactureError ;
       }
       // Return the successfully created Facture aFid the association details
       return { success: true, data: { Facture: Facture[0], siteFacture } };

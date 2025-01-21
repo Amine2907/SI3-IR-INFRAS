@@ -49,7 +49,7 @@ const FactureStorageModal = ({ Sid, factureId, fetchFiles, onSave, onClose }) =>
       return;
     }
     try {
-      const result = await facStorageService.uploadMesFile(file, factureId, Sid);
+      const result = await facStorageService.uploadFactureFile(file, factureId, Sid);
       if (result.success) {
         setAlert({
           show: true,
