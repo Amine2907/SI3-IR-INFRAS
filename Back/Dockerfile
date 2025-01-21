@@ -5,13 +5,13 @@ FROM node:16
 WORKDIR /app
 
 # Step 3: Copy package.json and package-lock.json from the 'back' folder
-COPY package*.json ./
+COPY ./back/package*.json ./ 
 
 # Step 4: Install the backend dependencies
 RUN npm install
 
 # Step 5: Copy the rest of the backend application code
-COPY . . 
+COPY ./back/. . 
 
 # Step 6: Expose the backend server port
 EXPOSE 5000
