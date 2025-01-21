@@ -27,12 +27,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-
 
-      - name: Check directory structure
+      # Verify directory structure
+      - name: Check current working directory and file structure
         run: |
-          ls -R
-          pwd  # print the current directory
+          pwd  # Print current directory
+          ls -R  # List all files recursively
 
-      - name: Set up Docker Compose
+      # Ensure Docker Compose is installed
+      - name: Install Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
@@ -42,8 +44,10 @@ jobs:
       - name: Build Docker image for Backend
         run: |
           docker-compose -f docker-compose.yml build backend
+        working-directory: ${{ github.workspace }} # Ensure the workspace is correctly set to root
 
       # Build Frontend Docker image
       - name: Build Docker image for Frontend
         run: |
           docker-compose -f docker-compose.yml build frontend
+        working-directory: ${{ github.workspace }} # Ensure the workspace is correctly set to root
