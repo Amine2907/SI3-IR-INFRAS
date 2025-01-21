@@ -4,7 +4,7 @@ FROM node:16 AS build
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the container's working directory
-COPY ./front/package*.json ./ 
+COPY package*.json ./
 
 # Install frontend dependencies
 RUN npm install
