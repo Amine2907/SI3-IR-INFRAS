@@ -105,7 +105,7 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
               </MenuItem>
               {activeDevis.length > 0 ? (
                 activeDevis.map(devis => (
-                  <MenuItem key={devis.id} value={devis.ND}>
+                  <MenuItem key={devis.ND} value={devis.ND}>
                     {devis.ND}
                   </MenuItem>
                 ))

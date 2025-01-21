@@ -19,6 +19,7 @@ import CommentSection from 'examples/Cards/Commentaires';
 import siteFactureService from 'services/site_details/Reglement/Facture/FactureService';
 import FactureUModal from 'examples/popup/FacturePopUp';
 import facStorageService from 'services/site_details/Reglement/Facture/FactStorageService';
+import FactureStorageModal from 'examples/popup/FactureStoragePopUp';
 function FactureList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
@@ -180,7 +181,7 @@ function FactureList() {
         </TableBody>
       </table>
       <Box mt={4}>
-        <CommentSection entityName="facture" Sid={siteId} />
+        <CommentSection entityName="Facture" Sid={siteId} />
       </Box>
       {showModal && (
         <FactureUModal
@@ -191,7 +192,7 @@ function FactureList() {
         />
       )}
       {showStorageModal && selectedFacture?.factureId && (
-        <factureStorageModal
+        <FactureStorageModal
           Sid={siteId}
           factureId={selectedFacture?.factureId}
           fetchFiles={() => fetchfactureFiles(selectedFacture?.factureId)}

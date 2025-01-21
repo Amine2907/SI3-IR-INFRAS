@@ -42,12 +42,12 @@ const createFacture = async (Devis_fk, factureData) => {
     }
   };
 // get all Factures
-const getAllFacture = async (devisID) => {
+const getAllFacture = async (Sid) => {
     try {
         const { data, error } = await supabase
         .from('Facture')
         .select('*')
-        .eq('ND',devisID);
+        .eq('EB_fk',Sid);
         if (error) {
             throw error;
         }

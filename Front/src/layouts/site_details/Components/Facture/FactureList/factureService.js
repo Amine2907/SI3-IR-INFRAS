@@ -33,7 +33,6 @@ const useFactureForSite = () => {
       fetchFactureData();
     }
   }, [siteId]);
-
   return { factureData, loading, error, fetchFactureData };
 };
 export default useFactureForSite;

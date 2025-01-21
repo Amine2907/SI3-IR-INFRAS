@@ -88,8 +88,8 @@ const FactureAddingModal = ({ Sid, facture = {}, onSave }) => {
               </MenuItem>
               {activeDevis.length > 0 ? (
                 activeDevis.map(devis => (
-                  <MenuItem key={devis.Tid} value={devis.Tid}>
-                    {devis.Tid}
+                  <MenuItem key={devis.ND} value={devis.ND}>
+                    {devis.ND}
                   </MenuItem>
                 ))
               ) : (
@@ -174,7 +174,6 @@ FactureAddingModal.propTypes = {
   }),
   onSave: PropTypes.func.isRequired,
 };
-
 FactureAddingModal.defaultProps = {
   facture: {},
 };
