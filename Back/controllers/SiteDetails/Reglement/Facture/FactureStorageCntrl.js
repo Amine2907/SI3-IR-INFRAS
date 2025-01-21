@@ -3,23 +3,23 @@ import factureStorage from "../../../../storage/Reglement/Facture/factureStorage
 const uploadFileController = async (req, res) => {
   try {
     const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { paieId } = req.body;  // Paie ID  comes from the request body
+    const { factureId } = req.body;  // Paie ID  comes from the request body
 
-    // Ensure that a file and paieId are provided
+    // Ensure that a file and factureId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    if (!paieId || isNaN(paieId)) {
-      return res.status(400).json({ error: 'Invalid paieId: It should be a valid number' });
+    if (!factureId || isNaN(factureId)) {
+      return res.status(400).json({ error: 'Invalid factureId: It should be a valid number' });
     }
 
     // Use the file name as the unique file name
     const uniqueFileName = file.originalname;  // Use the original file name
-    const paieIdStr = String(paieId);
+    const factureIdStr = String(factureId);
 
-    // Define the file path: 'paie-pdf/{paieId}/{originalFileName}'
-    const filePath = `paie-pdf/${paieIdStr}/${uniqueFileName}`;
+    // Define the file path: 'paie-pdf/{factureId}/{originalFileName}'
+    const filePath = `paie-pdf/${factureIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
 
@@ -85,13 +85,13 @@ const downloadFileController = async (req, res) => {
   }
 };
 
-const getFilesByPaieController = async (req, res) => {
-  const { paieId } = req.body;
-  if (!paieId) {
+const getFilesByFactureController = async (req, res) => {
+  const { factureId } = req.body;
+  if (!factureId) {
     return res.status(400).json({ error: "Paie ID  is required" });
   }
   try {
-    const files = await factureStorage.listFiles(paieId);
+    const files = await factureStorage.listFiles(factureId);
     return res.status(200).json({ files });
   } catch (error) {
     console.error("Error fetching files:", error);
@@ -122,7 +122,7 @@ const factureStorageCntrl = {
   uploadFileController,
   downloadFileController,
   generateSignedUrlController,
-  getFilesByPaieController,
+  getFilesByFactureController,
   deleteFileController,
 };
 export default factureStorageCntrl;

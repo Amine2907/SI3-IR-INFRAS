@@ -72,10 +72,10 @@ const deleteFactureFile = async filePath => {
   }
 };
 const facStorageService = {
-uploadFactureFile,
-getFactureFiles,
-generateFactureSignedUrl,
-deleteFactureFile,
-downloadFactureFile,
+  uploadFactureFile,
+  getFactureFiles,
+  generateFactureSignedUrl,
+  deleteFactureFile,
+  downloadFactureFile,
 };
 export default facStorageService;

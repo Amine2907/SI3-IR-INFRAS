@@ -1,7 +1,6 @@
 import express from "express";
 const router = express.Router();
 import factureStorageCntrl from "../../../../controllers/SiteDetails/Reglement/Facture/FactureStorageCntrl.js";
-import express from "express";
 import multer from "multer";
 
 // Configure Multer for file uploads (memory storage)
@@ -26,7 +25,7 @@ router.get("/download-facture", factureStorageCntrl.downloadFileController);
 // Route for retrieving public URLs of facture files
 router.post(
   "/get-facture-files",
-  factureStorageCntrl.getFilesByfactureController // Controller for fetching public URLs
+  factureStorageCntrl.getFilesByFactureController // Controller for fetching public URLs
 );
 // Route for deleting facture file 
 router.post('/delete-facture-file', factureStorageCntrl.deleteFileController);
