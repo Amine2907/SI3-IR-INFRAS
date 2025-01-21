@@ -2,10 +2,10 @@
 FROM node:16
 
 # Step 2: Set the working directory in the container
-# WORKDIR /app
+WORKDIR /app
 
 # Step 3: Copy package.json and package-lock.json from the 'back' folder
-COPY package*.json ./
+COPY ./back/package*.json ./ 
 
 # Step 4: Install the backend dependencies
 RUN npm install
