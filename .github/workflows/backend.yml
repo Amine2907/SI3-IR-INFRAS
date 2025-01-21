@@ -29,12 +29,12 @@ jobs:
 
       - name: Build Docker image for Backend
         run: |
-          docker build -f Back/Dockerfile -t backend:latest .  # Build the backend Docker image using the Dockerfile in the 'Back' folder
+          docker build -f ./back/Dockerfile -t backend:latest .  # Updated path to Dockerfile in 'back' directory
 
       - name: Log in to DockerHub
         run: |
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin  # Login to DockerHub using GitHub secrets
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push backend:latest  # Push the backend image to Docker Hub
+          docker push backend:latest
