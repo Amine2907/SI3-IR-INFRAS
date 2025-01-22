@@ -383,6 +383,20 @@ const desactivateDevis = async(id) => {
         return {success:false , error:error.messsage};
     }
 };
+const getfactureDetails = async(ND) => {
+    try {
+        const {data,error} = await supabase
+        .from('Facture')
+        .select('Fid, no_fac,montant_ht,montant_ttc')
+        .eq('Dfk',ND);
+        if(error){
+            throw error;
+        }
+        return {success:true , data}
+    }catch(error){
+        return {success:false , error:error.messsage}
+    }    
+};
 const devisModel = {
     createDevis,
     getAllDevis,
@@ -395,6 +409,6 @@ const devisModel = {
     getActiveFournisseurs,
     getActiveFacture,
     getActivePais,
-    // getValidatePropsect,
+    getfactureDetails
 }
 export default devisModel ; 
