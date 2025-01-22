@@ -2,185 +2,141 @@
 import React, { useState, useEffect } from 'react';
 import styles from './styles.module.css';
 import PropTypes from 'prop-types';
-import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
-import { Switch, Select, MenuItem, FormControl, Icon, InputLabel } from '@mui/material';
 import SiteDevisService from 'services/site_details/Devis/DevisService';
-const DevisRemModal = ({ ND, Sid, devis }) => {
-  const [formData, setFormData] = useState(devis);
-  const [factureForDevis, setFactureForDevis] = useState([]);
+import MDButton from 'components/MDButton';
+
+const DevisRemModal = ({ ND, Sid, devis, onClose }) => {
+  const [facturesForDevis, setFacturesForDevis] = useState([]);
   const [errors, setErrors] = useState({});
-  const handleChange = event => {
-    const { name, value } = event.target;
-    setFormData(prevData => {
-      const updatedData = {
-        ...prevData,
-        [name]: value,
-      };
-      return updatedData;
-    });
-  };
+
   useEffect(() => {
-    if (devis) {
-      setFormData({
-        ...devis,
-      });
-    }
-  }, [devis]);
-  //   fetching active fournisseurs for the site
-  const fetchFactureForDevis = async () => {
-    try {
-      // Call the service method to fetch active prospects for the given Sid
-      const result = await SiteDevisService.getFactureDetails(ND);
-      // Check if the result is successful
-      if (result.success) {
-        // Set the active prospects data if the response is successful
-        setFactureForDevis(result.data);
-      } else {
-        console.error('Error fetching facture details :', result.error);
-        setFactureForDevis([]);
+    const fetchFactureDetails = async () => {
+      try {
+        const result = await SiteDevisService.getFactureDetails(ND);
+        if (result.success) {
+          setFacturesForDevis(result.data || []);
+        } else {
+          console.error('Error fetching facture details:', result.error);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error.message);
       }
-    } catch (error) {
-      // Handle errors during the fetch
-      console.error('Error during fetch:', error.message);
-      setFactureForDevis([]); // Set an empty array in case of error
-    }
-  };
-  useEffect(() => {
-    fetchFactureForDevis();
-  }, [Sid, devis]);
+    };
+
+    fetchFactureDetails();
+  }, [ND, Sid]);
+
+  const totalFactureTtc = facturesForDevis.reduce(
+    (acc, facture) => acc + (facture.montant_ttc || 0),
+    0
+  );
+  const remboursement = devis.montant - totalFactureTtc;
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <MDTypography variant="h3" fontWeight="medium" textAlign="center">
-          Remboursement
+        <MDButton
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            background: 'transparent',
+            border: 'none',
+            fontSize: '20px',
+            cursor: 'pointer',
+          }}
+        >
+          &times;
+        </MDButton>
+        <MDTypography variant="h3" fontWeight="medium" textAlign="center" gutterBottom>
+          Détails du Remboursement
         </MDTypography>
         <div className={styles.formGrid}>
-          <MDInput
-            name="remboursement"
-            value={formData.remboursement || ''}
-            placeholder="remboursement"
-            style={{ marginBottom: '5px', width: '300px' }}
-            required
-          />
-          <MDInput
-            name="code_postal_lieu"
-            value={formData.code_postal_lieu || ''}
-            placeholder="CP du lieu de Raccordement"
-            style={{ marginBottom: '5px', width: '300px' }}
-            required
-          />
-          <div style={{ position: 'relative', width: '300px' }}>
+          <div className={styles.formRow}>
+            <label className={styles.formLabel} htmlFor="remboursement">
+              Remboursement
+            </label>
             <MDInput
-              name="montant"
-              value={formData.montant}
-              placeholder="Montant (TTC) "
-              style={{
-                marginBottom: '5px',
-                width: '100%',
-                marginTop: '10px',
-                borderColor: errors.montant ? 'red' : '',
-              }}
+              id="remboursement"
+              name="remboursement"
+              value={remboursement || ''}
+              style={{ width: '100%' }}
+              disabled
             />
-            <Icon
-              style={{
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                pointerEvents: 'none',
-              }}
-            >
-              euro
-            </Icon>
           </div>
-          <MDInput
-            name="code_postal_lieu"
-            value={formData.code_postal_lieu || ''}
-            placeholder="CP du lieu de Raccordement"
-            style={{ marginBottom: '5px', width: '300px' }}
-            required
-          />
-          <MDInput
-            name="code_postal_lieu"
-            value={formData.code_postal_lieu || ''}
-            placeholder="CP du lieu de Raccordement"
-            style={{ marginBottom: '5px', width: '300px' }}
-            required
-          />
-          <div style={{ position: 'relative', width: '300px' }}>
+          <div className={styles.formRow}>
+            <label className={styles.formLabel} htmlFor="ND">
+              Numéro de Devis
+            </label>
+            <MDInput id="ND" name="ND" value={devis.ND || ''} style={{ width: '100%' }} disabled />
+          </div>
+          <div className={styles.formRow}>
+            <label className={styles.formLabel} htmlFor="montant_ttc_devis">
+              Montant TTC du Devis
+            </label>
             <MDInput
-              name="montant"
-              value={formData.montant}
-              placeholder="Montant (TTC) "
-              style={{
-                marginBottom: '5px',
-                width: '100%',
-                marginTop: '10px',
-                borderColor: errors.montant ? 'red' : '',
-              }}
+              id="montant_ttc_devis"
+              name="montant_ttc_devis"
+              value={devis.montant || ''}
+              style={{ width: '100%' }}
+              disabled
             />
-            <Icon
-              style={{
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                pointerEvents: 'none',
-              }}
-            >
-              euro
-            </Icon>
           </div>
-          <div style={{ position: 'relative', width: '300px' }}>
-            <MDInput
-              name="montant"
-              value={formData.montant}
-              placeholder="Montant (TTC) "
-              style={{
-                marginBottom: '5px',
-                width: '100%',
-                marginTop: '10px',
-                borderColor: errors.montant ? 'red' : '',
-              }}
-            />
-            <Icon
-              style={{
-                position: 'absolute',
-                right: '10px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                pointerEvents: 'none',
-              }}
-            >
-              euro
-            </Icon>
-          </div>
+
+          {facturesForDevis.map((facture, index) => (
+            <div key={facture.Fid || index}>
+              <div className={styles.formRow}>
+                <label className={styles.formLabel} htmlFor={`no_fac_${index}`}>
+                  Numéro de Facture {index + 1}
+                </label>
+                <MDInput
+                  id={`no_fac_${index}`}
+                  name={`no_fac_${index}`}
+                  value={facture.no_fac || ''}
+                  style={{ width: '100%' }}
+                  disabled
+                />
+              </div>
+              <div className={styles.formRow}>
+                <label className={styles.formLabel} htmlFor={`montant_ht_${index}`}>
+                  Montant HT Facture {index + 1}
+                </label>
+                <MDInput
+                  id={`montant_ht_${index}`}
+                  name={`montant_ht_${index}`}
+                  value={facture.montant_ht || ''}
+                  style={{ width: '100%' }}
+                  disabled
+                />
+              </div>
+              <div className={styles.formRow}>
+                <label className={styles.formLabel} htmlFor={`montant_ttc_${index}`}>
+                  Montant TTC Facture {index + 1}
+                </label>
+                <MDInput
+                  id={`montant_ttc_${index}`}
+                  name={`montant_ttc_${index}`}
+                  value={facture.montant_ttc || ''}
+                  style={{ width: '100%' }}
+                  disabled
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 };
 DevisRemModal.propTypes = {
+  ND: PropTypes.string.isRequired,
   Sid: PropTypes.string.isRequired,
   devis: PropTypes.shape({
     ND: PropTypes.number,
-    fournisseur: PropTypes.string,
-    no_dr: PropTypes.string,
-    type_devis: PropTypes.string,
-    devis_date: PropTypes.string,
     montant: PropTypes.number,
-    code_postal_lieu: PropTypes.string,
-    code_paiement: PropTypes.string,
-    expiration_date: PropTypes.string,
-    reception_date: PropTypes.string,
-    etat_ralance: PropTypes.string,
-    derniere_relance_date: PropTypes.string,
-    is_active: PropTypes.bool,
-    conformite: PropTypes.bool,
-    valide_par_SFR: PropTypes.bool,
-  }),
+  }).isRequired,
   onClose: PropTypes.func.isRequired,
 };
 export default DevisRemModal;
