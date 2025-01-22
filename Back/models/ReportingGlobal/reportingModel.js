@@ -24,7 +24,7 @@ const getReportingData = async () => {
         if (error) throw error;
 
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
-        const drDataWithMappedValues = await Promise.all(data.map(async (item) => {
+        const reportingDataWithMappedValues = await Promise.all(data.map(async (item) => {
             // Fetch the corresponding 'nom' from 'Entite' where Eid matches gestionnaire_de_reseau
             const { data: entiteData, error: entiteError } = await supabase
                 .from('Entite')
@@ -35,7 +35,6 @@ const getReportingData = async () => {
             if (entiteError) {
                 console.error('Error fetching Entite:', entiteError);
             }
-
             // Fetch the corresponding 'SPR_desc' from 'SPR' table where SPRid matches SPRid_FK
             const { data: sprData, error: sprError } = await supabase
                 .from('SPR')
@@ -59,7 +58,7 @@ const getReportingData = async () => {
                 'Status Proposition ': sprData ? sprData.SPR_desc : 'NULL',
             };
         }));
-        return { success: true, data: drDataWithMappedValues };
+        return { success: true, data: reportingDataWithMappedValues };
     } catch (error) {
         return { success: false, error: error.message };
     }
