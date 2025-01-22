@@ -8,7 +8,7 @@ export const downloadExcel = async (req, res) => {
   
       let data;
       // Fetch the data based on the type
-      if (type === 'reporting') {
+      if (type === 'reportingNormal') {
         data = await ReportingGlobalModel.getReportingData();
         } else if (type === 'x') {
             data = await ReportingGlobalModel.getReportingData();
