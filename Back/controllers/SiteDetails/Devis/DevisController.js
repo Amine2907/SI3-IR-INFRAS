@@ -157,6 +157,14 @@ const getAllInactiveDevis = async(req,res) => {
     }
     return res.status(200).json(result.data);
 }
+const getfactureDetails = async(req,res) => {
+    const devisId = req.params.id ; 
+    const result = await devisModel.getfactureDetails(devisId);
+    if(!result.success){
+        return res.status(400).json({error:result.error});
+    }
+    return res.status(200).json(result.data);
+}
 // Search drs controller 
 const devisController = {
     fetchActiveFrs,
@@ -170,5 +178,6 @@ const devisController = {
     getAllActiveDevis,
     getAllInactiveDevis,
     fetchActivePais,
+    getfactureDetails,
 }
 export default devisController ; 

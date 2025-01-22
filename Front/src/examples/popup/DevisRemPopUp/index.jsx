@@ -7,7 +7,7 @@ import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
 import { Switch, Select, MenuItem, FormControl, Icon, InputLabel } from '@mui/material';
 import SiteDevisService from 'services/site_details/Devis/DevisService';
-const DevisRemModal = ({ Sid, devis }) => {
+const DevisRemModal = ({ ND, Sid, devis }) => {
   const [formData, setFormData] = useState(devis);
   const [factureForDevis, setFactureForDevis] = useState([]);
   const [errors, setErrors] = useState({});
@@ -32,13 +32,13 @@ const DevisRemModal = ({ Sid, devis }) => {
   const fetchFactureForDevis = async () => {
     try {
       // Call the service method to fetch active prospects for the given Sid
-      const result = await SiteDevisService.getActiveFrnsForDevis(Sid);
+      const result = await SiteDevisService.getFactureDetails(ND);
       // Check if the result is successful
       if (result.success) {
         // Set the active prospects data if the response is successful
         setFactureForDevis(result.data);
       } else {
-        console.error('Error fetching active fournisseurs :', result.error);
+        console.error('Error fetching facture details :', result.error);
         setFactureForDevis([]);
       }
     } catch (error) {
@@ -58,17 +58,15 @@ const DevisRemModal = ({ Sid, devis }) => {
         </MDTypography>
         <div className={styles.formGrid}>
           <MDInput
-            name="code_postal_lieu"
-            value={formData.code_postal_lieu || ''}
-            onChange={handleChange}
-            placeholder="CP du lieu de Raccordement"
+            name="remboursement"
+            value={formData.remboursement || ''}
+            placeholder="remboursement"
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />
           <MDInput
             name="code_postal_lieu"
             value={formData.code_postal_lieu || ''}
-            onChange={handleChange}
             placeholder="CP du lieu de Raccordement"
             style={{ marginBottom: '5px', width: '300px' }}
             required
@@ -77,7 +75,6 @@ const DevisRemModal = ({ Sid, devis }) => {
             <MDInput
               name="montant"
               value={formData.montant}
-              onChange={handleChange}
               placeholder="Montant (TTC) "
               style={{
                 marginBottom: '5px',
@@ -101,7 +98,6 @@ const DevisRemModal = ({ Sid, devis }) => {
           <MDInput
             name="code_postal_lieu"
             value={formData.code_postal_lieu || ''}
-            onChange={handleChange}
             placeholder="CP du lieu de Raccordement"
             style={{ marginBottom: '5px', width: '300px' }}
             required
@@ -109,7 +105,6 @@ const DevisRemModal = ({ Sid, devis }) => {
           <MDInput
             name="code_postal_lieu"
             value={formData.code_postal_lieu || ''}
-            onChange={handleChange}
             placeholder="CP du lieu de Raccordement"
             style={{ marginBottom: '5px', width: '300px' }}
             required
@@ -118,7 +113,6 @@ const DevisRemModal = ({ Sid, devis }) => {
             <MDInput
               name="montant"
               value={formData.montant}
-              onChange={handleChange}
               placeholder="Montant (TTC) "
               style={{
                 marginBottom: '5px',
@@ -143,7 +137,6 @@ const DevisRemModal = ({ Sid, devis }) => {
             <MDInput
               name="montant"
               value={formData.montant}
-              onChange={handleChange}
               placeholder="Montant (TTC) "
               style={{
                 marginBottom: '5px',
