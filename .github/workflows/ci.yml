@@ -30,7 +30,29 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-      # Run docker-compose up --build
-      - name: Build and run with docker-compose
-        run: docker-compose up --build
+      # Use Docker Buildx to enable build caching
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: ~/.docker/buildx-cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
+
+      # Build the Docker images separately
+      - name: Build Docker images
+        run: docker-compose build
+        working-directory: ${{ github.workspace }}
+
+      # Start the containers
+      - name: Start the services
+        run: docker-compose up -d
+        working-directory: ${{ github.workspace }}
+
+      # Check the status of the running containers
+      - name: Check container status
+        run: docker-compose ps
         working-directory: ${{ github.workspace }}
