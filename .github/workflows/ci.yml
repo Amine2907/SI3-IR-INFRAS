@@ -13,19 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: ~/.docker/buildx-cache
-          key: ${{ runner.os }}-docker-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-docker-
 
       # Verify directory structure
       - name: Check current working directory and file structure
@@ -40,14 +30,7 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-      # Build Backend Docker image
-      - name: Build Docker image for Backend
-        run: |
-          docker-compose -f docker-compose.yml build backend
-        working-directory: ${{ github.workspace }} # Ensure the workspace is correctly set to root
-
-      # Build Frontend Docker image
-      - name: Build Docker image for Frontend
-        run: |
-          docker-compose -f docker-compose.yml build frontend
-        working-directory: ${{ github.workspace }} # Ensure the workspace is correctly set to root
+      # Run docker-compose up --build
+      - name: Build and run with docker-compose
+        run: docker-compose up --build
+        working-directory: ${{ github.workspace }}
