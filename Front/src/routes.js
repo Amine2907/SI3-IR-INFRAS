@@ -9,6 +9,7 @@ import Profile from 'layouts/profile';
 // @mui icons
 import Icon from '@mui/material/Icon';
 import Entites from 'layouts/entites';
+import ReportingGlobal from 'layouts/reporting_global';
 
 const routes = [
   {
@@ -22,10 +23,18 @@ const routes = [
   {
     type: 'collapse',
     name: 'Site',
-    key: 'billing',
+    key: 'Site',
     icon: <Icon fontSize="small">construction</Icon>,
     route: '/sites',
     component: <Sites />,
+  },
+  {
+    type: 'collapse',
+    name: 'Reporting Global',
+    key: 'Reporting Global',
+    icon: <Icon fontSize="small">assessment</Icon>,
+    route: '/reportingGlobal',
+    component: <ReportingGlobal />,
   },
   {
     type: 'collapse',

@@ -94,6 +94,14 @@ const getinactiveDevis = async Sid => {
     return { success: false, error: error.response ? error.response.data.error : error.message };
   }
 };
+const getFactureDetails = async ND => {
+  try {
+    const response = await axios.get(`${API_URL}/${ND}/facture-details`);
+    return { success: true, data: response.data };
+  } catch (error) {
+    return { success: false, error: error.response ? error.response.data.error : error.message };
+  }
+};
 const SiteDevisService = {
   createDevis,
   updateDevis,
@@ -105,5 +113,6 @@ const SiteDevisService = {
   getActivePaieForDevis,
   getActiveDevis,
   getinactiveDevis,
+  getFactureDetails,
 };
 export default SiteDevisService;

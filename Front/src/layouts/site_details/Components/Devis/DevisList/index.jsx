@@ -20,9 +20,11 @@ import DevisUModal from 'examples/popup/DevisPopUp';
 import DevisStorageModal from 'examples/popup/DevisStoragePopUp';
 import devisStorageService from 'services/site_details/Devis/DevisStorageService';
 import CommentSection from 'examples/Cards/Commentaires';
+import DevisRemModal from 'examples/popup/DevisRemPopUp';
 function DevisList() {
   const [showModal, setShowModal] = useState(false);
   const [showStorageModal, setShowStorageModal] = useState(false);
+  const [showRemModal, setShowRemModal] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
   const location = useLocation();
   const { EB } = location.state || {};
@@ -47,9 +49,14 @@ function DevisList() {
     setSelectedDevis(devis);
     setShowStorageModal(true);
   };
+  const handleRem = devis => {
+    setSelectedDevis(devis);
+    setShowRemModal(true);
+  };
   const handleCloseModal = () => {
     setShowModal(false);
     setShowStorageModal(false);
+    setShowRemModal(false);
   };
   const handleUpdate = async updates => {
     const devisId = selectedDevis?.ND;
@@ -206,6 +213,15 @@ function DevisList() {
                     add
                   </Icon>
                 </TableCell>
+                <TableCell title="Remboursement" placement="top">
+                  <Icon
+                    sx={{ cursor: 'pointer' }}
+                    fontSize="small"
+                    onClick={() => handleRem(devis)}
+                  >
+                    euro
+                  </Icon>
+                </TableCell>
               </TableRow>
             );
           })}
@@ -219,6 +235,14 @@ function DevisList() {
           Sid={siteId}
           devis={selectedDevis}
           onSave={handleUpdate}
+          onClose={handleCloseModal}
+        />
+      )}
+      {showRemModal && (
+        <DevisRemModal
+          ND={selectedDevis?.ND}
+          Sid={siteId}
+          devis={selectedDevis}
           onClose={handleCloseModal}
         />
       )}

@@ -12,5 +12,6 @@ router.get('/:Sid/active-fours',devisController.fetchActiveFrs);
 router.get('/:Sid/active-paies',devisController.fetchActivePais);
 router.patch('/:id/desactivate',devisController.desactivateDevis);
 router.patch('/:id/activate',devisController.activateDevis);
+router.get('/:id/facture-details',devisController.getfactureDetails);
 
 export default router; 

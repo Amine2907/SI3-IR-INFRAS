@@ -21,6 +21,7 @@ import Reglement from '../Reglement';
 import Traveaux from '../Traveaux';
 import MES from '../MES';
 import Devis from '../Devis';
+import Fatcure from '../Facture';
 
 function HeaderFunctions() {
   const [tabsOrientation, setTabsOrientation] = useState('horizontal');
@@ -53,6 +54,8 @@ function HeaderFunctions() {
         return <Traveaux />;
       case 6:
         return <MES />;
+      case 7:
+        return <Fatcure />;
       default:
         return null;
     }

@@ -28,11 +28,11 @@ function ComplexStatisticsCard({ color, title, count, icon, onClick }) {
           mt={-3}
         >
           <Button
-            onClick={onClick} // This will call the passed onClick function when clicked
+            onClick={onClick}
             sx={{
-              width: '100%', // Make the button take the full width of the card
-              textAlign: 'left', // Align text to the left for better layout
-              padding: 0, // Remove padding to keep the layout clean
+              width: '100%',
+              textAlign: 'left',
+              padding: 0,
               '&:hover': {
                 backgroundColor: 'transparent', // Remove the button's hover background to keep card styling intact
               },

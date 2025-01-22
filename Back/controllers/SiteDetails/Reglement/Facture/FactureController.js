@@ -2,23 +2,23 @@ import factureModel from "../../../../models/SiteDetails/Reglement/Facture/Factu
 
 //Create Facture controlller 
 const createFacture = async (req, res) => {
-    const { Devis_fk, factureData } = req.body;
+    const { Sid, factureData } = req.body;
     // Validate required fields
-    if (!Devis_fk) {
-        return res.status(400).json({ error: 'Devis_fk (Devis identifier) is required.' });
+    if (!Sid) {
+        return res.status(400).json({ error: 'Sid (Site identifier) is required.' });
       }
       if (!factureData) {
         return res.status(400).json({ error: 'factureData is required.' });
       }
     try {
-        const result = await factureModel.createDevis(Devis_fk,factureData)
+        const result = await factureModel.createFacture(Sid,factureData)
       if (!result.success) {
         console.error("Error in model operation:", result.error);
         return res.status(400).json({ error: result.error });
       }
     // Return a success response with the created data
     return res.status(201).json({
-        message: 'Factire successfully created and associated with Devis.',
+        message: 'Facture successfully created and associated with Devis.',
         data: result.data,
       });
     } catch (error) {
@@ -122,7 +122,7 @@ const getAllInactiveFacture = async(req,res) => {
 }
 // factures controller 
 const factureController = {
-   createFacture,
+    createFacture,
     getAllFacture,
     getFactureById,
     updateFacture,

@@ -38,6 +38,8 @@
     "supertest": "^7.0.0"
   },
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "jest"
   }
 }

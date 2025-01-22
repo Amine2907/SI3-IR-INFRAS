@@ -1,53 +1,39 @@
 import { supabase } from "../../../../config/supabaseClient.js";
 // create Facture Model 
-const createFacture = async (Devis_fk, factureData) => {
+const createFacture = async (Sid, factureData) => {
     try {
-        // User can add only one reglement which colunm is_active equal to True ! 
-      if (factureData.is_active === true)  {
-        const { data: exisitngFacture, error: checkError } = await supabase
-          .from('Facture')
-          .select('*')
-          .eq('EB_fk', Sid)  // Match using EB_fk  (the site identifier)
-          .eq('is_active', true);  // Ensure we have only one prospect which have is_active = True 
-        if (checkError) {
-          throw new Error(`Error fetching existing Dps: ${checkError.message}`);
-        }
-        if (exisitngFacture && exisitngFacture.length > 0) {
-          throw new Error("This Site have already one reglement with active status already exists for this site.");
-        }
-      }
         console.log('Incoming data for create facture:', factureData);
       // Now insert the new Facture into the 'Devis' table, using the PRid_fk field
-      const { data: Facture, error: contactError } = await supabase
+      const { data: Facture, error: factureError } = await supabase
         .from('Facture')
-        .insert([{ Dfk: Devis_fk, ...factureData }])
+        .insert([{ EB_fk: Sid, ...factureData }])
         .select();
-      if (contactError) {
-        throw contactError;
+      if (factureError) {
+        throw factureError;
       }
       // Extract the newly created Facture ID (Proid)
       const Facturefk = Facture[0].Fid;
       // Now associate the Facture with the Site by inserting into 'Site-Facture' association table
-      const { data: siteFacture, error: devisFactureError  } = await supabase
-        .from('Devis-Facture')
-        .insert([{ Did: Devis_fk, Facturefk }]);
-      if (devisFactureError ) {
-        throw devisFactureError ;
+      const { data: siteFacture, error: siteFactureError  } = await supabase
+        .from('Site-facture')
+        .insert([{ Sid: Sid, Fid:Facturefk }]);
+      if (siteFactureError ) {
+        throw siteFactureError ;
       }
-      // Return the successfully created Facture and the association details
+      // Return the successfully created Facture aFid the association details
       return { success: true, data: { Facture: Facture[0], siteFacture } };
     } catch (error) {
       console.error('Error in createFacture:', error.message);
-      throw error; // Rethrow error for higher-level handling
+      throw error; // Rethrow error for higher-level haFidling
     }
   };
 // get all Factures
-const getAllFacture = async (devisID) => {
+const getAllFacture = async (Sid) => {
     try {
         const { data, error } = await supabase
         .from('Facture')
         .select('*')
-        .eq('ND',devisID);
+        .eq('EB_fk',Sid);
         if (error) {
             throw error;
         }
@@ -72,13 +58,13 @@ const getFactureById = async (id) => {
         }
 }
 // get active Factures
-const getActiveFacture = async (devisID) => {
+const getActiveFacture = async (factureId) => {
         try {
             const { data, error } = await supabase
             .from('Facture')
             .select('*')
             .eq('is_active', true)
-            .eq('ND',devisID);
+            .eq('Fid',factureId);
             ;
             if (error) {
                 throw error;
@@ -89,13 +75,13 @@ const getActiveFacture = async (devisID) => {
         }
 }
 // get inactive Factures
-const getInactiveFacture = async (devisID) => {
+const getInactiveFacture = async (factureId) => {
     try {
         const { data, error } = await supabase
         .from('Facture')
         .select('*')
         .eq('is_active', false)
-        .eq('ND',devisID);
+        .eq('Fid',factureId);
         if (error) {
             throw error;
         }

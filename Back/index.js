@@ -22,9 +22,9 @@ import miseEnServiceRoutes from './routes/SiteDetails/MES/miseEnService.js';
 import paieRoutes from './routes/SiteDetails/Reglement/Paiement/paiements.js';
 import CommentsRoutes from './routes/Comments/comments.js';
 import siteFields from './routes/Site/siteFields.js';
-// Dasboard Routes 
+// Dasboard Routes
 import dashRoutes from './routes/Dashboard/dashboard.js';
-// Storing Routes 
+// Storing Routes
 import prospectStorageRoutes from './routes/SiteDetails/Prospect/prospectStorage.js';
 import demRacStorageRoutes from './routes/SiteDetails/DR/demRacStorage.js';
 import preEtudeStorageRoutes from './routes/SiteDetails/PreEtude/preEtudeStorage.js';
@@ -36,6 +36,7 @@ import travStorageRoutes from './routes/SiteDetails/Traveaux/travsStorage.js';
 import miseEnServiceStorageRoutes from './routes/SiteDetails/MES/mesStorage.js';
 import checkFilesRoutes from './routes/SiteDetails/DynFields/getFilesRoute.js';
 import dashFilesRoutes from './routes/Dashboard/dashFiles.js';
+import reportingRoutes from './routes/ReportingGlobal/reporting.js';
 // Express Setup
 const app = express();
 app.use(cors({
@@ -79,6 +80,7 @@ app.use('/api/paie-storage',paieStorageRoutes);
 app.use('/api/mes-storage',miseEnServiceStorageRoutes);
 app.use('/api/check-files',checkFilesRoutes);
 app.use('/api/dash-files',dashFilesRoutes);
+app.use('/api/reporting-file',reportingRoutes);
 app.get('/', (req, res) => {
     res.send('SI3 BACKEND WORKING !');
   });

@@ -92,7 +92,6 @@ function Dashboard() {
     fetchData();
   }, []);
   const handleCardClick = type => {
-    console.log('Clicked type:', type);
     dashFilesService.downloadExcel(type);
   };
   return (
