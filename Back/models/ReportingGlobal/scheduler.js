@@ -28,7 +28,6 @@ cron.schedule('0 18 * * 5', async () => {
             .upload(fileName, fileBuffer, {
                 contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             });
-
         if (uploadError) {
             console.error('Error uploading file to Supabase storage:', uploadError);
         } else {
