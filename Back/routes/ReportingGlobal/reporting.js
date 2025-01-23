@@ -3,5 +3,7 @@ import ReportingController from '../../controllers/ReportingGlobal/reportingCont
 const router = express.Router();
 
 router.get('/download-excel/:type', ReportingController.downloadExcel);
+router.get('/reports', ReportingController.listReports);
+router.get('/reports/signed-url/:filename', ReportingController.getSignedUrl);
 
 export default router;
