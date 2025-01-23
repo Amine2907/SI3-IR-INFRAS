@@ -684,9 +684,9 @@ const getDemMesEnAttante  = async () => {
 };
 // Function to generate an Excel file from the data
 const generateExcelFile = (data) => {
-    if (!Array.isArray(data.data)) {
-        throw new Error('Data is not in the expected array format');
-      }
+    // if (!Array.isArray(data.data)) {
+    //     throw new Error('Data is not in the expected array format');
+    //   }
     // Generate a worksheet from the data
     const ws = XLSX.utils.json_to_sheet(data);
     // Create a new workbook and append the worksheet to it

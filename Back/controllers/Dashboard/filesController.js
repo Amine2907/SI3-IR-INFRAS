@@ -1,6 +1,7 @@
 import DashFiles from '../../models/Dashboard/filesModel.js';
 import fs from 'fs';
 import path from 'path';
+import ReportingGlobalModel from '../../models/ReportingGlobal/reportingModel.js';
 // Controller to generate and download Excel file
 export const downloadExcel = async (req, res) => {
     try {
@@ -9,7 +10,7 @@ export const downloadExcel = async (req, res) => {
       let data;
       // Fetch the data based on the type
       if (type === 'drProduit') {
-        data = await DashFiles.getDrDataWithSite();
+        data = await ReportingGlobalModel.getReportingData();
         } else if (type === 'devisRecu') {
             data = await DashFiles.getDeviRecuWithSite();
         } else if (type === 'devisEnAttente') {

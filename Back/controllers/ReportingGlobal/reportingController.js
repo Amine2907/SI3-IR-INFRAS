@@ -10,9 +10,7 @@ export const downloadExcel = async (req, res) => {
       // Fetch the data based on the type
       if (type === 'reportingNormal') {
         data = await ReportingGlobalModel.getReportingData();
-        } else if (type === 'x') {
-            data = await ReportingGlobalModel.getReportingData();
-        }else {
+      } else {
         return res.status(400).json({ message: 'Invalid type' });
       } 
       // If fetching the data fails
@@ -33,7 +31,6 @@ export const downloadExcel = async (req, res) => {
       res.status(500).json({ message: 'Error generating the Excel file', error: error.message });
     }
   };
-
 const ReportingController = {
     downloadExcel,
 }
