@@ -5,5 +5,6 @@ const router = express.Router();
 router.get('/download-excel/:type', ReportingController.downloadExcel);
 router.get('/reports', ReportingController.listReports);
 router.get('/reports/signed-url/:filename', ReportingController.getSignedUrl);
+router.get('/generate-report', ReportingController.generateReportManually);
 
 export default router;

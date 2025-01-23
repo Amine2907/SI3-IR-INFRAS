@@ -1,9 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import moment from 'moment';
 import ReportingGlobalModel from '../../models/ReportingGlobal/reportingModel.js';
 import { supabase } from '../../config/supabaseClient.js';
 // Controller to generate and download Excel file
-export const downloadExcel = async (req, res) => {
+ const downloadExcel = async (req, res) => {
     try {
       const { type } = req.params; // Get the dynamic type from the URL
   
@@ -32,7 +33,40 @@ export const downloadExcel = async (req, res) => {
       res.status(500).json({ message: 'Error generating the Excel file', error: error.message });
     }
   };
-  export const listReports = async (req, res) => {
+   const generateReportManually = async (req, res) => {
+    try {
+        // Fetch reporting data
+        const data = await ReportingGlobalModel.getReportingData();
+
+        if (!data.success) {
+            console.error('Error fetching reporting data:', data.error);
+            return res.status(500).json({ success: false, message: 'Error fetching reporting data' });
+        }
+        // Generate Excel file
+        const fileBuffer = ReportingGlobalModel.generateExcelFile(data.data);
+        // Generate a unique filename with timestamp
+        const timestamp = moment().format('YYYY-MM-DD_HH-mm');
+        const fileName = `reporting_data_${timestamp}.xlsx`;
+
+        // Upload the file to the Supabase bucket
+        const { error: uploadError } = await supabase.storage
+            .from('reports')
+            .upload(fileName, fileBuffer, {
+                contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            });
+
+        if (uploadError) {
+            console.error('Error uploading file to Supabase storage:', uploadError);
+            return res.status(500).json({ success: false, message: 'Error uploading file' });
+        }
+
+        res.status(200).json({ success: true, message: 'Report generated successfully', fileName });
+    } catch (error) {
+        console.error('Error generating report manually:', error.message);
+        res.status(500).json({ success: false, message: 'Error generating report manually', error: error.message });
+    }
+};
+   const listReports = async (req, res) => {
     try {
         // Fetch files from the bucket
         const { data, error } = await supabase.storage.from('reports').list('');
@@ -53,7 +87,7 @@ export const downloadExcel = async (req, res) => {
     }
 };
 // Generate a signed URL for private buckets (optional)
-export const getSignedUrl = async (req, res) => {
+ const getSignedUrl = async (req, res) => {
     try {
         const { filename } = req.params;
 
@@ -77,5 +111,6 @@ const ReportingController = {
     downloadExcel,
     listReports,
     getSignedUrl,
+    generateReportManually,
 }
 export default ReportingController;

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import reportingFileService from 'services/ReportingGlobal/reportingService';
+import MDTypography from 'components/MDTypography';
 const ReportList = () => {
   const [reports, setReports] = useState([]);
   const [error, setError] = useState(null);
@@ -21,7 +22,7 @@ const ReportList = () => {
   };
   return (
     <div>
-      <h1>Available Reports</h1>
+      <MDTypography variant="h3">Available Reports</MDTypography>
       {error && <div>Error: {error}</div>}
       <ul>
         {reports.map(report => (
