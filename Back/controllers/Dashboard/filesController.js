@@ -10,7 +10,7 @@ export const downloadExcel = async (req, res) => {
       let data;
       // Fetch the data based on the type
       if (type === 'drProduit') {
-        data = await ReportingGlobalModel.getReportingData();
+        data = await DashFiles.getDrDataWithSite();
         } else if (type === 'devisRecu') {
             data = await DashFiles.getDeviRecuWithSite();
         } else if (type === 'devisEnAttente') {

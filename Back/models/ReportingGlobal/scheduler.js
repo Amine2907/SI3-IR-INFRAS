@@ -14,7 +14,6 @@ cron.schedule('0 18 * * 5', async () => {
             console.error('Error fetching reporting data:', data.error);
             return;
         }
-
         // Generate Excel file
         const fileBuffer = ReportingGlobalModel.generateExcelFile(data.data);
 
