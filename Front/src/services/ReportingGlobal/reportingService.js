@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 const API_URL = 'http://localhost:5000/api/reporting-file';
 // Download DR data as Excel file
 const downloadExcel = async type => {
@@ -28,7 +27,41 @@ const downloadExcel = async type => {
     console.error('Error downloading the Excel file', error);
   }
 };
+const listReports = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/reports`);
+    if (response.data.success) {
+      return response.data.reports; // Return the list of reports
+    } else {
+      console.error('Error fetching reports:', response.data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching reports:', error);
+    return [];
+  }
+};
+const getSignedUrl = async filename => {
+  try {
+    if (!filename) {
+      console.error('Filename is missing or undefined');
+      return null;
+    }
+    const response = await axios.get(`${API_URL}/reports/signed-url/${filename}`);
+    if (response.data.success) {
+      return response.data.url; // Return the signed URL
+    } else {
+      console.error('Error fetching signed URL:', response.data.message);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching signed URL:', error);
+    return null;
+  }
+};
 const reportingFileService = {
   downloadExcel,
+  listReports,
+  getSignedUrl,
 };
 export default reportingFileService;
