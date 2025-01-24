@@ -127,7 +127,6 @@ const CommentSection = ({ entityName, Sid }) => {
                     .replace(/\(Added on: .*?\)/, '')
                     .replace(/\(Added by: .*?\)/, '')
                     .trim() || 'N/A';
-
                 return (
                   <TableRow key={index}>
                     <TableCell>{user}</TableCell>
@@ -143,7 +142,6 @@ const CommentSection = ({ entityName, Sid }) => {
     </Card>
   );
 };
-
 CommentSection.propTypes = {
   entityName: PropTypes.string.isRequired,
   Sid: PropTypes.number.isRequired,
