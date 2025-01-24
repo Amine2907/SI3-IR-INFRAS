@@ -211,10 +211,38 @@ const generateExcelFile = (data) => {
   const fileBuffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" })
   return fileBuffer
 }
+const downloadExcel = async (filePath) => {
+    try {
+        console.log('Attempting to download file from path:', filePath);
 
+        // Remove redundant "reports/" prefix if it exists
+        const sanitizedFilePath = filePath.startsWith('reports/')
+            ? filePath.replace('reports/', '')
+            : filePath;
+
+        console.log('Sanitized file path:', sanitizedFilePath);
+
+        // Use Supabase storage to download the file
+        const { data, error } = await supabase.storage
+            .from('reports') // Specify the bucket name
+            .download(sanitizedFilePath);
+
+        if (error) {
+            console.error('Error downloading file:', error);
+            return null;
+        }
+
+        console.log('File downloaded successfully');
+        return data;
+    } catch (error) {
+        console.error('Error in downloadExcel:', error);
+        throw error;
+    }
+};
 const ReportingGlobalModel = {
   getReportingData,
   generateExcelFile,
+  downloadExcel,
 }
 export default ReportingGlobalModel
 

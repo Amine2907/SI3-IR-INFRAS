@@ -107,10 +107,43 @@ import { supabase } from '../../config/supabaseClient.js';
         res.status(500).json({ success: false, message: 'Error generating signed URL', error: error.message });
     }
 };
+const downloadFileController = async (req, res) => {
+    try {
+      const { filePath } = req.query;
+      if (!filePath) {
+        return res.status(400).json({ error: "File path is required" });
+      }
+  
+      console.log("Received file path:", filePath);
+  
+      const fileBlob = await ReportingGlobalModel.downloadExcel(filePath);
+  
+      if (!fileBlob) {
+        return res.status(404).json({ error: "File not found" });
+      }
+  
+      // Set headers for binary file response
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${filePath.split('/').pop()}"`
+      );
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+  
+      // Pipe the file blob directly to the response
+      res.status(200).send(fileBlob);
+    } catch (error) {
+      console.error("Error in downloadFileController:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  };
 const ReportingController = {
     downloadExcel,
     listReports,
     getSignedUrl,
     generateReportManually,
+    downloadFileController,
 }
 export default ReportingController;

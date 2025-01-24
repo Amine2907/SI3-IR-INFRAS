@@ -49,7 +49,7 @@ const getSignedUrl = async filename => {
     }
     const response = await axios.get(`${API_URL}/reports/signed-url/${filename}`);
     if (response.data.success) {
-      return response.data.url; // Return the signed URL
+      return response.data.url;
     } else {
       console.error('Error fetching signed URL:', response.data.message);
       return null;
@@ -59,9 +59,22 @@ const getSignedUrl = async filename => {
     return null;
   }
 };
+const downloadReportFile = async filePath => {
+  try {
+    const response = await axios.get(`${API_URL}/download-report`, {
+      params: { filePath },
+      responseType: 'blob',
+    });
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    return { success: false, error: error.response?.data || 'Unknown error' };
+  }
+};
 const reportingFileService = {
   downloadExcel,
   listReports,
   getSignedUrl,
+  downloadReportFile,
 };
 export default reportingFileService;
