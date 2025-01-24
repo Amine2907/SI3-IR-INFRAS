@@ -31,15 +31,14 @@ const ReportList = () => {
         const blob = new Blob([response.data], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         });
-
         console.log('Blob size:', blob.size);
         console.log('Blob type:', blob.type);
-
-        // Trigger download
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = filename; // File name for the download
+        link.download = filename;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
       } else {
         throw new Error(response.error || 'Failed to download the file.');
       }

@@ -136,7 +136,7 @@ const downloadFileController = async (req, res) => {
         );
 
         // Send the buffer to the client
-        const fileBuffer = await fileBlob.arrayBuffer(); // Convert blob to ArrayBuffer
+        const fileBuffer = await fileBlob.arrayBuffer();
         res.status(200).send(Buffer.from(fileBuffer));
     } catch (error) {
         console.error("Error in downloadFileController:", error);

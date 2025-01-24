@@ -205,12 +205,28 @@ const fetchRelatedData = async (table, column, idColumn, id) => {
   return data
 }
 const generateExcelFile = (data) => {
-  const ws = XLSX.utils.json_to_sheet(data)
-  const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb, ws, "Reporting Data")
-  const fileBuffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" })
-  return fileBuffer
-}
+    try {
+        // Create a worksheet from the data
+        const ws = XLSX.utils.json_to_sheet(data);
+
+        // Create a new workbook and append the worksheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Reporting Data");
+
+        // Write the workbook to a buffer with explicit encoding and compression
+        const fileBuffer = XLSX.write(wb, {
+            bookType: 'xlsx',       // Specify the file type
+            type: 'buffer',         // Generate a Node.js buffer
+            compression: true,      // Enable compression to reduce file size
+        });
+
+        console.log("Excel file generated successfully");
+        return fileBuffer;
+    } catch (error) {
+        console.error("Error generating Excel file:", error);
+        throw error; // Rethrow the error for higher-level handling
+    }
+};
 const downloadExcel = async (filePath) => {
     try {
       console.log('Attempting to download file from path:', filePath);
@@ -224,7 +240,7 @@ const downloadExcel = async (filePath) => {
   
       // Fetch the file from the Supabase storage bucket
       const { data, error } = await supabase.storage
-        .from('reports') // Specify the correct bucket
+        .from('reports')
         .download(sanitizedFilePath);
   
       if (error) {

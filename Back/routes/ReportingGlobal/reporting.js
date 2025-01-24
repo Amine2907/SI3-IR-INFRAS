@@ -6,6 +6,6 @@ router.get('/download-excel/:type', ReportingController.downloadExcel);
 router.get('/reports', ReportingController.listReports);
 router.get('/reports/signed-url/:filename', ReportingController.getSignedUrl);
 router.get('/generate-report', ReportingController.generateReportManually);
-router.get("/download-report", ReportingController.downloadFileController);
+router.get('/download-report', ReportingController.downloadFileController);
 
 export default router;

@@ -63,7 +63,7 @@ const downloadReportFile = async filePath => {
   try {
     const response = await axios.get(`${API_URL}/download-report`, {
       params: { filePath },
-      responseType: 'blob', // Ensure blob response
+      responseType: 'blob',
     });
 
     if (response.status === 200) {
