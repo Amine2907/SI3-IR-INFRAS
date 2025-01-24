@@ -205,20 +205,12 @@ const fetchRelatedData = async (table, column, idColumn, id) => {
   return data
 }
 const generateExcelFile = (data) => {
-    try {
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Reporting Data");
-      const fileBuffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" });
-      // Debug: Save locally for verification
-      require('fs').writeFileSync('generated_test.xlsx', fileBuffer);
-  
-      return fileBuffer;
-    } catch (error) {
-      console.error('Error generating Excel file:', error);
-      throw error;
-    }
-  };
+  const ws = XLSX.utils.json_to_sheet(data)
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, ws, "Reporting Data")
+  const fileBuffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" })
+  return fileBuffer
+}
 const downloadExcel = async (filePath) => {
     try {
       console.log('Attempting to download file from path:', filePath);
