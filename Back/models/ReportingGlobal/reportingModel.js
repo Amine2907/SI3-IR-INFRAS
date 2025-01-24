@@ -205,40 +205,48 @@ const fetchRelatedData = async (table, column, idColumn, id) => {
   return data
 }
 const generateExcelFile = (data) => {
-  const ws = XLSX.utils.json_to_sheet(data)
-  const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb, ws, "Reporting Data")
-  const fileBuffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" })
-  return fileBuffer
-}
+    try {
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Reporting Data");
+      const fileBuffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" });
+      // Debug: Save locally for verification
+      require('fs').writeFileSync('generated_test.xlsx', fileBuffer);
+  
+      return fileBuffer;
+    } catch (error) {
+      console.error('Error generating Excel file:', error);
+      throw error;
+    }
+  };
 const downloadExcel = async (filePath) => {
     try {
-        console.log('Attempting to download file from path:', filePath);
-
-        // Remove redundant "reports/" prefix if it exists
-        const sanitizedFilePath = filePath.startsWith('reports/')
-            ? filePath.replace('reports/', '')
-            : filePath;
-
-        console.log('Sanitized file path:', sanitizedFilePath);
-
-        // Use Supabase storage to download the file
-        const { data, error } = await supabase.storage
-            .from('reports') // Specify the bucket name
-            .download(sanitizedFilePath);
-
-        if (error) {
-            console.error('Error downloading file:', error);
-            return null;
-        }
-
-        console.log('File downloaded successfully');
-        return data;
+      console.log('Attempting to download file from path:', filePath);
+  
+      // Sanitize file path
+      const sanitizedFilePath = filePath.startsWith('reports/')
+        ? filePath.replace('reports/', '')
+        : filePath;
+  
+      console.log('Sanitized file path:', sanitizedFilePath);
+  
+      // Fetch the file from the Supabase storage bucket
+      const { data, error } = await supabase.storage
+        .from('reports') // Specify the correct bucket
+        .download(sanitizedFilePath);
+  
+      if (error) {
+        console.error('Error downloading file:', error);
+        return null;
+      }
+  
+      console.log('File downloaded successfully');
+      return data;
     } catch (error) {
-        console.error('Error in downloadExcel:', error);
-        throw error;
+      console.error('Error in downloadExcel:', error);
+      throw error;
     }
-};
+  };
 const ReportingGlobalModel = {
   getReportingData,
   generateExcelFile,

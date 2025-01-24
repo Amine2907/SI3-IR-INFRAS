@@ -19,7 +19,7 @@ const downloadExcel = async type => {
     // Create a link to trigger the download
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `${type}_data.xlsx`; // The downloaded file will have the type in the filename
+    link.download = `${type}_data.xlsx`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

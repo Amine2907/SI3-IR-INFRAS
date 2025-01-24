@@ -7,7 +7,6 @@ import { supabase } from '../../config/supabaseClient.js';
  const downloadExcel = async (req, res) => {
     try {
       const { type } = req.params; // Get the dynamic type from the URL
-  
       let data;
       // Fetch the data based on the type
       if (type === 'reportingNormal') {
@@ -124,6 +123,9 @@ const downloadFileController = async (req, res) => {
   
       console.log("File blob type:", typeof fileBlob);
       console.log("File blob size:", fileBlob.size || 'unknown');
+  
+      // Debug: Save locally for verification
+      fs.writeFileSync('downloaded_test.xlsx', Buffer.from(await fileBlob.arrayBuffer()));
   
       res.setHeader(
         "Content-Disposition",
