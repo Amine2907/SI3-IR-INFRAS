@@ -26,12 +26,13 @@ const ReportList = () => {
   const handleDownload = async filename => {
     try {
       const response = await reportingFileService.downloadReportFile(filename);
+
       if (response.success && response.data) {
-        // Create a Blob from the response data
         const blob = new Blob([response.data], {
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         });
-        // Create a link to trigger the download
+        console.log('Blob size:', blob.size);
+        console.log('Blob type:', blob.type);
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = filename;
@@ -46,7 +47,6 @@ const ReportList = () => {
       setError('Failed to download the report. Please try again later.');
     }
   };
-
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>

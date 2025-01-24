@@ -122,7 +122,9 @@ const downloadFileController = async (req, res) => {
         return res.status(404).json({ error: "File not found" });
       }
   
-      // Set headers for binary file response
+      console.log("File blob type:", typeof fileBlob);
+      console.log("File blob size:", fileBlob.size || 'unknown');
+  
       res.setHeader(
         "Content-Disposition",
         `attachment; filename="${filePath.split('/').pop()}"`
@@ -132,7 +134,6 @@ const downloadFileController = async (req, res) => {
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
       );
   
-      // Pipe the file blob directly to the response
       res.status(200).send(fileBlob);
     } catch (error) {
       console.error("Error in downloadFileController:", error);
