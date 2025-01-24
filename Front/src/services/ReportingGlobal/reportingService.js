@@ -63,9 +63,14 @@ const downloadReportFile = async filePath => {
   try {
     const response = await axios.get(`${API_URL}/download-report`, {
       params: { filePath },
-      responseType: 'blob',
+      responseType: 'blob', // Ensure blob response
     });
-    return { success: true, data: response.data };
+
+    if (response.status === 200) {
+      return { success: true, data: response.data };
+    } else {
+      return { success: false, error: 'Failed to download file' };
+    }
   } catch (error) {
     console.error('Error downloading file:', error);
     return { success: false, error: error.response?.data || 'Unknown error' };

@@ -23,31 +23,31 @@ const ReportList = () => {
     fetchReports();
   }, []);
 
-  //   const handleDownload = async filename => {
-  //     try {
-  //       const response = await reportingFileService.downloadReportFile(filename);
+  const handleDownload = async filename => {
+    try {
+      const response = await reportingFileService.downloadReportFile(filename);
 
-  //       if (response.success && response.data) {
-  //         const blob = new Blob([response.data], {
-  //           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  //         });
-  //         const link = document.createElement('a');
-  //         link.href = URL.createObjectURL(blob);
-  //         link.download = filename;
-  //         document.body.appendChild(link);
-  //         link.click();
-  //         document.body.removeChild(link);
-  //       } else {
-  //         throw new Error(response.error || 'Failed to download the file.');
-  //       }
-  //     } catch (err) {
-  //       console.error('Error downloading the report:', err);
-  //       setError('Failed to download the report. Please try again later.');
-  //     }
-  //   };
-  const handleDownloadFile = type => {
-    reportingFileService.downloadExcel(type);
+      if (response.success && response.data) {
+        const blob = new Blob([response.data], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+
+        console.log('Blob size:', blob.size);
+        console.log('Blob type:', blob.type);
+
+        // Trigger download
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename; // File name for the download
+        link.click();
+      } else {
+        throw new Error(response.error || 'Failed to download the file.');
+      }
+    } catch (err) {
+      console.error('Error downloading the report:', err);
+    }
   };
+
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
@@ -73,11 +73,7 @@ const ReportList = () => {
                 <TableRow key={report.name}>
                   <TableCell>{report.name}</TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDownloadFile('reportingNormal')}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => handleDownload(report.name)}>
                       <Download className="mr-2 h-4 w-4" />
                       Telecharger
                     </Button>

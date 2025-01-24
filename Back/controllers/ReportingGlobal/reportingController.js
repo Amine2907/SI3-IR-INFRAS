@@ -108,40 +108,41 @@ import { supabase } from '../../config/supabaseClient.js';
 };
 const downloadFileController = async (req, res) => {
     try {
-      const { filePath } = req.query;
-      if (!filePath) {
-        return res.status(400).json({ error: "File path is required" });
-      }
-  
-      console.log("Received file path:", filePath);
-  
-      const fileBlob = await ReportingGlobalModel.downloadExcel(filePath);
-  
-      if (!fileBlob) {
-        return res.status(404).json({ error: "File not found" });
-      }
-  
-      console.log("File blob type:", typeof fileBlob);
-      console.log("File blob size:", fileBlob.size || 'unknown');
-  
-      // Debug: Save locally for verification
-      fs.writeFileSync('downloaded_test.xlsx', Buffer.from(await fileBlob.arrayBuffer()));
-  
-      res.setHeader(
-        "Content-Disposition",
-        `attachment; filename="${filePath.split('/').pop()}"`
-      );
-      res.setHeader(
-        "Content-Type",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      );
-  
-      res.status(200).send(fileBlob);
+        const { filePath } = req.query;
+        if (!filePath) {
+            return res.status(400).json({ error: "File path is required" });
+        }
+
+        console.log("Received file path:", filePath);
+
+        // Get the file from Supabase
+        const fileBlob = await ReportingGlobalModel.downloadExcel(filePath);
+
+        if (!fileBlob) {
+            return res.status(404).json({ error: "File not found" });
+        }
+
+        console.log("File blob type:", typeof fileBlob);
+        console.log("File blob size:", fileBlob.size || 'unknown');
+
+        // Correctly handle the file buffer and set headers
+        res.setHeader(
+            "Content-Disposition",
+            `attachment; filename="${filePath.split('/').pop()}"`
+        );
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+
+        // Send the buffer to the client
+        const fileBuffer = await fileBlob.arrayBuffer(); // Convert blob to ArrayBuffer
+        res.status(200).send(Buffer.from(fileBuffer));
     } catch (error) {
-      console.error("Error in downloadFileController:", error);
-      res.status(500).json({ error: "Internal server error" });
+        console.error("Error in downloadFileController:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
-  };
+};
 const ReportingController = {
     downloadExcel,
     listReports,
