@@ -2,9 +2,8 @@ import cron from 'node-cron';
 import moment from 'moment';
 import { supabase } from './config/supabaseClient.js';
 import ReportingGlobalModel from './models/ReportingGlobal/reportingModel.js';
-cron.schedule('* * * * *', async () => {
+cron.schedule('0 18 * * 5', async () => {
     console.log('Running scheduled task: Generating reporting data');
-  
     try {
       // Step 1: Fetch reporting data
       console.log('Step 1: Fetching reporting data...');
