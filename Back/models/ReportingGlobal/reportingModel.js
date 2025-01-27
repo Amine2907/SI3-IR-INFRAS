@@ -1,6 +1,6 @@
 import { supabase } from "../../config/supabaseClient.js"
 import XLSX from "xlsx"
-
+import moment from "moment"
 const checkFilesExistWithoutId = async (component, Sid) => {
   try {
     const folderPath = `${component}-pdf/${Sid}`
@@ -15,6 +15,10 @@ const checkFilesExistWithoutId = async (component, Sid) => {
     return false
   }
 }
+const formatDate = (date) => {
+    if (!date) return "";
+    return moment(date).format("DD/MM/YYYY HH:mm");
+  };
 const getReportingData = async () => {
   try {
     console.log("Fetching data from Prospect...")
@@ -150,15 +154,15 @@ const getReportingData = async () => {
           "0012.Prospect_Status validation": statusValData?.SV_desc || "",
           "0013.Prospect_Retenu": item.retenu ? "Oui" : "Non",
           "0014.Prospect_Commentaires": item.commentaires || "",
-          "0015.DP_Recipisee depot DP": item.Site?.DP?.[0]?.recipisse_depot_DP || "",
-          "0016.DP_ANO certificat tacite": item.Site?.DP?.[0]?.ANO_certificat_tacite || "",
-          "0017.DP_Arrete opposition": item.Site?.DP?.[0]?.arrete_opposition || "",
-          "0018.DP_Status GO travaux prev": item.Site?.DP?.[0]?.status_go_traveauxP || "",
-          "0019.DP_Status GO travaux reel": item.Site?.DP?.[0]?.status_go_traveauxR || "",
+          "0015.DP_Recipisee depot DP": formatDate(item.Site?.DP?.[0]?.recipisse_depot_DP || ""),
+          "0016.DP_ANO certificat tacite": formatDate(item.Site?.DP?.[0]?.ANO_certificat_tacite || ""),
+          "0017.DP_Arrete opposition": formatDate(item.Site?.DP?.[0]?.arrete_opposition || ""),
+          "0018.DP_Status GO travaux prev": formatDate(item.Site?.DP?.[0]?.status_go_traveauxP || ""),
+          "0019.DP_Status GO travaux reel": formatDate(item.Site?.DP?.[0]?.status_go_traveauxR || ""),
           "0020.Num Demande Raccordement": item.Site?.DR?.[0]?.NDRid || "",
-          "0021.DR_fin trav prev": item.Site?.DR?.[0]?.fin_trav_prev || "",
-          "0022.DR_Ko DP": item.Site?.DR?.[0]?.Ko_Dp || "",
-          "0023.Date DR": item.Site?.DR?.[0]?.date_dr || "",
+          "0021.DR_fin trav prev": formatDate(item.Site?.DR?.[0]?.fin_trav_prev || ""),
+          "0022.DR_Ko DP": formatDate(item.Site?.DR?.[0]?.Ko_Dp || ""),
+          "0023.Date DR": formatDate(item.Site?.DR?.[0]?.date_dr || ""),
           "0024.DR_Type Raccordement": item.Site?.DR?.[0]?.type_rac || "",
           "0025.DR_Gestionnaire reseau": entiteData?.nom || "",
           "0026.DR_Status Proposition": sprData?.SPR_desc || "",
@@ -167,10 +171,10 @@ const getReportingData = async () => {
           "0029.Numero Devis": item.Site?.Devis?.[0]?.ND || "",
           "0030.Devis Fournisseur": frnsEntite?.nom || "",
           "0031.Type Devis": item.Site?.Devis?.[0]?.type_devis || "",
-          "0032.Devis date": item.Site?.Devis?.[0]?.devis_date || "",
+          "0032.Devis date": formatDate(item.Site?.Devis?.[0]?.devis_date || ""),
           "0033.Devis_Montant TTC": item.Site?.Devis?.[0]?.montant || "",
-          "0034.Devis_Expiration date": item.Site?.Devis?.[0]?.expiration_date || "",
-          "0035.Devis_Reception date": item.Site?.Devis?.[0]?.reception_date || "",
+          "0034.Devis_Expiration date": formatDate(item.Site?.Devis?.[0]?.expiration_date || ""),
+          "0035.Devis_Reception date": formatDate(item.Site?.Devis?.[0]?.reception_date || ""),
           "0036.Devis PJ": devisFilesExist ? "Oui" : "Non",
           "0037.Devis_Commentaires": item.Site?.Devis?.[0]?.commentaires || "",
           "0038.Reglement_No commande": item.Site?.Paiements?.[0]?.no_commande || "",
@@ -179,34 +183,34 @@ const getReportingData = async () => {
           "0041.Reglement_Libelle virement": item.Site?.Paiements?.[0]?.libelle_du_virement || "",
           "0042.Reglement_Paiement partiel": item.Site?.Paiements?.[0]?.paiement_partiel || "",
           "0043.Paiement montant": item.Site?.Paiements?.[0]?.montant || "",
-          "0044.Reglement date": item.Site?.Paiements?.[0]?.reglement_date || "",
+          "0044.Reglement date": formatDate(item.Site?.Paiements?.[0]?.reglement_date || ""),
           "0045.Paiements PJ": paiementsFilesExist ? "Oui" : "Non",
           "0037.Paiements_Commentaires": item.Site?.Paiements?.[0]?.commentaires || "",
           "0047.No Traveaux": item.Site?.Traveaux?.[0]?.Tid || "",
-          "0048.Traveaux_Fin GC prev": item.Site?.Traveaux?.[0]?.fin_gc_prev || "",
-          "0049.Traveaux_Fin GC reel": item.Site?.Traveaux?.[0]?.fin_gc_reel || "",
-          "0050.Levee pylone prev": item.Site?.Traveaux?.[0]?.levee_pylone_prev || "",
-          "0051.Levee pylone reel": item.Site?.Traveaux?.[0]?.levee_pylone_reel || "",
-          "0052.Extension prev": item.Site?.Traveaux?.[0]?.extension_prev || "",
-          "0053.Extension reel": item.Site?.Traveaux?.[0]?.extension_reel || "",
-          "0054.Branchement prev": item.Site?.Traveaux?.[0]?.branchement_prev || "",
-          "0055.Branchement reel": item.Site?.Traveaux?.[0]?.branchement_reel || "",
-          "0056.EDLE prev": item.Site?.Traveaux?.[0]?.edle_prev || "",
-          "0057.EDLE reel": item.Site?.Traveaux?.[0]?.edle_reel || "",
+          "0048.Traveaux_Fin GC prev": formatDate(item.Site?.Traveaux?.[0]?.fin_gc_prev || ""),
+          "0049.Traveaux_Fin GC reel": formatDate(item.Site?.Traveaux?.[0]?.fin_gc_reel || ""),
+          "0050.Levee pylone prev": formatDate(item.Site?.Traveaux?.[0]?.levee_pylone_prev || ""),
+          "0051.Levee pylone reel": formatDate(item.Site?.Traveaux?.[0]?.levee_pylone_reel || ""),
+          "0052.Extension prev": formatDate(item.Site?.Traveaux?.[0]?.extension_prev || ""),
+          "0053.Extension reel": formatDate(item.Site?.Traveaux?.[0]?.extension_reel || ""),
+          "0054.Branchement prev": formatDate(item.Site?.Traveaux?.[0]?.branchement_prev || ""),
+          "0055.Branchement reel": formatDate(item.Site?.Traveaux?.[0]?.branchement_reel || ""),
+          "0056.EDLE prev": formatDate(item.Site?.Traveaux?.[0]?.edle_prev || ""),
+          "0057.EDLE reel": formatDate(item.Site?.Traveaux?.[0]?.edle_reel || ""),
           "0058.Traveaux_Commentaires": item.Site?.Traveaux?.[0]?.commentaires || "",
           "0059.MES_No PDL": item.Site?.MES?.[0]?.no_PDL || "",
           "0060.Status consuel": item.Site?.MES?.[0]?.status_consuel || "",
-          "0061.Consuel remise": item.Site?.MES?.[0]?.consuel_remise || "",
-          "0062.MES demande": item.Site?.MES?.[0]?.MES_demande || "",
-          "0063.MES prev": item.Site?.MES?.[0]?.MES_prev || "",
-          "0064.MES reel": item.Site?.MES?.[0]?.MES_reel || "",
+          "0061.Consuel remise": formatDate(item.Site?.MES?.[0]?.consuel_remise || ""),
+          "0062.MES demande": formatDate(item.Site?.MES?.[0]?.MES_demande || ""),
+          "0063.MES prev": formatDate(item.Site?.MES?.[0]?.MES_prev || ""),
+          "0064.MES reel": formatDate(item.Site?.MES?.[0]?.MES_reel || ""),
           "0065.MES_Commentaires": item.Site?.MES?.[0]?.commentaires || "",
           "0066.No facture": item.Site?.Facture?.[0]?.no_fac || "",
           "0067.Facture_Montant HT": item.Site?.Facture?.[0]?.montant_ht || "",
           "0068.Facture_Montant TTC": item.Site?.Facture?.[0]?.montant_ttc || "",
           "0069.Facture TVA": item.Site?.Facture?.[0]?.tva || "",
           "0070.Facture No Devis": item.Site?.Facture?.[0]?.Dfk || "",
-          "0071.Facture date": item.Site?.Facture?.[0]?.facture_date || "",
+          "0071.Facture date": formatDate(item.Site?.Facture?.[0]?.facture_date || ""),
           "0072.Facture PJ": factureFilesExist ? "Oui" : "Non",
           "0073.facture_Commentaires": item.Site?.Facture?.[0]?.commentaires || "",
         }
