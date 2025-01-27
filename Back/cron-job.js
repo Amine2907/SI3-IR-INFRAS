@@ -1,7 +1,7 @@
 import cron from 'node-cron';
 import moment from 'moment';
-import { supabase } from '../../config/supabaseClient.js';
-import ReportingGlobalModel from './reportingModel.js';
+import { supabase } from './config/supabaseClient.js';
+import ReportingGlobalModel from './models/ReportingGlobal/reportingModel.js';
 // Testing the generation of file instantaly 
 // cron.schedule('* * * * *', async () => {
   // Gnereating of file Friday at 6 PM
@@ -11,7 +11,6 @@ import ReportingGlobalModel from './reportingModel.js';
       // Step 1: Fetch reporting data
       console.log('Step 1: Fetching reporting data...');
       const data = await ReportingGlobalModel.getReportingData();
-  
       if (!data.success) {
         console.error('Error fetching reporting data:', data.error);
         return;
