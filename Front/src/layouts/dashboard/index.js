@@ -6,10 +6,8 @@ import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 import Footer from 'examples/Footer';
 import ComplexStatisticsCard from 'examples/Cards/StatisticsCards/ComplexStatisticsCard';
 import dashboardService from 'services/Dashboard/dashService';
-import reportsBarChartData from './data/reportsBarChartData';
-import ReportsLineChart from 'examples/Charts/LineCharts/ReportsLineChart';
-import ReportsBarChart from 'examples/Charts/BarCharts/ReportsBarChart';
 import dashFilesService from 'services/Dashboard/dashFilesService';
+import DashboardCharts from './Charts';
 function Dashboard() {
   const [data, setData] = useState({
     drProduit: 0,
@@ -262,43 +260,7 @@ function Dashboard() {
         </Grid>
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date=""
-                  chart={''}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={''}
-                />
-              </MDBox>
-            </Grid>
+            <DashboardCharts />
           </Grid>
         </MDBox>
       </MDBox>
