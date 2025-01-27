@@ -44,7 +44,7 @@ const PaieStorageModal = ({ paieId, fetchFiles, onSave, onClose }) => {
       return;
     }
     try {
-      const result = await paieStorageService.uploadPaieFile(file, paieId);
+      const result = await paieStorageService.uploadPaieFile(file, paieId, Sid);
       if (result.success) {
         setAlert({
           show: true,

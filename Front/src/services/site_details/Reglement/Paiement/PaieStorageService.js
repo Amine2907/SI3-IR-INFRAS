@@ -3,12 +3,12 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/paie-storage';
 
 // Upload a paie file to the server
-const uploadPaieFile = async (file, paieId) => {
+const uploadPaieFile = async (file, paieId, Sid) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('paieId', paieId);
-
+    formData.append('Sid', Sid);
     const response = await axios.post(`${API_URL}/upload-paie`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
@@ -21,9 +21,9 @@ const uploadPaieFile = async (file, paieId) => {
   }
 };
 // Get public URLs for all files associated with a paie
-const getPaieFiles = async paieId => {
+const getPaieFiles = async (paieId, Sid) => {
   try {
-    const response = await axios.post(`${API_URL}/get-paie-files`, { paieId });
+    const response = await axios.post(`${API_URL}/get-paie-files`, { paieId, Sid });
     return { success: true, data: response.data };
   } catch (error) {
     return {
