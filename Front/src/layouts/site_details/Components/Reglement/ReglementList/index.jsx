@@ -17,7 +17,6 @@ import cellStyle from './styles/styles';
 import useReglForSite from './reglementService';
 import sitePaiementService from 'services/site_details/Reglement/Paiement/PaiementService';
 import PaieUModal from 'examples/popup/ReglementPopUp';
-import paiementStorageModal from 'examples/popup/ReglStoragePopUp';
 import paieStorageService from 'services/site_details/Reglement/Paiement/PaieStorageService';
 import PaieStorageModal from 'examples/popup/ReglStoragePopUp';
 import CommentSection from 'examples/Cards/Commentaires';
@@ -94,9 +93,13 @@ function ReglementList() {
       console.error('Prospect ID is missing!');
       return [];
     }
+    if (!siteId) {
+      console.error('Site id  is missing!');
+      return [];
+    }
     try {
       console.log(`Fetching files for prospect ID: ${paieId}`);
-      const response = await paieStorageService.getPaieFiles(paieId); // Correct API call
+      const response = await paieStorageService.getPaieFiles(paieId, siteId); // Correct API call
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files

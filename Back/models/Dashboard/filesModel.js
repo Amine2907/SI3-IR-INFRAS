@@ -52,7 +52,7 @@ const getDrDataWithSite = async () => {
                 'G2R': item.Site ? item.Site.G2R : 'NULL',
                 'Nom site': item.Site ? item.Site.nom : 'NULL',
                 'Numéro Demande Raccordement': item.NDRid,
-                'Ko_Dp': item.Ko_Dp || 'NULL',
+                'Ko Dp': item.Ko_Dp || 'NULL',
                 'Date Demande Raccordement': item.date_dr || 'NULL',
                 'Type Raccordement': item.type_rac || 'NULL',
                 'Gestionnaire de reseau': entiteData ? entiteData.nom : 'NULL',
@@ -684,6 +684,9 @@ const getDemMesEnAttante  = async () => {
 };
 // Function to generate an Excel file from the data
 const generateExcelFile = (data) => {
+    // if (!Array.isArray(data.data)) {
+    //     throw new Error('Data is not in the expected array format');
+    //   }
     // Generate a worksheet from the data
     const ws = XLSX.utils.json_to_sheet(data);
     // Create a new workbook and append the worksheet to it

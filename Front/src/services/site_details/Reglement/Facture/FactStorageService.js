@@ -2,12 +2,12 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/fac-storage';
 
 // Upload fac File (Store a file in Supabase)
-const uploadFactureFile = async (file, factureId) => {
+const uploadFactureFile = async (file, factureId, Sid) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('factureId', factureId);
-
+    formData.append('Sid', Sid);
     const response = await axios.post(`${API_URL}/upload-facture`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
@@ -20,9 +20,9 @@ const uploadFactureFile = async (file, factureId) => {
   }
 };
 // Get public URLs for all files associated with a Facture
-const getFactureFiles = async factureId => {
+const getFactureFiles = async (factureId, Sid) => {
   try {
-    const response = await axios.post(`${API_URL}/get-facture-files`, { factureId });
+    const response = await axios.post(`${API_URL}/get-facture-files`, { factureId, Sid });
     return { success: true, data: response.data };
   } catch (error) {
     return {

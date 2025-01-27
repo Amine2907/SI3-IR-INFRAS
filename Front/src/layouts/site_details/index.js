@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
@@ -11,17 +10,19 @@ import SiteService from 'services/Site_Services/siteService';
 import { AlertDescription, Alert } from 'components/ui/alert';
 import SiteModal from 'examples/popup/SitePopUp';
 import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
+
 function SiteDetails() {
   const location = useLocation();
   const { EB } = location.state || {};
   const [site, setSite] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  // Fetch site details when the component mounts
+
   useEffect(() => {
     if (EB) {
       fetchSiteDetails(EB);
     }
   }, [EB]);
+
   const fetchSiteDetails = async EB => {
     const result = await SiteService.getSiteById(EB);
     if (result.success) {
@@ -31,14 +32,15 @@ function SiteDetails() {
       console.error('Failed to fetch site details:', result.error);
     }
   };
-  // Function to handle the "Edit" button click
+
   const handleEditClick = async () => {
     setShowModal(true);
   };
-  //  Function to close the modal
+
   const handleCloseModal = () => {
     setShowModal(false);
   };
+
   const fetchSiteInfoDetails = async () => {
     try {
       const result = await SiteService.getSiteById(EB);
@@ -52,6 +54,7 @@ function SiteDetails() {
       console.error('Error during fetch:', error.message);
     }
   };
+
   const handleSave = async updatedSite => {
     try {
       const result = await SiteService.updateSite(updatedSite.EB, updatedSite);
@@ -67,6 +70,7 @@ function SiteDetails() {
       console.error('Error updating site:', error.message);
     }
   };
+
   if (!EB) {
     return (
       <DashboardLayout>
@@ -75,7 +79,8 @@ function SiteDetails() {
         <MDBox px={3}>
           <Alert variant="destructive" className="mt-4">
             <AlertDescription>
-              Error: Site details are not available. Please navigate from the appropriate page.
+              Erreur : Les détails du site ne sont pas disponibles. Veuillez naviguer depuis la page
+              appropriée.
             </AlertDescription>
           </Alert>
         </MDBox>
@@ -83,27 +88,27 @@ function SiteDetails() {
       </DashboardLayout>
     );
   }
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox px={3} py={2}>
-        <Grid container spacing={2} alignItems="flex-start">
-          <Grid item xs={12} style={{ marginBottom: '-20px' }}></Grid>
-          <Grid item xs={12} md={3}>
+        <Grid container spacing={0} alignItems="flex-start">
+          <Grid item xs={12} md={2}>
             {site ? (
               <SiteInfoCard site={site} onEdit={handleEditClick} />
             ) : (
               <Alert variant="destructive" className="mt-4">
-                <AlertDescription>Loading site details...</AlertDescription>
+                <AlertDescription>Chargement des détails du site...</AlertDescription>
               </Alert>
             )}
           </Grid>
-          <Grid item xs={12} md={9}>
+          <Grid item xs={12} md={10}>
             {site ? (
-              <Header />
+              <Header style={{ height: '100%', minHeight: '600px', padding: '20px' }} />
             ) : (
               <Alert variant="destructive" className="mt-4">
-                <AlertDescription>Loading site details...</AlertDescription>
+                <AlertDescription>Chargement des détails du site...</AlertDescription>
               </Alert>
             )}
           </Grid>

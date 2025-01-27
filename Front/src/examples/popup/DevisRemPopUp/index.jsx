@@ -9,7 +9,6 @@ import MDButton from 'components/MDButton';
 
 const DevisRemModal = ({ ND, Sid, devis, onClose }) => {
   const [facturesForDevis, setFacturesForDevis] = useState([]);
-  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const fetchFactureDetails = async () => {
@@ -84,7 +83,6 @@ const DevisRemModal = ({ ND, Sid, devis, onClose }) => {
               disabled
             />
           </div>
-
           {facturesForDevis.map((facture, index) => (
             <div key={facture.Fid || index}>
               <div className={styles.formRow}>

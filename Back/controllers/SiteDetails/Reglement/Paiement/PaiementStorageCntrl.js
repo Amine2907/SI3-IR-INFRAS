@@ -3,7 +3,7 @@ import paieStorage from "../../../../storage/Reglement/Paiement/paieStorage.js";
 const uploadFileController = async (req, res) => {
   try {
     const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { paieId } = req.body;  // Paie ID  comes from the request body
+    const { paieId,Sid } = req.body;  // Paie ID  comes from the request body
 
     // Ensure that a file and paieId are provided
     if (!file) {
@@ -13,13 +13,15 @@ const uploadFileController = async (req, res) => {
     if (!paieId || isNaN(paieId)) {
       return res.status(400).json({ error: 'Invalid paieId: It should be a valid number' });
     }
-
+    if (!Sid) {
+      return res.status(400).json({ error: 'Invalid Sid' });
+    }
     // Use the file name as the unique file name
     const uniqueFileName = file.originalname;  // Use the original file name
     const paieIdStr = String(paieId);
-
+    const sidStr = String(Sid);
     // Define the file path: 'paie-pdf/{paieId}/{originalFileName}'
-    const filePath = `paie-pdf/${paieIdStr}/${uniqueFileName}`;
+    const filePath = `paie-pdf/${sidStr}/${paieIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
 
@@ -86,12 +88,15 @@ const downloadFileController = async (req, res) => {
 };
 
 const getFilesByPaieController = async (req, res) => {
-  const { paieId } = req.body;
+  const { paieId,Sid } = req.body;
   if (!paieId) {
     return res.status(400).json({ error: "Paie ID  is required" });
   }
+  if (!Sid) {
+    return res.status(400).json({ error: "Sid ID  is required" });
+  }
   try {
-    const files = await paieStorage.listFiles(paieId);
+    const files = await paieStorage.listFiles(paieId,Sid);
     return res.status(200).json({ files });
   } catch (error) {
     console.error("Error fetching files:", error);

@@ -3,7 +3,7 @@ import factureStorage from "../../../../storage/Reglement/Facture/factureStorage
 const uploadFileController = async (req, res) => {
   try {
     const { file } = req;  // Access the uploaded file
-    const { factureId } = req.body;  // factureId comes from the request body
+    const { factureId,Sid } = req.body;  // factureId comes from the request body
 
     // Ensure that a file and factureId are provided
     if (!file) {
@@ -12,13 +12,15 @@ const uploadFileController = async (req, res) => {
     if (!factureId) {
       return res.status(400).json({ error: 'Invalid factureId: It should be a valid number' });
     }
-
+    if (!Sid) {
+      return res.status(400).json({ error: 'Invalid Sid' });
+    }
     // Ensure factureId is a string and handle special characters in the file name
     const uniqueFileName = encodeURIComponent(file.originalname);  // Encode special characters in the original filename
     const factureIdStr = String(factureId);
-
+    const sidStr = String(Sid);
     // Define the file path: 'facture-pdf/{factureId}/{originalFileName}'
-    const filePath = `facture-pdf/${factureIdStr}/${uniqueFileName}`;
+    const filePath = `facture-pdf/${sidStr}/${factureIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
 
@@ -88,12 +90,15 @@ const downloadFileController = async (req, res) => {
 };
 
 const getFilesByFactureController = async (req, res) => {
-  const { factureId } = req.body;
+  const { factureId,Sid } = req.body;
   if (!factureId) {
     return res.status(400).json({ error: "facture ID  is required" });
   }
+  if (!Sid) {
+    return res.status(400).json({ error: "Sid ID  is required" });
+  }
   try {
-    const files = await factureStorage.listFiles(factureId);
+    const files = await factureStorage.listFiles(factureId,Sid);
     return res.status(200).json({ files });
   } catch (error) {
     console.error("Error fetching files:", error);
