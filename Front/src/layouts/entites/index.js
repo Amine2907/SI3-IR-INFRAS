@@ -7,7 +7,6 @@
  */
 // Material Dashboard 2 React example components
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
-import Footer from 'examples/Footer';
 import EntiteList from 'examples/Lists/EntitesList/EntiteList';
 import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 function Entites() {
@@ -15,7 +14,6 @@ function Entites() {
     <DashboardLayout>
       <DashboardNavbar />
       <EntiteList />
-      <Footer />
     </DashboardLayout>
   );
 }

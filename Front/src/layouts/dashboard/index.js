@@ -3,7 +3,6 @@ import Grid from '@mui/material/Grid';
 import MDBox from 'components/MDBox';
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
 import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
-import Footer from 'examples/Footer';
 import ComplexStatisticsCard from 'examples/Cards/StatisticsCards/ComplexStatisticsCard';
 import dashboardService from 'services/Dashboard/dashService';
 import dashFilesService from 'services/Dashboard/dashFilesService';
@@ -264,7 +263,6 @@ function Dashboard() {
           </Grid>
         </MDBox>
       </MDBox>
-      <Footer />
     </DashboardLayout>
   );
 }

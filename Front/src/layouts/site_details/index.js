@@ -1,7 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
-import Footer from 'examples/Footer';
 import MDBox from 'components/MDBox';
 import Header from './Components/Header';
 import { Grid } from '@mui/material';
@@ -84,7 +83,6 @@ function SiteDetails() {
             </AlertDescription>
           </Alert>
         </MDBox>
-        <Footer />
       </DashboardLayout>
     );
   }
@@ -115,7 +113,6 @@ function SiteDetails() {
         </Grid>
       </MDBox>
       {showModal && <SiteModal site={site} onSave={handleSave} onClose={handleCloseModal} />}
-      <Footer />
     </DashboardLayout>
   );
 }
