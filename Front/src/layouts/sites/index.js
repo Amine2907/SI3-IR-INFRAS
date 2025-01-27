@@ -6,7 +6,6 @@
  * It uses the DashboardLayout component to structure the page.
  */
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
-import Footer from 'examples/Footer';
 import SiteList from 'examples/Lists/SiteList/SiteList';
 import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
 function Sites() {
@@ -14,7 +13,6 @@ function Sites() {
     <DashboardLayout>
       <DashboardNavbar />
       <SiteList />
-      <Footer />
     </DashboardLayout>
   );
 }

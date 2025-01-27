@@ -4,8 +4,8 @@ import { supabase } from './config/supabaseClient.js';
 import ReportingGlobalModel from './models/ReportingGlobal/reportingModel.js';
 // Testing the generation of file instantaly 
 // cron.schedule('* * * * *', async () => {
-  // Gnereating of file Friday at 6 PM
-  cron.schedule('0 18 * * 5', async () => {
+  // Gnereating of file Monday - Friday 19:30 
+  cron.schedule('30 19 * * 1-5', async () => {
     console.log('Running scheduled task: Generating reporting data');
     try {
       // Step 1: Fetch reporting data
