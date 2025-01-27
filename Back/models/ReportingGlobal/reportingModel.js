@@ -166,7 +166,7 @@ const getReportingData = async () => {
           "0028.DR_Commentaires": item.Site?.DR?.[0]?.commentaires || "",
           "0029.Numero Devis": item.Site?.Devis?.[0]?.ND || "",
           "0030.Devis Fournisseur": frnsEntite?.nom || "",
-          "0031.Type Devis": item.Site?.Devis?.[0]?.tye_devis || "",
+          "0031.Type Devis": item.Site?.Devis?.[0]?.type_devis || "",
           "0032.Devis date": item.Site?.Devis?.[0]?.devis_date || "",
           "0033.Devis_Montant TTC": item.Site?.Devis?.[0]?.montant || "",
           "0034.Devis_Expiration date": item.Site?.Devis?.[0]?.expiration_date || "",
