@@ -16,7 +16,6 @@ import ReportingGlobalModel from './models/ReportingGlobal/reportingModel.js';
         return;
       }
       console.log('Step 1: Reporting data fetched successfully.');
-  
       // Step 2: Generate Excel file
       console.log('Step 2: Generating Excel file...');
       const fileBuffer = ReportingGlobalModel.generateExcelFile(data.data);
