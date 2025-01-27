@@ -48,15 +48,15 @@ const getDrDataWithSite = async () => {
             }
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro Demande Raccordement': item.NDRid,
-                'Ko Dp': item.Ko_Dp || 'NULL',
-                'Date Demande Raccordement': item.date_dr || 'NULL',
-                'Type Raccordement': item.type_rac || 'NULL',
-                'Gestionnaire de reseau': entiteData ? entiteData.nom : 'NULL',
-                'Status Proposition ': sprData ? sprData.SPR_desc : 'NULL',
+                'Ko Dp': item.Ko_Dp || "",
+                'Date Demande Raccordement': item.date_dr || "",
+                'Type Raccordement': item.type_rac || "",
+                'Gestionnaire de reseau': entiteData ? entiteData.nom : "",
+                'Status Proposition ': sprData ? sprData.SPR_desc : "",
             };
         }));
         return { success: true, data: drDataWithMappedValues };
@@ -102,16 +102,16 @@ const getDeviRecuWithSite = async () => {
             }
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de Devis': item.ND,
-                'Fournisseur': entiteData ? entiteData.nom : 'NULL',
-                'Type de devis': item.type_devis || 'NULL',
-                'Date de devis': item.devis_date || 'NULL',
-                'Montant': item.montant || 'NULL',
-                'Date Expiration devis': item.expiration_date || 'NULL',
-                'Date Reception devis': item.reception_date || 'NULL',
+                'Fournisseur': entiteData ? entiteData.nom : "",
+                'Type de devis': item.type_devis || "",
+                'Date de devis': item.devis_date || "",
+                'Montant': item.montant || "",
+                'Date Expiration devis': item.expiration_date || "",
+                'Date Reception devis': item.reception_date || "",
             };
         }));
         return { success: true, data: devisRecuWithMappedValues };
@@ -158,16 +158,16 @@ const getDevisEnAttenteWithSite = async () => {
             }
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de Devis': item.ND,
-                'Fournisseur': entiteData ? entiteData.nom : 'NULL',
-                'Type de devis': item.type_devis || 'NULL',
-                'Date de devis': item.devis_date || 'NULL',
-                'Montant': item.montant || 'NULL',
-                'Date Expiration devis': item.expiration_date || 'NULL',
-                'Date Reception devis': item.reception_date || 'NULL',
+                'Fournisseur': entiteData ? entiteData.nom : "",
+                'Type de devis': item.type_devis || "",
+                'Date de devis': item.devis_date || "",
+                'Montant': item.montant || "",
+                'Date Expiration devis': item.expiration_date || "",
+                'Date Reception devis': item.reception_date || "",
             };
         }));
         return { success: true, data: devisRecuWithMappedValues };
@@ -216,16 +216,16 @@ const getDevisEnAttenteOpWithSite = async () => {
             }
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de Devis': item.ND,
-                'Fournisseur': entiteData ? entiteData.nom : 'NULL',
-                'Type de devis': item.type_devis || 'NULL',
-                'Date de devis': item.devis_date || 'NULL',
-                'Montant': item.montant || 'NULL',
-                'Date Expiration devis': item.expiration_date || 'NULL',
-                'Date Reception devis': item.reception_date || 'NULL',
+                'Fournisseur': entiteData ? entiteData.nom : "",
+                'Type de devis': item.type_devis || "",
+                'Date de devis': item.devis_date || "",
+                'Montant': item.montant || "",
+                'Date Expiration devis': item.expiration_date || "",
+                'Date Reception devis': item.reception_date || "",
             };
         }));
         return { success: true, data: devisRecuWithMappedValues };
@@ -272,16 +272,16 @@ const getDevisSigneWithSite = async () => {
             }
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de Devis': item.ND,
-                'Fournisseur': entiteData ? entiteData.nom : 'NULL',
-                'Type de devis': item.type_devis || 'NULL',
-                'Date de devis': item.devis_date || 'NULL',
-                'Montant': item.montant || 'NULL',
-                'Date Expiration devis': item.expiration_date || 'NULL',
-                'Date Reception devis': item.reception_date || 'NULL',
+                'Fournisseur': entiteData ? entiteData.nom : "",
+                'Type de devis': item.type_devis || "",
+                'Date de devis': item.devis_date || "",
+                'Montant': item.montant || "",
+                'Date Expiration devis': item.expiration_date || "",
+                'Date Reception devis': item.reception_date || "",
             };
         }));
         return { success: true, data: devisRecuWithMappedValues };
@@ -314,13 +314,13 @@ const getReglementOkWithSite  = async () => {
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de commande': item.no_commande,
-                'Numéro de devis': item.no_devis || 'NULL',
-                'Montant': item.montant || 'NULL',
-                'Date de reglement': item.reglement_date || 'NULL',
+                'Numéro de devis': item.no_devis || "",
+                'Montant': item.montant || "",
+                'Date de reglement': item.reglement_date || "",
             };
         }));
         return { success: true, data: reglementOkWithMappedValues };
@@ -353,13 +353,13 @@ const getReglementEnAttenteWithSite = async () => {
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de commande': item.no_commande,
-                'Numéro de devis': item.no_devis || 'NULL',
-                'Montant': item.montant || 'NULL',
-                'Date de reglement': item.reglement_date || 'NULL',
+                'Numéro de devis': item.no_devis || "",
+                'Montant': item.montant || "",
+                'Date de reglement': item.reglement_date || "",
             };
         }));
         return { success: true, data: reglementOkWithMappedValues };
@@ -392,12 +392,12 @@ const getPlanificationExtension = async () => {
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de travaux': item.Tid,
-                'Extension prévisionnelle': item.extension_prev || 'NULL',
-                'Extension reele': item.extension_reel || 'NULL',
+                'Extension prévisionnelle': item.extension_prev || "",
+                'Extension reele': item.extension_reel || "",
             };
         }));
         return { success: true, data: reglementOkWithMappedValues };
@@ -429,12 +429,12 @@ const getExtensionOk = async () => {
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de travaux': item.Tid,
-                'Extension prévisionnelle': item.extension_prev || 'NULL',
-                'Extension reele': item.extension_reel || 'NULL',
+                'Extension prévisionnelle': item.extension_prev || "",
+                'Extension reele': item.extension_reel || "",
             };
         }));
         return { success: true, data: reglementOkWithMappedValues };
@@ -467,12 +467,12 @@ const getPlanificationBranchement  = async () => {
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de travaux': item.Tid,
-                'Extension prévisionnelle': item.extension_prev || 'NULL',
-                'Extension reele': item.extension_reel || 'NULL',
+                'Extension prévisionnelle': item.extension_prev || "",
+                'Extension reele': item.extension_reel || "",
             };
         }));
         return { success: true, data: reglementOkWithMappedValues };
@@ -504,12 +504,12 @@ const getBranchementOk  = async () => {
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de travaux': item.Tid,
-                'Extension prévisionnelle': item.extension_prev || 'NULL',
-                'Extension reele': item.extension_reel || 'NULL',
+                'Extension prévisionnelle': item.extension_prev || "",
+                'Extension reele': item.extension_reel || "",
             };
         }));
         return { success: true, data: reglementOkWithMappedValues };
@@ -543,14 +543,14 @@ const getConsuelRecu  = async () => {
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de travaux': item.traveaux_id,
-                'Numéro de PDL': item.no_PDL || 'NULL',
-                'MES prévisionnelle': item.MES_prev || 'NULL',
-                'MES reel': item.MES_reel || 'NULL',
-                'status consuel': item.status_consuel || 'NULL',
+                'Numéro de PDL': item.no_PDL || "",
+                'MES prévisionnelle': item.MES_prev || "",
+                'MES reel': item.MES_reel || "",
+                'status consuel': item.status_consuel || "",
             };
         }));
         return { success: true, data: reglementOkWithMappedValues };
@@ -584,14 +584,14 @@ const getDemMesRealisee  = async () => {
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de travaux': item.traveaux_id,
-                'Numéro de PDL': item.no_PDL || 'NULL',
-                'MES prévisionnelle': item.MES_prev || 'NULL',
-                'MES reel': item.MES_reel || 'NULL',
-                'status consuel': item.status_consuel || 'NULL',
+                'Numéro de PDL': item.no_PDL || "",
+                'MES prévisionnelle': item.MES_prev || "",
+                'MES reel': item.MES_reel || "",
+                'status consuel': item.status_consuel || "",
             };
         }));
         return { success: true, data: reglementOkWithMappedValues };
@@ -625,14 +625,14 @@ const getConsuelEnAttente  = async () => {
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de travaux': item.traveaux_id,
-                'Numéro de PDL': item.no_PDL || 'NULL',
-                'MES prévisionnelle': item.MES_prev || 'NULL',
-                'MES reel': item.MES_reel || 'NULL',
-                'status consuel': item.status_consuel || 'NULL',
+                'Numéro de PDL': item.no_PDL || "",
+                'MES prévisionnelle': item.MES_prev || "",
+                'MES reel': item.MES_reel || "",
+                'status consuel': item.status_consuel || "",
             };
         }));
         return { success: true, data: reglementOkWithMappedValues };
@@ -667,14 +667,14 @@ const getDemMesEnAttante  = async () => {
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
             // Return the mapped data, with NULL handling
             return {
-                'EB': item.Site ? item.Site.EB : 'NULL', 
-                'G2R': item.Site ? item.Site.G2R : 'NULL',
-                'Nom site': item.Site ? item.Site.nom : 'NULL',
+                'EB': item.Site ? item.Site.EB : "", 
+                'G2R': item.Site ? item.Site.G2R : "",
+                'Nom site': item.Site ? item.Site.nom : "",
                 'Numéro de travaux': item.traveaux_id,
-                'Numéro de PDL': item.no_PDL || 'NULL',
-                'MES prévisionnelle': item.MES_prev || 'NULL',
-                'MES reel': item.MES_reel || 'NULL',
-                'status consuel': item.status_consuel || 'NULL',
+                'Numéro de PDL': item.no_PDL || "",
+                'MES prévisionnelle': item.MES_prev || "",
+                'MES reel': item.MES_reel || "",
+                'status consuel': item.status_consuel || "",
             };
         }));
         return { success: true, data: reglementOkWithMappedValues };
