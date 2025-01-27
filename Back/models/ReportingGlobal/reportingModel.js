@@ -111,7 +111,7 @@ const getReportingData = async () => {
                     )
                 )
             `)
-      .eq("is_active", true)
+      .eq("is_active", true);
 
     if (error) {
       console.error("Error fetching data from Prospect:", error)
