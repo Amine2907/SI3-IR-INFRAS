@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/reporting-file';
+const API_URL = 'https://si3-ir-infras.onrender.com/api/reporting-file';
 // Download DR data as Excel file
 const downloadExcel = async type => {
   try {
