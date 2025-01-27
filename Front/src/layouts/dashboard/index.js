@@ -3,14 +3,6 @@ import Grid from '@mui/material/Grid';
 import MDBox from 'components/MDBox';
 import DashboardLayout from 'examples/LayoutContainers/DashboardLayout';
 import DashboardNavbar from 'examples/Navbars/DashboardNavbar';
-<<<<<<< HEAD
-import Footer from 'examples/Footer';
-// Dashboard components
-// import Projects from 'layouts/dashboard/components/Projects';
-// import OrdersOverview from 'layouts/dashboard/components/OrdersOverview';
-
-=======
->>>>>>> 3128f602c1ce57e8a94765b2e9fa4cdc8add5cb6
 import ComplexStatisticsCard from 'examples/Cards/StatisticsCards/ComplexStatisticsCard';
 import dashboardService from 'services/Dashboard/dashService';
 import dashFilesService from 'services/Dashboard/dashFilesService';
