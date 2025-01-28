@@ -32,11 +32,11 @@ const updateUser = async (userId, userData) => {
         return { success: false, error: "User ID is required" };
     }
     // Destructure fields from userData, if they exist
-    const { firstname, lastname, date_de_naissance, entreprise, department, genre, is_active } = userData || {};
+    const { firstName, lastName, date_de_naissance, entreprise, department, genre, is_active } = userData || {};
     // Construct the data object dynamically
     const updateData = {
-        ...(firstname !== undefined && { firstname }),
-        ...(lastname !== undefined && { lastname }),
+        ...(firstName !== undefined && { firstName }),
+        ...(lastName !== undefined && { lastName }),
         ...(date_de_naissance !== undefined && { date_de_naissance }),
         ...(entreprise !== undefined && { entreprise }),
         ...(department !== undefined && { department }),
@@ -66,7 +66,6 @@ const listUsers = async() => {
         const{data,error} = await supabase 
         .from('ausers')
         .select('*');
-        
         if(error){
             throw error ;
         }

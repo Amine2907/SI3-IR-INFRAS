@@ -72,8 +72,8 @@ function Users() {
               <TableCell>
                 <Avatar src={user.photo || '/placeholder.svg'} alt={user.firstName} />
               </TableCell>
-              <TableCell>{user.firstname || 'N/A'}</TableCell>
-              <TableCell>{user.lastname || 'N/A'}</TableCell>
+              <TableCell>{user.firstName || 'N/A'}</TableCell>
+              <TableCell>{user.lastName || 'N/A'}</TableCell>
               <TableCell>{user.email || 'N/A'}</TableCell>
               <TableCell>{user.entreprise || 'N/A'}</TableCell>
               <TableCell>{user.department || 'N/A'}</TableCell>

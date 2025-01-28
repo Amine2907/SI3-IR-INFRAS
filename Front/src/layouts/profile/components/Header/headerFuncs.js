@@ -21,7 +21,7 @@ import Companies from '../Companies';
 function HeaderFunctions() {
   const [tabsOrientation, setTabsOrientation] = useState('horizontal');
   const [tabValue, setTabValue] = useState(0);
-  const [userData, setUserData] = useState({ firstname: '', lastname: '' });
+  const [userData, setUserData] = useState({ firstName: '', lastName: '' });
 
   // Adjust the orientation of tabs based on screen size
   useEffect(() => {

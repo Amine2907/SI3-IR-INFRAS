@@ -53,7 +53,7 @@ function Header() {
           <Grid item>
             <MDBox height="100%" mt={0.5} lineHeight={1}>
               <MDTypography variant="h5" fontWeight="medium">
-                {`${userData.firstname} ${userData.lastname}`}
+                {`${userData.firstName} ${userData.lastName}`}
               </MDTypography>
             </MDBox>
           </Grid>
