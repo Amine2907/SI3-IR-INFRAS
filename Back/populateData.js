@@ -1,7 +1,7 @@
 import { supabase } from "./config/supabaseClient.js";
 import { faker } from "@faker-js/faker";
 
-// Helper to chunk data for bulk insertion
+// Helper function to split large datasets into smaller chunks
 const chunkArray = (array, size) => {
   const chunks = [];
   for (let i = 0; i < array.length; i += size) {
@@ -9,6 +9,8 @@ const chunkArray = (array, size) => {
   }
   return chunks;
 };
+// Convert a JavaScript array to a PostgreSQL-compatible array literal
+const toPostgresArray = (array) => `{${array.join(",")}}`;
 
 // Insert data in chunks to avoid memory issues
 const insertDataInChunks = async (table, data, chunkSize = 100) => {
@@ -16,7 +18,7 @@ const insertDataInChunks = async (table, data, chunkSize = 100) => {
   for (const chunk of chunks) {
     const { error } = await supabase.from(table).insert(chunk);
     if (error) {
-      console.error(`Error inserting data into ${table}:`, error.message, error.details);
+      console.error(`Error inserting data into ${table}:`, error.message, error.details, chunk);
     } else {
       console.log(`Successfully inserted ${chunk.length} rows into ${table}`);
     }
@@ -48,10 +50,10 @@ const createDataForReport = async () => {
 
     // Generate Sites
     for (let i = 0; i < 1000; i++) {
-      const EB = faker.string.uuid();
+      const siteId = i + 1;
       const site = {
-        EB,
-        G2R: faker.string.uuid(),
+        EB: siteId,
+        G2R: faker.number.int({ min: 10000, max: 99999 }).toString(),
         nom: faker.company.name(),
         Ville: faker.location.city(),
         priorite_fk: faker.number.int({ min: 1, max: 4 }),
@@ -63,7 +65,9 @@ const createDataForReport = async () => {
         zone: faker.location.street(),
         region: faker.location.state(),
         Acteur_ENEDIS_id: faker.number.int({ min: 1, max: 6 }),
-        Operateurs: `{${faker.helpers.arrayElements(ops).join(",")}}`,
+        Operateurs: toPostgresArray(
+          faker.helpers.arrayElements(ops, faker.number.int({ min: 1, max: 4 }))
+        ),
         status_site_SFR: faker.helpers.arrayElement(statusSiteSFValues),
         contact_fk: faker.number.int({ min: 1, max: 56 }),
       };
@@ -71,16 +75,17 @@ const createDataForReport = async () => {
 
       // Generate related data for each Site
       for (let j = 0; j < faker.number.int({ min: 1, max: 5 }); j++) {
-        const Proid = faker.string.uuid();
+        const prospectId = i * 10 + j + 1;
+
         const prospect = {
-          Proid,
+          Proid: prospectId,
           nom: faker.person.fullName(),
           status_validation_fk: faker.number.int({ min: 1, max: 26 }),
           retenu: faker.datatype.boolean(),
           is_active: true,
           commentaires: faker.lorem.sentence(),
-          cout_estime: faker.finance.amount(1000, 10000, 2),
-          EB_fk: EB,
+          cout_estime: faker.number.float({ min: 1000, max: 10000, precision: 0.01 }),
+          EB_fk: siteId,
           latitude: faker.location.latitude(),
           longitude: faker.location.longitude(),
           parcelle: faker.word.noun(),
@@ -89,10 +94,9 @@ const createDataForReport = async () => {
         };
         prospects.push(prospect);
 
-        // Generate DPs
         const dp = {
-          DPid: faker.string.uuid(),
-          PRid_fk: Proid,
+          DPid: i * 10 + j + 1,
+          PRid_fk: prospectId,
           ANO_certificat_tacite: faker.date.past(),
           arrete_opposition: faker.date.past(),
           commentaires: faker.lorem.sentence(),
@@ -100,41 +104,39 @@ const createDataForReport = async () => {
           etat_prerequis: faker.number.int({ min: 1, max: 2 }),
           is_active: true,
           MJS: faker.date.past(),
-          numero_DP: faker.string.uuid(),
+          numero_DP: faker.number.int({ min: 1000, max: 9999 }).toString(),
           plans: faker.word.noun(),
           production_DP_PC: faker.date.past(),
           recipisse_depot_DP: faker.date.past(),
           relance: faker.datatype.boolean(),
           status_go_traveauxP: faker.date.past(),
           status_go_traveauxR: faker.date.past(),
-          EB_fk: EB,
+          EB_fk: siteId,
         };
         dps.push(dp);
 
-        // Generate PreEtudes
         const preEtude = {
-          PREid: faker.string.uuid(),
-          ADPDT: faker.number.float({ min: 1, max: 100 }),
-          CRR: faker.number.float({ min: 1, max: 100 }),
-          CRP_HTABT: faker.number.float({ min: 1, max: 100 }),
-          CRRBTA: faker.number.float({ min: 1, max: 100 }),
+          PREid: i * 10 + j + 1,
+          ADPDT: faker.number.float({ min: 1, max: 100, precision: 0.1 }),
+          CRR: faker.number.float({ min: 1, max: 100, precision: 0.1 }),
+          CRP_HTABT: faker.number.float({ min: 1, max: 100, precision: 0.1 }),
+          CRRBTA: faker.number.float({ min: 1, max: 100, precision: 0.1 }),
           is_active: true,
-          MM: faker.number.float({ min: 1, max: 100 }),
+          MM: faker.number.float({ min: 1, max: 100, precision: 0.1 }),
           type_rac: faker.helpers.arrayElement(typeRacValues),
           pdf_url: faker.internet.url(),
-          cout: faker.number.float({ min: 100, max: 1000 }),
-          EB_fk: EB,
+          cout: faker.number.float({ min: 100, max: 1000, precision: 0.01 }),
+          EB_fk: siteId,
           ZFA: faker.datatype.boolean(),
           ZFB: faker.datatype.boolean(),
-          Prid_fk: Proid,
+          Prid_fk: prospectId,
           commentaires: faker.lorem.sentence(),
         };
         preEtudes.push(preEtude);
 
-        // Generate DRs
         const dr = {
-          NDRid: faker.string.uuid(),
-          Pro_fk: Proid,
+          NDRid: i * 10 + j + 1,
+          Pro_fk: prospectId,
           SPRid_FK: faker.number.int({ min: 1, max: 2 }),
           date_dr: faker.date.past(),
           Ko_Dp: faker.date.past(),
@@ -147,16 +149,15 @@ const createDataForReport = async () => {
           gestionnaire_de_reseau: faker.number.int({ min: 1, max: 56 }),
           type_rac: faker.helpers.arrayElement(typeRacValues),
           operators: faker.helpers.arrayElement(ops),
-          EB_fk: EB,
+          EB_fk: siteId,
           fin_trav_prev: faker.date.future(),
         };
         drs.push(dr);
 
-        // Generate Devis
         const devisItem = {
-          ND: faker.string.uuid(),
+          ND: i * 10 + j + 1,
           devis_date: faker.date.past(),
-          montant: faker.finance.amount(1000, 50000, 2),
+          montant: faker.number.float({ min: 1000, max: 50000, precision: 0.01 }),
           code_paiement: faker.string.alphanumeric(10),
           reception_date: faker.date.past(),
           expiration_date: faker.date.past(),
@@ -164,7 +165,7 @@ const createDataForReport = async () => {
           validation_date: faker.date.past(),
           envoi_date: faker.date.past(),
           is_active: true,
-          EB_fk: EB,
+          EB_fk: siteId,
           type_devis: faker.helpers.arrayElement([
             "Extension ENEDIS",
             "Branchement",
@@ -176,23 +177,21 @@ const createDataForReport = async () => {
         };
         devis.push(devisItem);
 
-        // Generate Paiements
         const paiement = {
-          Pid: faker.number.int({ min: 1, max: 1000000 }),
+          Pid: i * 10 + j + 1,
           is_active: true,
           libelle_du_virement: faker.lorem.words(3),
-          montant: faker.finance.amount(1000, 10000, 2),
-          no_commande: faker.string.uuid(),
+          montant: faker.number.float({ min: 1000, max: 10000, precision: 0.01 }),
+          no_commande: faker.number.int({ min: 1000, max: 9999 }).toString(),
           no_devis: devisItem.ND,
-          EB_fk: EB,
+          EB_fk: siteId,
           reglement_date: faker.date.past(),
           commentaires: faker.lorem.sentence(),
         };
         paiements.push(paiement);
 
-        // Generate Travaux
         const travauxItem = {
-          Tid: faker.string.uuid(),
+          Tid: i * 10 + j + 1,
           levee_pylone_prev: faker.date.future(),
           levee_pylone_reel: faker.date.future(),
           extension_prev: faker.date.future(),
@@ -203,52 +202,49 @@ const createDataForReport = async () => {
           raccordement_reel: faker.date.future(),
           is_active: true,
           commentaires: faker.lorem.sentence(),
-          EB_fk: EB,
+          EB_fk: siteId,
         };
         travaux.push(travauxItem);
 
-        // Generate MES
-        const mesData = {
-          MESid: faker.string.uuid(),
+        const mesItem = {
+          MESid: i * 10 + j + 1,
           consuel_remise: faker.date.future(),
           MES_demande: faker.date.future(),
           MES_prev: faker.date.future(),
           MES_reel: faker.date.future(),
           is_active: true,
           commentaires: faker.lorem.sentence(),
-          EB_fk: EB,
+          EB_fk: siteId,
         };
-        mes.push(mesData);
+        mes.push(mesItem);
 
-        // Generate Factures
         const facture = {
-          Fid: faker.string.uuid(),
+          Fid: i * 10 + j + 1,
           facture_date: faker.date.past(),
           is_active: true,
-          montant_ht: faker.finance.amount(1000, 10000, 2),
-          montant_ttc: faker.finance.amount(1200, 12000, 2),
-          tva: faker.finance.amount(5, 25, 2),
-          EB_fk: EB,
+          montant_ht: faker.number.float({ min: 1000, max: 10000, precision: 0.01 }),
+          montant_ttc: faker.number.float({ min: 1200, max: 12000, precision: 0.01 }),
+          tva: faker.number.float({ min: 5, max: 25, precision: 0.01 }),
+          EB_fk: siteId,
         };
         factures.push(facture);
       }
     }
 
-    // Insert data into tables
-    await insertDataInChunks("Site", sites, 100);
-    await insertDataInChunks("Prospect", prospects, 100);
-    await insertDataInChunks("DP", dps, 100);
-    await insertDataInChunks("PreEtude", preEtudes, 100);
-    await insertDataInChunks("DR", drs, 100);
-    await insertDataInChunks("Devis", devis, 100);
-    await insertDataInChunks("Paiements", paiements, 100);
-    await insertDataInChunks("Travaux", travaux, 100);
-    await insertDataInChunks("MES", mes, 100);
-    await insertDataInChunks("Facture", factures, 100);
+    await insertDataInChunks("Site", sites);
+    await insertDataInChunks("Prospect", prospects);
+    await insertDataInChunks("DP", dps);
+    await insertDataInChunks("PreEtude", preEtudes);
+    await insertDataInChunks("DR", drs);
+    await insertDataInChunks("Devis", devis);
+    await insertDataInChunks("Paiements", paiements);
+    await insertDataInChunks("Traveaux", travaux);
+    await insertDataInChunks("MES", mes);
+    await insertDataInChunks("Facture", factures);
 
     console.log("Data population completed successfully!");
   } catch (error) {
-    console.error("Error populating data:", error.message);
+    console.error("Error populating data:", error.message, error.stack);
   }
 };
 
