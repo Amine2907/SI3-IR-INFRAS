@@ -9,16 +9,28 @@ const chunkArray = (array, size) => {
   }
   return chunks;
 };
-// Convert a JavaScript array to a PostgreSQL-compatible array literal
-const toPostgresArray = (array) => `{${array.join(",")}}`;
 
-// Insert data in chunks to avoid memory issues
+// Check if a record exists in a parent table
+const checkRecordExists = async (table, column, value) => {
+  const { data, error } = await supabase.from(table).select(column).eq(column, value).limit(1);
+  if (error) {
+    console.error(`Error checking record existence in ${table}:`, error.message);
+    return false;
+  }
+  return data.length > 0;
+};
+
+// Convert an array to PostgreSQL array format
+const toPostgresArray = (array) => `{${array.map((item) => `"${item}"`).join(",")}}`;
+
+// Insert data in chunks to avoid memory issues and ensure dependencies
 const insertDataInChunks = async (table, data, chunkSize = 100) => {
   const chunks = chunkArray(data, chunkSize);
   for (const chunk of chunks) {
-    const { error } = await supabase.from(table).insert(chunk);
+    console.log(`Attempting to insert into table ${table}:`, JSON.stringify(chunk, null, 2));
+    const { data: insertedData, error } = await supabase.from(table).insert(chunk);
     if (error) {
-      console.error(`Error inserting data into ${table}:`, error.message, error.details, chunk);
+      console.error(`Error inserting data into ${table}:`, error.message, error.details);
     } else {
       console.log(`Successfully inserted ${chunk.length} rows into ${table}`);
     }
@@ -65,9 +77,9 @@ const createDataForReport = async () => {
         zone: faker.location.street(),
         region: faker.location.state(),
         Acteur_ENEDIS_id: faker.number.int({ min: 1, max: 6 }),
-        Operateurs: toPostgresArray(
-          faker.helpers.arrayElements(ops, faker.number.int({ min: 1, max: 4 }))
-        ),
+        // Operateurs: toPostgresArray(
+        //   faker.helpers.arrayElements(ops, faker.number.int({ min: 1, max: ops.length }))
+        // ),
         status_site_SFR: faker.helpers.arrayElement(statusSiteSFValues),
         contact_fk: faker.number.int({ min: 1, max: 56 }),
       };
@@ -232,15 +244,29 @@ const createDataForReport = async () => {
     }
 
     await insertDataInChunks("Site", sites);
-    await insertDataInChunks("Prospect", prospects);
-    await insertDataInChunks("DP", dps);
-    await insertDataInChunks("PreEtude", preEtudes);
-    await insertDataInChunks("DR", drs);
-    await insertDataInChunks("Devis", devis);
-    await insertDataInChunks("Paiements", paiements);
-    await insertDataInChunks("Traveaux", travaux);
-    await insertDataInChunks("MES", mes);
-    await insertDataInChunks("Facture", factures);
+
+    const dependentTables = [
+      { name: "Prospect", data: prospects },
+      { name: "DP", data: dps },
+      { name: "PreEtude", data: preEtudes },
+      { name: "DR", data: drs },
+      { name: "Devis", data: devis },
+      { name: "Paiements", data: paiements },
+      { name: "Traveaux", data: travaux },
+      { name: "MES", data: mes },
+      { name: "Facture", data: factures },
+    ];
+
+    for (const table of dependentTables) {
+      for (const row of table.data) {
+        const exists = await checkRecordExists("Site", "EB", row.EB_fk);
+        if (!exists) {
+          console.warn(`Skipping ${table.name} with EB_fk=${row.EB_fk} because Site does not exist.`);
+          continue;
+        }
+        await insertDataInChunks(table.name, [row]);
+      }
+    }
 
     console.log("Data population completed successfully!");
   } catch (error) {
