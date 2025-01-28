@@ -13,27 +13,62 @@ import { configDotenv } from "dotenv";
 configDotenv();
 const FRONT_URL= process.env.FrontUrl;
 export const signUp = async (req, res) => {
-  const {firstName,lastName,email, password} = req.body;
+  const { firstName, lastName, email, password } = req.body;
   console.log(req.body);
-  const EmailConfirmURL = `${FRONT_URL}/auth/confirm-sign-up`
-    if (!firstName || !lastName || !email || !password) {
+
+  const EmailConfirmURL = `${FRONT_URL}/auth/confirm-sign-up`;
+
+  if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({ success: false, error: 'Tous les champs sont obligatoires.' });
   }
+
   try {
-    const { user, error } = await supabase.auth.signUp({ email, password , options: {
-      data: {
-        firstName,
-        lastName,
-        emailRedirectTo: EmailConfirmURL,
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          firstName,
+          lastName,
+          emailRedirectTo: EmailConfirmURL,
+        },
       },
-    },});
+    });
+
+    console.log('Supabase signUp response:', { data, error });
+
     if (error) {
-      console.error('Error during sign-up:', error.message);  // Log the error message
+      console.error('Error during sign-up:', error.message);
       return res.status(400).json({ success: false, error: error.message });
     }
-    return res.status(200).json({ success: true, message: 'User signed up successfully!', user }); 
+
+    if (!data || !data.user) {
+      return res.status(400).json({ success: false, error: 'Failed to retrieve user data after sign-up.' });
+    }
+
+    const user = data.user;
+
+    // Extract data from user_metadata
+    const { firstName: metaFirstName, lastName: metaLastName } = user.user_metadata || {};
+    const { error: insertError } = await supabase
+      .from('ausers')
+      .insert([
+        {
+          id: user.id,
+          email: user.email,
+          firstName: metaFirstName || firstName,
+          lastName: metaLastName || lastName,
+          created_at: new Date().toISOString(),
+          is_active: true,
+        },
+      ]);
+    if (insertError) {
+      console.error('Error inserting user into ausers table:', insertError.message);
+      return res.status(400).json({ success: false, error: 'Failed to save user data.' });
+    }
+    return res.status(200).json({ success: true, message: 'User signed up successfully!', user });
   } catch (err) {
-    console.error('Server error:', err);  // Catch unexpected errors
+    console.error('Server error:', err);
     return res.status(500).json({ success: false, error: 'Server error' });
   }
 };

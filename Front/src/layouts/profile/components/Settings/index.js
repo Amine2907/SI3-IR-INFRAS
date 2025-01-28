@@ -92,8 +92,8 @@ function Settings({ setUserData }) {
                   ? new Date(userData.created_at).toLocaleDateString()
                   : 'Non disponible',
                 Email: userData.email || 'Non disponible',
-                Prénom: userData.firstname || 'Non disponible',
-                Nom: userData.lastname || 'Non disponible',
+                Prénom: userData.firstName || 'Non disponible',
+                Nom: userData.lastName || 'Non disponible',
                 Role: userData.user_access || 'Non disponible',
                 Entreprise: userData.entreprise || 'Non disponible',
                 Department: userData.department || 'Non disponible',
