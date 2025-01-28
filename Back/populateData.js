@@ -105,7 +105,6 @@ const createDataForReport = async () => {
           status_site_sfr: faker.helpers.arrayElement(statusSiteSFValues),
         };
         prospects.push(prospect);
-
         const dp = {
           DPid: i * 10 + j + 1,
           PRid_fk: prospectId,
