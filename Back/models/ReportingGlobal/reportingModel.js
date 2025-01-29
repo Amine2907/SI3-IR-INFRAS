@@ -236,18 +236,16 @@ const generateExcelFile = (data) => {
     try {
         // Create a worksheet from the data
         const ws = XLSX.utils.json_to_sheet(data);
-
         // Create a new workbook and append the worksheet
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Reporting Data");
 
         // Write the workbook to a buffer with explicit encoding and compression
         const fileBuffer = XLSX.write(wb, {
-            bookType: 'xlsx',       // Specify the file type
-            type: 'buffer',         // Generate a Node.js buffer
-            compression: true,      // Enable compression to reduce file size
+            bookType: 'xlsx',
+            type: 'buffer',
+            compression: true,
         });
-
         console.log("Excel file generated successfully");
         return fileBuffer;
     } catch (error) {

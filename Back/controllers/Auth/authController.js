@@ -68,7 +68,6 @@ export const signIn = async (req, res) => {
   const { email, password } = req.body; 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
-    console.error('Supabase Sign-in Error:', error.message);
     return res.status(400).json({ error: error.message });
   }
   return res.status(200).json({ message: 'Sign in successful', user: data.user,accessToken: data.session.access_token, });

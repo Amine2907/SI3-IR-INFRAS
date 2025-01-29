@@ -1,7 +1,6 @@
 import DashFiles from '../../models/Dashboard/filesModel.js';
 import fs from 'fs';
 import path from 'path';
-import ReportingGlobalModel from '../../models/ReportingGlobal/reportingModel.js';
 // Controller to generate and download Excel file
 export const downloadExcel = async (req, res) => {
     try {

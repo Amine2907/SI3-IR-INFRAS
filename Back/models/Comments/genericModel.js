@@ -41,7 +41,6 @@ const getComments = async (entityName, Sid) => {
       .single();
     if (error) throw error;
     if (!data || !data.commentaires) {
-      console.warn('No comments found for the first row in entity:', entityName, 'Sid:', Sid);
       return [];
     }
     return data.commentaires;

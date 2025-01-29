@@ -6,11 +6,11 @@ const addExisitngSiteContact = async (Sid, Cid) => {
     .insert([{ Sid, Cid }])
     .select('*');
   if (error) {
-    console.error('Supabase Error Details:', error); // Log detailed error
+    console.error('Supabase Error Details:', error);
     throw error;
   }
-  console.log('Returned Data:', data); // Log the returned data
-  return data; // Make sure data is properly returned
+  console.log('Returned Data:', data);
+  return data;
 };
 const addNewContactSite = async (Sid, contactData) => {
   try {
@@ -33,7 +33,7 @@ const addNewContactSite = async (Sid, contactData) => {
       throw siteContactError;
     }
     // Return both contact and site contact data
-    return { contact: contact[0], siteContact };  // This is the data being returned
+    return { contact: contact[0], siteContact };
   } catch (error) {
     console.error('Error in addNewContactSite:', error.message);
     throw error;
@@ -47,9 +47,9 @@ const deleteSiteContact = async (Sid, Cid) => {
       .eq('Sid', Sid)
       .eq('Cid', Cid);
     if (response.error) {
-      throw error; // Ensure the error is properly thrown
+      throw error; 
     }
-    return response; // Return the result to the controller
+    return response;
   };
   // Get site contacts
 const getSiteConatcts = async (Sid) => {

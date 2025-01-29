@@ -14,7 +14,6 @@
  */
 import { supabase } from "../../../config/supabaseClient.js";
 import entityModel from "../../Entites/entiteModel.js";
-import { statusPropmapping } from "./DrData.js";
 const getActiveProspects = async (Sid) => {
     try {
         const { data, error } = await supabase
@@ -257,20 +256,6 @@ const updateDr = async (NDRid, updates) => {
       if (!updates.no_devis || !updates.no_devis.ND) {
         delete updates.no_devis;
     }
-      // Check and map `SPRid_FK` only if it's not already a valid ID
-      if (updates.SPRid_FK) {
-        if (typeof updates.SPRid_FK === 'string') {
-          const statpropId = statusPropmapping[updates.SPRid_FK];
-          if (!statpropId) {
-            throw new Error(`Invalid status prop  description: ${updates.SPRid_FK}`);
-          }
-          updates.SPRid_FK = statpropId;
-        } else if (typeof updates.SPRid_FK === 'number') {
-          console.log('SPRid_FK is already an ID:', updates.SPRid_FK);
-        } else {
-          throw new Error(`Invalid structure for SPRid_FK: ${updates.SPRid_FK}`);
-        }
-      }
       console.log('Transformed updates ready for database operation:', updates);
       // Perform the update operation in the database
       const { data, error } = await supabase

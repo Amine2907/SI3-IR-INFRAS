@@ -91,17 +91,17 @@ const GetContactsById = async(Cid) => {
 const updateContact = async (Cid, updates) => {
     try {
       const { data, error } = await supabase
-        .from('Contacts') // Make sure the table name is correct
+        .from('Contacts')
         .update(updates)
         .eq('Cid', Cid);
       if (error) {
-        console.error('Supabase Error:', error); // Log the error
-        return { success: false, error: error.message }; // Pass the actual error message
+        console.error('Supabase Error:', error);
+        return { success: false, error: error.message };
       }
-      return { success: true, data }; // Return success with data
+      return { success: true, data };
     } catch (err) {
-      console.error('Catch Block Error:', err); // Log any unexpected errors
-      return { success: false, error: err.message }; // Return the caught error message
+      console.error('Catch Block Error:', err);
+      return { success: false, error: err.message };
     }
   };
 // Activate Contacts 

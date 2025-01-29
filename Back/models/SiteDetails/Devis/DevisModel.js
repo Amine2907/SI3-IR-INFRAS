@@ -161,7 +161,6 @@ const createDevis = async (EB, devisData) => {
                 );
             }
         }
-
         // Insert the new Devis
         const newDevisData = {
             no_dr: devisData.no_dr,
