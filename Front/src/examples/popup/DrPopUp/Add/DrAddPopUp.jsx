@@ -15,7 +15,6 @@ import entityService from 'services/Entites/entityService';
 const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     demrac || {
-      SPRid_FK: { SPR_desc: '' },
       gestionnaire_de_reseau: { nom: '' },
       Pro_fk: { nom: '' },
       no_devis: { ND: '' },
@@ -121,7 +120,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
         drdc: formData.drdc,
         type_rac: formData.type_rac,
         gestionnaire_de_reseau: formData.gestionnaire_de_reseau.nom,
-        SPRid_FK: formData.SPRid_FK,
+        status_prop: formData.status_prop,
         no_devis: formData.no_devis.ND,
         Pro_fk: formData.Pro_fk.nom,
         is_active: isActive,
@@ -137,7 +136,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
       drdc: formData.drdc,
       type_rac: formData.type_rac,
       gestionnaire_de_reseau: formData.gestionnaire_de_reseau.nom,
-      SPRid_FK: formData.SPRid_FK,
+      status_prop: formData.status_prop,
       no_devis: formData.no_devis.ND,
       Pro_fk: formData.Pro_fk.nom,
       is_active: isActive,
@@ -344,10 +343,10 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
             style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
           >
             <Select
-              name="SPRid_FK"
-              value={formData.SPRid_FK || ''}
+              name="status_prop"
+              value={formData.status_prop || ''}
               displayEmpty
-              onChange={e => setFormData({ ...formData, SPRid_FK: e.target.value })}
+              onChange={handleChange}
               style={{
                 padding: '10px',
                 fontSize: '14px',
@@ -357,8 +356,8 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               <MenuItem value="" disabled>
                 -- Choisir un statut --
               </MenuItem>
-              <MenuItem value={1}>Devis en attente</MenuItem>
-              <MenuItem value={2}>Reçu</MenuItem>
+              <MenuItem value="Devis en attente">Devis en attente</MenuItem>
+              <MenuItem value="Reçu">Reçu</MenuItem>
             </Select>
           </FormControl>
           <div>
@@ -394,7 +393,7 @@ DrAddModal.propTypes = {
     gestionnaire_de_reseau: PropTypes.shape({
       nom: PropTypes.string.isRequired,
     }).isRequired,
-    SPRid_FK: PropTypes.string,
+    status_prop: PropTypes.string,
     no_devis: PropTypes.shape({
       ND: PropTypes.string.isRequired,
     }).isRequired,

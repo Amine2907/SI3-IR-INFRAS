@@ -50,17 +50,8 @@ const createDr = async (req, res) => {
       if (!demracData) {
         return res.status(400).json({ error: 'demRacData is required.' });
       }
-        // Map `SPRid_FK` if it's an object with `SPR_desc`
-        if (demracData.SPRid_FK && typeof demracData.SPRid_FK === 'object' && demracData.SPRid_FK.SPR_desc) {
-            const statusPropId = statusPropmapping[demracData.SPRid_FK.SPR_desc];
-            console.log("Mapped status prop :", demracData.SPRid_FK.SPR_desc, "->", statusPropId);
-            if (!statusPropId) {
-              throw new Error(`Invalid status prop  description: ${demracData.SPRid_FK.SPR_desc}`);
-            }
-            demracData.SPRid_FK = statusPropId; // Map back to description
-          }
     try {
-        const result = await drModel.createDr(Sid,demracData)     // Extract and map the fields if they contain descriptions instead of IDs
+        const result = await drModel.createDr(Sid,demracData)
       if (!result.success) {
         console.error("Error in model operation:", result.error);
         return res.status(400).json({ error: result.error });

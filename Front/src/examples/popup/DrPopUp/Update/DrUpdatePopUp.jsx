@@ -313,14 +313,14 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
             required
           >
             <Select
-              name="SPRid_FK"
-              value={formData.SPRid_FK || ''}
-              onChange={e => setFormData({ ...formData, SPRid_FK: e.target.value })}
+              name="status_prop"
+              value={formData.status_prop || ''}
+              onChange={handleChange}
               displayEmpty
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.SPRid_FK ? 'red' : '',
+                borderColor: errors.status_prop ? 'red' : '',
               }}
             >
               <MenuItem value="" disabled>
@@ -363,7 +363,7 @@ DrUpdateModal.propTypes = {
     gestionnaire_de_reseau: PropTypes.shape({
       nom: PropTypes.string.isRequired,
     }).isRequired,
-    SPRid_FK: PropTypes.string,
+    status_prop: PropTypes.string,
     no_devis: PropTypes.shape({
       ND: PropTypes.string.isRequired,
     }).isRequired,

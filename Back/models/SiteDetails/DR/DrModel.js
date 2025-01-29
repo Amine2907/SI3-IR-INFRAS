@@ -96,14 +96,6 @@ const createDr = async (EB, demracData) => {
             }
             demracData.no_devis = devis.ND;
         }
-        // Map SPRid_FK.SPR_desc -> ID
-        if (demracData.SPRid_FK?.SPR_desc) {
-            const statusPropId = statusPropmapping[demracData.SPRid_FK.SPR_desc];
-            if (!statusPropId) {
-                throw new Error(`Invalid SPR_desc: ${demracData.SPRid_FK.SPR_desc}`);
-            }
-            demracData.SPRid_FK = statusPropId;
-        }
         if (!demracData.no_devis || !demracData.no_devis.ND) {
             delete demracData.no_devis;
         }

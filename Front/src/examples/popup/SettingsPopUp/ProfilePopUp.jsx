@@ -44,8 +44,8 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
   }, []);
   const handleSubmit = () => {
     const newErrors = {};
-    if (!formData.firstname) newErrors.firstname = true;
-    if (!formData.lastname) newErrors.lastname = true;
+    if (!formData.firstName) newErrors.firstName = true;
+    if (!formData.lastName) newErrors.lastName = true;
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -66,21 +66,21 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
         </MDTypography>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '320px' }}>
           <MDInput
-            name="firstname"
-            value={formData.firstname || ''}
+            name="firstName"
+            value={formData.firstName || ''}
             onChange={handleChange}
             placeholder="Prenom*"
             style={{
               marginBottom: '5px',
               width: '320px',
               marginTop: '10px',
-              borderColor: errors.firstname ? 'red' : '',
+              borderColor: errors.firstName ? 'red' : '',
             }}
             required
           />
           <MDInput
-            name="lastname"
-            value={formData.lastname || ''}
+            name="lastName"
+            value={formData.lastName || ''}
             onChange={handleChange}
             placeholder="Nom*"
             style={{
@@ -203,7 +203,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
 ProfileModal.propTypes = {
   userData: PropTypes.shape({
     firstname: PropTypes.string,
-    lastname: PropTypes.string,
+    lastName: PropTypes.string,
     genre: PropTypes.string,
     date_de_naissance: PropTypes.string,
     entreprise: PropTypes.string,
