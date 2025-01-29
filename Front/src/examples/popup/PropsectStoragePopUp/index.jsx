@@ -1,13 +1,12 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styles from './styles.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
 import ProspectStorageService from 'services/site_details/Prospect/prospectStorageService';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import MDAlert from 'components/MDAlert';
-
+import styles from '../storage.module.css';
 const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});

@@ -1,13 +1,12 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styles from './styles.module.css';
+import styles from '../largeStyles.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import travStorageService from 'services/site_details/Traveaux/TravStorageService';
 import MDAlert from 'components/MDAlert';
-
 const TravStorageModal = ({ travId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});

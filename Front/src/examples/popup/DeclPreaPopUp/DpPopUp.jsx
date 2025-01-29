@@ -71,6 +71,9 @@ const DpUModal = ({ dp, onSave, onClose }) => {
           Modifier DP
         </MDTypography>
         <div className={styles.formGrid}>
+          <label className={styles.formLabel} htmlFor="remboursement">
+            Etat prerequis
+          </label>
           <FormControl
             fullWidth
             style={{
@@ -99,6 +102,9 @@ const DpUModal = ({ dp, onSave, onClose }) => {
               <MenuItem value="Incomplet">Incomplet</MenuItem>
             </Select>
           </FormControl>
+          <label className={styles.formLabel} htmlFor="remboursement">
+            Numero DP
+          </label>
           <MDInput
             name="numero_DP"
             value={formData.numero_DP || ''}

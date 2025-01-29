@@ -18,7 +18,7 @@
  * - Material Design components: MDTypography, MDButton, MDInput, Switch, Select, MenuItem, FormControl
  */
 import React, { useState, useEffect } from 'react';
-import styles from './style.module.css';
+import styles from '../largeStyles.module.css';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
