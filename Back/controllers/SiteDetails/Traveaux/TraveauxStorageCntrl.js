@@ -2,9 +2,8 @@ import travStorage from "../../../storage/Traveaux/travStorage.js";
 // Controller to handle file uploads
 const uploadFileController = async (req, res) => {
   try {
-    const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { travId } = req.body;  // Traveaux ID comes from the request body
-
+    const { file } = req;
+    const { travId } = req.body;
     // Ensure that a file and travId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -13,12 +12,9 @@ const uploadFileController = async (req, res) => {
     if (!travId || isNaN(travId)) {
       return res.status(400).json({ error: 'Invalid travId: It should be a valid number' });
     }
-
     // Use the file name as the unique file name
-    const uniqueFileName = file.originalname;  // Use the original file name
+    const uniqueFileName = file.originalname;
     const travIdStr = String(travId);
-
-    // Define the file path: 'travs-pdf/{travId}/{originalFileName}'
     const filePath = `travs-pdf/${travIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);

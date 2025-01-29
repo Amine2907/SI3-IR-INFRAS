@@ -48,7 +48,7 @@ const updateMES = async (req, res) => {
   try {
     // Extract Devis ID from URL parameters
     const mesId = req.params.id;
-    let updates = { ...req.body }; // Extract update fields from request body
+    let updates = { ...req.body };
     console.log('--- Update MESeaux Request ---');
     console.log('MES ID :', mesId);
     console.log('Request Body:', updates);

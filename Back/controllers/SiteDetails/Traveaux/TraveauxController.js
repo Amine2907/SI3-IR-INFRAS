@@ -57,7 +57,7 @@ const updateTrav = async (req, res) => {
   try {
     // Extract Devis ID from URL parameters
     const travId = req.params.id;
-    let updates = { ...req.body }; // Extract update fields from request body
+    let updates = { ...req.body };
     console.log('--- Update Traveaux Request ---');
     console.log('Trav ID :', travId);
     console.log('Request Body:', updates);

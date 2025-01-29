@@ -9,10 +9,9 @@ const createPreEtude = async (req, res) => {
     if (!preEtudeData) {
       return res.status(400).json({ error: 'preEtudeData is required.' });
     }
-  // Ensure that the 'status_validation_fk' is correctly mapped to an integer ID (if it's passed as description 
   try {
     // Call the model function to create a new PreEtude
-    const result = await preEtudeModel.createPreEtude(Sid, preEtudeData);  // Pass Sid and preEtudeData to the model
+    const result = await preEtudeModel.createPreEtude(Sid, preEtudeData);
     if (!result.success) {
       throw new Error(result.error);
     }

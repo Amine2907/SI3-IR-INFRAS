@@ -17,11 +17,11 @@ const createProspect = async (req, res) => {
     if (!statusID) {
       return res.status(400).json({ error: `Invalid status validation description: ${prospectData.status_validation_fk.SV_desc}` });
     }
-    prospectData.status_validation_fk = statusID; // Update with numeric status ID
+    prospectData.status_validation_fk = statusID;
   }
   try {
     // Call the model function to create a new prospect
-    const result = await prospectModel.createProspect(Sid, prospectData);  // Pass Sid and prospectData to the model
+    const result = await prospectModel.createProspect(Sid, prospectData);
     if (!result.success) {
       throw new Error(result.error);
     }

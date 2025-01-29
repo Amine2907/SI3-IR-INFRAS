@@ -2,9 +2,8 @@ import paieStorage from "../../../../storage/Reglement/Paiement/paieStorage.js";
 // Controller to handle file uploads
 const uploadFileController = async (req, res) => {
   try {
-    const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { paieId,Sid } = req.body;  // Paie ID  comes from the request body
-
+    const { file } = req;
+    const { paieId,Sid } = req.body;
     // Ensure that a file and paieId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -20,14 +19,10 @@ const uploadFileController = async (req, res) => {
     const uniqueFileName = file.originalname;  // Use the original file name
     const paieIdStr = String(paieId);
     const sidStr = String(Sid);
-    // Define the file path: 'paie-pdf/{paieId}/{originalFileName}'
     const filePath = `paie-pdf/${sidStr}/${paieIdStr}/${uniqueFileName}`;
-
     console.log("Uploading file to path:", filePath);
-
     // Upload the file to Supabase storage
     const uploadResult = await paieStorage.uploadPdf(file, filePath);
-
     if (uploadResult.success) {
       return res.status(200).json({
         message: 'File uploaded successfully',
@@ -41,7 +36,6 @@ const uploadFileController = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
-
 // Controller to generate signed URL for a file
 const generateSignedUrlController = async (req, res) => {
   try {

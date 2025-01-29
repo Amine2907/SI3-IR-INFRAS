@@ -49,7 +49,7 @@ const updatePaie = async (req, res) => {
   try {
     // Extract Paiement ID from URL parameters
     const paieId = req.params.id;
-    let updates = { ...req.body }; // Extract update fields from request body
+    let updates = { ...req.body };
     console.log('--- Update fatcure Request ---');
     console.log('Paiement ID :', paieId);
     console.log('Request Body:', updates);

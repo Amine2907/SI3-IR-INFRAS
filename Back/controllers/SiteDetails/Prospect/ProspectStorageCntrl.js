@@ -2,9 +2,8 @@ import prospectStorage from "../../../storage/prospect/prospectStorage.js";
 // Controller to handle file uploads
 const uploadFileController = async (req, res) => {
   try {
-    const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { prospectId } = req.body;  // Prospect ID comes from the request body
-
+    const { file } = req;
+    const { prospectId } = req.body;
     // Ensure that a file and prospectId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -15,14 +14,11 @@ const uploadFileController = async (req, res) => {
     }
 
     // Use the file name as the unique file name
-    const uniqueFileName = file.originalname;  // Use the original file name
+    const uniqueFileName = file.originalname;
     const prospectIdStr = String(prospectId);
-
-    // Define the file path: 'prospect-pdf/{prospectId}/{originalFileName}'
     const filePath = `prospect-pdf/${prospectIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
-
     // Upload the file to Supabase storage
     const uploadResult = await prospectStorage.uploadPdf(file, filePath);
 

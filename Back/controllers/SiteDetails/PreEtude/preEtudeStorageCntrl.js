@@ -2,9 +2,8 @@ import preEtudeStorage from "../../../storage/PreEtude/preEtudeStorage.js";
 // Controller to handle file uploads
 const uploadFileController = async (req, res) => {
   try {
-    const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { preEtudeId } = req.body;  // PreEtude ID comes from the request body
-
+    const { file } = req;
+    const { preEtudeId } = req.body;
     // Ensure that a file and preEtudeId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -13,12 +12,9 @@ const uploadFileController = async (req, res) => {
     if (!preEtudeId || isNaN(preEtudeId)) {
       return res.status(400).json({ error: 'Invalid preEtudeId: It should be a valid number' });
     }
-
     // Use the file name as the unique file name
-    const uniqueFileName = file.originalname;  // Use the original file name
+    const uniqueFileName = file.originalname;
     const preEtudeIdStr = String(preEtudeId);
-
-    // Define the file path: 'pre-etude-pdf/{preEtudeId}/{originalFileName}'
     const filePath = `pre-etude-pdf/${preEtudeIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
