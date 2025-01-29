@@ -40,7 +40,7 @@ const getReportingData = async () => {
                     programme_fk,
                     Operateurs,
                     zone,
-                    DP (
+                    DP!DP_EB_fk_fkey(
                         recipisse_depot_DP,
                         ANO_certificat_tacite,
                         arrete_opposition,

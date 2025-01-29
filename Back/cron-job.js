@@ -3,9 +3,9 @@ import moment from 'moment';
 import { supabase } from './config/supabaseClient.js';
 import ReportingGlobalModel from './models/ReportingGlobal/reportingModel.js';
 // Testing the generation of file instantaly 
-cron.schedule('* * * * *', async () => {
+// cron.schedule('* * * * *', async () => {
   // Gnereating of file Monday - Friday 19:30 
-  // cron.schedule('30 19 * * 1-5', async () => {
+  cron.schedule('30 19 * * 1-5', async () => {
     console.log('Running scheduled task: Generating reporting data');
     try {
       // Step 1: Fetch reporting data
