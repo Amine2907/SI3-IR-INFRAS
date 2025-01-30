@@ -1,9 +1,10 @@
 name: CI Pipeline
+
 on:
   push:
     branches: [Pr]
   pull_request:
-    branches: [pr]
+    branches: [Pr]
 
 jobs:
   build-and-push:
@@ -20,25 +21,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build and push frontend
-        uses: docker/build-push-action@v4
-        with:
-          context: ${{ github.workspace }}/Front
-          file: ${{ github.workspace }}/Front/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}
-
-      - name: Build and push backend
-        uses: docker/build-push-action@v4
-        with:
-          context: ${{ github.workspace }}/Back
-          file: ${{ github.workspace }}/Back/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
-
       - name: Build and run Docker Compose
         run: |
-          docker compose -f ${{ github.workspace }}/docker-compose.yml up --build -d
+          docker compose -f ${{ github.workspace }}/docker-compose.yml build
+
+      - name: Tag and push combined image
+        run: |
+          docker tag frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/combined:${{ github.sha }}
+          docker tag backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/combined:${{ github.sha }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/combined:${{ github.sha }}
 
       - name: Upload updated docker-compose.yml
         uses: actions/upload-artifact@v4
