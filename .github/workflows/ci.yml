@@ -21,14 +21,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build and run Docker Compose
+      - name: Build and tag images using Docker Compose
         run: |
-          docker compose -f ${{ github.workspace }}/docker-compose.yml build
+          docker compose -f ${{ github.workspace }}/docker-compose.yml build \
+            --tag ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest \
+            --tag ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
 
-      - name: Tag and push combined image
+      - name: Push combined image
         run: |
-          docker tag frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/combined:${{ github.sha }}
-          docker tag backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/combined:${{ github.sha }}
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/combined:${{ github.sha }}
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/combined:${{ github.sha }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/combined:${{ github.sha }}
 
       - name: Upload updated docker-compose.yml
