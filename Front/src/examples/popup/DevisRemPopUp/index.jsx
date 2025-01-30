@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import styles from './styles.module.css';
+import styles from './remStyles.module.css';
 import PropTypes from 'prop-types';
 import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
@@ -31,7 +31,15 @@ const DevisRemModal = ({ ND, Sid, devis, onClose }) => {
     (acc, facture) => acc + (facture.montant_ttc || 0),
     0
   );
-  const remboursement = devis.montant - totalFactureTtc;
+  const remboursementDevis = devis.montant - totalFactureTtc;
+  const remboursementsFactures = facturesForDevis.map(facture => {
+    const remboursementFacture = devis.montant - (facture.montant_ttc || 0);
+    return {
+      ...facture,
+      remboursement: remboursementFacture > 0 ? remboursementFacture : 0,
+    };
+  });
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -60,7 +68,7 @@ const DevisRemModal = ({ ND, Sid, devis, onClose }) => {
             <MDInput
               id="remboursement"
               name="remboursement"
-              value={remboursement || ''}
+              value={remboursementDevis || 0}
               style={{ width: '100%' }}
               disabled
             />
@@ -83,7 +91,7 @@ const DevisRemModal = ({ ND, Sid, devis, onClose }) => {
               disabled
             />
           </div>
-          {facturesForDevis.map((facture, index) => (
+          {remboursementsFactures.map((facture, index) => (
             <div key={facture.Fid || index}>
               <div className={styles.formRow}>
                 <label className={styles.formLabel} htmlFor={`no_fac_${index}`}>
@@ -121,6 +129,18 @@ const DevisRemModal = ({ ND, Sid, devis, onClose }) => {
                   disabled
                 />
               </div>
+              <div className={styles.formRow}>
+                <label className={styles.formLabel} htmlFor={`remboursement_facture_${index}`}>
+                  Remboursement Facture {index + 1}
+                </label>
+                <MDInput
+                  id={`remboursement_facture_${index}`}
+                  name={`remboursement_facture_${index}`}
+                  value={facture.remboursement || 0}
+                  style={{ width: '100%' }}
+                  disabled
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -128,6 +148,7 @@ const DevisRemModal = ({ ND, Sid, devis, onClose }) => {
     </div>
   );
 };
+
 DevisRemModal.propTypes = {
   ND: PropTypes.string.isRequired,
   Sid: PropTypes.string.isRequired,
@@ -137,4 +158,5 @@ DevisRemModal.propTypes = {
   }).isRequired,
   onClose: PropTypes.func.isRequired,
 };
+
 export default DevisRemModal;

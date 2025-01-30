@@ -2,9 +2,8 @@ import mesStorage from "../../../storage/MES/mesStorage.js";
 // Controller to handle file uploads
 const uploadFileController = async (req, res) => {
   try {
-    const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { mesId,Sid } = req.body;  // Mise en Service ID  comes from the request body
-
+    const { file } = req;
+    const { mesId,Sid } = req.body;
     // Ensure that a file and mesId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -16,12 +15,10 @@ const uploadFileController = async (req, res) => {
     if (!mesId || isNaN(mesId)) {
       return res.status(400).json({ error: 'Invalid mesId: It should be a valid number' });
     }
-
     // Use the file name as the unique file name
     const uniqueFileName = file.originalname;  // Use the original file name
     const mesIdStr = String(mesId);
     const sidStr = String(Sid);
-    // Define the file path: 'travs-pdf/{mesId}/{originalFileName}'
     const filePath = `mes-pdf/${sidStr}/${mesIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
@@ -42,7 +39,6 @@ const uploadFileController = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
-
 // Controller to generate signed URL for a file
 const generateSignedUrlController = async (req, res) => {
   try {

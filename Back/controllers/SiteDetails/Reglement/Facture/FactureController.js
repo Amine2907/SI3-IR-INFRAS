@@ -49,7 +49,7 @@ const updateFacture = async (req, res) => {
   try {
     // Extract Devis ID from URL parameters
     const factureId = req.params.id;
-    let updates = { ...req.body }; // Extract update fields from request body
+    let updates = { ...req.body };
     console.log('--- Update dr Request ---');
     console.log('Devis ID :', factureId);
     console.log('Request Body:', updates);

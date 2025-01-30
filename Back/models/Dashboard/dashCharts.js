@@ -410,6 +410,5 @@ const dashChartsModel = {
   getConsuelEnAttenteByProgramme,
   getDemandeMESEnAttenteByProgramme,
 };
-
 export default dashChartsModel;
 

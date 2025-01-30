@@ -2,8 +2,8 @@ import demRacStorage from "../../../storage/demRacc/drStorage.js";
 // Controller to handle file uploads
 const uploadFileController = async (req, res) => {
   try {
-    const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { demRacId , Sid  } = req.body;  // Demrac ID  comes from the request body
+    const { file } = req;
+    const { demRacId , Sid  } = req.body;
     // Ensure that a file and demRacId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -16,10 +16,9 @@ const uploadFileController = async (req, res) => {
     }
 
     // Use the file name as the unique file name
-    const uniqueFileName = file.originalname;  // Use the original file name
+    const uniqueFileName = file.originalname;
     const demRacIdStr = String(demRacId);
     const SidStr =  String(Sid);
-    // Define the file path: 'demrac-pdf/{demRacId}/{originalFileName}'
     const filePath = `demrac-pdf/${SidStr}/${demRacIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);

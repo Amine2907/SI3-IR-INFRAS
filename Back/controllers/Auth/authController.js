@@ -14,8 +14,6 @@ configDotenv();
 const FRONT_URL= process.env.FrontUrl;
 export const signUp = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
-  console.log(req.body);
-
   const EmailConfirmURL = `${FRONT_URL}/auth/confirm-sign-up`;
 
   if (!firstName || !lastName || !email || !password) {
@@ -34,20 +32,13 @@ export const signUp = async (req, res) => {
         },
       },
     });
-
-    console.log('Supabase signUp response:', { data, error });
-
     if (error) {
-      console.error('Error during sign-up:', error.message);
       return res.status(400).json({ success: false, error: error.message });
     }
-
     if (!data || !data.user) {
       return res.status(400).json({ success: false, error: 'Failed to retrieve user data after sign-up.' });
     }
-
     const user = data.user;
-
     // Extract data from user_metadata
     const { firstName: metaFirstName, lastName: metaLastName } = user.user_metadata || {};
     const { error: insertError } = await supabase
@@ -77,7 +68,6 @@ export const signIn = async (req, res) => {
   const { email, password } = req.body; 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
-    console.error('Supabase Sign-in Error:', error.message); // Log the error message
     return res.status(400).json({ error: error.message });
   }
   return res.status(200).json({ message: 'Sign in successful', user: data.user,accessToken: data.session.access_token, });

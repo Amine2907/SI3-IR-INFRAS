@@ -9,7 +9,7 @@ const createDp = async (Sid , Proid, DpData) => {
             if (!statusID) {
               throw new Error(`Invalid status validation description: ${DpData.etat_prerequis}`);
             }
-            DpData.etat_prerequis = statusID; // Update the prospect data with the numeric ID
+            DpData.etat_prerequis = statusID;
           }
       if (DpData.is_active === true)  {
         console.log('Prospect has active DP');
@@ -139,7 +139,6 @@ const updateDp = async (DpID, updates) => {
                 if (fetchError) {
                     throw new Error(`Error fetching active DPs: ${fetchError.message}`);
                 }
-    
                 // Prevent activation if there's already an active DP
                 if (activeDPs && activeDPs.length > 0) {
                     throw new Error('An active DP already exists. Please deactivate it before activating another one.');

@@ -2,8 +2,8 @@ import devisStorage from "../../../storage/Devis/devisStorage.js";
 // Controller to handle file uploads
 const uploadFileController = async (req, res) => {
   try {
-    const { file } = req;  // Access the uploaded file using req.file (not req.body)
-    const { devisId,Sid  } = req.body;  // Devis ID  comes from the request body
+    const { file } = req;
+    const { devisId,Sid  } = req.body;
     // Ensure that a file and devisId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -15,10 +15,9 @@ const uploadFileController = async (req, res) => {
       return res.status(400).json({ error: 'Invalid Sid' });
     }
     // Use the file name as the unique file name
-    const uniqueFileName = file.originalname;  // Use the original file name
+    const uniqueFileName = file.originalname;
     const devisIdStr = String(devisId);
     const sidStr = String(Sid);
-    // Define the file path: 'devis-pdf/{devisId}/{originalFileName}'
     const filePath = `devis-pdf/${sidStr}/${devisIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);

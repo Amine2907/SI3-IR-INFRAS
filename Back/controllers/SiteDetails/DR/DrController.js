@@ -13,7 +13,6 @@
  * - getInactivedrs: gets all the inactive drs in the database
  */
 import drModel from "../../../models/SiteDetails/DR/DrModel.js";
-import { statusPropmapping } from "../../../models/SiteDetails/DR/DrData.js";
 const fetchActiveProspects = async (req,res) => {
     const siteId = req.params.Sid;
     try {
@@ -50,17 +49,8 @@ const createDr = async (req, res) => {
       if (!demracData) {
         return res.status(400).json({ error: 'demRacData is required.' });
       }
-        // Map `SPRid_FK` if it's an object with `SPR_desc`
-        if (demracData.SPRid_FK && typeof demracData.SPRid_FK === 'object' && demracData.SPRid_FK.SPR_desc) {
-            const statusPropId = statusPropmapping[demracData.SPRid_FK.SPR_desc];
-            console.log("Mapped status prop :", demracData.SPRid_FK.SPR_desc, "->", statusPropId);
-            if (!statusPropId) {
-              throw new Error(`Invalid status prop  description: ${demracData.SPRid_FK.SPR_desc}`);
-            }
-            demracData.SPRid_FK = statusPropId; // Map back to description
-          }
     try {
-        const result = await drModel.createDr(Sid,demracData)     // Extract and map the fields if they contain descriptions instead of IDs
+        const result = await drModel.createDr(Sid,demracData)
       if (!result.success) {
         console.error("Error in model operation:", result.error);
         return res.status(400).json({ error: result.error });
@@ -98,7 +88,7 @@ const updatedr = async (req, res) => {
   try {
     // Extract dr ID from URL parameters
     const drId = req.params.id;
-    let updates = { ...req.body }; // Extract update fields from request body
+    let updates = { ...req.body };
     console.log('--- Update dr Request ---');
     console.log('dr ID:', drId);
     console.log('Request Body:', updates);
@@ -112,29 +102,11 @@ const updatedr = async (req, res) => {
       console.error('Error: No update fields provided');
       return res.status(400).json({ error: 'No update fields provided.' });
     }
-    console.log('Mapping process started for update fields');
-    // Handle mapping for `SPRid_FK`
-    if (updates.SPRid_FK) {
-      if (typeof updates.SPRid_FK === 'object' && updates.SPRid_FK.SPR_desc) {
-        const statusPropId = statusPropmapping[updates.SPRid_FK.SPR_desc];
-        if (!statusPropId) {
-          throw new Error(`Invalid status prop  description: ${updates.SPRid_FK.SPR_desc}`);
-        }
-        updates.SPRid_FK = statusPropId; // Map to ID
-      } else if (typeof updates.SPRid_FK === 'string' || typeof updates.SPRid_FK === 'number') {
-        console.log('status prop  already mapped:', updates.SPRid_FK);
-      } else {
-        console.error('Invalid status prop _fk structure:', updates.SPRid_FK);
-        throw new Error('Invalid status prop _fk structure');
-      }
-    }
     console.log('Transformed update fields:', updates);
-
     // Call the model to update the dr
     const result = await drModel.updateDr(drId, updates);
     console.log('--- Model Response ---');
     console.log('Result:', result);
-
     // Handle the result from the model
     if (!result.success) {
       console.error('Error from Model:', result.error);

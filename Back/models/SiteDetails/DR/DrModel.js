@@ -14,7 +14,6 @@
  */
 import { supabase } from "../../../config/supabaseClient.js";
 import entityModel from "../../Entites/entiteModel.js";
-import { statusPropmapping } from "./DrData.js";
 const getActiveProspects = async (Sid) => {
     try {
         const { data, error } = await supabase
@@ -95,14 +94,6 @@ const createDr = async (EB, demracData) => {
                 throw new Error(`Devis not found for ND: ${demracData.no_devis.ND}`);
             }
             demracData.no_devis = devis.ND;
-        }
-        // Map SPRid_FK.SPR_desc -> ID
-        if (demracData.SPRid_FK?.SPR_desc) {
-            const statusPropId = statusPropmapping[demracData.SPRid_FK.SPR_desc];
-            if (!statusPropId) {
-                throw new Error(`Invalid SPR_desc: ${demracData.SPRid_FK.SPR_desc}`);
-            }
-            demracData.SPRid_FK = statusPropId;
         }
         if (!demracData.no_devis || !demracData.no_devis.ND) {
             delete demracData.no_devis;
@@ -265,20 +256,6 @@ const updateDr = async (NDRid, updates) => {
       if (!updates.no_devis || !updates.no_devis.ND) {
         delete updates.no_devis;
     }
-      // Check and map `SPRid_FK` only if it's not already a valid ID
-      if (updates.SPRid_FK) {
-        if (typeof updates.SPRid_FK === 'string') {
-          const statpropId = statusPropmapping[updates.SPRid_FK];
-          if (!statpropId) {
-            throw new Error(`Invalid status prop  description: ${updates.SPRid_FK}`);
-          }
-          updates.SPRid_FK = statpropId;
-        } else if (typeof updates.SPRid_FK === 'number') {
-          console.log('SPRid_FK is already an ID:', updates.SPRid_FK);
-        } else {
-          throw new Error(`Invalid structure for SPRid_FK: ${updates.SPRid_FK}`);
-        }
-      }
       console.log('Transformed updates ready for database operation:', updates);
       // Perform the update operation in the database
       const { data, error } = await supabase

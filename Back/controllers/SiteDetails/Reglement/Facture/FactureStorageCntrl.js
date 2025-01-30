@@ -2,9 +2,8 @@ import factureStorage from "../../../../storage/Reglement/Facture/factureStorage
 // Controller to handle file uploads
 const uploadFileController = async (req, res) => {
   try {
-    const { file } = req;  // Access the uploaded file
-    const { factureId,Sid } = req.body;  // factureId comes from the request body
-
+    const { file } = req;
+    const { factureId,Sid } = req.body;
     // Ensure that a file and factureId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -16,14 +15,11 @@ const uploadFileController = async (req, res) => {
       return res.status(400).json({ error: 'Invalid Sid' });
     }
     // Ensure factureId is a string and handle special characters in the file name
-    const uniqueFileName = encodeURIComponent(file.originalname);  // Encode special characters in the original filename
+    const uniqueFileName = encodeURIComponent(file.originalname);
     const factureIdStr = String(factureId);
     const sidStr = String(Sid);
-    // Define the file path: 'facture-pdf/{factureId}/{originalFileName}'
     const filePath = `facture-pdf/${sidStr}/${factureIdStr}/${uniqueFileName}`;
-
     console.log("Uploading file to path:", filePath);
-
     // Upload the file to Supabase storage
     const uploadResult = await factureStorage.uploadPdf(file, filePath);
 
@@ -40,7 +36,6 @@ const uploadFileController = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
-
 // Controller to generate signed URL for a file
 const generateSignedUrlController = async (req, res) => {
   try {

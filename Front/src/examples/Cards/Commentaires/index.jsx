@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable */
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
 import { Textarea } from 'components/ui/textarea';
@@ -8,12 +9,37 @@ import { Alert, AlertDescription } from 'components/ui/alert';
 import { Loader2 } from 'lucide-react';
 import commentService from 'services/Commentary/commentService';
 import { useAuth } from 'context/Auth/AuthContext';
+import settingsService from 'services/Settings/settingsService';
 
 const CommentSection = ({ entityName, Sid }) => {
   const { user, loading: authLoading } = useAuth();
+  const [userData, setUserData] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch user data
+  const fetchUserData = useCallback(async () => {
+    if (user?.id) {
+      try {
+        setLoading(true);
+        const response = await settingsService.getAccountInfo(user.id);
+        if (response.success && response.data) {
+          setUserData(response.data);
+        } else {
+          console.error(response.error?.message || 'Failed to fetch user data');
+        }
+      } catch (err) {
+        console.error('An error occurred while fetching user data:', err.message);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+      console.error('User is not available');
+    }
+  }, [user]);
 
   // Fetch comments on load or when entityName/Sid changes
   useEffect(() => {
@@ -21,10 +47,10 @@ const CommentSection = ({ entityName, Sid }) => {
       try {
         console.log('Fetching comments for:', { entityName, Sid });
         const fetchedComments = await commentService.getComments(entityName, Sid);
-        setComments(fetchedComments || []); // Ensure comments is always an array
+        setComments(fetchedComments || []);
       } catch (error) {
         console.error('Error fetching comments:', error);
-        setComments([]); // Default to an empty array on error
+        setComments([]);
       }
     };
 
@@ -32,6 +58,10 @@ const CommentSection = ({ entityName, Sid }) => {
       fetchComments();
     }
   }, [entityName, Sid]);
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
 
   // Handle the input change for adding a new comment
   const handleCommentChange = event => {
@@ -42,13 +72,10 @@ const CommentSection = ({ entityName, Sid }) => {
   // Submit the comment
   const handleCommentSubmit = async () => {
     if (!newComment) return;
-
-    // Ensure the user is available from AuthContext
     if (authLoading || !user) {
       console.error('No user logged in');
       return;
     }
-
     // Get the current date and time
     const currentDate = new Date().toLocaleString();
     const commentWithDate = `${newComment} (Added on: ${currentDate}) (Added by: ${
@@ -69,6 +96,14 @@ const CommentSection = ({ entityName, Sid }) => {
       setIsSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <Alert variant="destructive">
+        <AlertDescription>Loading user data...</AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <Card className="w-full">
@@ -127,9 +162,12 @@ const CommentSection = ({ entityName, Sid }) => {
                     .replace(/\(Added on: .*?\)/, '')
                     .replace(/\(Added by: .*?\)/, '')
                     .trim() || 'N/A';
+
                 return (
                   <TableRow key={index}>
-                    <TableCell>{user}</TableCell>
+                    <TableCell>
+                      {userData ? `${userData.firstName} ${userData.lastName}` : 'Unknown'}
+                    </TableCell>
                     <TableCell>{date}</TableCell>
                     <TableCell>{commentText}</TableCell>
                   </TableRow>
@@ -146,5 +184,4 @@ CommentSection.propTypes = {
   entityName: PropTypes.string.isRequired,
   Sid: PropTypes.number.isRequired,
 };
-
 export default CommentSection;

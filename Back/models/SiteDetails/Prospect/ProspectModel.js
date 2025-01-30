@@ -10,7 +10,7 @@ const createProspect = async (EB, prospectData) => {
           if (!statusID) {
             throw new Error(`Invalid status validation description: ${prospectData.status_validation_fk}`);
           }
-          prospectData.status_validation_fk = statusID; // Update the prospect data with the numeric ID
+          prospectData.status_validation_fk = statusID;
         }
       // First check if the Status_validation_fk is 25 (Prospect Validé) and if any similar prospects exist
       if (prospectData.status_validation_fk === 25)  {

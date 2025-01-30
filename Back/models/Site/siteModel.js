@@ -23,10 +23,10 @@ const getActiveCompanies = async () => {
         if (error) {
             throw new Error(`Error fetching active companies: ${error.message}`);
         }
-        return {success:true , data}; // Return active companies data (list of objects with ENTid and nom)
+        return {success:true , data};
     } catch (error) {
         console.error(error);
-        return []; // Return empty array if an error occurs
+        return [];
     }
 };
 //Create site
@@ -104,7 +104,6 @@ const getAllSites = async() => {
     try {
         const {data,error} = await supabase
         .from('Site')
-        // depends on use i will decide if im gonna use the query or not 
         .select(`
             * ,
             priorite_fk:Site-priorite(SP_desc),

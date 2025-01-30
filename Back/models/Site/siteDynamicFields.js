@@ -105,4 +105,4 @@ const siteDynFieldsModel = {
     getReglementDate,
     getMesReel,
 };
-export default siteDynFieldsModel ; 
+export default siteDynFieldsModel ;

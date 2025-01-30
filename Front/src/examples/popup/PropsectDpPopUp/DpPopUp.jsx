@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from './styles.module.css';
+import styles from './combinedStyles.module.css';
 import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';

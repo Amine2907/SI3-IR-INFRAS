@@ -25,7 +25,7 @@ const getAccountInfo = async (req, res) => {
 // 2. Update Password
 const updatePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
-  const userId = req.user.id; // Assuming you have middleware that sets the user
+  const userId = req.user.id;
   try {
     // Verify current password
     const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -50,7 +50,6 @@ const updatePassword = async (req, res) => {
 };
 //update User Account informations
 const updateUserAccount = async (req, res) => {
-    // Log the userId from req.user to verify it's populated
     const userId = req.user?.id;
     // Return an error if userId is missing
     if (!userId) {
