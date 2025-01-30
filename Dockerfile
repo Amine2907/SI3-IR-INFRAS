@@ -1,17 +1,17 @@
 # Step 1: Build the frontend
 FROM node:16 AS frontend-build
 WORKDIR /app/frontend
-COPY ./front/package*.json ./
+COPY front/package*.json ./
 RUN npm install
-COPY ./front ./
+COPY front ./
 RUN npm run build
 
 # Step 2: Build the backend
 FROM node:16 AS backend-build
 WORKDIR /app/backend
-COPY ./back/package*.json ./
+COPY back/package*.json ./
 RUN npm install
-COPY ./back ./
+COPY back ./
 RUN npm run build
 
 # Step 3: Create the final combined image
