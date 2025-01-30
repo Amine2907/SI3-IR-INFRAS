@@ -43,7 +43,7 @@ jobs:
           sed -i 's|build:|image: ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}|g' docker-compose.yml
 
       - name: Upload updated docker-compose.yml
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docker-compose
           path: docker-compose.yml
