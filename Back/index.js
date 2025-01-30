@@ -41,7 +41,7 @@ import reportingRoutes from './routes/ReportingGlobal/reporting.js';
 // Express Setup
 const app = express();
 app.use(cors({
-  origin: 'https://amine2907.github.io',
+  origin: 'https://si-3-ir-infras.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }))
