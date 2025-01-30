@@ -21,29 +21,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build and push frontend
+      - name: Build and push combined image
         uses: docker/build-push-action@v4
         with:
-          context: ${{ github.workspace }}/Front
-          file: ${{ github.workspace }}/Front/Dockerfile
+          context: ${{ github.workspace }}
+          file: ${{ github.workspace }}/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}
-
-      - name: Build and push backend
-        uses: docker/build-push-action@v4
-        with:
-          context: ${{ github.workspace }}/Back
-          file: ${{ github.workspace }}/Back/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
-
-      - name: Update Docker Compose file
-        run: |
-          sed -i 's|build:|image: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}|g' ${{ github.workspace }}/docker-compose.yml
-          sed -i 's|build:|image: ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}|g' ${{ github.workspace }}/docker-compose.yml
-
-      - name: Upload updated docker-compose.yml
-        uses: actions/upload-artifact@v4
-        with:
-          name: docker-compose
-          path: ${{ github.workspace }}/docker-compose.yml
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/combined-image:${{ github.sha }}
