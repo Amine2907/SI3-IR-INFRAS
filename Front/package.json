@@ -1,6 +1,6 @@
 {
   "name": "si3-dashboard-react",
-  "homepage": "https://amine2907.github.io/SI3-IR-INFRAS",
+  "homepage": "https://si-3-ir-infras.vercel.app",
   "version": "2.2.0",
   "private": true,
   "dependencies": {
