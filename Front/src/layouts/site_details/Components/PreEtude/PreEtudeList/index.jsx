@@ -99,7 +99,7 @@ function PreEtudeList() {
     }
     try {
       console.log(`Fetching files for preEtude ID: ${preEtudeId}`);
-      const response = await preEtudeStorageService.getPreEtudeFiles(preEtudeId); // Correct API call
+      const response = await preEtudeStorageService.getPreEtudeFiles(preEtudeId, siteId); // Correct API call
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files
@@ -211,6 +211,7 @@ function PreEtudeList() {
       )}
       {showStorageModal && selectedpreEtude?.PREid && (
         <PreEtudeStorageModal
+          Sid={siteId}
           preEtudeId={selectedpreEtude?.PREid}
           fetchFiles={() => fetchPreEtudeFiles(selectedpreEtude?.PREid)}
           onSave={() => {

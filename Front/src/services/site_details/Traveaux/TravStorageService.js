@@ -3,12 +3,12 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/trav-storage';
 
 // Upload a trav file to the server
-const uploadTravFile = async (file, travId) => {
+const uploadTravFile = async (file, travId, Sid) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('travId', travId);
-
+    formData.append('Sid', Sid);
     const response = await axios.post(`${API_URL}/upload-trav`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
@@ -21,9 +21,9 @@ const uploadTravFile = async (file, travId) => {
   }
 };
 // Get public URLs for all files associated with a trav
-const getTavFiles = async travId => {
+const getTavFiles = async (travId, Sid) => {
   try {
-    const response = await axios.post(`${API_URL}/get-trav-files`, { travId });
+    const response = await axios.post(`${API_URL}/get-trav-files`, { travId, Sid });
     return { success: true, data: response.data };
   } catch (error) {
     return {

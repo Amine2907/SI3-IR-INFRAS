@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import DeclPraelStorageService from 'services/site_details/DP/dpStorageService';
 import MDAlert from 'components/MDAlert';
-const DpStorageModal = ({ declPreaId, fetchFiles, onSave, onClose }) => {
+const DpStorageModal = ({ Sid, declPreaId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -44,7 +44,7 @@ const DpStorageModal = ({ declPreaId, fetchFiles, onSave, onClose }) => {
       return;
     }
     try {
-      const result = await DeclPraelStorageService.uploadDpFile(file, declPreaId);
+      const result = await DeclPraelStorageService.uploadDpFile(file, declPreaId, Sid);
       if (result.success) {
         console.log('File uploaded successfully:', result.data);
         setAlert({

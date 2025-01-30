@@ -3,12 +3,12 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/dp-storage';
 
 // Upload a dp file to the server
-const uploadDpFile = async (file, declPreaId) => {
+const uploadDpFile = async (file, declPreaId, Sid) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('declPreaId', declPreaId);
-
+    formData.append('Sid', Sid);
     const response = await axios.post(`${API_URL}/upload-dp`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
@@ -21,9 +21,9 @@ const uploadDpFile = async (file, declPreaId) => {
   }
 };
 // Get public URLs for all files associated with a dp
-const getDpFiles = async declPreaId => {
+const getDpFiles = async (declPreaId, Sid) => {
   try {
-    const response = await axios.post(`${API_URL}/get-dp-files`, { declPreaId });
+    const response = await axios.post(`${API_URL}/get-dp-files`, { declPreaId, Sid });
     return { success: true, data: response.data };
   } catch (error) {
     return {

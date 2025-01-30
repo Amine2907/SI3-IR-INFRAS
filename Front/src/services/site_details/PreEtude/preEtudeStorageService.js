@@ -3,12 +3,12 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/pre-storage';
 
 // Upload a preEtude file to the server
-const uploadPreEtudeFile = async (file, preEtudeId) => {
+const uploadPreEtudeFile = async (file, preEtudeId, Sid) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('preEtudeId', preEtudeId);
-
+    formData.append('Sid', Sid);
     const response = await axios.post(`${API_URL}/upload-preEtude`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
@@ -21,9 +21,9 @@ const uploadPreEtudeFile = async (file, preEtudeId) => {
   }
 };
 // Get public URLs for all files associated with a preEtude
-const getPreEtudeFiles = async preEtudeId => {
+const getPreEtudeFiles = async (preEtudeId, Sid) => {
   try {
-    const response = await axios.post(`${API_URL}/get-preEtude-files`, { preEtudeId });
+    const response = await axios.post(`${API_URL}/get-preEtude-files`, { preEtudeId, Sid });
     return { success: true, data: response.data };
   } catch (error) {
     return {

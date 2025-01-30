@@ -3,12 +3,12 @@ import axios from 'axios';
 const API_URL = 'http://localhost:5000/api/pros-storage';
 
 // Upload a prospect file to the server
-const uploadProspectFile = async (file, prospectId) => {
+const uploadProspectFile = async (file, prospectId, Sid) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('prospectId', prospectId);
-
+    formData.append('Sid', Sid);
     const response = await axios.post(`${API_URL}/upload-prospect`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
@@ -21,9 +21,9 @@ const uploadProspectFile = async (file, prospectId) => {
   }
 };
 // Get public URLs for all files associated with a prospect
-const getProspectFiles = async prospectId => {
+const getProspectFiles = async (prospectId, Sid) => {
   try {
-    const response = await axios.post(`${API_URL}/get-prospect-files`, { prospectId });
+    const response = await axios.post(`${API_URL}/get-prospect-files`, { prospectId, Sid });
     return { success: true, data: response.data };
   } catch (error) {
     return {

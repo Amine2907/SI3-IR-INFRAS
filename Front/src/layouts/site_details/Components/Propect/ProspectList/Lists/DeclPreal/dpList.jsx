@@ -98,7 +98,7 @@ function DeclPreaList() {
     }
     try {
       console.log(`Fetching files for prospect ID: ${declPreaId}`);
-      const response = await DeclPraelStorageService.getDpFiles(declPreaId);
+      const response = await DeclPraelStorageService.getDpFiles(declPreaId, siteId);
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files;
@@ -188,6 +188,7 @@ function DeclPreaList() {
       {showModal && <DpUModal dp={selecteddp} onSave={handleUpdate} onClose={handleCloseModal} />}
       {showUploadModal && selecteddp?.DPid && (
         <DpStorageModal
+          Sid={siteId}
           declPreaId={selecteddp?.DPid}
           fetchFiles={() => fetchDeclPreaFiles(selecteddp?.DPid)}
           onSave={() => {

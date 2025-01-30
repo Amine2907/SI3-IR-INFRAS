@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import preEtudeStorageService from 'services/site_details/PreEtude/preEtudeStorageService';
 import MDAlert from 'components/MDAlert';
-const preEtudeStorageModal = ({ preEtudeId, fetchFiles, onSave, onClose }) => {
+const preEtudeStorageModal = ({ Sid, preEtudeId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -45,7 +45,7 @@ const preEtudeStorageModal = ({ preEtudeId, fetchFiles, onSave, onClose }) => {
       return;
     }
     try {
-      const result = await preEtudeStorageService.uploadPreEtudeFile(file, preEtudeId);
+      const result = await preEtudeStorageService.uploadPreEtudeFile(file, preEtudeId, Sid);
       if (result.success) {
         setAlert({
           show: true,

@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import travStorageService from 'services/site_details/Traveaux/TravStorageService';
 import MDAlert from 'components/MDAlert';
-const TravStorageModal = ({ travId, fetchFiles, onSave, onClose }) => {
+const TravStorageModal = ({ Sid, travId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -45,7 +45,7 @@ const TravStorageModal = ({ travId, fetchFiles, onSave, onClose }) => {
       return;
     }
     try {
-      const result = await travStorageService.uploadTravFile(file, travId);
+      const result = await travStorageService.uploadTravFile(file, travId, Sid);
       if (result.success) {
         setAlert({
           show: true,
