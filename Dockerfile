@@ -1,29 +1,29 @@
-# Step 1: Build the frontend
-FROM node:16 AS frontend-build
-WORKDIR /app/frontend
-COPY ./front/package*.json ./
+# Step 1: Build the Frontend
+FROM node:16 AS Frontend-build
+WORKDIR /app/Frontend
+COPY ./Front/package*.json ./
 RUN npm install
-COPY ./front ./
+COPY ./Front ./
 RUN npm run build
 
-# Step 2: Build the backend
-FROM node:16 AS backend-build
-WORKDIR /app/backend
-COPY ./back/package*.json ./
+# Step 2: Build the Backend
+FROM node:16 AS Backend-build
+WORKDIR /app/Backend
+COPY ./Back/package*.json ./
 RUN npm install
-COPY ./back ./
+COPY ./Back ./
 RUN npm run build
 
 # Step 3: Create the final combined image
 FROM node:16
 WORKDIR /app
-# Copy the frontend build output
-COPY --from=frontend-build /app/frontend/build /app/frontend
-# Copy the backend build output
-COPY --from=backend-build /app/backend /app/backend
+# Copy the Frontend build output
+COPY --from=Frontend-build /app/Frontend/build /app/Frontend
+# Copy the Backend build output
+COPY --from=Backend-build /app/Backend /app/Backend
 
 # Expose necessary ports
 EXPOSE 3000 5000
 
-# Command to run both frontend and backend
-CMD ["sh", "-c", "node /app/backend/server.js & npx serve /app/frontend -l 3000"]
+# Command to run both Frontend and Backend
+CMD ["sh", "-c", "node /app/Backend/server.js & npx serve /app/Frontend -l 3000"]
