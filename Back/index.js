@@ -48,7 +48,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// Use Routes
+// Use Routesx
 app.use('/api/auth', authRoutes); 
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/entites',entitesRoutes);
