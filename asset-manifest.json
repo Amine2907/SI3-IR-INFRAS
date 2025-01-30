@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/SI3-IR-INFRAS/static/css/main.9812e3e5.css",
-    "main.js": "/SI3-IR-INFRAS/static/js/main.d43e15b4.js",
+    "main.css": "/SI3-IR-INFRAS/static/css/main.ea04dd3c.css",
+    "main.js": "/SI3-IR-INFRAS/static/js/main.37f5553d.js",
     "static/media/fa-solid-900.ttf": "/SI3-IR-INFRAS/static/media/fa-solid-900.2582b0e4bcf85eceead0.ttf",
     "static/media/fa-brands-400.ttf": "/SI3-IR-INFRAS/static/media/fa-brands-400.1815e00441357e01619e.ttf",
     "static/media/fa-solid-900.woff2": "/SI3-IR-INFRAS/static/media/fa-solid-900.2463b90d9a316e4e5294.woff2",
@@ -11,11 +11,11 @@
     "static/media/fa-v4compatibility.ttf": "/SI3-IR-INFRAS/static/media/fa-v4compatibility.da94ef451f4969af06e6.ttf",
     "static/media/fa-v4compatibility.woff2": "/SI3-IR-INFRAS/static/media/fa-v4compatibility.ea8f94e1d22e0d35ccd4.woff2",
     "index.html": "/SI3-IR-INFRAS/index.html",
-    "main.9812e3e5.css.map": "/SI3-IR-INFRAS/static/css/main.9812e3e5.css.map",
-    "main.d43e15b4.js.map": "/SI3-IR-INFRAS/static/js/main.d43e15b4.js.map"
+    "main.ea04dd3c.css.map": "/SI3-IR-INFRAS/static/css/main.ea04dd3c.css.map",
+    "main.37f5553d.js.map": "/SI3-IR-INFRAS/static/js/main.37f5553d.js.map"
   },
   "entrypoints": [
-    "static/css/main.9812e3e5.css",
-    "static/js/main.d43e15b4.js"
+    "static/css/main.ea04dd3c.css",
+    "static/js/main.37f5553d.js"
   ]
 }
