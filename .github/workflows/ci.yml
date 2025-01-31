@@ -24,7 +24,6 @@ jobs:
       - name: Build and tag frontend
         run: |
           docker build \
-            --build-arg BACKEND_URL=https://si3-ir-infras.onrender.com \
             -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest \
             -f ${{ github.workspace }}/Front/Dockerfile \
             ${{ github.workspace }}/Front
