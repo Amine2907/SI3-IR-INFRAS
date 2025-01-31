@@ -57,6 +57,13 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   const { isAuthenticated } = useAuth();
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (pathname.startsWith('/auth')) {
+      document.title = "SI3 | Se Connecter";
+    } else {
+      document.title = "SI3 Dashboard";
+    }
+  }, [pathname]);
   const handleOnMouseEnter = () => {
     if (controller.miniSidenav && !onMouseEnter) {
       setMiniSidenav(dispatch, false);
