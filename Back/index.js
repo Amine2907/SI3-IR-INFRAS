@@ -2,6 +2,7 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import fetch from 'node-fetch';
 // Routes
 import authRoutes from './routes/Auth/auth.js';
 import dashboardRoutes from './routes/Dashboard/dashboard.js';
