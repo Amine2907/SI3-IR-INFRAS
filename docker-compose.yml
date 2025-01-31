@@ -1,8 +1,8 @@
 version: '3'
 services:
-  frontend:
+  frontend: 
     build:
-      context: ./Front   
+      context: ./front
       dockerfile: Dockerfile
     ports:
       - "80:80"  
@@ -13,12 +13,14 @@ services:
 
   backend:
     build:
-      context: ./Back     
-      dockerfile: Dockerfile 
+      context: ./back
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     environment:
       - NODE_ENV=production
+    env_file:
+      - ./back/.env
     networks:
       - mynetwork
 
