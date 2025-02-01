@@ -89,7 +89,6 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 // Start Server
-// sending Api of test backend (secured)
 const PORT = process.env.PORT || 5000  ;
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
