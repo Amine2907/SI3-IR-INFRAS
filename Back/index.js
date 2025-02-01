@@ -43,7 +43,7 @@ import reportingRoutes from './routes/ReportingGlobal/reporting.js';
 const app = express();
 // Test Deployment on Vercel 
 app.use(cors({
-  origin: 'https://si-3-ir-infras.vercel.app',
+  origin: 'https://si3-ir-infras.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }))
