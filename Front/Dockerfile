@@ -6,11 +6,15 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the container's working directory
 COPY package*.json ./
 
+# Install dependencies
+# Override the homepage for Docker deployment
+RUN npm set homepage /
+
 # Install frontend dependencies
 RUN npm install
 
 # Copy the rest of the frontend files
-COPY . . 
+COPY . .
 
 # Build the React app
 RUN npm run build

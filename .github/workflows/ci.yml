@@ -23,17 +23,31 @@ jobs:
 
       - name: Build and tag frontend
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest -f ${{ github.workspace }}/Front/Dockerfile ${{ github.workspace }}/Front
+          docker build \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest \
+            -f ${{ github.workspace }}/Front/Dockerfile \
+            ${{ github.workspace }}/Front
 
       - name: Build and tag backend
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest -f ${{ github.workspace }}/Back/Dockerfile ${{ github.workspace }}/Back
+          docker build \
+            --build-arg NODE_ENV=production \
+            --build-arg SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
+            --build-arg SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }} \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest \
+            -f ${{ github.workspace }}/Back/Dockerfile \
+            ${{ github.workspace }}/Back
 
       - name: Push combined image
         run: |
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/combined:${{ github.sha }}
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/combined:${{ github.sha }}
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/combined:${{ github.sha }}
+      - name: Push frontend image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
+      - name: Push backend image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
 
       - name: Upload updated docker-compose.yml
         uses: actions/upload-artifact@v4
