@@ -1,5 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/prospect';
+import config from '../../../config.js';
+const API_URL = config.PRESOPECT_URL;
 // Create Prospect Service
 const createProspect = async ({ Sid, prospectData }) => {
   try {

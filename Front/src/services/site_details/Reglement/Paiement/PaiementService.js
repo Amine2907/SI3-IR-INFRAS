@@ -1,5 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/paie';
+import config from '../../../../config.js';
+const API_URL = config.PAIEMENTS_URL;
 // Create paie Service
 const createPaie = async ({ Sid, paiementData }) => {
   try {

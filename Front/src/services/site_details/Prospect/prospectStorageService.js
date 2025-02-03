@@ -1,7 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api/pros-storage';
-
+import config from '../../../config.js';
+const API_URL = config.PRESOPECT_STORAGE_URL;
 // Upload a prospect file to the server
 const uploadProspectFile = async (file, prospectId, Sid) => {
   try {

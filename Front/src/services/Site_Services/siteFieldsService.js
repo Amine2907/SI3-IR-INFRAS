@@ -1,5 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/site-fields';
+import config from '../../config.js';
+const API_URL = config.SITE_FIELDS_URL;
 const getPropsectRetenu = async Sid => {
   try {
     const response = await axios.get(`${API_URL}/${Sid}/prospect-retenu`);

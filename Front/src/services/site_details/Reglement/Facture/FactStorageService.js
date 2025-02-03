@@ -1,6 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/fac-storage';
-
+import config from '../../../../config.js';
+const API_URL = config.FACTURE_STORAGE_URL;
 // Upload fac File (Store a file in Supabase)
 const uploadFactureFile = async (file, factureId, Sid) => {
   try {

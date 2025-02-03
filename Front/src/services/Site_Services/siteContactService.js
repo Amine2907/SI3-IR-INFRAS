@@ -1,5 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/siteContact';
+import config from '../../config.js';
+const API_URL = config.SITE_CONTACTS_URL;
 const addExistingSiteContacts = async ({ Sid, Cids }) => {
   try {
     // Ensure Sid and Cids are not undefined

@@ -1,5 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/mes';
+import config from '../../../config.js';
+const API_URL = config.MES_URL;
 // Create mes Service
 const createMes = async ({ Sid, mesData }) => {
   try {

@@ -1,7 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api/devis-storage';
-
+import config from '../../../config.js';
+const API_URL = config.DEVIS_STORAGE_URL;
 // Upload a devis file to the server
 const uploadDevisFile = async (file, devisId, Sid) => {
   try {

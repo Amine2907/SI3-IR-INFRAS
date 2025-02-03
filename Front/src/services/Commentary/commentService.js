@@ -1,6 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/coms';
-
+import config from '../../config.js';
+const API_URL = config.COMMENTS_URL;
 // Add a comment for a specific entity (POST request)
 const addComment = async (entityName, comment, user, Sid) => {
   try {

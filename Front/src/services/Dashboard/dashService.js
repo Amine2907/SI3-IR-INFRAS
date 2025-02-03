@@ -1,6 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/dashboard';
-
+import config from '../../config.js';
+const API_URL = config.DASH_URL;
 // Count Dr
 const countDr = async () => {
   try {

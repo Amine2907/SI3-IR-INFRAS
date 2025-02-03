@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api/paie-storage';
+import config from '../../../../config.js';
+const API_URL = config.PAIEMENTS_STORAGE_URL;
 
 // Upload a paie file to the server
 const uploadPaieFile = async (file, paieId, Sid) => {

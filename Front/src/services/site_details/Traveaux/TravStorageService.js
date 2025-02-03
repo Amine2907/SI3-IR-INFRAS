@@ -1,7 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api/trav-storage';
-
+import config from '../../../config.js';
+const API_URL = config.TRAVEAUX_STORAGE_URL;
 // Upload a trav file to the server
 const uploadTravFile = async (file, travId, Sid) => {
   try {

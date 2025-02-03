@@ -1,7 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api/dem-rac-storage';
-
+import config from '../../../config.js';
+const API_URL = config.DEMRAC_STORAGE_URL;
 // Upload a demracs file to the server
 const uploadDemracsFile = async (file, demRacId, Sid) => {
   try {

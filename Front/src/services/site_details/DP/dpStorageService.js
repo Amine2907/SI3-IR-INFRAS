@@ -1,7 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api/dp-storage';
-
+import config from '../../../config.js';
+const API_URL = config.DP_STORAGE_URL;
 // Upload a dp file to the server
 const uploadDpFile = async (file, declPreaId, Sid) => {
   try {

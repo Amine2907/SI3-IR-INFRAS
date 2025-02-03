@@ -1,5 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/traveaux';
+import config from '../../../config.js';
+const API_URL = config.TRAVEAUX_URL;
 // Create trav Service
 const createTrav = async ({ Sid, traveauxData }) => {
   try {

@@ -1,5 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/preEtude';
+import config from '../../../config.js';
+const API_URL = config.PREETUDE_URL;
 // Create PreEtude Service
 const createPreEtude = async ({ Sid, preEtudeData }) => {
   try {

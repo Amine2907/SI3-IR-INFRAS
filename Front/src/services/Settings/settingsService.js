@@ -5,7 +5,8 @@
  * @module settingsService
  */
 import axios from 'axios';
-const API_BASE_URL = 'http://localhost:5000/api/settings';
+import config from '../../config.js';
+const API_BASE_URL = config.SETTINGS_URL;
 // 1. Get Account Information
 const getAccountInfo = async userId => {
   try {

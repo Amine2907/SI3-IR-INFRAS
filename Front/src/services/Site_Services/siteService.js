@@ -13,10 +13,8 @@
  * - getInactiveSites: gets all the inactive Sites in the database
  */
 import axios from 'axios';
-// import dotenv from 'dotenv';
-// dotenv.config();
-// const API_URL = process.env.BACK_COMPANIES_API || 'your-Site-api-url';
-const API_URL = 'http://localhost:5000/api/site';
+import config from '../../config.js';
+const API_URL = config.SITE_URL;
 // Create Site
 const createSite = async data => {
   try {

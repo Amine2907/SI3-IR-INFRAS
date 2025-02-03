@@ -1,5 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/devis';
+import config from '../../../config.js';
+const API_URL = config.DEVIS_URL;
 // Create Devis Service
 const createDevis = async ({ Sid, devisData }) => {
   try {

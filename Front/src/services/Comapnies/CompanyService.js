@@ -13,8 +13,8 @@
  * - getInactiveCompanys: gets all the inactive Companys in the database
  */
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/companies';
-
+import config from '../../config.js';
+const API_URL = config.COMPANY_URL;
 // Create Company
 const createCompany = async data => {
   try {

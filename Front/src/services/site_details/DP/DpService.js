@@ -1,5 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/dps';
+import config from '../../../config.js';
+const API_URL = config.DP_URL;
 // Create Dp Service
 const createDp = async ({ Sid, Proid, dpData }) => {
   try {

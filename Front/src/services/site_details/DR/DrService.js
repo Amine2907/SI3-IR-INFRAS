@@ -1,5 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/dem-rac';
+import config from '../../../config.js';
+const API_URL = config.DEMRAC_URL;
 // Create Prospect Service
 const createDemRac = async ({ Sid, demracData }) => {
   try {

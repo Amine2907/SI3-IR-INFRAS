@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api/dash-files';
+import config from '../../config.js';
+const API_URL = config.DASH_FILES_URL;
 // Download DR data as Excel file
 const downloadExcel = async type => {
   try {

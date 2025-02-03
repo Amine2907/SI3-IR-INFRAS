@@ -1,7 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api/check-files';
-
+import config from '../../../config.js';
+const API_URL = config.CHECK_FILES_URL;
 const checkAllFilesStatus = async Sid => {
   try {
     const response = await axios.get(`${API_URL}/${Sid}`);

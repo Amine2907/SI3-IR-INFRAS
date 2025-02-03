@@ -1,6 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/dashCharts';
-
+import config from '../../config.js';
+const API_URL = config.DASH_CHARTS_URL;
 // Fetch DR count by programme
 const getDRCountByProgramme = async () => {
   try {

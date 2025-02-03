@@ -1,5 +1,6 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/reporting-file';
+import config from '../../config.js';
+const API_URL = config.REPORTING_URL;
 // Download DR data as Excel file
 const downloadExcel = async type => {
   try {
