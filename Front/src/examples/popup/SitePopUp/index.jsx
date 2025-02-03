@@ -66,6 +66,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
       setIsActive(site.is_active);
     }
   }, [site]);
+
   useEffect(() => {
     const fetchActiveCompanies = async () => {
       try {

@@ -166,7 +166,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
               {activeCompanies.length > 0 ? (
                 activeCompanies.map(company => (
                   <MenuItem key={company.ENTid} value={company.ENTid}>
-                    {company.nom} {/* Display the company name */}
+                    {company.nom}
                   </MenuItem>
                 ))
               ) : (
