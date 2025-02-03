@@ -69,6 +69,7 @@ const CompanyModal = ({ company, onSave, onClose }) => {
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           {company ? 'Modifier Entreprise' : 'Ajouter Entreprise'}
         </MDTypography>
+        <label className={styles.formLabel}>Nom d&apos;Entreprise</label>
         <MDInput
           name="nom"
           value={formData.nom || ''}
@@ -82,6 +83,7 @@ const CompanyModal = ({ company, onSave, onClose }) => {
           }}
           required
         />
+        <label className={styles.formLabel}>Site Web</label>
         <MDInput
           name="site_web"
           value={formData.site_web || ''}
@@ -89,6 +91,7 @@ const CompanyModal = ({ company, onSave, onClose }) => {
           placeholder="Site Web"
           style={{ marginBottom: '5px', width: '320px' }}
         />
+        <label className={styles.formLabel}>SIRET</label>
         <MDInput
           name="siret"
           value={formData.siret || ''}
@@ -96,8 +99,8 @@ const CompanyModal = ({ company, onSave, onClose }) => {
           placeholder="Siret"
           style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
         />
+        <label className={styles.formLabel}>Départements</label>
         <FormControl style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
-          <InputLabel id="department-label">Départements</InputLabel>
           <Select
             labelId="department-label"
             name="department"

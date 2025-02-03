@@ -25,6 +25,7 @@ const ConatctStaticModal = ({ contact, onClose }) => {
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           Contact
         </MDTypography>
+        <label className={styles.formLabel}>Nom</label>
         <MDInput
           name="nom"
           value={formData.nom || ''}
@@ -37,6 +38,7 @@ const ConatctStaticModal = ({ contact, onClose }) => {
           }}
           required
         />
+        <label className={styles.formLabel}>Prenom</label>
         <MDInput
           name="prenom"
           value={formData.prenom || ''}
@@ -48,31 +50,34 @@ const ConatctStaticModal = ({ contact, onClose }) => {
           }}
           required
         />
+        <label className={styles.formLabel}>Mission</label>
         <MDInput
           name="mission"
           value={formData.mission || ''}
           placeholder="Mission"
           style={{ marginBottom: '5px', width: '320px' }}
         />
+        <label className={styles.formLabel}>Email</label>
         <MDInput
           name="email"
           value={formData.email || ''}
           placeholder="Email"
           style={{ marginBottom: '5px', width: '320px' }}
         />
+        <label className={styles.formLabel}>Telephone</label>
         <MDInput
           name="tel"
           value={formData.tel || ''}
           placeholder="Téléphone"
           style={{ marginBottom: '5px', width: '320px' }}
         />
+        <label className={styles.formLabel}>Mobile</label>
         <MDInput
           name="mobile"
           value={formData.mobile || ''}
           placeholder="Mobile"
           style={{ marginBottom: '5px', width: '320px' }}
         />
-
         <div>
           <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
           <Switch checked={isActive} name="is_active" inputProps={{ 'aria-label': 'controlled' }} />
