@@ -42,19 +42,35 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
     };
     fetchActiveCompanies();
   }, []);
+  useEffect(() => {
+    if (userData) {
+      const selectedCompany = activeCompanies.find(
+        company => company.nom === userData.entreprise // Match by company name
+      );
+
+      setFormData({
+        ...userData,
+        entreprise: selectedCompany ? selectedCompany.ENTid : '', // Use ENTid for the dropdown value
+      });
+    }
+  }, [userData, activeCompanies]);
+
   const handleSubmit = () => {
     const newErrors = {};
     if (!formData.firstName) newErrors.firstName = true;
     if (!formData.lastName) newErrors.lastName = true;
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+
     // Map the selected company ID back to its name
     const selectedCompany = activeCompanies.find(company => company.ENTid === formData.entreprise);
+
     onSave({
       ...formData,
-      entreprise: selectedCompany ? selectedCompany.nom : '',
+      entreprise: selectedCompany ? selectedCompany.nom : '', // Save the company name
       is_active: isActive,
     });
   };
@@ -134,13 +150,13 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
             <Select
               name="entreprise"
-              value={formData.entreprise || ''}
+              value={formData.entreprise || ''} // Use ENTid as the value
               onChange={handleChange}
               displayEmpty
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.department ? 'red' : '',
+                borderColor: errors.entreprise ? 'red' : '',
               }}
               required
             >
@@ -149,7 +165,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
               </MenuItem>
               {activeCompanies.length > 0 ? (
                 activeCompanies.map(company => (
-                  <MenuItem key={company.nom} value={company.ENTid}>
+                  <MenuItem key={company.ENTid} value={company.ENTid}>
                     {company.nom}
                   </MenuItem>
                 ))

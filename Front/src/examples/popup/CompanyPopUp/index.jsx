@@ -1,24 +1,18 @@
-/**
- * CompanyModal component
- *
- * This component renders a modal window to add or edit a company.
- * It displays input fields for name, site web, siret, and department.
- * There is also a switch to toggle the company's active status.
- * The component accepts three props: company (the company object to edit), onSave (callback to save the company), and onClose (callback to close the modal).
- * The component uses Material UI components for styling and layout.
- *
- * @param {Object} company - The company object to edit.
- * @param {Function} onSave - Callback to save the company.
- * @param {Function} onClose - Callback to close the modal.
- * @returns {ReactElement} The CompanyModal React element.
- */
-import React, { useState } from 'react';
-import styles from '../style.module.css';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
+import {
+  Switch,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Checkbox,
+  ListItemText,
+} from '@mui/material';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Switch, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import styles from '../style.module.css';
 
 // Department options for the multi-select
 const DEPARTMENTS = [
@@ -31,6 +25,7 @@ const DEPARTMENTS = [
   'Énergie',
   'Finance',
 ];
+
 const CompanyModal = ({ company, onSave, onClose }) => {
   const [formData, setFormData] = useState(company || {});
   const [isActive, setIsActive] = useState(company ? company.is_active : true);
@@ -41,14 +36,20 @@ const CompanyModal = ({ company, onSave, onClose }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleDepartmentChange = e => {
-    const value = e.target.value;
-    setFormData({ ...formData, department: value });
+  const handleDepartmentChange = event => {
+    const {
+      target: { value },
+    } = event;
+    setFormData({
+      ...formData,
+      department: typeof value === 'string' ? value.split(',') : value,
+    });
   };
 
   const handleSubmit = () => {
     const newErrors = {};
-    if (!formData.nom) newErrors.nom = true;
+    if (!formData.nom) newErrors.nom = 'Le nom est requis.';
+    if (!formData.siret) newErrors.siret = 'Le SIRET est requis.';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -59,16 +60,16 @@ const CompanyModal = ({ company, onSave, onClose }) => {
   };
 
   const handleToggleActive = () => {
-    if (company) {
-      setIsActive(!isActive);
-    }
+    setIsActive(prev => !prev);
   };
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           {company ? 'Modifier Entreprise' : 'Ajouter Entreprise'}
         </MDTypography>
+
         <label className={styles.formLabel}>Nom d&apos;Entreprise</label>
         <MDInput
           name="nom"
@@ -76,77 +77,98 @@ const CompanyModal = ({ company, onSave, onClose }) => {
           onChange={handleChange}
           placeholder="Nom*"
           style={{
-            marginBottom: '5px',
+            marginBottom: '10px',
             width: '320px',
-            marginTop: '10px',
             borderColor: errors.nom ? 'red' : '',
           }}
-          required
         />
+        {errors.nom && <span style={{ color: 'red', fontSize: '12px' }}>{errors.nom}</span>}
+
         <label className={styles.formLabel}>Site Web</label>
         <MDInput
           name="site_web"
           value={formData.site_web || ''}
           onChange={handleChange}
           placeholder="Site Web"
-          style={{ marginBottom: '5px', width: '320px' }}
+          style={{ marginBottom: '10px', width: '320px' }}
         />
+
         <label className={styles.formLabel}>SIRET</label>
         <MDInput
           name="siret"
           value={formData.siret || ''}
           onChange={handleChange}
-          placeholder="Siret"
-          style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
+          placeholder="Siret*"
+          style={{
+            marginBottom: '10px',
+            width: '320px',
+            borderColor: errors.siret ? 'red' : '',
+          }}
         />
+        {errors.siret && <span style={{ color: 'red', fontSize: '12px' }}>{errors.siret}</span>}
+
         <label className={styles.formLabel}>Départements</label>
-        <FormControl style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+        <FormControl style={{ marginBottom: '10px', width: '320px' }}>
+          <InputLabel id="department-label">Sélectionnez les départements</InputLabel>
           <Select
             labelId="department-label"
-            name="department"
             multiple
             value={formData.department || []}
             onChange={handleDepartmentChange}
             renderValue={selected => selected.join(', ')}
-            style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 48 * 4.5 + 8,
+                  width: '320px',
+                },
+              },
+            }}
           >
             {DEPARTMENTS.map(dept => (
-              <MenuItem
-                key={dept}
-                value={dept}
-                style={{ display: 'flex', alignItems: 'center' }}
-                className={styles.checkboxContainer}
-              >
-                <input
-                  type="checkbox"
-                  checked={formData.department && formData.department.includes(dept)}
-                  readOnly
-                  style={{ marginRight: '100px', cursor: 'pointer' }}
-                />
-                <MDTypography variant="body2">{dept}</MDTypography>
+              <MenuItem key={dept} value={dept} style={{ padding: '8px 16px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                  }}
+                >
+                  <Checkbox
+                    checked={formData.department?.includes(dept)}
+                    style={{ marginRight: '8px' }}
+                  />
+                  <ListItemText primary={dept} style={{ textAlign: 'right', flex: 1 }} />
+                </div>
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        <div>
+
+        <div style={{ marginTop: '15px' }}>
           <InputLabel>Active</InputLabel>
           <Switch checked={isActive} onChange={handleToggleActive} />
         </div>
-        <MDButton
-          onClick={handleSubmit}
-          variant="gradient"
-          color="dark"
-          style={{ marginLeft: '10px', marginTop: '10px' }}
-        >
-          Save
-        </MDButton>
-        <MDButton onClick={onClose} variant="gradient" color="dark" style={{ marginLeft: '170px' }}>
-          Fermer
-        </MDButton>
+
+        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
+          <MDButton
+            onClick={handleSubmit}
+            variant="gradient"
+            color="dark"
+            style={{ marginRight: '10px' }}
+          >
+            Sauvegarder
+          </MDButton>
+          <MDButton onClick={onClose} variant="gradient" color="dark">
+            Fermer
+          </MDButton>
+        </div>
       </div>
     </div>
   );
 };
+
 CompanyModal.propTypes = {
   company: PropTypes.shape({
     nom: PropTypes.string,
@@ -158,4 +180,5 @@ CompanyModal.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
+
 export default CompanyModal;
