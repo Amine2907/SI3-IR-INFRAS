@@ -41,15 +41,10 @@ import reportingRoutes from './routes/ReportingGlobal/reporting.js';
 // Express Setup
 const app = express();
 app.use(cors({
-<<<<<<< HEAD
   origin: 'https://si3-ir-infras.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }))
-=======
-  origin: '*',
-}));
->>>>>>> 76de4999aa40dafb44b117dfe78ed88b414f8229
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
