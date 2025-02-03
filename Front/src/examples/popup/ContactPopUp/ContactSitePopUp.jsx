@@ -83,7 +83,7 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           Add Contact
         </MDTypography>
-        {/* Input Fields */}
+        <label className={styles.formLabel}>Nom</label>
         <MDInput
           name="nom"
           value={formData.nom || ''}
@@ -98,6 +98,7 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
           required
         />
         {errors.nom && <p style={{ color: 'red' }}>Nom is required</p>}
+        <label className={styles.formLabel}>Prenom</label>
         <MDInput
           name="prenom"
           value={formData.prenom || ''}
@@ -111,7 +112,7 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
           required
         />
         {errors.prenom && <p style={{ color: 'red' }}>Prenom is required</p>}
-
+        <label className={styles.formLabel}>Mission</label>
         <MDInput
           name="mission"
           value={formData.mission || ''}
@@ -119,7 +120,7 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
           placeholder="Mission"
           style={{ marginBottom: '5px', width: '320px' }}
         />
-
+        <label className={styles.formLabel}>Email</label>
         <MDInput
           name="email"
           value={formData.email || ''}
@@ -128,7 +129,7 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
           style={{ marginBottom: '5px', width: '320px' }}
         />
         {errors.email && <p style={{ color: 'red' }}>Please enter a valid email</p>}
-
+        <label className={styles.formLabel}>Telephone</label>
         <MDInput
           name="tel"
           value={formData.tel || ''}
@@ -136,7 +137,7 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
           placeholder="Téléphone"
           style={{ marginBottom: '5px', width: '320px' }}
         />
-
+        <label className={styles.formLabel}>Mobile</label>
         <MDInput
           name="mobile"
           value={formData.mobile || ''}

@@ -2,7 +2,6 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import fetch from 'node-fetch';
 // Routes
 import authRoutes from './routes/Auth/auth.js';
 import dashboardRoutes from './routes/Dashboard/dashboard.js';
@@ -41,16 +40,20 @@ import dashFilesRoutes from './routes/Dashboard/dashFiles.js';
 import reportingRoutes from './routes/ReportingGlobal/reporting.js';
 // Express Setup
 const app = express();
-// Test Deployment on Vercel 
 app.use(cors({
+<<<<<<< HEAD
   origin: 'https://si3-ir-infras.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }))
+=======
+  origin: '*',
+}));
+>>>>>>> 76de4999aa40dafb44b117dfe78ed88b414f8229
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// Use Routesx
+// Use Routes
 app.use('/api/auth', authRoutes); 
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/entites',entitesRoutes);
@@ -93,18 +96,7 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 // Start Server
-// sending Api of test backend (secured)
 const PORT = process.env.PORT || 5000  ;
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
 });
-// const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-fetch(`https://si3-ir-infras.onrender.com/api/your-endpoint`)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));

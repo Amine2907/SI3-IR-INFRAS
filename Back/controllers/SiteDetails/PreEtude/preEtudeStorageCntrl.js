@@ -3,20 +3,22 @@ import preEtudeStorage from "../../../storage/PreEtude/preEtudeStorage.js";
 const uploadFileController = async (req, res) => {
   try {
     const { file } = req;
-    const { preEtudeId } = req.body;
+    const { preEtudeId,Sid } = req.body;
     // Ensure that a file and preEtudeId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-
+    if (!Sid) {
+      return res.status(400).json({ error: 'Invalid Sid' });
+    }
     if (!preEtudeId || isNaN(preEtudeId)) {
       return res.status(400).json({ error: 'Invalid preEtudeId: It should be a valid number' });
     }
     // Use the file name as the unique file name
     const uniqueFileName = file.originalname;
     const preEtudeIdStr = String(preEtudeId);
-    const filePath = `pre-etude-pdf/${preEtudeIdStr}/${uniqueFileName}`;
-
+    const SidStr =  String(Sid);
+    const filePath = `pre-etude-pdf/${SidStr}/${preEtudeIdStr}/${uniqueFileName}`;
     console.log("Uploading file to path:", filePath);
 
     // Upload the file to Supabase storage
@@ -77,12 +79,15 @@ const downloadFileController = async (req, res) => {
 };
 
 const getFilesByPreEtudeController = async (req, res) => {
-  const { preEtudeId } = req.body;
+  const { preEtudeId,Sid } = req.body;
   if (!preEtudeId) {
     return res.status(400).json({ error: "PreEtude ID is required" });
   }
+  if (!Sid) {
+    return res.status(400).json({ error: "Sid  is required" });
+  }
   try {
-    const files = await preEtudeStorage.listFiles(preEtudeId);
+    const files = await preEtudeStorage.listFiles(preEtudeId,Sid);
     return res.status(200).json({ files });
   } catch (error) {
     console.error("Error fetching files:", error);

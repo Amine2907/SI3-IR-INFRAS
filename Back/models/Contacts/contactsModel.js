@@ -28,41 +28,46 @@ const createContact = async (data) => {
     }
 };
 //GetAllContacts 
-const getAllContacts = async() => {
+const getAllContacts = async () => {
     try {
-        const {data,error} = await supabase
-        .from('Contacts')
-        .select('*');
-
-        if(error){
+        const { data, error } = await supabase
+            .from('Contacts')
+            .select('*')
+            .order('prenom', { ascending: true, nullsFirst:false  })
+            .order('nom', { ascending: true , nullsFirst:false  });
+        if (error) {
             throw error;
         }
-        return {success:true , data};
-    }catch(error){
-        return {success:false , error:error.messsage};
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, error: error.message };
     }
 };
-const getAllActiveContacts = async() => {
+const getAllActiveContacts = async () => {
     try {
-        const {data,error} = await supabase
-        .from('Contacts')
-        .select('*')
-        .eq('is_active',true);
-
-        if(error){
+        const { data, error } = await supabase
+            .from('Contacts')
+            .select('*')
+            .eq('is_active', true)
+            .order('prenom', { ascending: true, nullLast: true  })
+            .order('nom', { ascending: true, nullLast: true });
+        if (error) {
             throw error;
         }
-        return {success:true , data};
-    }catch(error){
-        return {success:false , error:error.messsage};
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, error: error.message };
     }
 };
+
 const getAllInactiveContacts = async() => {
     try {
         const {data,error} = await supabase
         .from('Contacts')
         .select('*')
-        .eq('is_active',false);
+        .eq('is_active',false)
+        .order('prenom', { ascending: true, nullsFirst:false  })
+        .order('nom', { ascending: true , nullsFirst:false  });
 
         if(error){
             throw error;
@@ -72,7 +77,7 @@ const getAllInactiveContacts = async() => {
         return {success:false , error:error.messsage};
     }
 };
-//GetContactsById 
+//GetContactsById
 const GetContactsById = async(Cid) => {
     try {
         const {data,error} = await supabase

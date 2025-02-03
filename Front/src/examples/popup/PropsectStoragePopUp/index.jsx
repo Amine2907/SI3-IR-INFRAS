@@ -7,7 +7,7 @@ import ProspectStorageService from 'services/site_details/Prospect/prospectStora
 import WarningPopUp from '../userPopUp/WariningPopUp';
 import MDAlert from 'components/MDAlert';
 import styles from '../storage.module.css';
-const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
+const ProspectStorageModal = ({ Sid, prospectId, fetchFiles, onSave, onClose }) => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -45,7 +45,7 @@ const ProspectStorageModal = ({ prospectId, fetchFiles, onSave, onClose }) => {
       return;
     }
     try {
-      const result = await ProspectStorageService.uploadProspectFile(file, prospectId);
+      const result = await ProspectStorageService.uploadProspectFile(file, prospectId, Sid);
       if (result.success) {
         console.log('File uploaded successfully:', result.data);
         setAlert({

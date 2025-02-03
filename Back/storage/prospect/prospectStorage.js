@@ -89,10 +89,10 @@ const deleteFile = async (filePath) => {
   }
 };
 
-const listFiles = async (prospectId) => {
+const listFiles = async (prospectId,Sid) => {
   try {
     // Ensure prospectId is a string when constructing the path
-    const folderPath = `prospect-pdf/${prospectId}`;
+    const folderPath = `prospect-pdf/${Sid}/${prospectId}`;
     console.log(`Fetching files from folder: ${folderPath}`);
 
     // Use the Supabase client to list files
@@ -108,14 +108,13 @@ const listFiles = async (prospectId) => {
     // Map through the files to return the proper structure
     return data.map(file => ({
       name: file.name,
-      path: `prospect-pdf/${prospectId}/${file.name}`,
+      path: `prospect-pdf/${Sid}/${prospectId}/${file.name}`,
     }));
   } catch (error) {
     console.error("Error listing files:", error);
     return [];
   }
 };
-
 const prospectStorage = {
   generateSignedUrl,
   uploadPdf,
