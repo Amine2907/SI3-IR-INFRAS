@@ -50,7 +50,6 @@ const getAllActiveContacts = async () => {
             .from('Contacts')
             .select('*')
             .eq('is_active', true);
-
         if (error) {
             throw error;
         }

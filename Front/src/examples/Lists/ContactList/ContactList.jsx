@@ -35,26 +35,25 @@ const ContactList = () => {
     const { value } = e.target;
     setSearchQuery(value);
 
-    // Filter contacts based on the search query
-    if (value) {
+    if (value.trim() === '') {
+      fetchActiveContacts(setContacts, setNoResultsMessage);
+    } else {
       const filteredContacts = contacts.filter(contact => {
-        const lowercasedSearchQuery = value.toLowerCase();
+        const lowercasedValue = value.toLowerCase();
         return (
-          contact.nom.toLowerCase().includes(lowercasedSearchQuery) ||
-          contact.prenom.toLowerCase().includes(lowercasedSearchQuery) ||
-          contact.mission.toLowerCase().includes(lowercasedSearchQuery)
+          contact.nom.toLowerCase().includes(lowercasedValue) ||
+          contact.prenom.toLowerCase().includes(lowercasedValue) ||
+          contact.mission.toLowerCase().includes(lowercasedValue)
         );
       });
 
       setContacts(filteredContacts);
+
       if (filteredContacts.length === 0) {
         setNoResultsMessage('Aucune contact trouvée pour les critères de recherche spécifiés');
       } else {
         setNoResultsMessage('');
       }
-    } else {
-      // If search query is empty, fetch the active contacts again
-      fetchActiveContacts(setContacts, setNoResultsMessage);
     }
   };
   const handleModalClose = () => {
@@ -95,6 +94,11 @@ const ContactList = () => {
       return newIsActive; // Update the state
     });
   };
+  const clearSearch = () => {
+    setSearchQuery(''); // Clear the search query
+    setNoResultsMessage(''); // Reset the no results message
+    fetchActiveContacts(setContacts, setNoResultsMessage); // Fetch the full list of active contacts
+  };
   return (
     <div className="contact-list">
       <Card id="search-contacts">
@@ -107,15 +111,7 @@ const ContactList = () => {
                 onChange={handleSearchChange}
                 style={{ width: '100%', marginBottom: '10px' }}
               />
-              <MDButton
-                onClick={() => {
-                  setNoResultsMessage('');
-                  setSearchQuery({ nom: '', prenom: '', mission: '' });
-                  fetchActiveContacts(setContacts, setNoResultsMessage); // Reset to active entities
-                }}
-                variant="gradient"
-                color="dark"
-              >
+              <MDButton onClick={clearSearch} variant="gradient" color="dark">
                 Effacer la recherche
               </MDButton>
             </div>

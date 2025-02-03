@@ -147,6 +147,7 @@ export const handleSearchChange = (
 
 export const handleSearchContacts = async (searchQuery, setContacts, setNoResultsMessage) => {
   const result = await contactService.searchContacts(searchQuery);
+
   if (result.success) {
     setContacts(result.data);
     if (result.data.length === 0) {
@@ -156,5 +157,6 @@ export const handleSearchContacts = async (searchQuery, setContacts, setNoResult
     }
   } else {
     console.error(result.error);
+    setNoResultsMessage('Erreur lors de la recherche des contacts. Veuillez réessayer.');
   }
 };
