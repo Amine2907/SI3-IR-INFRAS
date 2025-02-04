@@ -313,7 +313,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               fullWidth
               style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
             >
-              <InputLabel id="operateurs-label">Operateurs</InputLabel>
               <Select
                 labelId="operateurs-label"
                 name="Operateurs"
@@ -408,7 +407,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <Select
                 labelId="role-select-label"
                 name="Acteur_ENEDIS_id"
-                value={formData.Acteur_ENEDIS_id || ''}
+                value={formData.Acteur_ENEDIS_id.nom || formData.Acteur_ENEDIS_id || ''}
                 displayEmpty
                 onChange={e => handleCompanieschange('Acteur_ENEDIS_id', 'nom', e.target.value)}
                 style={{
