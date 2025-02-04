@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import styles from './combinedStyles.module.css';
+import styles from '../combinedStyles.module.css';
 import PropTypes from 'prop-types';
-// import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';

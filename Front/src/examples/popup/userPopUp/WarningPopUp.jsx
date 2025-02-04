@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
-import styles from '../style.module.css';
+import styles from '../warning.module.css';
 
 const WarningPopUp = ({ message, onConfirm, onCancel }) => {
   return (

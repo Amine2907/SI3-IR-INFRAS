@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styles from '../storage.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
-import WarningPopUp from '../userPopUp/WariningPopUp';
+import WarningPopUp from '../userPopUp/WarningPopUp';
 import mesStorageService from 'services/site_details/MES/MesStorageService';
 import MDAlert from 'components/MDAlert';
 const mesStorageModal = ({ Sid, mesId, fetchFiles, onSave, onClose }) => {

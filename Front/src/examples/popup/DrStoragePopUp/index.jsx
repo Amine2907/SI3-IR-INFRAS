@@ -1,10 +1,10 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styles from '../largeStyles.module.css';
+import styles from '../storage.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
-import WarningPopUp from '../userPopUp/WariningPopUp';
+import WarningPopUp from '../userPopUp/WarningPopUp';
 import demracsStorageService from 'services/site_details/DR/DrStorageService';
 import MDAlert from 'components/MDAlert';
 const DemracStorageModal = ({ Sid, demRacId, fetchFiles, onSave, onClose }) => {

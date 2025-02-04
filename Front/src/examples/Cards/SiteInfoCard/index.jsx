@@ -26,7 +26,7 @@ import {
   performSiteContactAction,
 } from './SiteInfoData';
 import { Select, MenuItem, FormControl } from '@mui/material';
-import WarningPopUp from 'examples/popup/userPopUp/WariningPopUp';
+import WarningPopUp from 'examples/popup/userPopUp/WarningPopUp';
 import siteContactService from 'services/Site_Services/siteContactService';
 import ContactSiteModal from 'examples/popup/ContactPopUp/ContactSitePopUp';
 import ConatctStaticModal from 'examples/popup/ContactPopUp/ContactStaticPopUp';
