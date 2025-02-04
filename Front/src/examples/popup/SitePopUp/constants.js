@@ -2,13 +2,7 @@
 // constants.js
 // Priority levels
 export const PRIORITIES = ['P00', 'P0', 'P1', 'P2'];
-export const  PRIORITY_MAP = {
-  'P00': 'P00',
-  'P0': 'P0',
-  'P1': 'P1',
-  'P2': 'P2',
-  '3': 'P2', // Map backend value `3` to the corresponding dropdown option `P2`
-};
+export const priority = { 1: 'P00', 2: 'P0', 3: 'P1', 4: 'P2' };
 // Regions
 export const REGIONS = [
   'Auvergne-Rhône-Alpes',

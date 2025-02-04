@@ -111,7 +111,6 @@ const CompanyModal = ({ company, onSave, onClose }) => {
           }}
         />
         {errors.siret && <span style={{ color: 'red', fontSize: '12px' }}>{errors.siret}</span>}
-
         <label className={styles.formLabel}>Départements</label>
         <FormControl style={{ marginBottom: '10px', width: '320px' }}>
           <InputLabel id="department-label">Sélectionnez les départements</InputLabel>
