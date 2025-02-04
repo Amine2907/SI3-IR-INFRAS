@@ -25,9 +25,9 @@ const ConatctStaticModal = ({ contact, onClose }) => {
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           Contact
         </MDTypography>
-        <label className={styles.formLabel}>Nom</label>
         <MDInput
           name="nom"
+          label="Nom"
           value={formData.nom || ''}
           placeholder="Nom*"
           style={{
@@ -38,9 +38,9 @@ const ConatctStaticModal = ({ contact, onClose }) => {
           }}
           required
         />
-        <label className={styles.formLabel}>Prenom</label>
         <MDInput
           name="prenom"
+          label="Prenom"
           value={formData.prenom || ''}
           placeholder="Prenom*"
           style={{
@@ -50,30 +50,30 @@ const ConatctStaticModal = ({ contact, onClose }) => {
           }}
           required
         />
-        <label className={styles.formLabel}>Mission</label>
         <MDInput
+          label="Mission"
           name="mission"
           value={formData.mission || ''}
           placeholder="Mission"
           style={{ marginBottom: '5px', width: '320px' }}
         />
-        <label className={styles.formLabel}>Email</label>
         <MDInput
           name="email"
+          label="Email"
           value={formData.email || ''}
           placeholder="Email"
           style={{ marginBottom: '5px', width: '320px' }}
         />
-        <label className={styles.formLabel}>Telephone</label>
         <MDInput
           name="tel"
+          label="Telephone"
           value={formData.tel || ''}
           placeholder="Téléphone"
           style={{ marginBottom: '5px', width: '320px' }}
         />
-        <label className={styles.formLabel}>Mobile</label>
         <MDInput
           name="mobile"
+          label="Mobile"
           value={formData.mobile || ''}
           placeholder="Mobile"
           style={{ marginBottom: '5px', width: '320px' }}

@@ -44,10 +44,10 @@ export const PROGRAMMES = {
 
 // Status Site SFR
 export const STATUS_SITE_FK = {
-  1:'Activé',
-  2:'Inactif',
-  3:'Terminé',
-}
+  1: 'Activé',
+  2: 'Inactif',
+  3: 'Terminé',
+};
 // Status Site FK
 export const STATUS_SITE_SFR = ['Activé', 'Inactif', 'Terminé'];
 // Operators

@@ -83,9 +83,9 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           Add Contact
         </MDTypography>
-        <label className={styles.formLabel}>Nom</label>
         <MDInput
           name="nom"
+          label="Nom"
           value={formData.nom || ''}
           onChange={handleChange}
           placeholder="Nom*"
@@ -98,9 +98,9 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
           required
         />
         {errors.nom && <p style={{ color: 'red' }}>Nom is required</p>}
-        <label className={styles.formLabel}>Prenom</label>
         <MDInput
           name="prenom"
+          label="Prenom"
           value={formData.prenom || ''}
           onChange={handleChange}
           placeholder="Prenom*"
@@ -112,34 +112,34 @@ const ContactSiteModal = ({ Sid, contact, onSave, onClose }) => {
           required
         />
         {errors.prenom && <p style={{ color: 'red' }}>Prenom is required</p>}
-        <label className={styles.formLabel}>Mission</label>
         <MDInput
+          label="Mission"
           name="mission"
           value={formData.mission || ''}
           onChange={handleChange}
           placeholder="Mission"
           style={{ marginBottom: '5px', width: '320px' }}
         />
-        <label className={styles.formLabel}>Email</label>
         <MDInput
           name="email"
+          label="Email"
           value={formData.email || ''}
           onChange={handleChange}
           placeholder="Email"
           style={{ marginBottom: '5px', width: '320px' }}
         />
         {errors.email && <p style={{ color: 'red' }}>Please enter a valid email</p>}
-        <label className={styles.formLabel}>Telephone</label>
         <MDInput
           name="tel"
+          label="Telephone"
           value={formData.tel || ''}
           onChange={handleChange}
           placeholder="Téléphone"
           style={{ marginBottom: '5px', width: '320px' }}
         />
-        <label className={styles.formLabel}>Mobile</label>
         <MDInput
           name="mobile"
+          label="Mobile"
           value={formData.mobile || ''}
           onChange={handleChange}
           placeholder="Mobile"

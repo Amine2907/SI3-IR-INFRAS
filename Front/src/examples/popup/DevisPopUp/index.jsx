@@ -99,8 +99,6 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
   }, [Sid, devis]);
   const validateForm = () => {
     const newErrors = {};
-    // if (formData.type_rac === 'Complexe' && !formData.ZFA_ZFB) newErrors.ZFA_ZFB = true;
-    // if (!formData.nom) newErrors.nom = true;
     return newErrors;
   };
   const handleSubmit = () => {
@@ -108,11 +106,11 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       console.log('demRac data :', devisData);
-      const selectedFournisseur = activeFrns.find(f => f.nom === formData.fournisseur.nom);
+      // const selectedFournisseur = activeFrns.find(f => f.nom === formData.fournisseur.nom);
       onSave({
         Sid,
         ...formData,
-        fournisseur: selectedFournisseur ? selectedFournisseur.id : null,
+        // fournisseur: selectedFournisseur ? selectedFournisseur.id : null,
         is_active: isActive,
         conformite: isConforme,
         valide_par_SFR: isValide,
@@ -156,6 +154,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
         <div className={styles.formGrid}>
           <MDInput
             name="ND"
+            label="Numero Devis"
             value={formData.ND || ''}
             onChange={handleChange}
             placeholder="N de devis"
@@ -165,7 +164,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="fournisseur"
-              value={formData.fournisseur?.nom || ''}
+              value={formData.fournisseur?.nom || formData.fournisseur || ''}
               onChange={e => handleDropdownChange('fournisseur', 'nom', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
@@ -181,6 +180,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
             </Select>
           </FormControl>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
+            <InputLabel id="devis-select-label">Numero DR</InputLabel>
             <Select
               name="no_dr"
               value={formData.no_dr || ''}
@@ -199,6 +199,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
             </Select>
           </FormControl>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
+            <InputLabel id="devis-select-label">Type devis</InputLabel>
             <Select
               name="type_devis"
               value={formData.type_devis}
@@ -239,6 +240,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
           <div style={{ position: 'relative', width: '300px' }}>
             <MDInput
               name="montant"
+              label="Montant"
               value={formData.montant}
               onChange={handleChange}
               placeholder="Montant (TTC) "
@@ -263,6 +265,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
           </div>
           <MDInput
             name="code_postal_lieu"
+            label="Code postal lieu"
             value={formData.code_postal_lieu || ''}
             onChange={handleChange}
             placeholder="CP du lieu de Raccordement"
@@ -271,6 +274,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
           />
           <MDInput
             name="code_paiement"
+            label="Code paiement"
             value={formData.code_paiement || ''}
             onChange={handleChange}
             placeholder="Code de Paiement"
@@ -310,6 +314,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
             />
           </LocalizationProvider>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
+            <InputLabel id="devis-select-label">Etat realance</InputLabel>
             <Select
               name="etat_ralance"
               value={formData.etat_ralance || ''}

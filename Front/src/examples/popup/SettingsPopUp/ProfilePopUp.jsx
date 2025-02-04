@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Select, MenuItem, FormControl } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -88,11 +88,9 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
             width: '320px',
           }}
         >
-          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
-            Prenom
-          </label>
           <MDInput
             name="firstName"
+            label="Prenom"
             value={formData.firstName || ''}
             onChange={handleChange}
             placeholder="Prenom*"
@@ -103,11 +101,9 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
             }}
             required
           />
-          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
-            Nom
-          </label>
           <MDInput
             name="lastName"
+            label="Nom"
             value={formData.lastName || ''}
             onChange={handleChange}
             placeholder="Nom*"
@@ -118,10 +114,8 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
             }}
             required
           />
-          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
-            Genre
-          </label>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }} required>
+            <InputLabel id="devis-select-label">Genre</InputLabel>
             <Select
               name="genre"
               value={formData.genre || ''}
@@ -134,16 +128,10 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
               }}
               required
             >
-              <MenuItem value="" disabled>
-                -- Choisir genre --
-              </MenuItem>
               <MenuItem value="Homme">Homme</MenuItem>
               <MenuItem value="Femme">Femme</MenuItem>
             </Select>
           </FormControl>
-          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
-            Date de naissance
-          </label>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Date de naissance"
@@ -160,10 +148,8 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
               style={{ marginBottom: '10px', width: '100%' }}
             />
           </LocalizationProvider>
-          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
-            Entreprise
-          </label>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
+            <InputLabel id="devis-select-label">Entreprise </InputLabel>
             <Select
               name="entreprise"
               value={formData.entreprise || ''}
@@ -190,10 +176,8 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
               )}
             </Select>
           </FormControl>
-          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
-            Départements
-          </label>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
+            <InputLabel id="devis-select-label">Départements</InputLabel>
             <Select
               name="department"
               value={formData.department || ''}

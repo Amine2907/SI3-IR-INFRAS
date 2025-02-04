@@ -94,6 +94,7 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
         <div className={styles.formGrid}>
           <MDInput
             name="no_PDL"
+            label="No PDL"
             value={formData.no_PDL || ''}
             onChange={handleChange}
             placeholder="No PDL"
@@ -101,6 +102,7 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
             required
           />
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
+            <InputLabel id="devis-select-label">Numero Traveaux</InputLabel>
             <Select
               name="traveaux_id"
               value={formData.traveaux_id || ''}
@@ -123,6 +125,7 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
             </Select>
           </FormControl>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
+            <InputLabel id="devis-select-label">Status Consuel</InputLabel>
             <Select
               name="status_consuel"
               value={formData.status_consuel || ''}

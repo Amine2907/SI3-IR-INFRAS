@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import styles from './remStyles.module.css';
+import styles from '../remStyles.module.css';
 import PropTypes from 'prop-types';
 import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
