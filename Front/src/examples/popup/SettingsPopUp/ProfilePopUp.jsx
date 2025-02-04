@@ -150,7 +150,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
           <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
             <Select
               name="entreprise"
-              value={formData.entreprise || ''} // Use ENTid as the value
+              value={formData.entreprise || ''}
               onChange={handleChange}
               displayEmpty
               style={{
