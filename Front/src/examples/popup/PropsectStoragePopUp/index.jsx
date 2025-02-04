@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
 import ProspectStorageService from 'services/site_details/Prospect/prospectStorageService';
-import WarningPopUp from '../userPopUp/WariningPopUp';
+import WarningPopUp from '../userPopUp/WarningPopUp';
 import MDAlert from 'components/MDAlert';
 import styles from '../storage.module.css';
 const ProspectStorageModal = ({ Sid, prospectId, fetchFiles, onSave, onClose }) => {

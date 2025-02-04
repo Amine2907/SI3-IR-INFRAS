@@ -55,9 +55,9 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
         </MDTypography>
         <div className={styles.formGrid}>
           <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>Nom*</label>
             <MDInput
               name="nom"
+              label="Nom"
               value={formData.nom || ''}
               onChange={handleChange}
               placeholder="Nom*"
@@ -71,8 +71,8 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
           </div>
 
           <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>Role*</label>
             <FormControl fullWidth style={{ marginTop: '0px', width: '320px' }} required>
+              <InputLabel id="devis-select-label">Role</InputLabel>
               <Select
                 name="role"
                 value={formData.role || ''}
@@ -99,144 +99,124 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
               </Select>
             </FormControl>
           </div>
+          <MDInput
+            label="Adresse"
+            name="adresse"
+            value={formData.adresse || ''}
+            onChange={handleChange}
+            placeholder="Adresse"
+            style={{ marginTop: '0px', width: '320px' }}
+          />
+          <MDInput
+            name="ville"
+            label="Ville"
+            value={formData.ville || ''}
+            onChange={handleChange}
+            placeholder="Ville"
+            style={{ marginTop: '0px', width: '320px' }}
+          />
 
-          <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>Adresse</label>
-            <MDInput
-              name="adresse"
-              value={formData.adresse || ''}
-              onChange={handleChange}
-              placeholder="Adresse"
-              style={{ marginTop: '0px', width: '320px' }}
-            />
-          </div>
+          <MDInput
+            name="code_postal"
+            label="Code postal"
+            value={formData.code_postal || ''}
+            onChange={handleChange}
+            placeholder="Code Postal"
+            style={{ marginTop: '0px', width: '320px' }}
+          />
 
-          <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>Ville</label>
-            <MDInput
-              name="ville"
-              value={formData.ville || ''}
+          <FormControl fullWidth style={{ marginTop: '0px', width: '320px' }} required>
+            <InputLabel id="devis-select-label">Region</InputLabel>
+            <Select
+              name="region"
+              value={formData.region || ''}
               onChange={handleChange}
-              placeholder="Ville"
-              style={{ marginTop: '0px', width: '320px' }}
-            />
-          </div>
+              displayEmpty
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.region ? 'red' : '',
+              }}
+              required
+            >
+              <MenuItem value="" disabled>
+                -- Choisir une Région* --
+              </MenuItem>
+              <MenuItem value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</MenuItem>
+              <MenuItem value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</MenuItem>
+              <MenuItem value="Bretagne">Bretagne</MenuItem>
+              <MenuItem value="Centre-Val de Loire">Centre-Val de Loire</MenuItem>
+              <MenuItem value="Corse">Corse</MenuItem>
+              <MenuItem value="Grand Est">Grand Est</MenuItem>
+              <MenuItem value="Guadeloupe">Guadeloupe</MenuItem>
+              <MenuItem value="Guyane">Guyane</MenuItem>
+              <MenuItem value="Hauts-de-France">Hauts-de-France</MenuItem>
+              <MenuItem value="Île-de-France">Île-de-France</MenuItem>
+              <MenuItem value="Martinique">Martinique</MenuItem>
+              <MenuItem value="Normandie">Normandie</MenuItem>
+              <MenuItem value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</MenuItem>
+              <MenuItem value="Occitanie">Occitanie</MenuItem>
+              <MenuItem value="Pays de la Loire">Pays de la Loire</MenuItem>
+              <MenuItem value="Provence-Alpes-Côte d'Azur">
+                Provence-Alpes-Côte d&apos;Azur
+              </MenuItem>
+              <MenuItem value="Réunion">Réunion</MenuItem>
+            </Select>
+          </FormControl>
 
-          <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>Code Postal</label>
-            <MDInput
-              name="code_postal"
-              value={formData.code_postal || ''}
-              onChange={handleChange}
-              placeholder="Code Postal"
-              style={{ marginTop: '0px', width: '320px' }}
-            />
-          </div>
+          <MDInput
+            name="contact"
+            label="Contact"
+            value={formData.contact || ''}
+            onChange={handleChange}
+            placeholder="Contact"
+            style={{ marginTop: '0px', width: '320px' }}
+          />
 
-          <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>Région*</label>
-            <FormControl fullWidth style={{ marginTop: '0px', width: '320px' }} required>
-              <Select
-                name="region"
-                value={formData.region || ''}
-                onChange={handleChange}
-                displayEmpty
-                style={{
-                  padding: '10px',
-                  fontSize: '14px',
-                  borderColor: errors.region ? 'red' : '',
-                }}
-                required
-              >
-                <MenuItem value="" disabled>
-                  -- Choisir une Région* --
-                </MenuItem>
-                <MenuItem value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</MenuItem>
-                <MenuItem value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</MenuItem>
-                <MenuItem value="Bretagne">Bretagne</MenuItem>
-                <MenuItem value="Centre-Val de Loire">Centre-Val de Loire</MenuItem>
-                <MenuItem value="Corse">Corse</MenuItem>
-                <MenuItem value="Grand Est">Grand Est</MenuItem>
-                <MenuItem value="Guadeloupe">Guadeloupe</MenuItem>
-                <MenuItem value="Guyane">Guyane</MenuItem>
-                <MenuItem value="Hauts-de-France">Hauts-de-France</MenuItem>
-                <MenuItem value="Île-de-France">Île-de-France</MenuItem>
-                <MenuItem value="Martinique">Martinique</MenuItem>
-                <MenuItem value="Normandie">Normandie</MenuItem>
-                <MenuItem value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</MenuItem>
-                <MenuItem value="Occitanie">Occitanie</MenuItem>
-                <MenuItem value="Pays de la Loire">Pays de la Loire</MenuItem>
-                <MenuItem value="Provence-Alpes-Côte d'Azur">
-                  Provence-Alpes-Côte d&apos;Azur
-                </MenuItem>
-                <MenuItem value="Réunion">Réunion</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-          <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>Contact</label>
-            <MDInput
-              name="contact"
-              value={formData.contact || ''}
-              onChange={handleChange}
-              placeholder="Contact"
-              style={{ marginTop: '0px', width: '320px' }}
-            />
-          </div>
+          <MDInput
+            name="email"
+            label="Email"
+            value={formData.email || ''}
+            onChange={handleChange}
+            placeholder="Email"
+            style={{ marginTop: '0px', width: '320px' }}
+          />
 
-          <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>Email</label>
-            <MDInput
-              name="email"
-              value={formData.email || ''}
-              onChange={handleChange}
-              placeholder="Email"
-              style={{ marginTop: '0px', width: '320px' }}
-            />
-          </div>
-          <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>Téléphone</label>
-            <MDInput
-              name="telephone"
-              value={formData.telephone || ''}
-              onChange={handleChange}
-              placeholder="Téléphone"
-              style={{ marginTop: '0px', width: '320px' }}
-            />
-          </div>
+          <MDInput
+            name="telephone"
+            label="Telephone"
+            value={formData.telephone || ''}
+            onChange={handleChange}
+            placeholder="Téléphone"
+            style={{ marginTop: '0px', width: '320px' }}
+          />
 
-          <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>Site Web</label>
-            <MDInput
-              name="site_web"
-              value={formData.site_web || ''}
-              onChange={handleChange}
-              placeholder="Site Web"
-              style={{ marginTop: '0px', width: '320px' }}
-            />
-          </div>
+          <MDInput
+            name="site_web"
+            label="Site web "
+            value={formData.site_web || ''}
+            onChange={handleChange}
+            placeholder="Site Web"
+            style={{ marginTop: '0px', width: '320px' }}
+          />
 
-          <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>IBAN</label>
-            <MDInput
-              name="IBAN"
-              value={formData.IBAN || ''}
-              onChange={handleChange}
-              placeholder="IBAN"
-              style={{ marginTop: '0px', width: '320px' }}
-            />
-          </div>
+          <MDInput
+            name="IBAN"
+            label="IBAN"
+            value={formData.IBAN || ''}
+            onChange={handleChange}
+            placeholder="IBAN"
+            style={{ marginTop: '0px', width: '320px' }}
+          />
 
-          <div style={{ marginBottom: '3px' }}>
-            <label className={styles.formLabel}>BIC</label>
-            <MDInput
-              name="BIC"
-              value={formData.BIC || ''}
-              onChange={handleChange}
-              placeholder="BIC"
-              style={{ marginTop: '0px', width: '320px' }}
-            />
-          </div>
+          <MDInput
+            name="BIC"
+            label="BIC"
+            value={formData.BIC || ''}
+            onChange={handleChange}
+            placeholder="BIC"
+            style={{ marginTop: '0px', width: '320px' }}
+          />
 
           <div style={{ marginBottom: '3px' }}>
             <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>

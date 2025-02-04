@@ -93,6 +93,7 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
         </MDTypography>
         <div className={styles.formGrid}>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
+            <InputLabel id="devis-select-label">Numero devis</InputLabel>
             <Select
               name="Dfk"
               value={formData.Dfk || ''}
@@ -117,6 +118,7 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
           <MDInput
             name="no_fac"
             value={formData.no_fac || ''}
+            label="Numero Fcature"
             onChange={handleChange}
             placeholder="No Facture"
             style={{ marginBottom: '5px', width: '300px' }}
@@ -140,6 +142,7 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
           </LocalizationProvider>
           <MDInput
             name="montant_ht"
+            label="Montant HT"
             value={formData.montant_ht || ''}
             onChange={handleChange}
             placeholder="Montant HT"
@@ -148,6 +151,7 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
           />
           <MDInput
             name="tva"
+            label="TVA"
             value={formData.tva || ''}
             onChange={handleChange}
             placeholder="TVA"
@@ -156,6 +160,7 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
           />
           <MDInput
             name="montant_ttc"
+            label="Montant TTC"
             value={formData.montant_ttc || ''}
             onChange={handleChange}
             placeholder="Montant TTC"

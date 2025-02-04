@@ -49,9 +49,9 @@ const ContactModal = ({ contact, onSave, onClose }) => {
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           {contact ? 'Modifier Contact' : 'Ajouter Contact'}
         </MDTypography>
-        <label className={styles.formLabel}>Nom de contact</label>
         <MDInput
           name="nom"
+          label="Nom"
           value={formData.nom || ''}
           onChange={handleChange}
           placeholder="Nom*"
@@ -63,9 +63,9 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           }}
           required
         />
-        <label className={styles.formLabel}>Prenom de contact</label>
         <MDInput
           name="prenom"
+          label="Prenom"
           value={formData.prenom || ''}
           onChange={handleChange}
           placeholder="Prenom*"
@@ -76,32 +76,35 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           }}
           required
         />
-        <label className={styles.formLabel}>Mission</label>
         <MDInput
+          label="Mission"
           name="mission"
           value={formData.mission || ''}
           onChange={handleChange}
           placeholder="Mission"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
-        <label className={styles.formLabel}>Email</label>
+
         <MDInput
+          label="Email"
           name="email"
           value={formData.email || ''}
           onChange={handleChange}
           placeholder="Email"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
-        <label className={styles.formLabel}>Telephone</label>
+
         <MDInput
+          label="Telephone"
           name="tel"
           value={formData.tel || ''}
           onChange={handleChange}
           placeholder="Téléphone"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
-        <label className={styles.formLabel}>Mobile</label>
+
         <MDInput
+          label="Mobile"
           name="mobile"
           value={formData.mobile || ''}
           onChange={handleChange}

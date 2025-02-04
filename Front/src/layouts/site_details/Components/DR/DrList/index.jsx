@@ -105,7 +105,7 @@ function DemRacList({ site }) {
       if (value === 'Complexe') return 'red';
       return 'gray';
     }
-    if (key === 'statusProp') {
+    if (key === 'status_prop') {
       if (value === 'Devis en attente') return 'orange';
       if (value === 'Reçu') return 'blue';
       return 'gray';
@@ -204,7 +204,7 @@ function DemRacList({ site }) {
                           width: 10,
                           height: 10,
                           borderRadius: '50%',
-                          backgroundColor: getDotColor('statusProp', statusProp),
+                          backgroundColor: getDotColor('status_prop', statusProp),
                           margin: 'auto',
                         }}
                       />
