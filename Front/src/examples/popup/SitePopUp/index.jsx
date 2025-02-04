@@ -25,7 +25,7 @@ import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import SiteService from 'services/Site_Services/siteService';
-import { OPERATORS, priority } from './constants';
+import { OPERATORS, priority, PROGRAMMES, STATUS_SITE_FK } from './constants';
 const SiteModal = ({ site, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     site || {
@@ -329,13 +329,27 @@ const SiteModal = ({ site, onSave, onClose }) => {
               >
                 {OPERATORS.map(operateur => (
                   <MenuItem key={operateur} value={operateur}>
-                    <input
-                      type="checkbox"
-                      checked={formData.Operateurs && formData.Operateurs.includes(operateur)}
-                      readOnly
-                      style={{ marginRight: '10px' }}
-                    />
-                    <MDTypography variant="body2">{operateur}</MDTypography>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        width: '100%',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <span style={{ display: 'flex', alignItems: 'center' }}>
+                        <input
+                          type="checkbox"
+                          checked={formData.Operateurs && formData.Operateurs.includes(operateur)}
+                          readOnly
+                          style={{
+                            marginRight: '10px',
+                            transform: 'scale(1.2)',
+                          }}
+                        />
+                        <MDTypography variant="body2">{operateur}</MDTypography>
+                      </span>
+                    </div>
                   </MenuItem>
                 ))}
               </Select>
@@ -352,7 +366,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
             >
               <Select
                 name="programme_fk"
-                value={formData.programme_fk.PR_desc || ''}
+                value={PROGRAMMES[formData.programme_fk] || ''}
                 onChange={e => handleDropdownChange('programme_fk', 'PR_desc', e.target.value)}
                 displayEmpty
                 style={{
@@ -394,7 +408,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <Select
                 labelId="role-select-label"
                 name="Acteur_ENEDIS_id"
-                value={formData.Acteur_ENEDIS_id.nom || ''}
+                value={formData.Acteur_ENEDIS_id || ''}
                 displayEmpty
                 onChange={e => handleCompanieschange('Acteur_ENEDIS_id', 'nom', e.target.value)}
                 style={{
@@ -476,7 +490,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
             >
               <Select
                 name="status_site_fk"
-                value={formData.status_site_fk.SS_desc || ''}
+                value={STATUS_SITE_FK[formData.status_site_fk] || ''}
                 onChange={e => handleDropdownChange('status_site_fk', 'SS_desc', e.target.value)}
                 displayEmpty
                 style={{
