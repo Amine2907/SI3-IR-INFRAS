@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import styles from './combinedStyles.module.css';
+import styles from '../combinedStyles.module.css';
 import PropTypes from 'prop-types';
-// import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
@@ -55,6 +54,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
         <div className={styles.formGrid}>
           <MDInput
             name="nom"
+            label="Nom"
             value={formData.nom || ''}
             onChange={handleChange}
             placeholder="Nom*"
@@ -67,6 +67,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
             required
           />
           <MDInput
+            label="Section"
             name="section"
             value={formData.section || ''}
             onChange={handleChange}
@@ -80,6 +81,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
             required
           />
           <MDInput
+            label="Parcelle"
             name="parcelle"
             value={formData.parcelle || ''}
             onChange={handleChange}
@@ -93,6 +95,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
             required
           />
           <MDInput
+            label="Longitude"
             name="longitude"
             value={formData.longitude || ''}
             onChange={handleChange}
@@ -106,6 +109,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
             required
           />
           <MDInput
+            label="Latitude"
             name="latitude"
             value={formData.latitude || ''}
             onChange={handleChange}
@@ -119,6 +123,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
             required
           />
           <MDInput
+            label="Cout Estime"
             name="cout_estime"
             value={formData.cout_estime || ''}
             onChange={handleChange}
@@ -136,6 +141,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
             style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
             required
           >
+            <InputLabel id="devis-select-label">Status Validation</InputLabel>
             <Select
               name="status_validation_fk"
               value={formData.status_validation_fk || ''}
@@ -163,6 +169,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
             style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
             required
           >
+            <InputLabel id="devis-select-label">Status site SFR</InputLabel>
             <Select
               name="status_site_sfr"
               value={formData.status_site_sfr || ''}

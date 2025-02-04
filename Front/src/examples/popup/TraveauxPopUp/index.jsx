@@ -102,6 +102,7 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
         <div className={styles.formGrid}>
           <MDInput
             name="Tid"
+            label="No Traveaux"
             value={formData.Tid || ''}
             onChange={handleChange}
             placeholder="No virement"
@@ -109,9 +110,10 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
             required
           />
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
+            <InputLabel id="devis-select-label">Libelle virement</InputLabel>
             <Select
               name="paie_id"
-              value={formData.paie_id || ''}
+              value={formData.paie_id || formData.paie_id.libelle_du_virement || ''}
               onChange={handleChange}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}

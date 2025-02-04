@@ -132,6 +132,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
             }}
             required
           >
+            <InputLabel id="devis-select-label">Prospect</InputLabel>
             <Select
               name="activeProspect"
               value={activeProspects.find(p => p.nom === selectedProspect) ? selectedProspect : ''}
@@ -161,6 +162,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
             }}
             required
           >
+            <InputLabel id="devis-select-label">ZFA / ZFB</InputLabel>
             <Select
               name="ZFA_ZFB"
               value={formData.ZFA_ZFB || '-- Choisir ZFA/ZFB --'}
@@ -182,6 +184,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
           </FormControl>
           <MDInput
             name="MM"
+            label="Moyenne en metres"
             value={formData.MM || ''}
             onChange={handleChange}
             placeholder="Moyenne metres"
@@ -195,6 +198,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
           />
           <MDInput
             name="CRR"
+            label="Création ou remplacement d'un réseau BT"
             value={formData.CRR || ''}
             onChange={handleChange}
             placeholder="Création ou remplacement d'un réseau BT"
@@ -208,6 +212,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
           />
           <MDInput
             name="ADPDT"
+            label="Augmentation de puissance du transformateur"
             value={formData.ADPDT || ''}
             onChange={handleChange}
             placeholder="Augmentation de puissance du transformateur"
@@ -221,6 +226,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
           />
           <MDInput
             name="CRRBTA"
+            label="Création réseau BT et augmentation"
             value={formData.CRRBTA || ''}
             onChange={handleChange}
             placeholder="Création réseau BT et augmentation"
@@ -234,6 +240,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
           />
           <MDInput
             name="CRP_HTABT"
+            label="Création poste HTA/BT"
             value={formData.CRP_HTABT || ''}
             onChange={handleChange}
             placeholder="Création poste HTA/BT"
@@ -248,6 +255,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
           <div style={{ position: 'relative', width: '300px' }}>
             <MDInput
               name="cout"
+              label="Cout"
               value={formData.cout ? `${formData.cout.toFixed(2)}` : ''}
               onChange={handleChange}
               placeholder="Cout"

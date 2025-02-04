@@ -20,6 +20,10 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
       no_devis: { ND: '' },
     }
   );
+  const spr_values = {
+    1: 'Devis en attente',
+    2: 'Reçu',
+  };
   const [selectedDemrac, setSelectedDemrac] = useState('');
   const [activeDevis, setActiveDevis] = useState([]);
   const [activeProspects, setActivePropescts] = useState([]);
@@ -139,215 +143,237 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
     });
   };
   return (
-    <div className={styles.modal}>
-      <div className={styles.modalContent}>
-        <MDTypography variant="h3" fontWeight="medium" textAlign="center">
-          Modifier DR
-        </MDTypography>
-        <div className={styles.formGrid}>
-          <MDInput
-            name="NDRid"
-            value={formData.NDRid || ''}
-            onChange={handleChange}
-            placeholder="NDRid*"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
-            }}
-            required
-          />
-          <FormControl
-            fullWidth
-            required
-            style={{ marginBottom: '5px', marginTop: '10px', width: '320px' }}
-          >
-            <Select
-              labelId="role-select-label"
-              name="Pro_fk"
-              value={formData.Pro_fk.nom || ''}
-              displayEmpty
-              onChange={e => handleNestedVChange('Pro_fk', 'nom', e.target.value)}
-              style={{ padding: '12px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
-              required
-            >
-              <MenuItem value="" disabled>
-                -- Choisir un prospect --
-              </MenuItem>
-              {activeProspects.length > 0 ? (
-                activeProspects.map(prospect => (
-                  <MenuItem key={prospect.nom} value={prospect.Proid}>
-                    {prospect.nom}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem value="">No active prospects available</MenuItem>
-              )}
-            </Select>
-          </FormControl>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              label="KO DP "
-              name="KO DP "
-              value={formData.Ko_Dp ? dayjs(formData.Ko_Dp) : null}
-              onChange={newValue => {
-                handleChange({
-                  target: {
-                    name: 'Ko_Dp',
-                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  },
-                });
-              }}
-              style={{ marginBottom: '10px', width: '100%' }}
-            />
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              label="DR Date"
-              name="DR Date"
-              value={formData.date_dr ? dayjs(formData.date_dr) : null}
-              onChange={newValue => {
-                handleChange({
-                  target: {
-                    name: 'date_dr',
-                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  },
-                });
-              }}
-              style={{ marginBottom: '10px', width: '100%' }}
-            />
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DesktopDatePicker
-              label="Reception dossier complet"
-              name="Reception dossier complet"
-              value={formData.drdc ? dayjs(formData.drdc) : null}
-              onChange={newValue => {
-                handleChange({
-                  target: {
-                    name: 'drdc',
-                    value: newValue ? newValue.format('YYYY-MM-DD') : '',
-                  },
-                });
-              }}
-              style={{ marginBottom: '10px', width: '100%' }}
-            />
-          </LocalizationProvider>
-          <FormControl
-            fullWidth
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-            required
-          >
-            <Select
-              name="type_rac"
-              value={formData.type_rac || ''}
+    <>
+      <div className={styles.modal}>
+        <div className={styles.modalContent}>
+          <MDTypography variant="h3" fontWeight="medium" textAlign="center">
+            Modifier DR
+          </MDTypography>
+          <div className={styles.formGrid}>
+            <MDInput
+              name="NDRid"
+              label="Numero de DR"
+              value={formData.NDRid || ''}
               onChange={handleChange}
-              displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
-              required
-            >
-              <MenuItem value="" disabled>
-                -- Choisir le type de racc --
-              </MenuItem>
-              <MenuItem value="Simple">Simple</MenuItem>
-              <MenuItem value="Complexe">Complexe</MenuItem>
-              <MenuItem value="A Renseigner">A Renseigner</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
-            <InputLabel id="operators-label">operators</InputLabel>
-            <Select
-              labelId="operators-label"
-              name="operators"
-              multiple
-              value={formData.operators || []}
-              onChange={handleoperatorsChange}
-              renderValue={selected => selected.join(', ')}
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
-            >
-              {operators.map(operateur => (
-                <MenuItem key={operateur} value={operateur}>
-                  <input
-                    type="checkbox"
-                    checked={formData.operators && formData.operators.includes(operateur)}
-                    readOnly
-                    style={{ marginRight: '10px' }}
-                  />
-                  <MDTypography variant="body2">{operateur}</MDTypography>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl
-            fullWidth
-            required
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-          >
-            <Select
-              labelId="role-select-label"
-              name="gestionnaire_de_reseau"
-              value={formData.gestionnaire_de_reseau.nom || ''}
-              displayEmpty
-              onChange={e => handleNestedVChange('gestionnaire_de_reseau', 'nom', e.target.value)}
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
-              required
-            >
-              <MenuItem value="" disabled>
-                -- Choisir un entite --
-              </MenuItem>
-              {activeEntites.length > 0 ? (
-                activeEntites.map(entite => (
-                  <MenuItem key={entite.nom} value={entite.Eid}>
-                    {entite.nom}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem value="">No active entites available</MenuItem>
-              )}
-            </Select>
-          </FormControl>
-          <FormControl
-            fullWidth
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-            required
-          >
-            <Select
-              name="status_prop"
-              value={formData.status_prop || ''}
-              onChange={handleChange}
-              displayEmpty
+              placeholder="NDRid*"
               style={{
-                padding: '10px',
-                fontSize: '14px',
-                borderColor: errors.status_prop ? 'red' : '',
+                width: '320px',
+
+                borderColor: errors.nom ? 'red' : '',
               }}
-            >
-              <MenuItem value="" disabled>
-                -- Choisir un statut --
-              </MenuItem>
-              <MenuItem value={1}>Devis en attente</MenuItem>
-              <MenuItem value={2}>Reçu</MenuItem>
-            </Select>
-          </FormControl>
-          <div>
-            <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
-            <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
-              {' '}
-              {isActive ? 'Active' : 'Inactive'}
-            </Switch>
+              required
+            />
+
+            <FormControl fullWidth required style={{ width: '320px' }}>
+              <InputLabel id="devis-select-label">Prospect</InputLabel>
+              <Select
+                labelId="role-select-label"
+                name="Pro_fk"
+                value={formData.Pro_fk || ''}
+                displayEmpty
+                onChange={e => handleNestedVChange('Pro_fk', 'nom', e.target.value)}
+                style={{
+                  padding: '12px',
+                  fontSize: '14px',
+                  borderColor: errors.prenom ? 'red' : '',
+                }}
+                required
+              >
+                <InputLabel>Propsect</InputLabel>
+                <MenuItem value="" disabled>
+                  -- Choisir un prospect --
+                </MenuItem>
+                {activeProspects.length > 0 ? (
+                  activeProspects.map(prospect => (
+                    <MenuItem key={prospect.nom} value={prospect.Proid}>
+                      {prospect.nom}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="">No active prospects available</MenuItem>
+                )}
+              </Select>
+            </FormControl>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DesktopDatePicker
+                label="KO DP "
+                name="KO DP "
+                value={formData.Ko_Dp ? dayjs(formData.Ko_Dp) : null}
+                onChange={newValue => {
+                  handleChange({
+                    target: {
+                      name: 'Ko_Dp',
+                      value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                    },
+                  });
+                }}
+                style={{ width: '100%' }}
+              />
+            </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DesktopDatePicker
+                label="DR Date"
+                name="DR Date"
+                value={formData.date_dr ? dayjs(formData.date_dr) : null}
+                onChange={newValue => {
+                  handleChange({
+                    target: {
+                      name: 'date_dr',
+                      value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                    },
+                  });
+                }}
+                style={{ marginBottom: '0px', width: '100%' }}
+              />
+            </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DesktopDatePicker
+                label="Reception dossier complet"
+                name="Reception dossier complet"
+                value={formData.drdc ? dayjs(formData.drdc) : null}
+                onChange={newValue => {
+                  handleChange({
+                    target: {
+                      name: 'drdc',
+                      value: newValue ? newValue.format('YYYY-MM-DD') : '',
+                    },
+                  });
+                }}
+                style={{ width: '100%' }}
+              />
+            </LocalizationProvider>
+            <FormControl fullWidth style={{ width: '320px' }} required>
+              <InputLabel id="devis-select-label">Type raccordement</InputLabel>
+              <Select
+                name="type_rac"
+                value={formData.type_rac || ''}
+                onChange={handleChange}
+                displayEmpty
+                style={{
+                  padding: '10px',
+                  fontSize: '14px',
+                  borderColor: errors.prenom ? 'red' : '',
+                }}
+                required
+              >
+                <MenuItem value="" disabled>
+                  -- Choisir le type de racc --
+                </MenuItem>
+                <MenuItem value="Simple">Simple</MenuItem>
+                <MenuItem value="Complexe">Complexe</MenuItem>
+                <MenuItem value="A Renseigner">A Renseigner</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth style={{ width: '320px' }}>
+              <InputLabel id="operators-label">Operateurs</InputLabel>
+              <Select
+                labelId="operateurs-label"
+                name="Operateurs"
+                multiple
+                value={formData.operators || []}
+                onChange={handleoperatorsChange}
+                renderValue={selected => selected.join(', ')}
+                style={{
+                  padding: '10px',
+                  fontSize: '14px',
+                  borderColor: errors.prenom ? 'red' : '',
+                }}
+              >
+                {operators.map(operateur => (
+                  <MenuItem key={operateur} value={operateur}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        width: '100%',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <span style={{ display: 'flex', alignItems: 'center' }}>
+                        <input
+                          type="checkbox"
+                          checked={formData.Operateurs && formData.Operateurs.includes(operateur)}
+                          readOnly
+                          style={{
+                            marginRight: '10px',
+                            transform: 'scale(1.2)',
+                          }}
+                        />
+                        <MDTypography variant="body2">{operateur}</MDTypography>
+                      </span>
+                    </div>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth style={{ width: '320px' }} required>
+              <InputLabel id="devis-select-label">Status Proposition</InputLabel>
+              <Select
+                name="status_prop"
+                value={spr_values[formData.status_prop] || formData.status_prop || ''}
+                onChange={handleChange}
+                displayEmpty
+                style={{
+                  padding: '10px',
+                  fontSize: '14px',
+                  borderColor: errors.status_prop ? 'red' : '',
+                }}
+              >
+                <MenuItem value="" disabled>
+                  -- Choisir un statut --
+                </MenuItem>
+                <MenuItem value="Devis en attente">Devis en attente</MenuItem>
+                <MenuItem value="Reçu">Reçu</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth required style={{ width: '320px' }}>
+              <InputLabel id="devis-select-label">Gestionnaire de reseau</InputLabel>
+              <Select
+                labelId="role-select-label"
+                name="gestionnaire_de_reseau"
+                value={formData.gestionnaire_de_reseau || ''}
+                displayEmpty
+                onChange={e => handleNestedVChange('gestionnaire_de_reseau', 'nom', e.target.value)}
+                style={{
+                  padding: '10px',
+                  fontSize: '14px',
+                  borderColor: errors.prenom ? 'red' : '',
+                }}
+                required
+              >
+                <MenuItem value="" disabled>
+                  -- Choisir un entite --
+                </MenuItem>
+                {activeEntites.length > 0 ? (
+                  activeEntites.map(entite => (
+                    <MenuItem key={entite.nom} value={entite.Eid}>
+                      {entite.nom}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="">No active entites available</MenuItem>
+                )}
+              </Select>
+            </FormControl>
+            <div>
+              <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
+              <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
+                {' '}
+                {isActive ? 'Active' : 'Inactive'}
+              </Switch>
+            </div>
+          </div>
+          <div className={styles.buttonContainer}>
+            <MDButton onClick={handleSubmit} variant="gradient" color="dark">
+              Save
+            </MDButton>
+            <MDButton onClick={onClose} variant="gradient" color="dark">
+              Fermer
+            </MDButton>
           </div>
         </div>
-        <div className={styles.buttonContainer}>
-          <MDButton onClick={handleSubmit} variant="gradient" color="dark">
-            Save
-          </MDButton>
-          <MDButton onClick={onClose} variant="gradient" color="dark">
-            Fermer
-          </MDButton>
-        </div>
       </div>
-    </div>
+    </>
   );
 };
 DrUpdateModal.propTypes = {

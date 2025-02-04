@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styles from '../largeStyles.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
-import WarningPopUp from '../userPopUp/WariningPopUp';
+import WarningPopUp from '../userPopUp/WarningPopUp';
 import travStorageService from 'services/site_details/Traveaux/TravStorageService';
 import MDAlert from 'components/MDAlert';
 const TravStorageModal = ({ Sid, travId, fetchFiles, onSave, onClose }) => {

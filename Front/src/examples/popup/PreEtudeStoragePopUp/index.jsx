@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styles from '../storage.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
-import WarningPopUp from '../userPopUp/WariningPopUp';
+import WarningPopUp from '../userPopUp/WarningPopUp';
 import preEtudeStorageService from 'services/site_details/PreEtude/preEtudeStorageService';
 import MDAlert from 'components/MDAlert';
 const preEtudeStorageModal = ({ Sid, preEtudeId, fetchFiles, onSave, onClose }) => {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styles from '../storage.module.css';
 import MDButton from 'components/MDButton';
 import Typography from '@mui/material/Typography';
-import WarningPopUp from '../userPopUp/WariningPopUp';
+import WarningPopUp from '../userPopUp/WarningPopUp';
 import MDAlert from 'components/MDAlert';
 import facStorageService from 'services/site_details/Reglement/Facture/FactStorageService';
 const FactureStorageModal = ({ Sid, factureId, fetchFiles, onSave, onClose }) => {

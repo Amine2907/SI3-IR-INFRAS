@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from './styles.module.css';
+import styles from '../largeStyles.module.css';
 import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
@@ -73,13 +73,10 @@ const DpUModal = ({ dp, onSave, onClose }) => {
         <div className={styles.formGrid}>
           <FormControl
             fullWidth
-            style={{
-              marginTop: '12px',
-              marginBottom: '2px',
-              width: '320px',
-            }}
+            style={{ marginTop: '12px', marginBottom: '2px', width: '320px' }}
             required
           >
+            <InputLabel>État Prérequis</InputLabel>
             <Select
               name="etat_prerequis"
               value={formData.etat_prerequis || ''}
@@ -93,7 +90,7 @@ const DpUModal = ({ dp, onSave, onClose }) => {
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir l&apos;etat prerequis --
+                -- Choisir l&apos;état prérequis --
               </MenuItem>
               <MenuItem value="Complet">Complet</MenuItem>
               <MenuItem value="Incomplet">Incomplet</MenuItem>
@@ -101,9 +98,10 @@ const DpUModal = ({ dp, onSave, onClose }) => {
           </FormControl>
           <MDInput
             name="numero_DP"
+            label="Numéro DP"
             value={formData.numero_DP || ''}
             onChange={handleChange}
-            placeholder="Numero DP"
+            placeholder="Numéro DP"
             style={{
               marginBottom: '5px',
               width: '300px',

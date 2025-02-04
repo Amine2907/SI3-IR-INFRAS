@@ -25,43 +25,29 @@ export const REGIONS = [
 ];
 
 // Programmes
-export const PROGRAMMES = [
-  '4GFixe',
-  'DCC',
-  'ARP',
-  'DENSIF_CZ_RED',
-  'DENSIF_CZ',
-  'ZTD_RED',
-  'PAC-REMP',
-  'PAC',
-  'PAC-DUP',
-  'PAC-CONTINUITY-PLAN',
-  'FM',
-  'ORF',
-  'SFR TT',
-  'FM TT',
-];
+export const PROGRAMMES = {
+  1: '4GFixe',
+  2: 'DCC',
+  3: 'ARP',
+  4: 'DENSIF_CZ_RED',
+  5: 'DENSIF_CZ',
+  6: 'ZTD_RED',
+  7: 'PAC-REMP',
+  8: 'PAC',
+  9: 'PAC-DUP',
+  10: 'PAC-CONTINUITY-PLAN',
+  11: 'FM',
+  12: 'ORF',
+  13: 'SFR TT',
+  14: 'FM TT',
+};
 
 // Status Site SFR
-export const STATUS_SITE_FK = [
-  '0.Bloquée/Suspendu MAD',
-  '0.Bloquée/Suspendu Conv',
-  '0.Bloquée/Suspendu DP',
-  '1.En Recherche',
-  '2.En validation',
-  '3.Validé',
-  '3.En Conception',
-  '4.En cours conception',
-  '4.GO Constr. Anticipé',
-  '5.En attente visées FH',
-  '5.GO Constructibilité',
-  '6.GO Constructibilité',
-  '7.GO Constructibilité Anticipé',
-  '7.MES',
-  '8.Annulé',
-  '8.PEM',
-  'En service',
-];
+export const STATUS_SITE_FK = {
+  1: 'Activé',
+  2: 'Inactif',
+  3: 'Terminé',
+};
 // Status Site FK
 export const STATUS_SITE_SFR = ['Activé', 'Inactif', 'Terminé'];
 // Operators

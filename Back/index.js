@@ -40,11 +40,21 @@ import dashFilesRoutes from './routes/Dashboard/dashFiles.js';
 import reportingRoutes from './routes/ReportingGlobal/reporting.js';
 // Express Setup
 const app = express();
+const allowedOrigins = [
+  'https://si3-ir-infras.vercel.app',
+  'https://si3-app.ir-infras.com'
+];
 app.use(cors({
-  origin: 'https://si3-ir-infras.vercel.app',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
-}))
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
