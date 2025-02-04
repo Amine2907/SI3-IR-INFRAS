@@ -8,14 +8,17 @@ const uploadFileController = async (req, res) => {
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-
+    if (!Sid) {
+      return res.status(400).json({ error: 'Invalid Sid' });
+    }
     if (!travId || isNaN(travId)) {
       return res.status(400).json({ error: 'Invalid travId: It should be a valid number' });
     }
     // Use the file name as the unique file name
     const uniqueFileName = file.originalname;
     const travIdStr = String(travId);
-    const filePath = `travs-pdf/${travIdStr}/${uniqueFileName}`;
+    const SidStr =  String(Sid);
+    const filePath = `travs-pdf/${SidStr}/${travIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
 
@@ -82,12 +85,15 @@ const downloadFileController = async (req, res) => {
 };
 
 const getFilesByTravController = async (req, res) => {
-  const { travId } = req.body;
+  const { travId,Sid } = req.body;
   if (!travId) {
     return res.status(400).json({ error: "Traveaux ID is required" });
   }
+  if (!Sid) {
+    return res.status(400).json({ error: "Sid  is required" });
+  }
   try {
-    const files = await travStorage.listFiles(travId);
+    const files = await travStorage.listFiles(travId,Sid);
     return res.status(200).json({ files });
   } catch (error) {
     console.error("Error fetching files:", error);

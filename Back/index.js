@@ -2,7 +2,6 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import fetch from 'node-fetch';
 // Routes
 import authRoutes from './routes/Auth/auth.js';
 import dashboardRoutes from './routes/Dashboard/dashboard.js';
@@ -41,16 +40,15 @@ import dashFilesRoutes from './routes/Dashboard/dashFiles.js';
 import reportingRoutes from './routes/ReportingGlobal/reporting.js';
 // Express Setup
 const app = express();
-// Test Deployment on Vercel 
 app.use(cors({
-  origin: 'https://si-3-ir-infras.vercel.app',
+  origin: 'https://si3-ir-infras.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// Use Routesx
+// Use Routes
 app.use('/api/auth', authRoutes); 
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/entites',entitesRoutes);
@@ -86,25 +84,58 @@ app.use('/api/check-files',checkFilesRoutes);
 app.use('/api/dash-files',dashFilesRoutes);
 app.use('/api/reporting-file',reportingRoutes);
 app.get('/', (req, res) => {
-    res.send('SI3 BACKEND WORKING !');
-  });
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>SI3 Backend</title>
+      <style>
+        body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f9;
+          color: #333;
+        }
+        .container {
+          text-align: center;
+          padding: 20px;
+          border: 2px solid #333;
+          border-radius: 15px;
+          background-color: #fff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+          font-size: 2.5rem;
+          margin-bottom: 10px;
+          color: #007BFF;
+        }
+        p {
+          font-size: 1.2rem;
+          color: #555;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>SI3 Backend</h1>
+        <p>Welcome to the SI3 backend! Everything is running smoothly. 🚀</p>
+      </div>
+    </body>
+    </html>
+  `);
+});
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 // Start Server
-// sending Api of test backend (secured)
 const PORT = process.env.PORT || 5000  ;
 app.listen(PORT, () => {
   console.log(`Backend running on http://localhost:${PORT}`);
 });
-// const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-fetch(`https://si3-ir-infras.onrender.com/api/your-endpoint`)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));

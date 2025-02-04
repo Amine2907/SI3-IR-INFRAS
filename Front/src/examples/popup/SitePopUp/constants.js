@@ -2,6 +2,7 @@
 // constants.js
 // Priority levels
 export const PRIORITIES = ['P00', 'P0', 'P1', 'P2'];
+export const priority = { 1: 'P00', 2: 'P0', 3: 'P1', 4: 'P2' };
 // Regions
 export const REGIONS = [
   'Auvergne-Rhône-Alpes',

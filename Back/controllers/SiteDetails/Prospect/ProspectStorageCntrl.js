@@ -3,12 +3,14 @@ import prospectStorage from "../../../storage/prospect/prospectStorage.js";
 const uploadFileController = async (req, res) => {
   try {
     const { file } = req;
-    const { prospectId } = req.body;
+    const { prospectId,Sid } = req.body;
     // Ensure that a file and prospectId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-
+    if (!Sid) {
+      return res.status(400).json({ error: 'Invalid Sid' });
+    }
     if (!prospectId || isNaN(prospectId)) {
       return res.status(400).json({ error: 'Invalid prospectId: It should be a valid number' });
     }
@@ -16,7 +18,8 @@ const uploadFileController = async (req, res) => {
     // Use the file name as the unique file name
     const uniqueFileName = file.originalname;
     const prospectIdStr = String(prospectId);
-    const filePath = `prospect-pdf/${prospectIdStr}/${uniqueFileName}`;
+    const SidStr =  String(Sid);
+    const filePath = `prospect-pdf/${SidStr}/${prospectIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
     // Upload the file to Supabase storage
@@ -82,12 +85,15 @@ const downloadFileController = async (req, res) => {
 };
 
 const getFilesByProspectController = async (req, res) => {
-  const { prospectId } = req.body;
+  const { prospectId,Sid} = req.body;
   if (!prospectId) {
     return res.status(400).json({ error: "Prospect ID is required" });
   }
+  if (!Sid) {
+    return res.status(400).json({ error: "Sid  is required" });
+  }
   try {
-    const files = await prospectStorage.listFiles(prospectId);
+    const files = await prospectStorage.listFiles(prospectId,Sid);
     return res.status(200).json({ files });
   } catch (error) {
     console.error("Error fetching files:", error);

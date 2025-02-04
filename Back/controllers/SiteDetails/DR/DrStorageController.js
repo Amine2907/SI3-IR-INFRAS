@@ -103,11 +103,9 @@ const getFilesByDemRacController = async (req, res) => {
 };
 const deleteFileController = async (req, res) => {
   const { filePath } = req.body; 
-
   if (!filePath) {
     return res.status(400).json({ error: "File path is required" });
   }
-
   try {
     const result = await demRacStorage.deleteFile(filePath); 
 

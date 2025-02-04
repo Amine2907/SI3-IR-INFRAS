@@ -89,10 +89,10 @@ const deleteFile = async (filePath) => {
   }
 };
 
-const listFiles = async (preEtudeId) => {
+const listFiles = async (preEtudeId,Sid) => {
   try {
     // Ensure preEtudeId is a string when constructing the path
-    const folderPath = `pre-etude-pdf/${preEtudeId}`;
+    const folderPath = `pre-etude-pdf/${Sid}/${preEtudeId}`;
     console.log(`Fetching files from folder: ${folderPath}`);
 
     // Use the Supabase client to list files
@@ -108,7 +108,7 @@ const listFiles = async (preEtudeId) => {
     // Map through the files to return the proper structure
     return data.map(file => ({
       name: file.name,
-      path: `pre-etude-pdf/${preEtudeId}/${file.name}`,
+      path: `pre-etude-pdf/${Sid}/${preEtudeId}/${file.name}`,
     }));
   } catch (error) {
     console.error("Error listing files:", error);

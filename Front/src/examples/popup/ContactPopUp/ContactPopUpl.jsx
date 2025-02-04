@@ -49,6 +49,7 @@ const ContactModal = ({ contact, onSave, onClose }) => {
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           {contact ? 'Modifier Contact' : 'Ajouter Contact'}
         </MDTypography>
+        <label className={styles.formLabel}>Nom de contact</label>
         <MDInput
           name="nom"
           value={formData.nom || ''}
@@ -62,6 +63,7 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           }}
           required
         />
+        <label className={styles.formLabel}>Prenom de contact</label>
         <MDInput
           name="prenom"
           value={formData.prenom || ''}
@@ -74,6 +76,7 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           }}
           required
         />
+        <label className={styles.formLabel}>Mission</label>
         <MDInput
           name="mission"
           value={formData.mission || ''}
@@ -81,6 +84,7 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           placeholder="Mission"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
+        <label className={styles.formLabel}>Email</label>
         <MDInput
           name="email"
           value={formData.email || ''}
@@ -88,6 +92,7 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           placeholder="Email"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
+        <label className={styles.formLabel}>Telephone</label>
         <MDInput
           name="tel"
           value={formData.tel || ''}
@@ -95,6 +100,7 @@ const ContactModal = ({ contact, onSave, onClose }) => {
           placeholder="Téléphone"
           style={{ marginBottom: '5px', width: '320px' }}
         ></MDInput>
+        <label className={styles.formLabel}>Mobile</label>
         <MDInput
           name="mobile"
           value={formData.mobile || ''}

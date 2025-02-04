@@ -3,7 +3,7 @@ import declPrealStorage from "../../../storage/DeclaPrealable/dpStorage.js";
 const uploadFileController = async (req, res) => {
   try {
     const { file } = req;
-    const { declPreaId } = req.body;
+    const { declPreaId,Sid } = req.body;
     // Ensure that a file and declPreaId are provided
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -11,10 +11,14 @@ const uploadFileController = async (req, res) => {
     if (!declPreaId || isNaN(declPreaId)) {
       return res.status(400).json({ error: 'Invalid declPreaId: It should be a valid number' });
     }
+    if (!Sid) {
+      return res.status(400).json({ error: 'Invalid Sid' });
+    }
     // Use the file name as the unique file name
     const uniqueFileName = file.originalname;
     const declPreaIdStr = String(declPreaId);
-    const filePath = `declPreal-pdf/${declPreaIdStr}/${uniqueFileName}`;
+    const SidStr =  String(Sid);
+    const filePath = `declPreal-pdf/${SidStr}${declPreaIdStr}/${uniqueFileName}`;
 
     console.log("Uploading file to path:", filePath);
 
@@ -80,12 +84,15 @@ const downloadFileController = async (req, res) => {
 };
 
 const getFilesByDpController = async (req, res) => {
-  const { declPreaId } = req.body;
+  const { declPreaId,Sid } = req.body;
   if (!declPreaId) {
     return res.status(400).json({ error: "Dp ID is required" });
   }
+  if (!Sid) {
+    return res.status(400).json({ error: "Sid  is required" });
+  }
   try {
-    const files = await declPrealStorage.listFiles(declPreaId);
+    const files = await declPrealStorage.listFiles(declPreaId,Sid);
     return res.status(200).json({ files });
   } catch (error) {
     console.error("Error fetching files:", error);

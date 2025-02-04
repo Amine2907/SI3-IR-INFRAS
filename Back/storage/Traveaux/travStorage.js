@@ -89,10 +89,10 @@ const deleteFile = async (filePath) => {
   }
 };
 
-const listFiles = async (travId) => {
+const listFiles = async (travId,Sid) => {
   try {
     // Ensure travId is a string when constructing the path
-    const folderPath = `travs-pdf/${travId}`;
+    const folderPath = `travs-pdf/${Sid}/${travId}`;
     console.log(`Fetching files from folder: ${folderPath}`);
 
     // Use the Supabase client to list files
@@ -108,7 +108,7 @@ const listFiles = async (travId) => {
     // Map through the files to return the proper structure
     return data.map(file => ({
       name: file.name,
-      path: `travs-pdf/${travId}/${file.name}`,
+      path: `travs-pdf/${Sid}/${travId}/${file.name}`,
     }));
   } catch (error) {
     console.error("Error listing files:", error);
@@ -123,5 +123,4 @@ const travStorage = {
   listFiles,
   deleteFile,
 };
-
 export default travStorage;

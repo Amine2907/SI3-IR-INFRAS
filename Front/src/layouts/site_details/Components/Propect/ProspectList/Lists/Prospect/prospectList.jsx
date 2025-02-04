@@ -156,7 +156,7 @@ function ProspectList({ site }) {
     }
     try {
       console.log(`Fetching files for prospect ID: ${prospectId}`);
-      const response = await ProspectStorageService.getProspectFiles(prospectId);
+      const response = await ProspectStorageService.getProspectFiles(prospectId, Sid);
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files
@@ -255,6 +255,7 @@ function ProspectList({ site }) {
       </Box>
       {showUploadModal && selectedprospect?.Proid && (
         <ProspectStorageModal
+          Sid={Sid}
           prospectId={selectedprospect?.Proid}
           fetchFiles={() => fetchProspectFiles(selectedprospect?.Proid)}
           onSave={() => {

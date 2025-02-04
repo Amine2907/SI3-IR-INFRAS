@@ -17,7 +17,6 @@ import useTravForSite from './traveauxService';
 import siteTravService from 'services/site_details/Traveaux/TraveauxService';
 import TravUModal from 'examples/popup/TraveauxPopUp';
 import cellStyle from './styles/styles';
-import traveauxStorageModal from 'examples/popup/TravStoragePopUp';
 import TravStorageModal from 'examples/popup/TravStoragePopUp';
 import travStorageService from 'services/site_details/Traveaux/TravStorageService';
 import CommentSection from 'examples/Cards/Commentaires';
@@ -96,7 +95,7 @@ function TraveauxList() {
     }
     try {
       console.log(`Fetching files for prospect ID: ${travId}`);
-      const response = await travStorageService.getTavFiles(travId); // Correct API call
+      const response = await travStorageService.getTavFiles(travId, siteId); // Correct API call
       if (response.success) {
         console.log('Files fetched successfully:', response.data.files);
         return response.data.files; // Return the fetched files
@@ -190,6 +189,7 @@ function TraveauxList() {
       )}
       {showStorageModal && selectedTrav?.Tid && (
         <TravStorageModal
+          Sid={siteId}
           travId={selectedTrav?.Tid}
           fetchFiles={() => fetchTravFiles(selectedTrav?.Tid)}
           onSave={() => {
