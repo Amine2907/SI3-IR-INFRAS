@@ -27,8 +27,13 @@ const DEPARTMENTS = [
 ];
 
 const CompanyModal = ({ company, onSave, onClose }) => {
-  const [formData, setFormData] = useState(company || {});
-  const [isActive, setIsActive] = useState(company ? company.is_active : true);
+  const [formData, setFormData] = useState({
+    nom: company?.nom || '',
+    site_web: company?.site_web || '',
+    siret: company?.siret || '',
+    department: company?.department || [],
+  });
+  const [isActive, setIsActive] = useState(company?.is_active ?? true);
   const [errors, setErrors] = useState({});
 
   const handleChange = e => {
@@ -73,7 +78,7 @@ const CompanyModal = ({ company, onSave, onClose }) => {
         <label className={styles.formLabel}>Nom d&apos;Entreprise</label>
         <MDInput
           name="nom"
-          value={formData.nom || ''}
+          value={formData.nom}
           onChange={handleChange}
           placeholder="Nom*"
           style={{
@@ -87,7 +92,7 @@ const CompanyModal = ({ company, onSave, onClose }) => {
         <label className={styles.formLabel}>Site Web</label>
         <MDInput
           name="site_web"
-          value={formData.site_web || ''}
+          value={formData.site_web}
           onChange={handleChange}
           placeholder="Site Web"
           style={{ marginBottom: '10px', width: '320px' }}
@@ -96,7 +101,7 @@ const CompanyModal = ({ company, onSave, onClose }) => {
         <label className={styles.formLabel}>SIRET</label>
         <MDInput
           name="siret"
-          value={formData.siret || ''}
+          value={formData.siret}
           onChange={handleChange}
           placeholder="Siret*"
           style={{
@@ -106,16 +111,21 @@ const CompanyModal = ({ company, onSave, onClose }) => {
           }}
         />
         {errors.siret && <span style={{ color: 'red', fontSize: '12px' }}>{errors.siret}</span>}
-
         <label className={styles.formLabel}>Départements</label>
         <FormControl style={{ marginBottom: '10px', width: '320px' }}>
           <InputLabel id="department-label">Sélectionnez les départements</InputLabel>
           <Select
             labelId="department-label"
             multiple
-            value={formData.department || []}
+            value={formData.department}
             onChange={handleDepartmentChange}
             renderValue={selected => selected.join(', ')}
+            style={{
+              height: '40px',
+              fontSize: '16px',
+              display: 'flex',
+              alignItems: 'center',
+            }}
             MenuProps={{
               PaperProps: {
                 style: {
@@ -126,26 +136,13 @@ const CompanyModal = ({ company, onSave, onClose }) => {
             }}
           >
             {DEPARTMENTS.map(dept => (
-              <MenuItem key={dept} value={dept} style={{ padding: '8px 16px' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                  }}
-                >
-                  <Checkbox
-                    checked={formData.department?.includes(dept)}
-                    style={{ marginRight: '8px' }}
-                  />
-                  <ListItemText primary={dept} style={{ textAlign: 'right', flex: 1 }} />
-                </div>
+              <MenuItem key={dept} value={dept}>
+                <Checkbox checked={formData.department.includes(dept)} />
+                <ListItemText primary={dept} />
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-
         <div style={{ marginTop: '15px' }}>
           <InputLabel>Active</InputLabel>
           <Switch checked={isActive} onChange={handleToggleActive} />

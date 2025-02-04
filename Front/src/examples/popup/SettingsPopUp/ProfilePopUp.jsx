@@ -80,38 +80,48 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
         <MDTypography variant="h3" fontWeight="medium" textAlign="center">
           Modifier profil
         </MDTypography>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '320px' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px', // Reduce gap between labels and fields
+            width: '320px',
+          }}
+        >
+          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
+            Prenom
+          </label>
           <MDInput
             name="firstName"
             value={formData.firstName || ''}
             onChange={handleChange}
             placeholder="Prenom*"
             style={{
-              marginBottom: '5px',
+              marginBottom: '10px',
               width: '320px',
-              marginTop: '10px',
               borderColor: errors.firstName ? 'red' : '',
             }}
             required
           />
+          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
+            Nom
+          </label>
           <MDInput
             name="lastName"
             value={formData.lastName || ''}
             onChange={handleChange}
             placeholder="Nom*"
             style={{
-              marginBottom: '5px',
+              marginBottom: '10px',
               width: '320px',
-              marginTop: '10px',
               borderColor: errors.firstname ? 'red' : '',
             }}
             required
           />
-          <FormControl
-            fullWidth
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-            required
-          >
+          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
+            Genre
+          </label>
+          <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }} required>
             <Select
               name="genre"
               value={formData.genre || ''}
@@ -131,6 +141,9 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
               <MenuItem value="Femme">Femme</MenuItem>
             </Select>
           </FormControl>
+          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
+            Date de naissance
+          </label>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Date de naissance"
@@ -147,10 +160,13 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
               style={{ marginBottom: '10px', width: '100%' }}
             />
           </LocalizationProvider>
-          <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
+            Entreprise
+          </label>
+          <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
             <Select
               name="entreprise"
-              value={formData.entreprise || ''} // Use ENTid as the value
+              value={formData.entreprise || ''}
               onChange={handleChange}
               displayEmpty
               style={{
@@ -174,7 +190,10 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
               )}
             </Select>
           </FormControl>
-          <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+          <label className={styles.formLabel} style={{ marginBottom: '2px' }}>
+            Départements
+          </label>
+          <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
             <Select
               name="department"
               value={formData.department || ''}

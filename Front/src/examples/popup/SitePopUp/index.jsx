@@ -25,7 +25,7 @@ import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import { Switch, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import SiteService from 'services/Site_Services/siteService';
-import { OPERATORS } from './constants';
+import { OPERATORS, priority } from './constants';
 const SiteModal = ({ site, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     site || {
@@ -138,274 +138,363 @@ const SiteModal = ({ site, onSave, onClose }) => {
           {site ? 'Modifier site' : 'Ajouter site'}
         </MDTypography>
         <div className={styles.formGrid}>
-          <MDInput
-            name="EB"
-            value={formData.EB || ''}
-            onChange={handleChange}
-            placeholder="EB*"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
-            }}
-            required
-          />
-          <MDInput
-            name="G2R"
-            value={formData.G2R || ''}
-            onChange={handleChange}
-            placeholder="G2R*"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
-            }}
-            required
-          />
-          <MDInput
-            name="nom"
-            value={formData.nom || ''}
-            onChange={handleChange}
-            placeholder="Nom*"
-            style={{
-              marginBottom: '5px',
-              width: '320px',
-              marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
-            }}
-            required
-          />
-          <FormControl
-            fullWidth
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-            required
-          >
-            <Select
-              name="priorite_fk"
-              value={formData.priorite_fk.SP_desc || ''}
-              onChange={e => handleDropdownChange('priorite_fk', 'SP_desc', e.target.value)}
-              displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
-              required
-            >
-              <MenuItem value="" disabled>
-                -- Choisir une priorite --
-              </MenuItem>
-              <MenuItem value="P00">P00</MenuItem>
-              <MenuItem value="P0">P0</MenuItem>
-              <MenuItem value="P1">P1</MenuItem>
-              <MenuItem value="P2">P2</MenuItem>
-            </Select>
-          </FormControl>
-          <MDInput
-            name="lot"
-            value={formData.lot || ''}
-            onChange={handleChange}
-            placeholder="LOT"
-            style={{ marginBottom: '5px', width: '320px' }}
-          ></MDInput>
-          <MDInput
-            name="Ville"
-            value={formData.Ville || ''}
-            onChange={handleChange}
-            placeholder="Ville"
-            style={{ marginBottom: '5px', width: '320px' }}
-          ></MDInput>
-          <MDInput
-            name="zone"
-            value={formData.zone || ''}
-            onChange={handleChange}
-            placeholder="Zone"
-            style={{ marginBottom: '5px', width: '320px' }}
-          ></MDInput>
-          <FormControl
-            fullWidth
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-            required
-          >
-            <Select
-              name="region"
-              value={formData.region || ''}
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>EB*</label>
+            <MDInput
+              name="EB"
+              value={formData.EB || ''}
               onChange={handleChange}
-              displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              placeholder="EB*"
+              style={{
+                marginBottom: '1px',
+                width: '320px',
+
+                borderColor: errors.nom ? 'red' : '',
+              }}
+              required
+            />
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>G2R*</label>
+            <MDInput
+              name="G2R"
+              value={formData.G2R || ''}
+              onChange={handleChange}
+              placeholder="G2R*"
+              style={{
+                marginBottom: '1px',
+                width: '320px',
+
+                borderColor: errors.nom ? 'red' : '',
+              }}
+              required
+            />
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>Nom</label>
+            <MDInput
+              name="nom"
+              value={formData.nom || ''}
+              onChange={handleChange}
+              placeholder="Nom*"
+              style={{
+                marginBottom: '1px',
+                width: '320px',
+
+                borderColor: errors.nom ? 'red' : '',
+              }}
+              required
+            />
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>
+              Priorite
+            </label>
+            <FormControl
+              fullWidth
+              style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
               required
             >
-              <MenuItem value="" disabled>
-                -- Choisir une Region* --
-              </MenuItem>
-              <MenuItem value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</MenuItem>
-              <MenuItem value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</MenuItem>
-              <MenuItem value="Bretagne">Bretagne</MenuItem>
-              <MenuItem value="Centre-Val de Loire">Centre-Val de Loire</MenuItem>
-              <MenuItem value="Corse">Corse</MenuItem>
-              <MenuItem value="Grand Est">Grand Est</MenuItem>
-              <MenuItem value="Guadeloupe">Guadeloupe</MenuItem>
-              <MenuItem value="Guyane">Guyane</MenuItem>
-              <MenuItem value="Hauts-de-France">Hauts-de-France</MenuItem>
-              <MenuItem value="Île-de-France">Île-de-France</MenuItem>
-              <MenuItem value="Martinique">Martinique</MenuItem>
-              <MenuItem value="Normandie">Normandie</MenuItem>
-              <MenuItem value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</MenuItem>
-              <MenuItem value="Occitanie">Occitanie</MenuItem>
-              <MenuItem value="Pays de la Loire">Pays de la Loire</MenuItem>
-              <MenuItem value="Provence-Alpes-Côte d'Azur">
-                Provence-Alpes-Côte d&apos;Azur
-              </MenuItem>
-              <MenuItem value="Réunion">Réunion</MenuItem>
-            </Select>
-          </FormControl>
-          <MDInput
-            name="code_postal"
-            value={formData.code_postal || ''}
-            onChange={handleChange}
-            placeholder="Code Postal"
-            style={{ marginBottom: '5px', width: '320px' }}
-          ></MDInput>
-          <FormControl fullWidth style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
-            <InputLabel id="operateurs-label">Operateurs</InputLabel>
-            <Select
-              labelId="operateurs-label"
-              name="Operateurs"
-              multiple
-              value={formData.Operateurs || []}
-              onChange={handleOperateursChange}
-              renderValue={selected => selected.join(', ')}
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
-            >
-              {OPERATORS.map(operateur => (
-                <MenuItem key={operateur} value={operateur}>
-                  <input
-                    type="checkbox"
-                    checked={formData.Operateurs && formData.Operateurs.includes(operateur)}
-                    readOnly
-                    style={{ marginRight: '10px' }}
-                  />
-                  <MDTypography variant="body2">{operateur}</MDTypography>
+              <Select
+                name="priorite_fk"
+                value={priority[formData.priorite_fk] || ''}
+                onChange={e => handleDropdownChange('priorite_fk', 'SP_desc', e.target.value)}
+                displayEmpty
+                style={{
+                  padding: '10px',
+                  fontSize: '14px',
+                  borderColor: errors.prenom ? 'red' : '',
+                }}
+                required
+              >
+                <MenuItem value="" disabled>
+                  -- Choisir une priorite --
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl
-            fullWidth
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-            required
-          >
-            <Select
-              name="programme_fk"
-              value={formData.programme_fk.PR_desc || ''}
-              onChange={e => handleDropdownChange('programme_fk', 'PR_desc', e.target.value)}
-              displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
-              required
-            >
-              <MenuItem value="" disabled>
-                -- Choisir un Programme --
-              </MenuItem>
-              <MenuItem value="4GFixe">4GFixe</MenuItem>
-              <MenuItem value="DCC">DCC</MenuItem>
-              <MenuItem value="ARP">ARP</MenuItem>
-              <MenuItem value="DENSIF_CZ_RED">DENSIF_CZ_RED</MenuItem>
-              <MenuItem value="DENSIF_CZ">DENSIF_CZ</MenuItem>
-              <MenuItem value="ZTD_RED">ZTD_RED</MenuItem>
-              <MenuItem value="PAC-REMP">PAC-REMP</MenuItem>
-              <MenuItem value="PAC">PAC</MenuItem>
-              <MenuItem value="PAC-DUP">PAC-DUP</MenuItem>
-              <MenuItem value="PAC-CONTINUITY-PLAN">PAC-CONTINUITY-PLAN</MenuItem>
-              <MenuItem value="FM">FM</MenuItem>
-              <MenuItem value="ORF">ORF</MenuItem>
-              <MenuItem value="SFR TT ">SFR TT </MenuItem>
-              <MenuItem value="FM TT ">FM TT </MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl
-            fullWidth
-            required
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-          >
-            <Select
-              labelId="role-select-label"
-              name="Acteur_ENEDIS_id"
-              value={formData.Acteur_ENEDIS_id.nom || ''}
-              displayEmpty
-              onChange={e => handleCompanieschange('Acteur_ENEDIS_id', 'nom', e.target.value)}
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
-              required
-            >
-              <MenuItem value="" disabled>
-                -- Choisir un acteur enedis --
-              </MenuItem>
-              {activeCompanies.length > 0 ? (
-                activeCompanies.map(company => (
-                  <MenuItem key={company.nom} value={company.ENTid}>
-                    {company.nom}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem value="">No active companies available</MenuItem>
-              )}
-            </Select>
-          </FormControl>
-          <FormControl
-            fullWidth
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-            required
-          >
-            <Select
-              name="status_site_SFR"
-              value={formData.status_site_SFR || ''}
+                <MenuItem value="P00">P00</MenuItem>
+                <MenuItem value="P0">P0</MenuItem>
+                <MenuItem value="P1">P1</MenuItem>
+                <MenuItem value="P2">P2</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>Lot</label>
+            <MDInput
+              name="lot"
+              value={formData.lot || ''}
               onChange={handleChange}
-              displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              placeholder="LOT"
+              style={{ marginBottom: '1px', width: '320px' }}
+            ></MDInput>
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>Ville</label>
+            <MDInput
+              name="Ville"
+              value={formData.Ville || ''}
+              onChange={handleChange}
+              placeholder="Ville"
+              style={{ marginBottom: '1px', width: '320px' }}
+            ></MDInput>
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>Zone</label>
+            <MDInput
+              name="zone"
+              value={formData.zone || ''}
+              onChange={handleChange}
+              placeholder="Zone"
+              style={{ marginBottom: '1px', width: '320px' }}
+            ></MDInput>
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>
+              Region
+            </label>
+            <FormControl
+              fullWidth
+              style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
               required
             >
-              <MenuItem value="" disabled>
-                --Choisir le status de site SFR--
-              </MenuItem>
-              <MenuItem value="0.Bloquée/Suspendu MAD">0.Bloquée/Suspendu MAD</MenuItem>
-              <MenuItem value="0.Bloquée/Suspendu Conv">0.Bloquée/Suspendu Conv</MenuItem>
-              <MenuItem value="0.Bloquée/Suspendu DP">0.Bloquée/Suspendu DP</MenuItem>
-              <MenuItem value="1.En Recherche">1.En Recherche</MenuItem>
-              <MenuItem value="2.En validation">2.En validation</MenuItem>
-              <MenuItem value="3.Validé">3.Validé</MenuItem>
-              <MenuItem value="3.En Conception">3.En Conception</MenuItem>
-              <MenuItem value="4.En cours conception">4.En cours conception</MenuItem>
-              <MenuItem value="4.GO Constr. Anticipé">4.GO Constr. Anticipé</MenuItem>
-              <MenuItem value="5.En attente visées FH">5.En attente visées FH</MenuItem>
-              <MenuItem value="5.GO Constructibilité">5.GO Constructibilité</MenuItem>
-              <MenuItem value="6.GO Constructibilité">6.GO Constructibilité</MenuItem>
-              <MenuItem value="7.GO Constructibilité Anticipé">
-                7.GO Constructibilité Anticipé
-              </MenuItem>
-              <MenuItem value="7.MES">7.MES</MenuItem>
-              <MenuItem value="8.Annulé">8.Annulé</MenuItem>
-              <MenuItem value="8.PEM">8.PEM</MenuItem>
-              <MenuItem value="En service">En service</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl
-            fullWidth
-            style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
-            required
-          >
-            <Select
-              name="status_site_fk"
-              value={formData.status_site_fk.SS_desc || ''}
-              onChange={e => handleDropdownChange('status_site_fk', 'SS_desc', e.target.value)}
-              displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              <Select
+                name="region"
+                value={formData.region || ''}
+                onChange={handleChange}
+                displayEmpty
+                style={{
+                  padding: '10px',
+                  fontSize: '14px',
+                  borderColor: errors.prenom ? 'red' : '',
+                }}
+                required
+              >
+                <MenuItem value="" disabled>
+                  -- Choisir une Region* --
+                </MenuItem>
+                <MenuItem value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</MenuItem>
+                <MenuItem value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</MenuItem>
+                <MenuItem value="Bretagne">Bretagne</MenuItem>
+                <MenuItem value="Centre-Val de Loire">Centre-Val de Loire</MenuItem>
+                <MenuItem value="Corse">Corse</MenuItem>
+                <MenuItem value="Grand Est">Grand Est</MenuItem>
+                <MenuItem value="Guadeloupe">Guadeloupe</MenuItem>
+                <MenuItem value="Guyane">Guyane</MenuItem>
+                <MenuItem value="Hauts-de-France">Hauts-de-France</MenuItem>
+                <MenuItem value="Île-de-France">Île-de-France</MenuItem>
+                <MenuItem value="Martinique">Martinique</MenuItem>
+                <MenuItem value="Normandie">Normandie</MenuItem>
+                <MenuItem value="Nouvelle-Aquitaine">Nouvelle-Aquitaine</MenuItem>
+                <MenuItem value="Occitanie">Occitanie</MenuItem>
+                <MenuItem value="Pays de la Loire">Pays de la Loire</MenuItem>
+                <MenuItem value="Provence-Alpes-Côte d'Azur">
+                  Provence-Alpes-Côte d&apos;Azur
+                </MenuItem>
+                <MenuItem value="Réunion">Réunion</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>
+              Code Postal
+            </label>
+            <MDInput
+              name="code_postal"
+              value={formData.code_postal || ''}
+              onChange={handleChange}
+              placeholder="Code Postal"
+              style={{ marginBottom: '1px', width: '320px' }}
+            ></MDInput>
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>
+              Operateurs
+            </label>
+            <FormControl
+              fullWidth
+              style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
+            >
+              <InputLabel id="operateurs-label">Operateurs</InputLabel>
+              <Select
+                labelId="operateurs-label"
+                name="Operateurs"
+                multiple
+                value={formData.Operateurs || []}
+                onChange={handleOperateursChange}
+                renderValue={selected => selected.join(', ')}
+                style={{
+                  padding: '10px',
+                  fontSize: '14px',
+                  borderColor: errors.prenom ? 'red' : '',
+                }}
+              >
+                {OPERATORS.map(operateur => (
+                  <MenuItem key={operateur} value={operateur}>
+                    <input
+                      type="checkbox"
+                      checked={formData.Operateurs && formData.Operateurs.includes(operateur)}
+                      readOnly
+                      style={{ marginRight: '10px' }}
+                    />
+                    <MDTypography variant="body2">{operateur}</MDTypography>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>
+              Programme
+            </label>
+            <FormControl
+              fullWidth
+              style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
               required
             >
-              <MenuItem value="" disabled>
-                -- Choisir le status de site--
-              </MenuItem>
-              <MenuItem value="Activé">Activé</MenuItem>
-              <MenuItem value="Inactif">Inactif</MenuItem>
-              <MenuItem value="Terminé">Terminé</MenuItem>
-            </Select>
-          </FormControl>
+              <Select
+                name="programme_fk"
+                value={formData.programme_fk.PR_desc || ''}
+                onChange={e => handleDropdownChange('programme_fk', 'PR_desc', e.target.value)}
+                displayEmpty
+                style={{
+                  padding: '10px',
+                  fontSize: '14px',
+                  borderColor: errors.prenom ? 'red' : '',
+                }}
+                required
+              >
+                <MenuItem value="" disabled>
+                  -- Choisir un Programme --
+                </MenuItem>
+                <MenuItem value="4GFixe">4GFixe</MenuItem>
+                <MenuItem value="DCC">DCC</MenuItem>
+                <MenuItem value="ARP">ARP</MenuItem>
+                <MenuItem value="DENSIF_CZ_RED">DENSIF_CZ_RED</MenuItem>
+                <MenuItem value="DENSIF_CZ">DENSIF_CZ</MenuItem>
+                <MenuItem value="ZTD_RED">ZTD_RED</MenuItem>
+                <MenuItem value="PAC-REMP">PAC-REMP</MenuItem>
+                <MenuItem value="PAC">PAC</MenuItem>
+                <MenuItem value="PAC-DUP">PAC-DUP</MenuItem>
+                <MenuItem value="PAC-CONTINUITY-PLAN">PAC-CONTINUITY-PLAN</MenuItem>
+                <MenuItem value="FM">FM</MenuItem>
+                <MenuItem value="ORF">ORF</MenuItem>
+                <MenuItem value="SFR TT ">SFR TT </MenuItem>
+                <MenuItem value="FM TT ">FM TT </MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>
+              Acteur ENEDIS
+            </label>
+            <FormControl
+              fullWidth
+              required
+              style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
+            >
+              <Select
+                labelId="role-select-label"
+                name="Acteur_ENEDIS_id"
+                value={formData.Acteur_ENEDIS_id.nom || ''}
+                displayEmpty
+                onChange={e => handleCompanieschange('Acteur_ENEDIS_id', 'nom', e.target.value)}
+                style={{
+                  padding: '10px',
+                  fontSize: '14px',
+                  borderColor: errors.prenom ? 'red' : '',
+                }}
+                required
+              >
+                <MenuItem value="" disabled>
+                  -- Choisir un acteur enedis --
+                </MenuItem>
+                {activeCompanies.length > 0 ? (
+                  activeCompanies.map(company => (
+                    <MenuItem key={company.nom} value={company.ENTid}>
+                      {company.nom}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="">No active companies available</MenuItem>
+                )}
+              </Select>
+            </FormControl>
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>
+              Status Site SFR
+            </label>
+            <FormControl
+              fullWidth
+              style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
+              required
+            >
+              <Select
+                name="status_site_SFR"
+                value={formData.status_site_SFR || ''}
+                onChange={handleChange}
+                displayEmpty
+                style={{
+                  padding: '10px',
+                  fontSize: '14px',
+                  borderColor: errors.prenom ? 'red' : '',
+                }}
+                required
+              >
+                <MenuItem value="" disabled>
+                  --Choisir le status de site SFR--
+                </MenuItem>
+                <MenuItem value="0.Bloquée/Suspendu MAD">0.Bloquée/Suspendu MAD</MenuItem>
+                <MenuItem value="0.Bloquée/Suspendu Conv">0.Bloquée/Suspendu Conv</MenuItem>
+                <MenuItem value="0.Bloquée/Suspendu DP">0.Bloquée/Suspendu DP</MenuItem>
+                <MenuItem value="1.En Recherche">1.En Recherche</MenuItem>
+                <MenuItem value="2.En validation">2.En validation</MenuItem>
+                <MenuItem value="3.Validé">3.Validé</MenuItem>
+                <MenuItem value="3.En Conception">3.En Conception</MenuItem>
+                <MenuItem value="4.En cours conception">4.En cours conception</MenuItem>
+                <MenuItem value="4.GO Constr. Anticipé">4.GO Constr. Anticipé</MenuItem>
+                <MenuItem value="5.En attente visées FH">5.En attente visées FH</MenuItem>
+                <MenuItem value="5.GO Constructibilité">5.GO Constructibilité</MenuItem>
+                <MenuItem value="6.GO Constructibilité">6.GO Constructibilité</MenuItem>
+                <MenuItem value="7.GO Constructibilité Anticipé">
+                  7.GO Constructibilité Anticipé
+                </MenuItem>
+                <MenuItem value="7.MES">7.MES</MenuItem>
+                <MenuItem value="8.Annulé">8.Annulé</MenuItem>
+                <MenuItem value="8.PEM">8.PEM</MenuItem>
+                <MenuItem value="En service">En service</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div style={{ marginBottom: '1px' }}>
+            <label style={{ display: 'block', marginBottom: '0px', fontSize: '14px' }}>
+              Status Site
+            </label>
+            <FormControl
+              fullWidth
+              style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
+              required
+            >
+              <Select
+                name="status_site_fk"
+                value={formData.status_site_fk.SS_desc || ''}
+                onChange={e => handleDropdownChange('status_site_fk', 'SS_desc', e.target.value)}
+                displayEmpty
+                style={{
+                  padding: '10px',
+                  fontSize: '14px',
+                  borderColor: errors.prenom ? 'red' : '',
+                }}
+                required
+              >
+                <MenuItem value="" disabled>
+                  -- Choisir le status de site--
+                </MenuItem>
+                <MenuItem value="Activé">Activé</MenuItem>
+                <MenuItem value="Inactif">Inactif</MenuItem>
+                <MenuItem value="Terminé">Terminé</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
           <div>
             <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
