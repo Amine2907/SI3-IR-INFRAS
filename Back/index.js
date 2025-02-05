@@ -82,8 +82,52 @@ app.use('/api/check-files',checkFilesRoutes);
 app.use('/api/dash-files',dashFilesRoutes);
 app.use('/api/reporting-file',reportingRoutes);
 app.get('/', (req, res) => {
-    res.send('SI3 BACKEND WORKING !');
-  });
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>SI3 Backend</title>
+      <style>
+        body {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          margin: 0;
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f9;
+          color: #333;
+        }
+        .container {
+          text-align: center;
+          padding: 20px;
+          border: 2px solid #333;
+          border-radius: 15px;
+          background-color: #fff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+          font-size: 2.5rem;
+          margin-bottom: 10px;
+          color: #007BFF;
+        }
+        p {
+          font-size: 1.2rem;
+          color: #555;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>SI3 Backend</h1>
+        <p>Welcome to the SI3 backend! Everything is running smoothly. 🚀</p>
+      </div>
+    </body>
+    </html>
+  `);
+});
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
