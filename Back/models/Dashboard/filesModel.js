@@ -684,6 +684,10 @@ const getDemMesEnAttante  = async () => {
 };
 // Function to generate an Excel file from the data
 const generateExcelFile = (data) => {
+        if (!data || data.length === 0) {
+            console.error("No data available to generate the Excel file.");
+            return null; // Return null if the data is empty
+        }
     // Generate a worksheet from the data
     const ws = XLSX.utils.json_to_sheet(data);
     // Create a new workbook and append the worksheet to it
