@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
 import { Textarea } from 'components/ui/textarea';
 import { Button } from 'components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'components/ui/table';
 import { Alert, AlertDescription } from 'components/ui/alert';
 import { Loader2 } from 'lucide-react';
 import commentService from 'services/Commentary/commentService';
