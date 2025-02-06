@@ -162,6 +162,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
             required
           />
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
+            <InputLabel id="devis-select-label">Fournisseur</InputLabel>
             <Select
               name="fournisseur"
               value={formData.fournisseur?.nom || formData.fournisseur || ''}
