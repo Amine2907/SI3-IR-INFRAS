@@ -18,6 +18,7 @@ const CommentSection = ({ entityName, Sid }) => {
   const [newComment, setNewComment] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [userMapping, setUserMapping] = useState({});
 
   // Fetch user data
   const fetchUserData = useCallback(async () => {
@@ -43,25 +44,47 @@ const CommentSection = ({ entityName, Sid }) => {
 
   // Fetch comments on load or when entityName/Sid changes
   useEffect(() => {
-    const fetchComments = async () => {
+    const fetchCommentsAndUsers = async () => {
       try {
-        console.log('Fetching comments for:', { entityName, Sid });
         const fetchedComments = await commentService.getComments(entityName, Sid);
-        setComments(fetchedComments || []);
+
+        if (fetchedComments.length > 0) {
+          // Extract unique emails from comments
+          const emails = [
+            ...new Set(
+              fetchedComments.map(comment => {
+                const match = comment.match(/\(Added by: (.*?)\)/);
+                return match ? match[1] : null;
+              })
+            ),
+          ].filter(email => email);
+
+          // Fetch user details for each email
+          const userResponses = await Promise.all(
+            emails.map(email => settingsService.getAccountInfo(email))
+          );
+
+          // Create email-to-user mapping
+          const emailToUserMap = userResponses.reduce((map, response) => {
+            if (response?.data) {
+              map[response.data.email] = `${response.data.firstName} ${response.data.lastName}`;
+            }
+            return map;
+          }, {});
+
+          setUserMapping(emailToUserMap);
+        }
+        setComments(fetchedComments);
       } catch (error) {
-        console.error('Error fetching comments:', error);
+        console.error('Error fetching comments or user data:', error);
         setComments([]);
       }
     };
 
     if (entityName && Sid) {
-      fetchComments();
+      fetchCommentsAndUsers();
     }
   }, [entityName, Sid]);
-
-  useEffect(() => {
-    fetchUserData();
-  }, [fetchUserData]);
 
   // Handle the input change for adding a new comment
   const handleCommentChange = event => {
@@ -139,12 +162,14 @@ const CommentSection = ({ entityName, Sid }) => {
         ) : (
           <div className="space-y-2">
             {comments.map((comment, index) => {
-              // Extract date and user from the comment
               const dateMatch = comment.match(/\(Added on: (.*?)\)/);
               const date = dateMatch ? dateMatch[1] : 'N/A';
 
               const userMatch = comment.match(/\(Added by: (.*?)\)/);
-              const user = userMatch ? userMatch[1] : 'Unknown';
+              const email = userMatch ? userMatch[1] : 'Unknown';
+
+              // Map email to user's name
+              const userName = userMapping[email] || email; // Use name if available, fallback to email
 
               const commentText =
                 comment
@@ -158,10 +183,9 @@ const CommentSection = ({ entityName, Sid }) => {
                   className="flex items-center bg-gray-100 rounded-md px-4 py-2 shadow-sm"
                 >
                   <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold text-sm mr-2">
-                    {/* Avatar Placeholder */}
-                    {user.charAt(0).toUpperCase()}
+                    {userName.charAt(0).toUpperCase()}
                   </div>
-                  <span className="text-sm font-medium text-gray-800 mr-4">{user}</span>
+                  <span className="text-sm font-medium text-gray-800 mr-4">{userName}</span>
                   <span className="text-xs text-gray-500 mr-4">{date}</span>
                   <span className="text-sm text-gray-700">{commentText}</span>
                 </div>
