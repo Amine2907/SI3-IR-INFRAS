@@ -2,6 +2,8 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import compression from "compression";
+import http from 'http';
 // Routes
 import authRoutes from './routes/Auth/auth.js';
 import dashboardRoutes from './routes/Dashboard/dashboard.js';
@@ -40,6 +42,7 @@ import dashFilesRoutes from './routes/Dashboard/dashFiles.js';
 import reportingRoutes from './routes/ReportingGlobal/reporting.js';
 // Express Setup
 const app = express();
+app.use(compression());
 const allowedOrigins = [
   'https://si3-ir-infras.vercel.app',
   'https://si3-app.ir-infras.com'
@@ -140,10 +143,19 @@ app.get('/', (req, res) => {
     </html>
   `);
 });
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
+// Health Check Route
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: "UP", timestamp: new Date() });
+});
+// Server with Keep-Alive
+const server = http.createServer(app);
+server.keepAliveTimeout = 120 * 1000;
+server.headersTimeout = 130 * 1000;
 // Start Server
 const PORT = process.env.PORT || 5000  ;
 app.listen(PORT, () => {

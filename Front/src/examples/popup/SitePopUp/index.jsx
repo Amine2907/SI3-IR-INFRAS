@@ -474,7 +474,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <MenuItem value="Terminé">Terminé</MenuItem>
             </Select>
           </FormControl>
-
           <div>
             <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>
