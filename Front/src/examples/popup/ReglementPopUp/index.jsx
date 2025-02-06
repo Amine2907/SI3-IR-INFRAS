@@ -61,23 +61,17 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
       [field]: { ...(formData[field] || {}), [subField]: value },
     });
   };
-  const validateForm = () => {
-    const newErrors = {};
-    // if (formData.type_rac === 'Complexe' && !formData.ZFA_ZFB) newErrors.ZFA_ZFB = true;
-    // if (!formData.nom) newErrors.nom = true;
-    return newErrors;
-  };
   const handleSubmit = () => {
-    const newErrors = validateForm();
+    const newErrors = {};
+    // Ensure EB and G2R have values
+    if (!formData.no_virement) newErrors.no_virement = true;
+    if (!formData.no_devis) newErrors.no_devis = true;
+    if (!formData.nom_acteur) newErrors.nom_acteur = true;
+    if (!formData.libelle_du_virement) newErrors.libelle_du_virement = true;
+    if (!formData.montant) newErrors.montant = true;
+    if (!formData.no_commande) newErrors.no_commande = true;
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      console.log('demRac data :', paiementData);
-      onSave({
-        Sid,
-        ...formData,
-        is_active: isActive,
-        paiement_partiel: isPartiel,
-      });
       return;
     }
     onSave({
@@ -108,13 +102,17 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
         </MDTypography>
         <div className={styles.formGrid}>
           <MDInput
-            label="No virement "
             name="no_virement"
             value={formData.no_virement || ''}
             onChange={handleChange}
             placeholder="No virement"
-            style={{ marginBottom: '5px', width: '300px' }}
+            style={{
+              marginBottom: '1px',
+              width: '320px',
+              borderColor: errors.no_virement ? 'red' : '',
+            }}
             required
+            error={errors.no_virement}
           />
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <InputLabel id="devis-select-label">Numero devis</InputLabel>
@@ -123,7 +121,13 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
               value={formData.no_devis || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.no_devis ? 'red' : '',
+              }}
+              required
+              error={errors.no_devis}
             >
               <MenuItem value="" disabled>
                 -- Choisir le Devis --
@@ -141,39 +145,55 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
           </FormControl>
           <MDInput
             name="nom_acteur"
-            label="Nom acteur"
             value={formData.nom_acteur || ''}
             onChange={handleChange}
             placeholder="Nom Acteur"
-            style={{ marginBottom: '5px', width: '300px' }}
+            style={{
+              marginBottom: '1px',
+              width: '320px',
+              borderColor: errors.nom_acteur ? 'red' : '',
+            }}
             required
+            error={errors.nom_acteur}
           />
           <MDInput
             name="libelle_du_virement"
-            label="Libelle du virement"
             value={formData.libelle_du_virement || ''}
             onChange={handleChange}
             placeholder="Libelle de virement"
-            style={{ marginBottom: '5px', width: '300px' }}
+            style={{
+              marginBottom: '1px',
+              width: '320px',
+              borderColor: errors.libelle_du_virement ? 'red' : '',
+            }}
             required
+            error={errors.libelle_du_virement}
           />
           <MDInput
-            label="Montant"
             name="montant"
             value={formData.montant || ''}
             onChange={handleChange}
             placeholder="Montant (TTC)"
-            style={{ marginBottom: '5px', width: '300px' }}
+            style={{
+              marginBottom: '1px',
+              width: '320px',
+              borderColor: errors.montant ? 'red' : '',
+            }}
             required
+            error={errors.montant}
           />
           <MDInput
-            label="No commande"
             name="no_commande"
             value={formData.no_commande || ''}
             onChange={handleChange}
             placeholder="N commande"
-            style={{ marginBottom: '5px', width: '300px' }}
+            style={{
+              marginBottom: '1px',
+              width: '320px',
+              borderColor: errors.no_commande ? 'red' : '',
+            }}
             required
+            error={errors.no_commande}
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
