@@ -173,6 +173,7 @@ const createDevis = async (EB, devisData) => {
             expiration_date: devisData.expiration_date,
             reception_date: devisData.reception_date,
             etat_ralance: devisData.etat_ralance,
+            fournisseur : devisData.fournisseur,
             derniere_relance_date: devisData.derniere_relance_date,
             is_active: devisData.is_active,
             conformite: devisData.conformite,

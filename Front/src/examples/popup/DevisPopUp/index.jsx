@@ -120,7 +120,6 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       console.log('demRac data :', devisData);
-      const selectedFournisseur = activeFournisseurs.find(f => f.nom === formData.fournisseur.nom);
       onSave({
         Sid,
         ...formData,
@@ -185,14 +184,15 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
             >
-              <MenuItem value="" disabled>
-                -- Choisir le fournisseur --
-              </MenuItem>
-              {activeFournisseurs.map(fournisseur => (
-                <MenuItem key={fournisseur.Eid} value={fournisseur.nom}>
-                  {fournisseur.nom}
-                </MenuItem>
-              ))}
+              {activeFrns.length > 0 ? (
+                activeFournisseurs.map(fournisseur => (
+                  <MenuItem key={fournisseur.Eid} value={fournisseur.nom}>
+                    {fournisseur.nom}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="">No active fournisseurs available</MenuItem>
+              )}
             </Select>
           </FormControl>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
@@ -207,11 +207,15 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
               <MenuItem value="" disabled>
                 -- Choisir le DR --
               </MenuItem>
-              {activeDemracs.map(demrac => (
-                <MenuItem key={demrac.id} value={demrac.NDRid}>
-                  {demrac.NDRid}
-                </MenuItem>
-              ))}
+              {activeDemracs.length > 0 ? (
+                activeDemracs.map(demrac => (
+                  <MenuItem key={demrac.id} value={demrac.NDRid}>
+                    {demrac.NDRid}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="">No active dem rac available</MenuItem>
+              )}
             </Select>
           </FormControl>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>

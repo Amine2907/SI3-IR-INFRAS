@@ -14,7 +14,7 @@ function DevisHeader() {
   const location = useLocation();
   const { EB } = location.state || {};
   const Sid = EB;
-  const { fetchDevisData } = useDevisForSite(Sid);
+  const { fetchdevisData } = useDevisForSite(Sid);
 
   const handleAddDevis = async data => {
     const { devisData } = data;
@@ -25,7 +25,7 @@ function DevisHeader() {
       if (result.success) {
         successMessage = 'Devis enregistré avec succès !';
         setAlert({ show: true, message: successMessage, type: 'success' });
-        fetchDevisData();
+        fetchdevisData();
       } else {
         let errorMessage = `Error: ${result.error}`;
         console.error(errorMessage); // Log any errors from the API response
