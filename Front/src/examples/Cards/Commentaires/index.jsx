@@ -119,7 +119,7 @@ const CommentSection = ({ entityName, Sid }) => {
           className="mb-4"
           rows={4}
         />
-        <div className="flex justify-between mb-6">
+        <div className="flex justify-end mb-6">
           <Button onClick={handleCommentSubmit} disabled={isSaving || !newComment}>
             {isSaving ? (
               <>
@@ -130,11 +130,7 @@ const CommentSection = ({ entityName, Sid }) => {
               'Enregistrer'
             )}
           </Button>
-          <Button variant="outline" onClick={() => setNewComment('')}>
-            Effacer
-          </Button>
         </div>
-
         {comments.length === 0 ? (
           <Alert variant="destructive">
             <AlertDescription>Pas de commentaires pour ce Site.</AlertDescription>
