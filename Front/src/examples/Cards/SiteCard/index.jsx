@@ -129,36 +129,19 @@ const SiteCard = ({ site, onEdit }) => {
                     `${borderWidth[1]} solid ${borderColor}`,
                 }}
               >
-                {/* EB and Programme */}
-                <MDBox
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  width="100%"
-                >
-                  {/* EB */}
-                  <MDBox display="flex" alignItems="center">
-                    <Icon sx={{ mr: 1 }}>business</Icon>
-                    <MDTypography variant="h6" fontWeight="medium">
-                      {site.EB}
-                    </MDTypography>
-                  </MDBox>
-                  {/* Programme with Colored Background */}
-                  <MDBox
-                    px={2}
-                    py={0.5}
-                    borderRadius="md"
-                    sx={{
-                      backgroundColor: '#89CFF0',
-                      color: 'black',
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <MDTypography variant="h6" fontWeight="medium">
-                      {program[site.programme_fk] || 'N/A'}
-                    </MDTypography>
-                  </MDBox>
+                {/* EB */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>business</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {site.EB}
+                  </MDTypography>
+                </MDBox>
+                {/* Programme */}
+                <MDBox display="flex" alignItems="center">
+                  <Icon sx={{ mr: 1 }}>folder</Icon>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    {program[site.programme_fk] || 'N/A'}
+                  </MDTypography>
                 </MDBox>
                 {/* G2R */}
                 <MDBox display="flex" alignItems="center">
