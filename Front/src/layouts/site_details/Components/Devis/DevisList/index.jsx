@@ -26,6 +26,7 @@ function DevisList() {
   const [showStorageModal, setShowStorageModal] = useState(false);
   const [showRemModal, setShowRemModal] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+  const [activeFournisseurs, setActiveFournisseurs] = useState([]);
   const location = useLocation();
   const { EB } = location.state || {};
   const [selectedDevis, setSelectedDevis] = useState(null);
@@ -70,9 +71,8 @@ function DevisList() {
       });
       return;
     }
-    const { fournisseurName, ...filteredUpdates } = updates;
     try {
-      const result = await SiteDevisService.updateDevis(devisId, filteredUpdates);
+      const result = await SiteDevisService.updateDevis(devisId, updates);
       let successMessage = '';
       if (result.success) {
         successMessage = 'devis modifiee avec succès !';
@@ -96,6 +96,25 @@ function DevisList() {
     }
     handleCloseModal();
   };
+  useEffect(() => {
+    const fetchActiveFournisseurs = async () => {
+      try {
+        const result = await SiteDevisService.getActiveFrnsForDevis(siteId); // Fetch fournisseurs
+        if (result.success) {
+          setActiveFournisseurs(result.data); // Update state with fetched data
+        } else {
+          console.error('Error fetching active fournisseurs:', result.error);
+          setActiveFournisseurs([]);
+        }
+      } catch (error) {
+        console.error('Error during fetch:', error.message);
+        setActiveFournisseurs([]);
+      }
+    };
+    if (siteId) {
+      fetchActiveFournisseurs();
+    }
+  }, [siteId]);
   const getDotColor = conformite => {
     if (conformite === true) return 'green';
     if (conformite === false) return 'red';
@@ -173,7 +192,10 @@ function DevisList() {
             return (
               <TableRow key={devis.id}>
                 <TableCell>{devis.ND || 'N/A'}</TableCell>
-                <TableCell>{devis.fournisseurName || 'N/A'}</TableCell>
+                <TableCell>
+                  {activeFournisseurs.find(fournisseur => fournisseur.Eid === devis.fournisseur)
+                    ?.nom || 'N/A'}
+                </TableCell>
                 <TableCell>{devis.type_devis || 'N/A'}</TableCell>
                 <TableCell>{devis.reception_date || 'N/A'}</TableCell>
                 <TableCell>
