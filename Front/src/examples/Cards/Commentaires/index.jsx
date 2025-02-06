@@ -186,7 +186,9 @@ const CommentSection = ({ entityName, Sid }) => {
                   </div>
                   <span className="text-sm font-medium text-gray-800 mr-4">{userName}</span>
                   <span className="text-xs text-gray-500 mr-4">{date}</span>
-                  <span className="text-sm text-gray-700">{commentText}</span>
+                  <span className="text-sm text-gray-700" style={{ whiteSpace: 'pre-wrap' }}>
+                    {commentText}
+                  </span>
                 </div>
               );
             })}
