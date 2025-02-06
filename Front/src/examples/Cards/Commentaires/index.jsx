@@ -131,46 +131,43 @@ const CommentSection = ({ entityName, Sid }) => {
             )}
           </Button>
         </div>
+
         {comments.length === 0 ? (
           <Alert variant="destructive">
             <AlertDescription>Pas de commentaires pour ce Site.</AlertDescription>
           </Alert>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Utilisateur</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Commentaire</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {comments.map((comment, index) => {
-                // Correct regex patterns to extract date and user
-                const dateMatch = comment.match(/\(Added on: (.*?)\)/);
-                const date = dateMatch ? dateMatch[1] : 'N/A';
+          <div className="space-y-2">
+            {comments.map((comment, index) => {
+              // Extract date and user from the comment
+              const dateMatch = comment.match(/\(Added on: (.*?)\)/);
+              const date = dateMatch ? dateMatch[1] : 'N/A';
 
-                const userMatch = comment.match(/\(Added by: (.*?)\)/);
-                const user = userMatch ? userMatch[1] : 'Unknown';
+              const userMatch = comment.match(/\(Added by: (.*?)\)/);
+              const user = userMatch ? userMatch[1] : 'Unknown';
 
-                const commentText =
-                  comment
-                    .replace(/\(Added on: .*?\)/, '')
-                    .replace(/\(Added by: .*?\)/, '')
-                    .trim() || 'N/A';
+              const commentText =
+                comment
+                  .replace(/\(Added on: .*?\)/, '')
+                  .replace(/\(Added by: .*?\)/, '')
+                  .trim() || 'N/A';
 
-                return (
-                  <TableRow key={index}>
-                    <TableCell>
-                      {userData ? `${userData.firstName} ${userData.lastName}` : 'Unknown'}
-                    </TableCell>
-                    <TableCell>{date}</TableCell>
-                    <TableCell>{commentText}</TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+              return (
+                <div
+                  key={index}
+                  className="flex items-center bg-gray-100 rounded-md px-4 py-2 shadow-sm"
+                >
+                  <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold text-sm mr-2">
+                    {/* Avatar Placeholder */}
+                    {user.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-sm font-medium text-gray-800 mr-4">{user}</span>
+                  <span className="text-xs text-gray-500 mr-4">{date}</span>
+                  <span className="text-sm text-gray-700">{commentText}</span>
+                </div>
+              );
+            })}
+          </div>
         )}
       </CardContent>
     </Card>
