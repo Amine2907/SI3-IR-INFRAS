@@ -40,9 +40,13 @@ import dashFilesRoutes from './routes/Dashboard/dashFiles.js';
 import reportingRoutes from './routes/ReportingGlobal/reporting.js';
 // Express Setup
 const app = express();
+// Increase JSON payload size limit to 100MB (adjust as needed)
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ limit: "100mb", extended: true }));
 app.use(cors({
   origin: '*',
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());

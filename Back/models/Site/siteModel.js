@@ -30,72 +30,146 @@ const getActiveCompanies = async () => {
     }
 };
 //Create site
-const createSite = async (data) => {
+// const createSite = async (data) => {
+//     try {
+//         // Fetch active companies list
+//         const activeCompaniesResponse = await getActiveCompanies();
+//         // Log the response to ensure it's correct
+//         console.log('Active Companies Response:', activeCompaniesResponse);
+//         // Check if the response is successful and if the data is an array
+//         if (!activeCompaniesResponse.success) {
+//             throw new Error('Failed to fetch active companies');
+//         }
+//         const activeCompanies = activeCompaniesResponse.data;
+//         if (!Array.isArray(activeCompanies)) {
+//             throw new Error('Active companies data is not an array.');
+//         }
+//         if (activeCompanies.length === 0) {
+//             throw new Error('No active companies found');
+//         }
+//         // Log the incoming data to inspect Acteur_ENEDIS_id
+//         console.log('Incoming data for createSite:', data);
+
+//         // If Acteur_ENEDIS_id is a string (company name), convert it to the corresponding company ID
+//         if (typeof data.Acteur_ENEDIS_id === 'string') {
+//             const companyName = data.Acteur_ENEDIS_id;
+//             console.warn('Converting company name to company ID:', companyName);
+
+//             // Find the company in the activeCompanies list based on company name
+//             const company = activeCompanies.find(company => company.nom === companyName);
+
+//             if (company) {
+//                 // Replace the company name with the corresponding company ID
+//                 data.Acteur_ENEDIS_id = company.ENTid;
+//             } else {
+//                 throw new Error(`No company found with name: ${companyName}`);
+//             }
+//         }
+//         // Check and map priorite_fk, programme_fk, and status_site_fk to their corresponding IDs
+//         if (data.priorite_fk) {
+//             const prioriteId = priorityMapping[data.priorite_fk];
+//             if (!prioriteId) {
+//                 throw new Error(`Invalid priority description: ${data.priorite_fk}`);
+//             }
+//             data.priorite_fk = prioriteId;
+//         }
+//         if (data.programme_fk) {
+//             const programId = programMapping[data.programme_fk];
+//             if (!programId) {
+//                 throw new Error(`Invalid program description: ${data.programme_fk}`);
+//             }
+//             data.programme_fk = programId;
+//         }
+//         if (data.status_site_fk) {
+//             const statusId = siteStatusMapping[data.status_site_fk];
+//             if (!statusId) {
+//                 throw new Error(`Invalid status description: ${data.status_site_fk}`);
+//             }
+//             data.status_site_fk = statusId;
+//         }
+//         // Insert data into the database
+//         const { data: result, error } = await supabase
+//             .from('Site')
+//             .insert([data]);
+//         if (error) {
+//             throw error;
+//         }
+//         return { success: true, result };
+//     } catch (error) {
+//         return { success: false, error: error.message };
+//     }
+// 
+const createSite = async (sites) => {
     try {
+        // Ensure `sites` is an array
+        if (!Array.isArray(sites)) {
+            throw new Error("Invalid data format. Expected an array of objects.");
+        }
+
+        console.log("🛠 Processing batch site insertion...");
+
         // Fetch active companies list
         const activeCompaniesResponse = await getActiveCompanies();
-        // Log the response to ensure it's correct
-        console.log('Active Companies Response:', activeCompaniesResponse);
-        // Check if the response is successful and if the data is an array
+        console.log("Active Companies Response:", activeCompaniesResponse);
+
         if (!activeCompaniesResponse.success) {
-            throw new Error('Failed to fetch active companies');
+            throw new Error("Failed to fetch active companies");
         }
+
         const activeCompanies = activeCompaniesResponse.data;
         if (!Array.isArray(activeCompanies)) {
-            throw new Error('Active companies data is not an array.');
+            throw new Error("Active companies data is not an array.");
         }
         if (activeCompanies.length === 0) {
-            throw new Error('No active companies found');
+            throw new Error("No active companies found");
         }
-        // Log the incoming data to inspect Acteur_ENEDIS_id
-        console.log('Incoming data for createSite:', data);
 
-        // If Acteur_ENEDIS_id is a string (company name), convert it to the corresponding company ID
-        if (typeof data.Acteur_ENEDIS_id === 'string') {
-            const companyName = data.Acteur_ENEDIS_id;
-            console.warn('Converting company name to company ID:', companyName);
+        // ✅ Transform each site in the array
+        const transformedSites = sites.map(site => {
+            let transformedSite = { ...site };
 
-            // Find the company in the activeCompanies list based on company name
-            const company = activeCompanies.find(company => company.nom === companyName);
+            // Convert Acteur_ENEDIS_id from a name to ID if needed
+            if (typeof site.Acteur_ENEDIS_id === "string") {
+                const company = activeCompanies.find(company => company.nom === site.Acteur_ENEDIS_id);
+                if (company) {
+                    transformedSite.Acteur_ENEDIS_id = company.ENTid;
+                } else {
+                    throw new Error(`No company found with name: ${site.Acteur_ENEDIS_id}`);
+                }
+            }
 
-            if (company) {
-                // Replace the company name with the corresponding company ID
-                data.Acteur_ENEDIS_id = company.ENTid;
-            } else {
-                throw new Error(`No company found with name: ${companyName}`);
+            // Convert descriptions to corresponding IDs
+            if (site.priorite_fk && priorityMapping[site.priorite_fk]) {
+                transformedSite.priorite_fk = priorityMapping[site.priorite_fk];
             }
-        }
-        // Check and map priorite_fk, programme_fk, and status_site_fk to their corresponding IDs
-        if (data.priorite_fk) {
-            const prioriteId = priorityMapping[data.priorite_fk];
-            if (!prioriteId) {
-                throw new Error(`Invalid priority description: ${data.priorite_fk}`);
+            if (site.programme_fk && programMapping[site.programme_fk]) {
+                transformedSite.programme_fk = programMapping[site.programme_fk];
             }
-            data.priorite_fk = prioriteId;
-        }
-        if (data.programme_fk) {
-            const programId = programMapping[data.programme_fk];
-            if (!programId) {
-                throw new Error(`Invalid program description: ${data.programme_fk}`);
+            if (site.status_site_fk && siteStatusMapping[site.status_site_fk]) {
+                transformedSite.status_site_fk = siteStatusMapping[site.status_site_fk];
             }
-            data.programme_fk = programId;
+
+            return transformedSite;
+        });
+
+        console.log("✅ Transformed batch data ready for insertion:", transformedSites.length, "records");
+
+        // ✅ Ensure transformedSites is a valid array before inserting
+        if (!Array.isArray(transformedSites) || transformedSites.length === 0) {
+            throw new Error("Invalid data format. Expected a non-empty array of objects.");
         }
-        if (data.status_site_fk) {
-            const statusId = siteStatusMapping[data.status_site_fk];
-            if (!statusId) {
-                throw new Error(`Invalid status description: ${data.status_site_fk}`);
-            }
-            data.status_site_fk = statusId;
-        }
-        // Insert data into the database
-        const { data: result, error } = await supabase
-            .from('Site')
-            .insert([data]);
+
+        // ✅ Bulk Insert into Database
+        const { data: result, error } = await supabase.from("Site").insert(transformedSites);
+
         if (error) {
             throw error;
         }
+
+        console.log("✅ Sites created successfully:", result);
         return { success: true, result };
     } catch (error) {
+        console.error("❌ Error during site creation:", error.message);
         return { success: false, error: error.message };
     }
 };
