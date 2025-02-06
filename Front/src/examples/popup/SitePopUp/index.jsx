@@ -86,15 +86,17 @@ const SiteModal = ({ site, onSave, onClose }) => {
   }, []);
   const handleSubmit = () => {
     const newErrors = {};
-    // if (!formData.nom) newErrors.nom = true;
-    // if (!formData.priorite_fk.SP_desc) newErrors.priorite_fk = true;
-    // if (!formData.programme_fk.PR_desc) newErrors.programme_fk = true;
-    // if (!formData.status_site_fk.SS_desc) newErrors.status_site_fk = true;
+
+    // Ensure EB and G2R have values
+    if (!formData.EB) newErrors.EB = true;
+    if (!formData.G2R) newErrors.G2R = true;
+
     console.log('Validation errors:', newErrors);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+
     console.log('Form data submitted:', formData);
     onSave({
       ...formData,
@@ -147,10 +149,10 @@ const SiteModal = ({ site, onSave, onClose }) => {
             style={{
               marginBottom: '1px',
               width: '320px',
-
-              borderColor: errors.nom ? 'red' : '',
+              borderColor: errors.EB ? 'red' : '',
             }}
             required
+            error={errors.EB}
           />
           <MDInput
             name="G2R"
@@ -161,10 +163,10 @@ const SiteModal = ({ site, onSave, onClose }) => {
             style={{
               marginBottom: '1px',
               width: '320px',
-
-              borderColor: errors.nom ? 'red' : '',
+              borderColor: errors.G2R ? 'red' : '',
             }}
             required
+            error={errors.G2R}
           />
           <MDInput
             name="nom"
