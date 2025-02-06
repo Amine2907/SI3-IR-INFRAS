@@ -118,7 +118,6 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
       return;
     }
     const selectedFournisseur = activeFrns.find(f => f.nom === formData.fournisseur.nom);
-
     const devisData = {
       ND: formData.ND,
       fournisseur: selectedFournisseur ? selectedFournisseur.id : null,

@@ -26,32 +26,46 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
   const [errors, setErrors] = useState({});
   const handleChange = event => {
     const { name, value } = event.target;
-    setFormData(prevData => {
-      const updatedData = {
-        ...prevData,
-        [name]: value,
-      };
-      return updatedData;
-    });
+    if (name === 'fournisseur') {
+      setFormData({ ...formData, fournisseur: { nom: value } });
+    } else {
+      setFormData(prevData => {
+        const updatedData = {
+          ...prevData,
+          [name]: value,
+        };
+        return updatedData;
+      });
+    }
   };
   useEffect(() => {
     if (devis) {
+      // Find the fournisseur name based on the stored ID
+      const fournisseurNom = activeFournisseurs.find(f => f.Eid === devis.fournisseur)?.nom || '';
+
       setFormData({
         ...devis,
-        fournisseur: devis.fournisseur ? devis.fournisseur : { nom: '' },
+        fournisseur: { Eid: devis.fournisseur || '', nom: fournisseurNom },
       });
+
       setIsActive(devis.is_active);
       setIsConforme(devis.conformite);
       setIsValide(devis.valide_par_SFR);
     }
-  }, [devis]);
+  }, [devis, activeFournisseurs]);
   const handleDropdownChange = (field, subField, value) => {
-    console.log(`Updating ${field}.${subField} with value:`, value); // Debug log
-    // Ensure `formData[field]` exists before accessing sub-properties
-    setFormData({
-      ...formData,
-      [field]: { ...(formData[field] || {}), [subField]: value },
-    });
+    if (field === 'fournisseur') {
+      const selectedFournisseur = activeFournisseurs.find(f => f.nom === value);
+      setFormData({
+        ...formData,
+        [field]: { Eid: selectedFournisseur?.Eid || '', nom: value }, // Store both Eid and nom
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [field]: { ...(formData[field] || {}), [subField]: value },
+      });
+    }
   };
   //   fetching active fournisseurs for the site
   const fetchActiveFrns = async () => {
@@ -74,7 +88,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
   };
   useEffect(() => {
     fetchActiveFrns();
-  }, [Sid, devis]);
+  }, [devis]);
   //   fetching active demandes de raccordements for the site
   const fetchActiveDemrac = async () => {
     try {
@@ -106,11 +120,11 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       console.log('demRac data :', devisData);
-      // const selectedFournisseur = activeFrns.find(f => f.nom === formData.fournisseur.nom);
+      const selectedFournisseur = activeFournisseurs.find(f => f.nom === formData.fournisseur.nom);
       onSave({
         Sid,
         ...formData,
-        // fournisseur: selectedFournisseur ? selectedFournisseur.id : null,
+        fournisseur: formData.fournisseur?.Eid || null, // Store only the ID
         is_active: isActive,
         conformite: isConforme,
         valide_par_SFR: isValide,
@@ -119,6 +133,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
     }
     onSave({
       ...formData,
+      fournisseur: formData.fournisseur?.Eid || null, // Store only the ID
       is_active: isActive,
       conformite: isConforme,
       valide_par_SFR: isValide,
@@ -165,7 +180,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
             <InputLabel id="devis-select-label">Fournisseur</InputLabel>
             <Select
               name="fournisseur"
-              value={formData.fournisseur?.nom || formData.fournisseur || ''}
+              value={formData.fournisseur?.nom || ''}
               onChange={e => handleDropdownChange('fournisseur', 'nom', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
@@ -174,7 +189,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
                 -- Choisir le fournisseur --
               </MenuItem>
               {activeFournisseurs.map(fournisseur => (
-                <MenuItem key={fournisseur.id} value={fournisseur.nom}>
+                <MenuItem key={fournisseur.Eid} value={fournisseur.nom}>
                   {fournisseur.nom}
                 </MenuItem>
               ))}
