@@ -40,29 +40,35 @@ const fetchActiveFacture = async (req,res) => {
 //Create dr controlller 
 const createDevis = async (req, res) => {
     const { Sid, devisData } = req.body;
+  
     // Validate required fields
     if (!Sid) {
-        return res.status(400).json({ error: 'EB (Site identifier) is required.' });
-      }
-      if (!devisData) {
-        return res.status(400).json({ error: 'devisData is required.' });
-      }
+      return res.status(400).json({ error: 'EB (Site identifier) is required.' });
+    }
+    if (!devisData) {
+      return res.status(400).json({ error: 'devisData is required.' });
+    }
+  
     try {
-        const result = await devisModel.createDevis(Sid,devisData)
+      // Call the model to handle database operations
+      const result = await devisModel.createDevis(Sid, devisData);
+  
       if (!result.success) {
-        console.error("Error in model operation:", result.error);
+        console.error('Error in model operation:', result.error);
         return res.status(400).json({ error: result.error });
       }
-    // Return a success response with the created data
-    return res.status(201).json({
+  
+      // Return a success response
+      return res.status(201).json({
         message: 'Devis successfully created and associated with site.',
         data: result.data,
       });
     } catch (error) {
+      // Log server-side errors
       console.error('Error creating Devis:', error.message);
       return res.status(500).json({ error: 'An error occurred while creating the Devis.' });
     }
-  };
+  };  
 // Get all active drs controller 
 const getAllDevis = async(req,res)=>{
     const siteId = req.params.Sid;

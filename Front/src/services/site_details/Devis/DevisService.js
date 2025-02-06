@@ -4,13 +4,23 @@ const API_URL = 'https://si3-ir-infras.onrender.com/api/devis';
 const createDevis = async ({ Sid, devisData }) => {
   try {
     console.log('Sending request:', { Sid, devisData });
+
+    // Send the request to the backend
     const response = await axios.post(`${API_URL}/create-devis-site`, {
       Sid,
       devisData,
     });
+
+    console.log('Devis created successfully:', response.data);
     return { success: true, data: response.data };
   } catch (error) {
-    return { success: false, error: error.response ? error.response.data.error : error.message };
+    // Log detailed error response for debugging
+    console.error('Error creating Devis:', error.response ? error.response.data : error.message);
+
+    return {
+      success: false,
+      error: error.response ? error.response.data.error : error.message,
+    };
   }
 };
 // Update Devis Service

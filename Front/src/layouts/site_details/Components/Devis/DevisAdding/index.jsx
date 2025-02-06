@@ -55,12 +55,20 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
     }
   }, [devis]);
   const handleDropdownChange = (field, subField, value) => {
-    console.log(`Updating ${field}.${subField} with value:`, value); // Debug log
-    setFormData({
-      ...formData,
-      [field]: { [subField]: value },
-    });
+    if (field === 'fournisseur') {
+      const selectedFournisseur = activeFrns.find(f => f.nom === value);
+      setFormData({
+        ...formData,
+        [field]: { Eid: selectedFournisseur?.Eid || '', nom: value }, // Store both `Eid` and `nom`
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [field]: { ...(formData[field] || {}), [subField]: value },
+      });
+    }
   };
+
   // get Active Fournisseurs for dropdown
   useEffect(() => {
     const fetchActiveFrns = async () => {
@@ -107,7 +115,6 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
   }, [Sid]);
   const validateForm = () => {
     const newErrors = {};
-    // if (!formData.nom) newErrors.nom = true;
     return newErrors;
   };
   const handleSubmit = () => {
@@ -120,7 +127,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
     const selectedFournisseur = activeFrns.find(f => f.nom === formData.fournisseur.nom);
     const devisData = {
       ND: formData.ND,
-      fournisseur: selectedFournisseur ? selectedFournisseur.id : null,
+      fournisseur: selectedFournisseur ? selectedFournisseur.Eid : null,
       no_dr: formData.no_dr,
       type_devis: formData.type_devis,
       devis_date: formData.devis_date,
@@ -166,7 +173,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="fournisseur"
-              value={formData.fournisseur.nom || ''}
+              value={formData.fournisseur?.nom || ''}
               onChange={e => handleDropdownChange('fournisseur', 'nom', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
