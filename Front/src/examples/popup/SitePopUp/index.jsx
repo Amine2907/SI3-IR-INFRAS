@@ -189,7 +189,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
             <InputLabel id="devis-select-label">Prioirte</InputLabel>
             <Select
               name="priorite_fk"
-              value={priority[formData.priorite_fk] || ''}
+              value={priority[formData.priorite_fk] || formData.priorite_fk.SP_desc || ''}
               onChange={e => handleDropdownChange('priorite_fk', 'SP_desc', e.target.value)}
               displayEmpty
               style={{
@@ -339,7 +339,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
             <InputLabel id="devis-select-label">Programme</InputLabel>
             <Select
               name="programme_fk"
-              value={PROGRAMMES[formData.programme_fk] || ''}
+              value={PROGRAMMES[formData.programme_fk] || formData.programme_fk.PR_desc || ''}
               onChange={e => handleDropdownChange('programme_fk', 'PR_desc', e.target.value)}
               displayEmpty
               style={{
@@ -454,7 +454,9 @@ const SiteModal = ({ site, onSave, onClose }) => {
             <InputLabel id="devis-select-label">Status Site</InputLabel>
             <Select
               name="status_site_fk"
-              value={STATUS_SITE_FK[formData.status_site_fk] || ''}
+              value={
+                STATUS_SITE_FK[formData.status_site_fk] || formData.status_site_fk.SS_desc || ''
+              }
               onChange={e => handleDropdownChange('status_site_fk', 'SS_desc', e.target.value)}
               displayEmpty
               style={{
