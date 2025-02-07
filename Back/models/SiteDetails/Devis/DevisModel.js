@@ -114,7 +114,7 @@ const getActiveFacture = async (Sid) => {
     return [];
     }
 };
-//Create Devis 
+//Create Devis
 const createDevis = async (EB, devisData) => {
     try {
         console.log('Creating Devis with data:', devisData);
