@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'https://si3-ir-infras.onrender.com/api/auth';
+const API_URL = `${process.env.BACKEND_URL}/api/auth`;
 // Sign in the user
 const signIn = async (email, password) => {
   return await axios
