@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:5000/api/facture';
+const API_URL = `${process.env.BACKEND_URL}/api/facture`;
 // Create Facture Service
 const createFacture = async ({ Sid, factureData }) => {
   try {

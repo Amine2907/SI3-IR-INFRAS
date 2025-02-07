@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'https://si3-ir-infras.onrender.com/api/preEtude';
+const API_URL = `${process.env.BACKEND_URL}/api/preEtude`;
 // Create PreEtude Service
 const createPreEtude = async ({ Sid, preEtudeData }) => {
   try {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://si3-ir-infras.onrender.com/api/check-files';
+const API_URL = `${process.env.BACKEND_URL}/api/check-files`;
 
 const checkAllFilesStatus = async Sid => {
   try {

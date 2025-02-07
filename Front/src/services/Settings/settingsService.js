@@ -5,7 +5,7 @@
  * @module settingsService
  */
 import axios from 'axios';
-const API_BASE_URL = 'https://si3-ir-infras.onrender.com/api/settings';
+const API_BASE_URL = `${process.env.BACKEND_URL}/api/settings`;
 // 1. Get Account Information
 const getAccountInfo = async userId => {
   try {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'https://si3-ir-infras.onrender.com/api/site-fields';
+const API_URL = `${process.env.BACKEND_URL}/api/site-fields`;
 const getPropsectRetenu = async Sid => {
   try {
     const response = await axios.get(`${API_URL}/${Sid}/prospect-retenu`);
