@@ -567,18 +567,18 @@ const SiteInfoCard = ({ site, onEdit }) => {
                                   ? contact.Contacts.nom
                                   : contact.Contacts.email
                                   ? contact.Contacts.email
-                                  : 'Unknown Contact'}
+                                  : 'Contact Inconnu'}
                               </span>
                               <Box>
                                 <IconButton
                                   onClick={() => handleEdit(contact?.Contacts?.Cid)}
-                                  aria-label="Edit Contact"
+                                  aria-label="Modifier Contact"
                                 >
                                   <EditIcon />
                                 </IconButton>
                                 <IconButton
                                   onClick={() => handleOpenDeleteModal(contact?.Contacts?.Cid)}
-                                  aria-label="Delete Contact"
+                                  aria-label="Supprimer Contact"
                                 >
                                   <DeleteIcon />
                                 </IconButton>

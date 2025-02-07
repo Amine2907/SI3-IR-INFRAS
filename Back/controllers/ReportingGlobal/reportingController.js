@@ -65,7 +65,7 @@ import { supabase } from '../../config/supabaseClient.js';
         res.status(500).json({ success: false, message: 'Error generating report manually', error: error.message });
     }
 };
-   const listReports = async (req, res) => {
+const listReports = async (req, res) => {
     try {
         // Fetch files from the bucket
         const { data, error } = await supabase.storage.from('reports').list('');
@@ -74,11 +74,14 @@ import { supabase } from '../../config/supabaseClient.js';
             console.error('Error fetching files from Supabase storage:', error);
             return res.status(500).json({ success: false, message: 'Error fetching reports' });
         }
-        // Map the files to include public URLs
-        const reports = data.map((file) => ({
-            name: file.name,
-            url: `${process.env.SUPABASE_URL}/storage/v1/object/public/reports/${file.name}`,
-        }));
+        // Filter out .emptyFolderPlaceholder and map the files to include public URLs
+        const reports = data
+            .filter((file) => file.name !== '.emptyFolderPlaceholder')
+            .map((file) => ({
+                name: file.name,
+                url: `${process.env.SUPABASE_URL}/storage/v1/object/public/reports/${file.name}`,
+            }));
+
         res.status(200).json({ success: true, reports });
     } catch (error) {
         console.error('Error listing reports:', error.message);
