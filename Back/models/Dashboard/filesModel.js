@@ -601,8 +601,6 @@ const getDemMesRealisee  = async () => {
 // get consuel en attente 
 const getConsuelEnAttente = async () => {
     try {
-        console.log("Fetching data for getConsuelEnAttente...");
-        // Fetch MES data while joining Traveaux with the correct relationship
         const { data, error } = await supabase
             .from('MES')
             .select(`
@@ -643,9 +641,6 @@ const getConsuelEnAttente = async () => {
         return { success: false, error: error.message };
     }
 };
-
-
-
 // get demande MES en attente 
 const getDemMesEnAttante  = async () => {
     try {
