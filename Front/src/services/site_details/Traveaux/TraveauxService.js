@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = `${process.env.BACKEND_URL}/api/traveaux`;
+const API_URL = 'https://si3-ir-infras.onrender.com/api/traveaux';
 // Create trav Service
 const createTrav = async ({ Sid, traveauxData }) => {
   try {

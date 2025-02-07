@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = `${process.env.BACKEND_URL}/api/fac-storage`;
+const API_URL = 'https://si3-ir-infras.onrender.com/api/fac-storage';
 
 // Upload fac File (Store a file in Supabase)
 const uploadFactureFile = async (file, factureId, Sid) => {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = `${process.env.BACKEND_URL}/api/prospect`;
+const API_URL = 'https://si3-ir-infras.onrender.com/api/prospect';
 // Create Prospect Service
 const createProspect = async ({ Sid, prospectData }) => {
   try {

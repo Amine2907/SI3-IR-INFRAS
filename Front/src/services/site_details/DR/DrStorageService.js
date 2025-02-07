@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = `${process.env.BACKEND_URL}/api/dem-rac-storage`;
+const API_URL = 'https://si3-ir-infras.onrender.com/api/dem-rac-storage';
 
 // Upload a demracs file to the server
 const uploadDemracsFile = async (file, demRacId, Sid) => {

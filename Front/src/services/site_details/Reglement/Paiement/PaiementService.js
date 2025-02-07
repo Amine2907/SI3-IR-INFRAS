@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = `${process.env.BACKEND_URL}/api/paie`;
+const API_URL = 'https://si3-ir-infras.onrender.com/api/paie';
 // Create paie Service
 const createPaie = async ({ Sid, paiementData }) => {
   try {

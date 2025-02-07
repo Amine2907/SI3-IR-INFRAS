@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = `${process.env.BACKEND_URL}/api/dash-files`;
+const API_URL = 'https://si3-ir-infras.onrender.com/api/dash-files';
 // Download DR data as Excel file
 const downloadExcel = async type => {
   try {
@@ -20,7 +20,7 @@ const downloadExcel = async type => {
     // Create a link to trigger the download
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `${type}_data.xlsx`;
+    link.download = `${type}_data.xlsx`; // The downloaded file will have the type in the filename
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

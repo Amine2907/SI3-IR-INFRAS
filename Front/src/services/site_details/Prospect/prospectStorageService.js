@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = `${process.env.BACKEND_URL}/api/pros-storage`;
+const API_URL = 'https://si3-ir-infras.onrender.com/api/pros-storage';
 
 // Upload a prospect file to the server
 const uploadProspectFile = async (file, prospectId) => {

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = `${process.env.BACKEND_URL}/api/mes-storage`;
+const API_URL = 'https://si3-ir-infras.onrender.com/api/mes-storage';
 
 // Upload a mes file to the server
 const uploadMesFile = async (file, mesId, Sid) => {
