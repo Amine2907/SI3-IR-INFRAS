@@ -184,7 +184,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
             >
-              {activeFrns.length > 0 ? (
+              {activeFournisseurs.length > 0 ? (
                 activeFournisseurs.map(fournisseur => (
                   <MenuItem key={fournisseur.Eid} value={fournisseur.nom}>
                     {fournisseur.nom}
