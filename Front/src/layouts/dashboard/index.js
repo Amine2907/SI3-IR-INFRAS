@@ -116,7 +116,6 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="success"
                 icon="receipt"
                 title="Devis en attente"
                 count={data.devisEnAttente}
@@ -127,7 +126,6 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="primary"
                 icon="receipt"
                 title="Devis en attente ( validation operateur )"
                 count={data.devisValidationOperateur}
@@ -138,7 +136,6 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="primary"
                 icon="receipt"
                 title="Devis signe"
                 count={data.devisSigne}
@@ -215,7 +212,7 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="primary"
+                color="success"
                 icon="settings"
                 title="Consuel recu"
                 count={data.consuelRecu}
@@ -226,7 +223,7 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="primary"
+                color="success"
                 icon="settings"
                 title="Demande de MES realisee"
                 count={data.demandeMESRealisee}
@@ -237,7 +234,7 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="primary"
+                color="success"
                 icon="settings"
                 title="Consuel en attente"
                 count={data.consuelEnAttente}
@@ -248,7 +245,7 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                color="primary"
+                color="success"
                 icon="settings"
                 title="Demande de MES en attente"
                 count={data.demandeMESEnAttente}
