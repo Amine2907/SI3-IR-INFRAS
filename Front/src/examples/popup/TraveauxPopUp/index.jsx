@@ -18,22 +18,28 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
   const [errors, setErrors] = useState({});
   const handleChange = event => {
     const { name, value } = event.target;
-    setFormData(prevData => {
-      const updatedData = {
-        ...prevData,
-        [name]: value,
-      };
-      return updatedData;
-    });
+    if (name === 'paie_id') {
+      setFormData({ ...formData, paie_id: { libelle_du_virement: value } });
+    } else {
+      setFormData(prevData => {
+        const updatedData = {
+          ...prevData,
+          [name]: value,
+        };
+        return updatedData;
+      });
+    }
   };
   useEffect(() => {
     if (traveaux) {
+      const libNom = activeLib.find(p => p.Pid === traveaux.paie_id)?.libelle_du_virement || '';
       setFormData({
         ...traveaux,
+        paie_id: { Pid: traveaux.paie_id || '', libelle_du_virement: libNom },
       });
       setIsActive(traveaux.is_active);
     }
-  }, [traveaux]);
+  }, [traveaux, activeLib]);
   useEffect(() => {
     const fecthactiveLib = async () => {
       try {
@@ -56,12 +62,18 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
     fecthactiveLib();
   }, [Sid]);
   const handleDropdownChange = (field, subField, value) => {
-    console.log(`Updating ${field}.${subField} with value:`, value); // Debug log
-    // Ensure `formData[field]` exists before accessing sub-properties
-    setFormData({
-      ...formData,
-      [field]: { ...(formData[field] || {}), [subField]: value },
-    });
+    if (field === 'paie_id') {
+      const selectedLib = activeLib.find(f => f.Pid === value);
+      setFormData({
+        ...formData,
+        [field]: { Pid: selectedLib?.Pid || '', libelle_du_virement: value },
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [field]: { ...(formData[field] || {}), [subField]: value },
+      });
+    }
   };
   const validateForm = () => {
     const newErrors = {};
@@ -73,9 +85,9 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      console.log('demRac data :', traveauxData);
       onSave({
         Sid,
+        paie_id: formData.paie_id?.Pid || null,
         ...formData,
         is_active: isActive,
       });
@@ -83,6 +95,7 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
     }
     onSave({
       ...formData,
+      paie_id: formData.paie_id?.Pid || null,
       is_active: isActive,
     });
   };
@@ -113,14 +126,11 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
             <InputLabel id="devis-select-label">Libelle virement</InputLabel>
             <Select
               name="paie_id"
-              value={formData.paie_id || formData.paie_id.libelle_du_virement || ''}
-              onChange={handleChange}
+              value={formData.paie_id?.libelle_du_virement || ''}
+              onChange={e => handleDropdownChange('paie_id', 'libelle_du_virement', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
             >
-              <MenuItem value="" disabled>
-                -- Choisir libelle vir --
-              </MenuItem>
               {activeLib.length > 0 ? (
                 activeLib.map(lib => (
                   <MenuItem key={lib.id} value={lib.libelle_du_virement}>

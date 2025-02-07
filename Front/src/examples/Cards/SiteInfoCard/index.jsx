@@ -298,7 +298,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
     if (!selectedContacts || !Array.isArray(selectedContacts) || selectedContacts.length === 0) {
       setAlert({
         show: true,
-        message: 'Please select at least one valid contact.',
+        message: 'Merci de selectionner au minimum un contact',
         type: 'error',
       });
       return;
@@ -521,7 +521,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
                           renderValue={selected =>
                             activeContacts
                               .filter(contact => selected.includes(contact.Cid))
-                              .map(contact => contact.nom)
+                              .map(contact => contact.nom || contact.email)
                               .join(', ')
                           }
                           style={{
@@ -539,7 +539,11 @@ const SiteInfoCard = ({ site, onEdit }) => {
                           {activeContacts.length > 0 ? (
                             activeContacts.map(contact => (
                               <MenuItem key={contact.Cid} value={contact.Cid}>
-                                {contact.nom ? contact.nom : contact.email}{' '}
+                                {contact.nom
+                                  ? contact.nom
+                                  : contact.email
+                                  ? contact.email
+                                  : 'Unknown Contact'}
                               </MenuItem>
                             ))
                           ) : (
@@ -558,7 +562,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
                               alignItems="center"
                               width="100%"
                             >
-                              {/* Contact Name or Email */}
                               <span>
                                 {contact.Contacts.nom
                                   ? contact.Contacts.nom
@@ -566,7 +569,6 @@ const SiteInfoCard = ({ site, onEdit }) => {
                                   ? contact.Contacts.email
                                   : 'Unknown Contact'}
                               </span>
-                              {/* Action Icons */}
                               <Box>
                                 <IconButton
                                   onClick={() => handleEdit(contact?.Contacts?.Cid)}
@@ -586,7 +588,7 @@ const SiteInfoCard = ({ site, onEdit }) => {
                         ))
                       ) : (
                         <MDTypography variant="subtitle2" color="textSecondary">
-                          No contacts related to this site
+                          Pas de contacts pour ce site
                         </MDTypography>
                       )}
                     </MDTypography>

@@ -103,6 +103,7 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
         <div className={styles.formGrid}>
           <MDInput
             name="no_virement"
+            label="Numero Virement"
             value={formData.no_virement || ''}
             onChange={handleChange}
             placeholder="No virement"
@@ -146,6 +147,7 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
           <MDInput
             name="nom_acteur"
             value={formData.nom_acteur || ''}
+            label="Nom acteur"
             onChange={handleChange}
             placeholder="Nom Acteur"
             style={{
@@ -158,6 +160,7 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
           />
           <MDInput
             name="libelle_du_virement"
+            label="Libelle du virement"
             value={formData.libelle_du_virement || ''}
             onChange={handleChange}
             placeholder="Libelle de virement"
@@ -171,6 +174,7 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
           />
           <MDInput
             name="montant"
+            label="Montant"
             value={formData.montant || ''}
             onChange={handleChange}
             placeholder="Montant (TTC)"
@@ -184,6 +188,7 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
           />
           <MDInput
             name="no_commande"
+            label="Numero commande"
             value={formData.no_commande || ''}
             onChange={handleChange}
             placeholder="N commande"
