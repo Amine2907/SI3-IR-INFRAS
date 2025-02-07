@@ -3,18 +3,21 @@ import XLSX from "xlsx"
 import moment from "moment"
 const checkFilesExistWithoutId = async (component, Sid) => {
   try {
-    const folderPath = `${component}-pdf/${Sid}`
-    const { data, error } = await supabase.storage.from(component + "-pdf").list(folderPath)
+    const folderPath = `${component}-pdf/${Sid}`;
+    const { data, error } = await supabase.storage.from(component + "-pdf").list(folderPath);
     if (error) {
-      console.error(`Error checking files for ${component}:`, error)
-      return false
+      console.error(`Error checking files for ${component}:`, error);
+      return false;
     }
-    return data && data.length > 0
+    // Filter out unwanted files
+    const filteredData = data?.filter(file => file.name !== '.emptyFolderPlaceholder');
+    return filteredData && filteredData.length > 0;
   } catch (error) {
-    console.error(`Error in checkFilesExistWithoutId for ${component}:`, error)
-    return false
+    console.error(`Error in checkFilesExistWithoutId for ${component}:`, error);
+    return false;
   }
-}
+};
+
 const formatDate = (date) => {
     if (!date) return "";
     return moment(date).format("DD/MM/YYYY HH:mm");
