@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 // @mui material components
 import Divider from '@mui/material/Divider';
 import Switch from '@mui/material/Switch';
-import IconButton from '@mui/material/IconButton';
 import Icon from '@mui/material/Icon';
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
@@ -21,23 +20,13 @@ import {
   setOpenConfigurator,
   setTransparentSidenav,
   setWhiteSidenav,
-  setFixedNavbar,
-  setSidenavColor,
   setDarkMode,
 } from '../../context/index';
 
 function Configurator() {
   const [controller, dispatch] = useMaterialUIController();
-  const {
-    openConfigurator,
-    fixedNavbar,
-    sidenavColor,
-    transparentSidenav,
-    whiteSidenav,
-    darkMode,
-  } = controller;
+  const { openConfigurator, transparentSidenav, whiteSidenav, darkMode } = controller;
   const [disabled, setDisabled] = useState(false);
-  const sidenavColors = ['primary', 'dark', 'info', 'success', 'warning', 'error'];
 
   // Use the useEffect hook to change the button state for the sidenav type based on window size.
   useEffect(() => {
@@ -69,7 +58,6 @@ function Configurator() {
     setWhiteSidenav(dispatch, false);
     setTransparentSidenav(dispatch, false);
   };
-  const handleFixedNavbar = () => setFixedNavbar(dispatch, !fixedNavbar);
   const handleDarkMode = () => setDarkMode(dispatch, !darkMode);
 
   // sidenav type buttons styles
@@ -116,9 +104,9 @@ function Configurator() {
         px={3}
       >
         <MDBox>
-          <MDTypography variant="h5">Material UI Configurator</MDTypography>
+          <MDTypography variant="h5">SI3 DASHBOARD</MDTypography>
           <MDTypography variant="body2" color="text">
-            See our dashboard options.
+            Voir les options de dashboard
           </MDTypography>
         </MDBox>
 
@@ -136,62 +124,12 @@ function Configurator() {
           close
         </Icon>
       </MDBox>
-
-      <Divider />
-
       <MDBox pt={0.5} pb={3} px={3}>
-        <MDBox>
-          <MDTypography variant="h6">Sidenav Colors</MDTypography>
-
-          <MDBox mb={0.5}>
-            {sidenavColors.map(color => (
-              <IconButton
-                key={color}
-                sx={({
-                  borders: { borderWidth },
-                  palette: { white, dark, background },
-                  transitions,
-                }) => ({
-                  width: '24px',
-                  height: '24px',
-                  padding: 0,
-                  border: `${borderWidth[1]} solid ${darkMode ? background.sidenav : white.main}`,
-                  borderColor: () => {
-                    let borderColorValue = sidenavColor === color && dark.main;
-
-                    if (darkMode && sidenavColor === color) {
-                      borderColorValue = white.main;
-                    }
-
-                    return borderColorValue;
-                  },
-                  transition: transitions.create('border-color', {
-                    easing: transitions.easing.sharp,
-                    duration: transitions.duration.shorter,
-                  }),
-                  backgroundImage: ({ functions: { linearGradient }, palette: { gradients } }) =>
-                    linearGradient(gradients[color].main, gradients[color].state),
-
-                  '&:not(:last-child)': {
-                    mr: 1,
-                  },
-
-                  '&:hover, &:focus, &:active': {
-                    borderColor: darkMode ? white.main : dark.main,
-                  },
-                })}
-                onClick={() => setSidenavColor(dispatch, color)}
-              />
-            ))}
-          </MDBox>
-        </MDBox>
-
         <MDBox mt={3} lineHeight={1}>
           <MDTypography variant="h6">Sidenav Type</MDTypography>
           <MDTypography variant="button" color="text">
-            Choose between different sidenav types.
+            Choisissez entre différents types de barre latérale.
           </MDTypography>
-
           <MDBox
             sx={{
               display: 'flex',
@@ -211,7 +149,7 @@ function Configurator() {
                   : sidenavTypeButtonsStyles
               }
             >
-              Dark
+              Noir
             </MDButton>
             <MDBox sx={{ mx: 1, width: '8rem', minWidth: '8rem' }}>
               <MDButton
@@ -241,30 +179,17 @@ function Configurator() {
                   : sidenavTypeButtonsStyles
               }
             >
-              White
+              Blanche
             </MDButton>
           </MDBox>
         </MDBox>
-        <MDBox
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mt={3}
-          lineHeight={1}
-        >
-          <MDTypography variant="h6">Navbar Fixed</MDTypography>
-
-          <Switch checked={fixedNavbar} onChange={handleFixedNavbar} />
-        </MDBox>
         <Divider />
         <MDBox display="flex" justifyContent="space-between" alignItems="center" lineHeight={1}>
-          <MDTypography variant="h6">Light / Dark</MDTypography>
-
+          <MDTypography variant="h6">Clair / Sombre</MDTypography>
           <Switch checked={darkMode} onChange={handleDarkMode} />
         </MDBox>
       </MDBox>
     </ConfiguratorRoot>
   );
 }
-
 export default Configurator;

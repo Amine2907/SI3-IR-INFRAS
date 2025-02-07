@@ -48,7 +48,6 @@ const SiteList = () => {
   const renderSearch = () => {
     let filteredSites = sites;
 
-    // Filter by Search Text
     if (searchText.trim()) {
       filteredSites = filteredSites.filter(site => {
         const lowerCaseQuery = searchText.toLowerCase();
@@ -65,23 +64,31 @@ const SiteList = () => {
           site.status_site_fk,
           site.Acteur_ENEDIS_id,
         ]
-          .filter(Boolean) // Remove undefined/null values
-          .map(field => field.toString().toLowerCase()) // Convert to lowercase for comparison
+          .filter(Boolean)
+          .map(field => field.toString().toLowerCase())
           .join(' ');
+
         return combinedFields.includes(lowerCaseQuery);
       });
     }
-    // Filter by Dropdowns
+
     if (Object.keys(searchQuery).length > 0) {
+      console.log('Applying Filters:', searchQuery); // Log filters being applied
       filteredSites = filteredSites.filter(site =>
         Object.entries(searchQuery).every(([key, value]) => {
-          if (!value) return true; // Skip if the field is not set
-          return site[key] && site[key].toString().toLowerCase() === value.toString().toLowerCase();
+          console.log(`Comparing site[${key}] (${site[key]}) with value (${value})`); // Debug log
+          if (!value) return true;
+          if (!site[key]) return false;
+          return (
+            site[key].toString().toLowerCase().trim() === value.toString().toLowerCase().trim()
+          );
         })
       );
     }
+
     return filteredSites;
   };
+
   const filteredSites = renderSearch();
   // Fetch Active and Inactive Sites
   const fetchActivesites = async () => {
@@ -165,12 +172,14 @@ const SiteList = () => {
   // Search Role
   const handleSearchDropDown = e => {
     const { name, value } = e.target;
-    console.log(`Changing ${name} to ${value}`);
-    setSearchQuery(prev => ({ ...prev, [name]: value }));
+
+    setSearchQuery(prev => ({
+      ...prev,
+      [name]: value || '',
+    }));
   };
   const handleSearchCompanies = event => {
     const { value } = event.target;
-    console.log('Selected Acteur_ENEDIS_id:', value); // Check if the selected value is correct
     setSearchQuery(prevState => ({
       ...prevState,
       Acteur_ENEDIS_id: value,
