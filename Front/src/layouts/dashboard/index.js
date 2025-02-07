@@ -96,7 +96,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
-                icon="weekend"
+                icon="business"
                 title="DR Produit"
                 count={data.drProduit}
                 onClick={() => handleCardClick('drProduit')}
@@ -106,7 +106,7 @@ function Dashboard() {
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                icon="leaderboard"
+                icon="receipt"
                 title="Devis recu"
                 count={data.devisRecu}
                 onClick={() => handleCardClick('devisRecu')}
@@ -117,7 +117,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="success"
-                icon="store"
+                icon="receipt"
                 title="Devis en attente"
                 count={data.devisEnAttente}
                 onClick={() => handleCardClick('devisEnAttente')}
@@ -128,7 +128,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="receipt"
                 title="Devis en attente ( validation operateur )"
                 count={data.devisValidationOperateur}
                 onClick={() => handleCardClick('devisEnAttenteOp')}
@@ -139,7 +139,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="receipt"
                 title="Devis signe"
                 count={data.devisSigne}
                 onClick={() => handleCardClick('devisSigne')}
@@ -150,7 +150,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="payment"
                 title="Reglement OK"
                 count={data.reglementOk}
                 onClick={() => handleCardClick('reglementOk')}
@@ -161,7 +161,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="payment"
                 title="Reglement en attente"
                 count={data.reglementEnAttente}
                 onClick={() => handleCardClick('reglementAttente')}
@@ -172,7 +172,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="payment"
                 title="Planification Extension"
                 count={data.planificationExtension}
                 onClick={() => handleCardClick('planificationExtension')}
@@ -183,7 +183,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="payment"
                 title="Extension OK"
                 count={data.extensionOk}
                 onClick={() => handleCardClick('extensionOk')}
@@ -194,7 +194,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="payment"
                 title="Planification Branchement"
                 count={data.planificationBranchement}
                 onClick={() => handleCardClick('planificationBranchement')}
@@ -205,7 +205,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="payment"
                 title="Branchement OK"
                 count={data.branchementOk}
                 onClick={() => handleCardClick('branchementOk')}
@@ -216,7 +216,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="settings"
                 title="Consuel recu"
                 count={data.consuelRecu}
                 onClick={() => handleCardClick('consuelRecu')}
@@ -227,7 +227,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="settings"
                 title="Demande de MES realisee"
                 count={data.demandeMESRealisee}
                 onClick={() => handleCardClick('demandeMesRealisee')}
@@ -238,7 +238,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="settings"
                 title="Consuel en attente"
                 count={data.consuelEnAttente}
                 onClick={() => handleCardClick('consuelEnAttente')}
@@ -249,7 +249,7 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
+                icon="settings"
                 title="Demande de MES en attente"
                 count={data.demandeMESEnAttente}
                 onClick={() => handleCardClick('demandeMesEnAttente')}

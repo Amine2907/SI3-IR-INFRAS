@@ -22,6 +22,27 @@ import {
   Cell,
 } from 'recharts';
 import dashChartsService from 'services/Dashboard/dashChartsService';
+import MDTypography from 'components/MDTypography';
+
+const PROGRAMMES = {
+  1: '4GFixe',
+  2: 'DCC',
+  3: 'ARP',
+  4: 'DENSIF_CZ_RED',
+  5: 'DENSIF_CZ',
+  6: 'ZTD_RED',
+  7: 'PAC-REMP',
+  8: 'PAC',
+  9: 'PAC-DUP',
+  10: 'PAC-CONTINUITY-PLAN',
+  11: 'FM',
+  12: 'ORF',
+  13: 'SFR TT',
+  14: 'FM TT',
+};
+
+// Default Programs List
+const DEFAULT_PROGRAMS = Object.values(PROGRAMMES);
 
 function DashboardCharts() {
   const [chartsData, setChartsData] = useState({
@@ -44,6 +65,25 @@ function DashboardCharts() {
 
   const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#a4de6c', '#d0ed57'];
 
+  // Format DR data to ensure all programs are included
+  const formatDRData = data => {
+    return DEFAULT_PROGRAMS.map(program => {
+      const programData = data.find(item => item.programme === program);
+      return {
+        programme: program,
+        count: programData ? programData.count : 0,
+      };
+    });
+  };
+  const formatChartData = data => {
+    return DEFAULT_PROGRAMS.map(program => {
+      const programData = data.find(item => item.programme === program);
+      return {
+        programme: program,
+        count: programData ? programData.count : 0, // Default to 0 if no data
+      };
+    });
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -82,22 +122,24 @@ function DashboardCharts() {
         ]);
 
         setChartsData({
-          dr: dr.data,
-          devisRecu: devisRecu.data,
-          devisEnAttente: devisEnAttente.data,
-          devisSigne: devisSigne.data,
-          devisValidationOperateur: devisValidationOperateur.data,
-          reglementOk: reglementOk.data,
-          reglementEnAttente: reglementEnAttente.data,
-          planificationExtension: planificationExtension.data,
-          extensionOk: extensionOk.data,
-          planificationBranchements: planificationBranchements.data,
-          branchementOk: branchementOk.data,
-          consuelRecu: consuelRecu.data,
-          demandeMESRealisee: demandeMESRealisee.data,
-          consuelEnAttente: consuelEnAttente.data,
-          demandeMESEnAttente: demandeMESEnAttente.data,
+          dr: formatDRData(dr.data),
+          devisRecu: formatChartData(devisRecu.data),
+          devisEnAttente: formatChartData(devisEnAttente.data),
+          devisSigne: formatChartData(devisSigne.data),
+          devisValidationOperateur: formatChartData(devisValidationOperateur.data),
+          reglementOk: formatChartData(reglementOk.data),
+          reglementEnAttente: formatChartData(reglementEnAttente.data),
+          planificationExtension: formatChartData(planificationExtension.data),
+          extensionOk: formatChartData(extensionOk.data),
+          planificationBranchements: formatChartData(planificationBranchements.data),
+          branchementOk: formatChartData(branchementOk.data),
+          consuelRecu: formatChartData(consuelRecu.data),
+          demandeMESRealisee: formatChartData(demandeMESRealisee.data),
+          consuelEnAttente: formatChartData(consuelEnAttente.data),
+          demandeMESEnAttente: formatChartData(demandeMESEnAttente.data),
         });
+
+        console.log('Chart data fetched and formatted successfully!');
       } catch (error) {
         console.error('Error fetching chart data:', error);
       }
@@ -112,7 +154,7 @@ function DashboardCharts() {
         <h3>{title}</h3>
         <ResponsiveContainer width="100%" height={400}>
           <BarChart
-            data={data.length ? data : [{ programme: 'No Data', count: 0 }]}
+            data={data.length ? data : [{ programme: "Pas d'informations", count: 0 }]}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
@@ -132,7 +174,7 @@ function DashboardCharts() {
       <MDBox mb={3}>
         <h3>{title}</h3>
         <ResponsiveContainer width="100%" height={400}>
-          <RadarChart data={data.length ? data : [{ programme: 'No Data', count: 0 }]}>
+          <RadarChart data={data.length ? data : [{ programme: "Pas d'informations", count: 0 }]}>
             <PolarGrid />
             <PolarAngleAxis dataKey="programme" />
             <PolarRadiusAxis />
@@ -151,33 +193,42 @@ function DashboardCharts() {
     </Grid>
   );
 
-  const renderPieChart = (data, title) => (
-    <Grid item xs={12} md={6}>
-      <MDBox mb={3}>
-        <h3>{title}</h3>
-        <ResponsiveContainer width="100%" height={400}>
-          <PieChart>
-            <Pie
-              data={data.length ? data : [{ programme: 'No Data', count: 1 }]}
-              dataKey="count"
-              nameKey="programme"
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              fill="#8884d8"
-              label
-            >
-              {(data.length ? data : [{ programme: 'No Data', count: 1 }]).map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      </MDBox>
-    </Grid>
-  );
+  const renderPieChart = (data, title) => {
+    const hasData = data.some(item => item.count > 0);
+    return (
+      <Grid item xs={12} md={6}>
+        <MDBox mb={3}>
+          <h3>{title}</h3>
+          <ResponsiveContainer width="100%" height={400}>
+            {hasData ? (
+              <PieChart>
+                <Pie
+                  data={data}
+                  dataKey="count"
+                  nameKey="programme"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  fill="#8884d8"
+                  label
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            ) : (
+              <MDBox display="flex" justifyContent="center" alignItems="center" height="100%">
+                <MDTypography>Pas d&apos;informations</MDTypography>
+              </MDBox>
+            )}
+          </ResponsiveContainer>
+        </MDBox>
+      </Grid>
+    );
+  };
 
   const renderLineChart = (data, title) => (
     <Grid item xs={12} md={6}>
@@ -185,7 +236,7 @@ function DashboardCharts() {
         <h3>{title}</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart
-            data={data.length ? data : [{ programme: 'No Data', count: 0 }]}
+            data={data.length ? data : [{ programme: "Pas d'informations", count: 0 }]}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
@@ -204,7 +255,6 @@ function DashboardCharts() {
     <MDBox mt={4.5}>
       <Grid container spacing={3}>
         {renderBarChart(chartsData.dr, 'DR par programme')}
-
         {renderRadarChart(chartsData.devisRecu, 'Devis reçu par programme')}
         {renderRadarChart(chartsData.devisEnAttente, 'Devis en attente par programme')}
         {renderRadarChart(chartsData.devisSigne, 'Devis signé par programme')}
@@ -212,10 +262,8 @@ function DashboardCharts() {
           chartsData.devisValidationOperateur,
           'Devis validation opérateur par programme'
         )}
-
         {renderPieChart(chartsData.reglementOk, 'Règlement OK par programme')}
         {renderPieChart(chartsData.reglementEnAttente, 'Règlement en attente par programme')}
-
         {renderLineChart(
           chartsData.planificationExtension,
           'Planification extension par programme'
@@ -226,7 +274,6 @@ function DashboardCharts() {
           'Planification branchements par programme'
         )}
         {renderLineChart(chartsData.branchementOk, 'Branchement OK par programme')}
-
         {renderPieChart(chartsData.consuelRecu, 'Consuel reçu par programme')}
         {renderPieChart(chartsData.demandeMESRealisee, 'Demande MES réalisée par programme')}
         {renderPieChart(chartsData.consuelEnAttente, 'Consuel en attente par programme')}

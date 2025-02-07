@@ -204,7 +204,7 @@ function DemRacList({ site }) {
                           width: 10,
                           height: 10,
                           borderRadius: '50%',
-                          backgroundColor: getDotColor('status_prop', statusProp),
+                          backgroundColor: getDotColor('status_prop', demrac.status_prop),
                           margin: 'auto',
                         }}
                       />

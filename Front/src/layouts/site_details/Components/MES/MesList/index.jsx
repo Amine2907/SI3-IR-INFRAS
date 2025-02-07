@@ -113,8 +113,8 @@ function MiseEnServiceList() {
     }
   };
   const getDotColor = status_consuel => {
-    if (status_consuel === 'En attente') return 'green';
-    if (status_consuel === 'ok') return 'red';
+    if (status_consuel === 'En attente') return 'red';
+    if (status_consuel === 'ok') return 'green';
     return 'gray';
   };
   if (loading)

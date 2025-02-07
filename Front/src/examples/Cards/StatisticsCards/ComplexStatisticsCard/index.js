@@ -6,6 +6,7 @@ import Card from '@mui/material/Card';
 import Divider from '@mui/material/Divider';
 import Icon from '@mui/material/Icon';
 import { Button } from '@mui/material';
+
 // Material Dashboard 2 React components
 import MDBox from 'components/MDBox';
 import MDTypography from 'components/MDTypography';
@@ -13,7 +14,7 @@ import MDTypography from 'components/MDTypography';
 function ComplexStatisticsCard({ color, title, count, icon, onClick }) {
   return (
     <Card>
-      <MDBox display="flex" justifyContent="space-between" pt={1} px={2}>
+      <MDBox display="flex" alignItems="center" justifyContent="space-between" pt={2} px={2}>
         <MDBox
           variant="gradient"
           bgColor={color}
@@ -23,36 +24,44 @@ function ComplexStatisticsCard({ color, title, count, icon, onClick }) {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          width="3rem"
-          height="3rem"
-          mt={-3}
+          width="4rem"
+          height="4rem"
+          position="relative"
+          overflow="hidden"
         >
           <Button
             onClick={onClick}
             sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
               width: '100%',
-              textAlign: 'left',
-              padding: 0,
+              height: '100%',
+              backgroundColor: 'transparent',
+              zIndex: 1,
               '&:hover': {
-                backgroundColor: 'transparent', // Remove the button's hover background to keep card styling intact
+                backgroundColor: 'transparent',
               },
             }}
-          ></Button>
-          <Icon fontSize="medium" color="inherit">
+          />
+          <Icon fontSize="large" sx={{ zIndex: 2 }}>
             {icon}
           </Icon>
         </MDBox>
-        <MDBox textAlign="right" lineHeight={1.25}>
-          <MDTypography variant="button" fontWeight="light" color="text">
+        <MDBox textAlign="right" lineHeight={1.25} ml={2}>
+          <MDTypography variant="button" fontWeight="regular" color="text">
             {title}
           </MDTypography>
-          <MDTypography variant="h4">{count}</MDTypography>
+          <MDTypography variant="h4" fontWeight="bold">
+            {count}
+          </MDTypography>
         </MDBox>
       </MDBox>
-      <Divider />
+      <Divider sx={{ mt: 1 }} />
     </Card>
   );
 }
+
 // Setting default values for the props of ComplexStatisticsCard
 ComplexStatisticsCard.defaultProps = {
   color: 'info',
@@ -72,20 +81,6 @@ ComplexStatisticsCard.propTypes = {
   ]),
   title: PropTypes.string.isRequired,
   count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  percentage: PropTypes.shape({
-    color: PropTypes.oneOf([
-      'primary',
-      'secondary',
-      'info',
-      'success',
-      'warning',
-      'error',
-      'dark',
-      'white',
-    ]),
-    amount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    label: PropTypes.string,
-  }),
   icon: PropTypes.node.isRequired,
   onClick: PropTypes.func,
 };

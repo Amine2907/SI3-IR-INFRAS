@@ -29,7 +29,6 @@ const statusValidationValues = [
 const statusSfrValues = [
   '0.Bloquée/Suspendu MAD',
   '0.Bloquée/Suspendu Conv',
-  '0.Bloquée/Suspendu MAD',
   '1.En Recherche',
   '2.En validation',
   '3.Validé',
