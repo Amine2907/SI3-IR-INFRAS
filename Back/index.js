@@ -126,7 +126,7 @@ app.get('/', (req, res) => {
     <body>
       <div class="container">
         <h1>SI3 Backend</h1>
-        <p>Welcome to the SI3 backend! Everything is running smoothly. 🚀</p>
+        <p>Welcome to the SI3 backend! Everything is running smoothly.</p>
       </div>
     </body>
     </html>
