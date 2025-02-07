@@ -4,12 +4,11 @@ import path from 'path';
 // Controller to generate and download Excel file
 export const downloadExcel = async (req, res) => {
     try {
-      const { type } = req.params; // Get the dynamic type from the URL
-  
+      const { type } = req.params;
       let data;
       // Fetch the data based on the type
-      if (type === 'drProduit') {
-        data = await DashFiles.getDrDataWithSite();
+        if (type === 'drProduit') {
+            data = await DashFiles.getDrDataWithSite();
         } else if (type === 'devisRecu') {
             data = await DashFiles.getDeviRecuWithSite();
         } else if (type === 'devisEnAttente') {

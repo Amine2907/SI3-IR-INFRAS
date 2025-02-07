@@ -88,7 +88,6 @@ const listReports = async (req, res) => {
         res.status(500).json({ success: false, message: 'Error listing reports', error: error.message });
     }
 };
-
 // Generate a signed URL for private buckets (optional)
  const getSignedUrl = async (req, res) => {
     try {

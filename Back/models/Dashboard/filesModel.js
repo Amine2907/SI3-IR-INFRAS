@@ -12,7 +12,7 @@ const getDrDataWithSite = async () => {
                 date_dr,
                 type_rac,
                 gestionnaire_de_reseau,
-                SPRid_FK,
+                status_prop,
                 Site:EB_fk (
                     EB,
                     G2R,
@@ -21,49 +21,48 @@ const getDrDataWithSite = async () => {
             `)
             .eq('is_active', true);
 
-        if (error) throw error;
-
+        if (error) {
+            console.error("Supabase Error: Fetching DR Data Failed", error);
+            throw error; // Throw error to stop execution
+        }
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const drDataWithMappedValues = await Promise.all(data.map(async (item) => {
-            // Fetch the corresponding 'nom' from 'Entite' where Eid matches gestionnaire_de_reseau
-            const { data: entiteData, error: entiteError } = await supabase
-                .from('Entite')
-                .select('nom')
-                .eq('Eid', item.gestionnaire_de_reseau)
-                .single(); // We expect only one result for each gestionnaire_de_reseau value
+            try {
+                const { data: entiteData, error: entiteError } = await supabase
+                    .from('Entite')
+                    .select('nom')
+                    .eq('Eid', item.gestionnaire_de_reseau)
+                    .single();
 
-            if (entiteError) {
-                console.error('Error fetching Entite:', entiteError);
+                if (entiteError) {
+                    console.error('Error fetching Entite:', entiteError);
+                    return null; // Handle missing data
+                }
+                return {
+                    'EB': item.Site ? item.Site.EB : "", 
+                    'G2R': item.Site ? item.Site.G2R : "",
+                    'Nom site': item.Site ? item.Site.nom : "",
+                    'Numéro Demande Raccordement': item.NDRid,
+                    'Ko Dp': item.Ko_Dp || "",
+                    'Date Demande Raccordement': item.date_dr || "",
+                    'Type Raccordement': item.type_rac || "",
+                    'Gestionnaire de reseau': entiteData ? entiteData.nom : "",
+                    'Status Proposition ': item.status_prop  || "",
+                };
+            } catch (innerError) {
+                console.error("Error processing DR data item:", innerError);
+                return null;
             }
-
-            // Fetch the corresponding 'SPR_desc' from 'SPR' table where SPRid matches SPRid_FK
-            const { data: sprData, error: sprError } = await supabase
-                .from('SPR')
-                .select('SPR_desc')
-                .eq('SPRid', item.SPRid_FK)
-                .single();
-
-            if (sprError) {
-                console.error('Error fetching SPR:', sprError);
-            }
-            // Return the mapped data, with NULL handling
-            return {
-                'EB': item.Site ? item.Site.EB : "", 
-                'G2R': item.Site ? item.Site.G2R : "",
-                'Nom site': item.Site ? item.Site.nom : "",
-                'Numéro Demande Raccordement': item.NDRid,
-                'Ko Dp': item.Ko_Dp || "",
-                'Date Demande Raccordement': item.date_dr || "",
-                'Type Raccordement': item.type_rac || "",
-                'Gestionnaire de reseau': entiteData ? entiteData.nom : "",
-                'Status Proposition ': sprData ? sprData.SPR_desc : "",
-            };
         }));
+
+        console.log("Final DR Data Processed:", drDataWithMappedValues);
         return { success: true, data: drDataWithMappedValues };
     } catch (error) {
+        console.error("Error in getDrDataWithSite:", error);
         return { success: false, error: error.message };
     }
 };
+
 const getDeviRecuWithSite = async () => {
     try {
         // Fetch DR data and Site-related fields
@@ -600,9 +599,10 @@ const getDemMesRealisee  = async () => {
     }
 };
 // get consuel en attente 
-const getConsuelEnAttente  = async () => {
+const getConsuelEnAttente = async () => {
     try {
-        // Fetch DR data and Site-related fields
+        console.log("Fetching data for getConsuelEnAttente...");
+        // Fetch MES data while joining Traveaux with the correct relationship
         const { data, error } = await supabase
             .from('MES')
             .select(`
@@ -615,31 +615,37 @@ const getConsuelEnAttente  = async () => {
                     EB,
                     G2R,
                     nom
-                )
+                ),
+                Traveaux:MES_traveaux_id_fkey (branchement_reel)  -- Explicitly specify the correct join
             `)
             .eq('is_active', true)
-            .not('branchement_reel', 'is', null);
+            .not('Traveaux.branchement_reel', 'is', null);
 
-        if (error) throw error;
-        // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
-        const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
-            // Return the mapped data, with NULL handling
-            return {
-                'EB': item.Site ? item.Site.EB : "", 
-                'G2R': item.Site ? item.Site.G2R : "",
-                'Nom site': item.Site ? item.Site.nom : "",
-                'Numéro de travaux': item.traveaux_id,
-                'Numéro de PDL': item.no_PDL || "",
-                'MES prévisionnelle': item.MES_prev || "",
-                'MES reel': item.MES_reel || "",
-                'status consuel': item.status_consuel || "",
-            };
+        if (error) {
+            console.error("Supabase Error: Fetching MES Data Failed", error);
+            throw error;
+        }
+        // Transform data into the expected format
+        const formattedData = data.map(item => ({
+            'EB': item.Site ? item.Site.EB : "", 
+            'G2R': item.Site ? item.Site.G2R : "",
+            'Nom site': item.Site ? item.Site.nom : "",
+            'Numéro de travaux': item.traveaux_id,
+            'Numéro de PDL': item.no_PDL || "",
+            'MES prévisionnelle': item.MES_prev || "",
+            'MES reel': item.MES_reel || "",
+            'Status consuel': item.status_consuel || "",
         }));
-        return { success: true, data: reglementOkWithMappedValues };
+        console.log("Data successfully formatted for getConsuelEnAttente:", formattedData);
+        return { success: true, data: formattedData };
     } catch (error) {
+        console.error("Error in getConsuelEnAttente:", error);
         return { success: false, error: error.message };
     }
 };
+
+
+
 // get demande MES en attente 
 const getDemMesEnAttante  = async () => {
     try {
