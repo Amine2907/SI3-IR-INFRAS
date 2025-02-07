@@ -36,28 +36,20 @@ import SiteDetails from 'layouts/site_details';
 import SiteInfoCard from 'examples/Cards/SiteInfoCard';
 import Sites from 'layouts/sites';
 import ReportingGlobal from 'layouts/reporting_global';
-import { motion } from 'framer-motion';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
   const { pathname } = useLocation();
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.4 }}
-    >
-      <AuthProvider>
-        <InnerApp
-          controller={controller}
-          dispatch={dispatch}
-          pathname={pathname}
-          theme={darkMode ? themeDark : theme}
-          darkMode={darkMode}
-        />
-      </AuthProvider>
-    </motion.div>
+    <AuthProvider>
+      <InnerApp
+        controller={controller}
+        dispatch={dispatch}
+        pathname={pathname}
+        theme={darkMode ? themeDark : theme}
+        darkMode={darkMode}
+      />
+    </AuthProvider>
   );
 }
 function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {

@@ -33,8 +33,8 @@ import {
 import { Tooltip } from '@mui/material';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import AuthService from 'services/Auth/authService';
 import { useAuth } from 'context/Auth/AuthContext';
+import WarningPopUp from 'examples/popup/userPopUp/WarningPopUp';
 // Material Dashboard 2 React context
 import {
   useMaterialUIController,
@@ -52,6 +52,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split('/').slice(1);
   const navigate = useNavigate();
+  const [showWarning, setShowWarning] = useState(false);
 
   // Function to handle the "Go Back" navigation
   const handleGoBack = () => {
@@ -118,44 +119,16 @@ function DashboardNavbar({ absolute, light, isMini }) {
       return colorValue;
     },
   });
-  // const handleLogOut = async () => {
-  //   const userId = user?.id;
-  //   if (!userId) {
-  //     setAlert({
-  //       show: true,
-  //       message: 'User ID is not available. Unable to log out.',
-  //       type: 'error',
-  //     });
-  //     return;
-  //   }
-  //   try {
-  //     // Call the AuthService to log out the user
-  //     const response = await AuthService.signOutUser(userId);
-  //     if (response.success) {
-  //       setAlert({ show: true, message: 'Logout successful.', type: 'success' });
-  //       // Clear local data and navigate to login page
-  //       localStorage.removeItem('accessToken');
-  //       localStorage.removeItem('refreshToken');
-  //       setTimeout(() => {
-  //         navigate('/authentication/sign-in/basic');
-  //       }, 2000);
-  //     } else {
-  //       setAlert({
-  //         show: true,
-  //         message: response.error?.message || 'Failed to log out. Please try again.',
-  //         type: 'error',
-  //       });
-  //     }
-  //   } catch (error) {
-  //     setAlert({
-  //       show: true,
-  //       message: `An error occurred: ${error.message || 'Unknown error'}`,
-  //       type: 'error',
-  //     });
-  //   }
-  // };
-  const handleExit = () => {
+  const handleLogOut = () => {
+    setShowWarning(true);
+  };
+  const handleConfirmExit = () => {
+    setShowWarning(false);
     navigate('/auth');
+  };
+
+  const handleCloseModal = () => {
+    setShowWarning(false); // Close the warning popup without taking action
   };
   return (
     <AppBar
@@ -181,7 +154,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
         {isMini ? null : (
           <MDBox sx={theme => navbarRow(theme, { isMini })}>
             <MDBox color={light ? 'white' : 'inherit'}>
-              <IconButton sx={navbarIconButton} size="small" disableRipple onClick={handleExit}>
+              <IconButton sx={navbarIconButton} size="small" disableRipple onClick={handleLogOut}>
                 <Icon sx={iconsStyle}>logout</Icon>
               </IconButton>
               <IconButton
@@ -219,6 +192,14 @@ function DashboardNavbar({ absolute, light, isMini }) {
         >
           {alert.message}
         </MDAlert>
+      )}
+      {/* WARNING POPUP */}
+      {showWarning && (
+        <WarningPopUp
+          message="Êtes-vous sûr de vouloir vous déconnecter ?"
+          onConfirm={handleConfirmExit}
+          onCancel={handleCloseModal}
+        />
       )}
     </AppBar>
   );

@@ -139,9 +139,6 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
               }}
               required
             >
-              <MenuItem value="" disabled>
-                -- Choisir une Région* --
-              </MenuItem>
               <MenuItem value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</MenuItem>
               <MenuItem value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</MenuItem>
               <MenuItem value="Bretagne">Bretagne</MenuItem>

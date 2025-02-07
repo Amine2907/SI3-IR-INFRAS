@@ -201,9 +201,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               }}
               required
             >
-              <MenuItem value="" disabled>
-                -- Choisir une priorite --
-              </MenuItem>
               <MenuItem value="P00">P00</MenuItem>
               <MenuItem value="P0">P0</MenuItem>
               <MenuItem value="P1">P1</MenuItem>
@@ -256,9 +253,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               }}
               required
             >
-              <MenuItem value="" disabled>
-                -- Choisir une Region* --
-              </MenuItem>
               <MenuItem value="Auvergne-Rhône-Alpes">Auvergne-Rhône-Alpes</MenuItem>
               <MenuItem value="Bourgogne-Franche-Comté">Bourgogne-Franche-Comté</MenuItem>
               <MenuItem value="Bretagne">Bretagne</MenuItem>
@@ -291,6 +285,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
           ></MDInput>
 
           <FormControl fullWidth style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}>
+            <InputLabel id="devis-select-label">Operateurs</InputLabel>
             <Select
               labelId="operateurs-label"
               name="Operateurs"
@@ -351,9 +346,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               }}
               required
             >
-              <MenuItem value="" disabled>
-                -- Choisir un Programme --
-              </MenuItem>
               <MenuItem value="4GFixe">4GFixe</MenuItem>
               <MenuItem value="DCC">DCC</MenuItem>
               <MenuItem value="ARP">ARP</MenuItem>
@@ -423,9 +415,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               }}
               required
             >
-              <MenuItem value="" disabled>
-                --Choisir le status de site SFR--
-              </MenuItem>
               <MenuItem value="0.Bloquée/Suspendu MAD">0.Bloquée/Suspendu MAD</MenuItem>
               <MenuItem value="0.Bloquée/Suspendu Conv">0.Bloquée/Suspendu Conv</MenuItem>
               <MenuItem value="0.Bloquée/Suspendu DP">0.Bloquée/Suspendu DP</MenuItem>
@@ -468,9 +457,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               }}
               required
             >
-              <MenuItem value="" disabled>
-                -- Choisir le status de site--
-              </MenuItem>
               <MenuItem value="Activé">Activé</MenuItem>
               <MenuItem value="Inactif">Inactif</MenuItem>
               <MenuItem value="Terminé">Terminé</MenuItem>
