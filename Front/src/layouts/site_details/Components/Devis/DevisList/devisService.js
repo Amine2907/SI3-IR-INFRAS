@@ -20,13 +20,17 @@ const useDevisForSite = () => {
       if (!fournisseurResponse.success) {
         throw new Error(`Failed to fetch fournisseurs for site ID: ${siteId}`);
       }
+
       // Fetch devis for the site
       const devisResponse = await SiteDevisService.getDevisSite(siteId);
       if (!devisResponse.success) throw new Error('Failed to fetch devis');
-      const deviss = devisResponse.data;
 
-      // Set the fetched data directly without adding fournisseurName
-      setDevisData(deviss);
+      // Sort devis by creation time in descending order (newest first)
+      const sortedDevis = devisResponse.data.sort((a, b) => {
+        return new Date(b.created_at) - new Date(a.created_at);
+      });
+
+      setDevisData(sortedDevis);
     } catch (err) {
       setError(err.message);
     } finally {
