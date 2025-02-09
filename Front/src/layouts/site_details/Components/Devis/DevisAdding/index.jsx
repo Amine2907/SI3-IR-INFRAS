@@ -114,7 +114,27 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
     fetchActiveDemracs();
   }, [Sid]);
   const validateForm = () => {
+    const requiredFields = [
+      'ND',
+      'no_dr',
+      'fournisseur',
+      'type_devis',
+      'devis_date',
+      'montant',
+      'expiration_date',
+      'reception_date',
+      'numero_DP',
+      'section',
+      'parcelle',
+    ];
     const newErrors = {};
+    requiredFields.forEach(field => {
+      if (!formData[field] || (field === 'fournisseur' && !formData.fournisseur.nom)) {
+        newErrors[field] = 'This field is required';
+      }
+    });
+
+    setErrors(newErrors);
     return newErrors;
   };
   const handleSubmit = () => {
@@ -166,20 +186,25 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
             name="ND"
             value={formData.ND || ''}
             onChange={handleChange}
-            placeholder="N de devis"
-            style={{ marginBottom: '5px', width: '300px' }}
+            placeholder="N de devis*"
+            style={{ marginBottom: '5px', width: '300px', borderColor: errors.ND ? 'red' : '' }}
             required
           />
+          {errors.ND && <p className={styles.errorText}>{errors.ND}</p>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="fournisseur"
               value={formData.fournisseur?.nom || ''}
               onChange={e => handleDropdownChange('fournisseur', 'nom', e.target.value)}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.fournisseur ? 'red' : '',
+              }}
             >
               <MenuItem value="" disabled>
-                -- Choisir le fournisseur --
+                -- Choisir le fournisseur* --
               </MenuItem>
               {activeFrns.length > 0 ? (
                 activeFrns.map(fournisseur => (
@@ -192,16 +217,21 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               )}
             </Select>
           </FormControl>
+          {errors.ND && <p className={styles.errorText}>{errors.fournisseur}</p>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="no_dr"
               value={formData.no_dr || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.fournisseur ? 'red' : '',
+              }}
             >
               <MenuItem value="" disabled>
-                -- Choisir le DR --
+                -- Choisir le DR* --
               </MenuItem>
               {activeDemracs.length > 0 ? (
                 activeDemracs.map(demrac => (
@@ -214,6 +244,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               )}
             </Select>
           </FormControl>
+          {errors.ND && <p className={styles.errorText}>{errors.no_dr}</p>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="type_devis"
@@ -228,7 +259,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir le type de devis --
+                -- Choisir le type de devis* --
               </MenuItem>
               <MenuItem value="Extension ENEDIS">Extension ENEDIS</MenuItem>
               <MenuItem value="Branchement">Branchement</MenuItem>
@@ -236,9 +267,10 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               <MenuItem value="Definitif SYNDICAT">Definitif SYNDICAT</MenuItem>
             </Select>
           </FormControl>
+          {errors.ND && <p className={styles.errorText}>{errors.type_devis}</p>}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Date de devis "
+              label="Date de devis*"
               name="devis_date "
               value={formData.devis_date ? dayjs(formData.devis_date) : null}
               onChange={newValue => {
@@ -249,17 +281,27 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '100%' }}
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                borderColor: errors.devis_date ? 'red' : '',
+              }}
             />
           </LocalizationProvider>
+          {errors.ND && <p className={styles.errorText}>{errors.devis_date}</p>}
           <MDInput
             name="montant"
             value={formData.montant || ''}
             onChange={handleChange}
-            placeholder="Montant (TTC) "
-            style={{ marginBottom: '5px', width: '300px' }}
+            placeholder="Montant (TTC)* "
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.montant ? 'red' : '',
+            }}
             required
           />
+          {errors.ND && <p className={styles.errorText}>{errors.montant}</p>}
           <MDInput
             name="code_postal_lieu"
             value={formData.code_postal_lieu || ''}
@@ -278,7 +320,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Date d'expiration"
+              label="Date d'expiration*"
               name="expiration_date"
               value={formData.expiration_date ? dayjs(formData.expiration_date) : null}
               onChange={newValue => {
@@ -289,12 +331,17 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '100%' }}
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                borderColor: errors.expiration_date ? 'red' : '',
+              }}
             />
           </LocalizationProvider>
+          {errors.ND && <p className={styles.errorText}>{errors.expiration_date}</p>}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Date de reception"
+              label="Date de reception*"
               name="reception_date"
               value={formData.reception_date ? dayjs(formData.reception_date) : null}
               onChange={newValue => {
@@ -305,9 +352,14 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '100%' }}
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                borderColor: errors.reception_date ? 'red' : '',
+              }}
             />
           </LocalizationProvider>
+          {errors.ND && <p className={styles.errorText}>{errors.reception_date}</p>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="etat_ralance"
@@ -372,26 +424,41 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
             name="numero_DP"
             value={formData.numero_DP || ''}
             onChange={handleChange}
-            placeholder="N DP"
-            style={{ marginBottom: '5px', width: '300px' }}
+            placeholder="N DP*"
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.numero_DP ? 'red' : '',
+            }}
             required
           />
+          {errors.ND && <p className={styles.errorText}>{errors.numero_DP}</p>}
           <MDInput
             name="section"
             value={formData.section || ''}
             onChange={handleChange}
-            placeholder="Section"
-            style={{ marginBottom: '5px', width: '300px' }}
+            placeholder="Section*"
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.section ? 'red' : '',
+            }}
             required
           />
+          {errors.ND && <p className={styles.errorText}>{errors.section}</p>}
           <MDInput
             name="parcelle"
             value={formData.parcelle || ''}
             onChange={handleChange}
-            placeholder="Parcelle"
-            style={{ marginBottom: '5px', width: '300px' }}
+            placeholder="Parcelle*"
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.parcelle ? 'red' : '',
+            }}
             required
           />
+          {errors.ND && <p className={styles.errorText}>{errors.parcelle}</p>}
         </div>
       </div>
       <div className={styles.buttonContainer}>

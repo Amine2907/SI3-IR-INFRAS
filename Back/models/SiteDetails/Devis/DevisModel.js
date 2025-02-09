@@ -189,9 +189,13 @@ const createDevis = async (EB, devisData) => {
             .select();
 
         if (insertError) throw insertError;
-
         console.log('Devis created successfully:', devis[0]);
-
+        // Link DR with the site
+        const Did = devis[0].ND;
+        const { error: siteDevisError } = await supabase
+            .from('Site-Devis')
+            .insert([{ Sid: EB, Did }]);
+        if (siteDevisError) throw siteDevisError;
         return { success: true, data: devis[0] };
     } catch (error) {
         console.error('Error in createDevis:', error.message);
