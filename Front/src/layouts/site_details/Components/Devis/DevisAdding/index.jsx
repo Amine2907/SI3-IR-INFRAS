@@ -166,7 +166,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
             name="ND"
             value={formData.ND || ''}
             onChange={handleChange}
-            placeholder="N de devis"
+            placeholder="N de devis*"
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />
@@ -179,7 +179,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               style={{ padding: '10px', fontSize: '14px' }}
             >
               <MenuItem value="" disabled>
-                -- Choisir le fournisseur --
+                -- Choisir le fournisseur* --
               </MenuItem>
               {activeFrns.length > 0 ? (
                 activeFrns.map(fournisseur => (
@@ -201,7 +201,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               style={{ padding: '10px', fontSize: '14px' }}
             >
               <MenuItem value="" disabled>
-                -- Choisir le DR --
+                -- Choisir le DR* --
               </MenuItem>
               {activeDemracs.length > 0 ? (
                 activeDemracs.map(demrac => (
@@ -228,7 +228,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir le type de devis --
+                -- Choisir le type de devis* --
               </MenuItem>
               <MenuItem value="Extension ENEDIS">Extension ENEDIS</MenuItem>
               <MenuItem value="Branchement">Branchement</MenuItem>
@@ -238,7 +238,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           </FormControl>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Date de devis "
+              label="Date de devis*"
               name="devis_date "
               value={formData.devis_date ? dayjs(formData.devis_date) : null}
               onChange={newValue => {
@@ -256,7 +256,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
             name="montant"
             value={formData.montant || ''}
             onChange={handleChange}
-            placeholder="Montant (TTC) "
+            placeholder="Montant (TTC)* "
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />
@@ -278,7 +278,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Date d'expiration"
+              label="Date d'expiration*"
               name="expiration_date"
               value={formData.expiration_date ? dayjs(formData.expiration_date) : null}
               onChange={newValue => {
@@ -294,7 +294,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Date de reception"
+              label="Date de reception*"
               name="reception_date"
               value={formData.reception_date ? dayjs(formData.reception_date) : null}
               onChange={newValue => {
@@ -372,7 +372,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
             name="numero_DP"
             value={formData.numero_DP || ''}
             onChange={handleChange}
-            placeholder="N DP"
+            placeholder="N DP*"
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />
@@ -380,7 +380,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
             name="section"
             value={formData.section || ''}
             onChange={handleChange}
-            placeholder="Section"
+            placeholder="Section*"
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />
@@ -388,7 +388,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
             name="parcelle"
             value={formData.parcelle || ''}
             onChange={handleChange}
-            placeholder="Parcelle"
+            placeholder="Parcelle*"
             style={{ marginBottom: '5px', width: '300px' }}
             required
           />

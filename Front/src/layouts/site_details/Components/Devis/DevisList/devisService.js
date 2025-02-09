@@ -20,7 +20,6 @@ const useDevisForSite = () => {
       if (!fournisseurResponse.success) {
         throw new Error(`Failed to fetch fournisseurs for site ID: ${siteId}`);
       }
-
       // Fetch devis for the site
       const devisResponse = await SiteDevisService.getDevisSite(siteId);
       if (!devisResponse.success) throw new Error('Failed to fetch devis');
