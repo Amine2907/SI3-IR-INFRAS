@@ -124,7 +124,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
             name="numero_DP"
             value={formData.numero_DP || ''}
             onChange={handleChange}
-            placeholder="Numero DP"
+            placeholder="Numero DP*"
             style={{
               marginBottom: '5px',
               width: '300px',

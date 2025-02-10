@@ -98,7 +98,7 @@ const DpUModal = ({ dp, onSave, onClose }) => {
           </FormControl>
           <MDInput
             name="numero_DP"
-            label="Numéro DP"
+            label="Numéro DP*"
             value={formData.numero_DP || ''}
             onChange={handleChange}
             placeholder="Numéro DP"
@@ -112,7 +112,7 @@ const DpUModal = ({ dp, onSave, onClose }) => {
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="ANO certificat tacite"
+              label="ANO certificat tacite*"
               name="ANO_certificat_tacite"
               value={formData.ANO_certificat_tacite ? dayjs(formData.ANO_certificat_tacite) : null}
               onChange={newValue => {
