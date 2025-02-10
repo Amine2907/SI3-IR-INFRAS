@@ -185,7 +185,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 width: '320px',
                 borderColor: errors.NDRid ? 'red' : '',
               }}
-              disabled
               error={errors.NDRid}
             />
             <FormControl fullWidth required style={{ width: '320px' }}>
@@ -193,21 +192,15 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
               <Select
                 labelId="role-select-label"
                 name="Pro_fk"
-                value={formData.Pro_fk || ''}
+                value={formData.Pro_fk?.nom || ''}
                 displayEmpty
                 onChange={e => handleNestedVChange('Pro_fk', 'nom', e.target.value)}
                 style={{
                   padding: '12px',
                   fontSize: '14px',
-                  // borderColor: errors.Pro_fk ? 'red' : '',
                 }}
-                // error={errors.Pro_fk}
-                required
               >
                 <InputLabel>Propsect</InputLabel>
-                <MenuItem value="" disabled>
-                  -- Choisir un prospect --
-                </MenuItem>
                 {activeProspects.length > 0 ? (
                   activeProspects.map(prospect => (
                     <MenuItem key={prospect.nom} value={prospect.Proid}>
@@ -371,10 +364,8 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 style={{
                   padding: '10px',
                   fontSize: '14px',
-                  borderColor: errors.gestionnaire_de_reseau ? 'red' : '',
                 }}
-                error={errors.gestionnaire_de_reseau}
-                required
+                // required
               >
                 <MenuItem value="" disabled>
                   -- Choisir un gestionnaire de reseau* --
