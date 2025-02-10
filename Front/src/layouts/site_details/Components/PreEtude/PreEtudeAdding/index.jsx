@@ -3,7 +3,7 @@ import styles from './styles.module.css';
 import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Select, MenuItem, FormControl } from '@mui/material';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 
 const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
@@ -158,7 +158,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
             <span style={{ color: 'red', fontSize: '12px' }}>{errors.selectedProspect}</span>
           )}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
-            <InputLabel id="devis-select-label">Type de raccordement</InputLabel>
             <Select
               name="type_rac"
               value={formData.type_rac}

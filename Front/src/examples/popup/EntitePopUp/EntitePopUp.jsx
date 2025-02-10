@@ -86,9 +86,6 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
                 }}
                 required
               >
-                <MenuItem value="" disabled>
-                  -- Choisir un Role* --
-                </MenuItem>
                 <MenuItem value="Fournisseur">Fournisseur</MenuItem>
                 <MenuItem value="CSPS">CSPS</MenuItem>
                 <MenuItem value="Syndicat">Syndicat</MenuItem>
@@ -137,7 +134,6 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.region ? 'red' : '',
               }}
               required
             >
