@@ -150,12 +150,13 @@ function DashboardCharts() {
 
   const renderBarChart = (data, title) => (
     <Grid item xs={12}>
-      <MDBox mb={3}>
+      <MDBox mb={4}>
         <h3>{title}</h3>
         <ResponsiveContainer width="100%" height={400}>
           <BarChart
             data={data.length ? data : [{ programme: "Pas d'informations", count: 0 }]}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+            barGap={10}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="programme" angle={-45} textAnchor="end" height={100} />
@@ -171,7 +172,7 @@ function DashboardCharts() {
 
   const renderRadarChart = (data, title) => (
     <Grid item xs={12} md={6}>
-      <MDBox mb={3}>
+      <MDBox mb={4}>
         <h3>{title}</h3>
         <ResponsiveContainer width="100%" height={400}>
           <RadarChart data={data.length ? data : [{ programme: "Pas d'informations", count: 0 }]}>
@@ -197,7 +198,7 @@ function DashboardCharts() {
     const hasData = data.some(item => item.count > 0);
     return (
       <Grid item xs={12} md={6}>
-        <MDBox mb={3}>
+        <MDBox mb={4}>
           <h3>{title}</h3>
           <ResponsiveContainer width="100%" height={400}>
             {hasData ? (
@@ -232,12 +233,13 @@ function DashboardCharts() {
 
   const renderLineChart = (data, title) => (
     <Grid item xs={12} md={6}>
-      <MDBox mb={3}>
+      <MDBox mb={4}>
         <h3>{title}</h3>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart
             data={data.length ? data : [{ programme: "Pas d'informations", count: 0 }]}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+            barGap={10}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="programme" angle={-45} textAnchor="end" height={100} />

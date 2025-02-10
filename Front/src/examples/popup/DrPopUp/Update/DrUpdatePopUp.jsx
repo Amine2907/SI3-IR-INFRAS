@@ -12,7 +12,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import entityService from 'services/Entites/entityService';
-import { error } from 'bfj/src/events';
 const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     demrac || {
@@ -131,11 +130,9 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
     if (!formData.operators || formData.operators.length === 0) {
       newErrors.operators = 'At least one operator est obligatoire';
     }
-
-    if (!formData.gestionnaire_de_reseau.nom) {
-      newErrors.gestionnaire_de_reseau = 'Gestionnaire de reseau est obligatoire';
-    }
-
+    // if (!formData.gestionnaire_de_reseau.nom) {
+    //   newErrors.gestionnaire_de_reseau = 'Gestionnaire de reseau est obligatoire';
+    // }
     if (!formData.status_prop) {
       newErrors.status_prop = 'Statut proposition est obligatoire';
     }
@@ -146,6 +143,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
   const handleSubmit = () => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
+      console.log('Validation errors:', newErrors);
       setErrors(newErrors);
       return;
     }
@@ -192,7 +190,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
               <Select
                 labelId="role-select-label"
                 name="Pro_fk"
-                value={formData.Pro_fk?.nom || ''}
+                value={formData.Pro_fk || ''}
                 displayEmpty
                 onChange={e => handleNestedVChange('Pro_fk', 'nom', e.target.value)}
                 style={{
@@ -365,7 +363,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                   padding: '10px',
                   fontSize: '14px',
                 }}
-                // required
               >
                 <MenuItem value="" disabled>
                   -- Choisir un gestionnaire de reseau* --
