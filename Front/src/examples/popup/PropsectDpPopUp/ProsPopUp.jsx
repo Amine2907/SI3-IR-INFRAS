@@ -29,12 +29,31 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
     }
     console.log('Initialized formData:', formData);
   }, [prospect]);
-  const handleSubmit = () => {
+  const validateForm = () => {
+    const requiredFields = [
+      'nom',
+      'section',
+      'parcelle',
+      'longitude',
+      'latitude',
+      'status_validation_fk',
+    ];
+
     const newErrors = {};
-    // if (!formData.nom) newErrors.nom = true;
-    // if (!formData.prenom) newErrors.prenom = true;
+    requiredFields.forEach(field => {
+      if (!formData[field]) {
+        newErrors[field] = `${field} est obligatoire !`;
+      }
+    });
+
+    setErrors(newErrors);
+    return newErrors;
+  };
+
+  const handleSubmit = () => {
+    const newErrors = validateForm();
+    // If there are errors, prevent submission
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
       return;
     }
     onSave({ ...formData, is_active: isActive, retenu: isRetenu });
@@ -66,6 +85,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
             }}
             required
           />
+          {errors.nom && <p className={styles.errorText}>{errors.nom}</p>}
           <MDInput
             label="Section"
             name="section"
@@ -76,10 +96,11 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               marginBottom: '5px',
               width: '320px',
               marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
+              borderColor: errors.section ? 'red' : '',
             }}
             required
           />
+          {errors.section && <p className={styles.errorText}>{errors.section}</p>}
           <MDInput
             label="Parcelle"
             name="parcelle"
@@ -90,10 +111,11 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               marginBottom: '5px',
               width: '320px',
               marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
+              borderColor: errors.parcelle ? 'red' : '',
             }}
             required
           />
+          {errors.parcelle && <p className={styles.errorText}>{errors.parcelle}</p>}
           <MDInput
             label="Longitude"
             name="longitude"
@@ -104,10 +126,11 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               marginBottom: '5px',
               width: '320px',
               marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
+              borderColor: errors.longitude ? 'red' : '',
             }}
             required
           />
+          {errors.longitude && <p className={styles.errorText}>{errors.longitude}</p>}
           <MDInput
             label="Latitude"
             name="latitude"
@@ -118,10 +141,11 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               marginBottom: '5px',
               width: '320px',
               marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
+              borderColor: errors.latitude ? 'red' : '',
             }}
             required
           />
+          {errors.latitude && <p className={styles.errorText}>{errors.latitude}</p>}
           <MDInput
             label="Cout Estime"
             name="cout_estime"
@@ -132,7 +156,6 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               marginBottom: '5px',
               width: '320px',
               marginTop: '10px',
-              borderColor: errors.cout_estime ? 'red' : '',
             }}
             required
           />
@@ -155,7 +178,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir le status validation --
+                -- Choisir le status validation* --
               </MenuItem>
               {statusValidationValues.map(status => (
                 <MenuItem key={status} value={status}>
@@ -164,6 +187,9 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
+          {errors.status_validation_fk && (
+            <p className={styles.errorText}>{errors.status_validation_fk}</p>
+          )}
           <FormControl
             fullWidth
             style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
@@ -175,7 +201,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               value={formData.status_site_sfr || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              style={{ padding: '10px', fontSize: '14px' }}
               required
             >
               <MenuItem value="" disabled>

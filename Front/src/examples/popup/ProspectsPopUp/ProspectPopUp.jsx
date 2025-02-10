@@ -11,11 +11,10 @@ import { useLocation } from 'react-router-dom';
 const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
   const [formData, setFormData] = useState(prospect || {});
   const [isActive, setIsActive] = useState(prospect ? prospect.is_active : false);
-  const [isRetenu, setIsRetenu] = useState(prospect ? prospect.retenu : true);
+  const [isRetenu, setIsRetenu] = useState(prospect ? prospect.retenu : false);
   const [errors, setErrors] = useState({});
   const location = useLocation();
   const { EB } = location.state || {};
-  console.log('EB Value:', EB);
   const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prevFormData => ({
@@ -34,9 +33,23 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
     console.log('Initialized formData:', formData);
   }, [prospect]);
   const validateForm = () => {
+    const requiredFields = [
+      'nom',
+      'section',
+      'parcelle',
+      'longitude',
+      'latitude',
+      'status_validation_fk',
+    ];
+
     const newErrors = {};
-    if (!formData.nom) newErrors.nom = true;
-    if (!formData.latitude) newErrors.latitude = true;
+    requiredFields.forEach(field => {
+      if (!formData[field]) {
+        newErrors[field] = `${field} est obligatoire !`;
+      }
+    });
+
+    setErrors(newErrors);
     return newErrors;
   };
   const handleSubmit = () => {
@@ -52,7 +65,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
         status_validation_fk: formData.status_validation_fk,
         status_site_sfr: formData.status_site_sfr,
         cout_estime: formData.cout_estime,
-        is_active: true, // Always true*
+        is_active: isActive,
         retenu: isRetenu,
       };
       console.log('prospect data :', prospectData);
@@ -100,6 +113,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
             }}
             required
           />
+          {errors.nom && <p className={styles.errorText}>{errors.nom}</p>}
           <MDInput
             name="section"
             value={formData.section || ''}
@@ -109,10 +123,11 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
               marginBottom: '5px',
               width: '320px',
               marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
+              borderColor: errors.section ? 'red' : '',
             }}
             required
           />
+          {errors.section && <p className={styles.errorText}>{errors.section}</p>}
           <MDInput
             name="parcelle"
             value={formData.parcelle || ''}
@@ -122,10 +137,11 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
               marginBottom: '5px',
               width: '320px',
               marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
+              borderColor: errors.parcelle ? 'red' : '',
             }}
             required
           />
+          {errors.parcelle && <p className={styles.errorText}>{errors.parcelle}</p>}
           <MDInput
             name="longitude"
             value={formData.longitude || ''}
@@ -135,10 +151,11 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
               marginBottom: '5px',
               width: '320px',
               marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
+              borderColor: errors.longitude ? 'red' : '',
             }}
             required
           />
+          {errors.longitude && <p className={styles.errorText}>{errors.longitude}</p>}
           <MDInput
             name="latitude"
             value={formData.latitude || ''}
@@ -148,10 +165,11 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
               marginBottom: '5px',
               width: '320px',
               marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
+              borderColor: errors.latitude ? 'red' : '',
             }}
             required
           />
+          {errors.latitude && <p className={styles.errorText}>{errors.latitude}</p>}
           <MDInput
             name="cout_estime"
             value={formData.cout_estime || ''}
@@ -183,7 +201,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir le status validation --
+                -- Choisir le status validation* --
               </MenuItem>
               {statusValidationValues.map((status, index) => (
                 <MenuItem key={index} value={status}>
@@ -192,6 +210,9 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
+          {errors.status_validation_fk && (
+            <p className={styles.errorText}>{errors.status_validation_fk}</p>
+          )}
           <FormControl
             fullWidth
             style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}
@@ -202,7 +223,7 @@ const ProspectModal = ({ Sid, prospect, onSave, onClose }) => {
               value={formData.status_site_sfr || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px', borderColor: errors.prenom ? 'red' : '' }}
+              style={{ padding: '10px', fontSize: '14px' }}
               required
             >
               <MenuItem value="" disabled>

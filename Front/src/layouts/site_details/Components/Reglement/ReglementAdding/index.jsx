@@ -57,6 +57,29 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
 
   const validateForm = () => {
     const newErrors = {};
+
+    if (!formData.no_virement) {
+      newErrors.no_virement = 'No virement est obligatoire';
+    }
+    if (!formData.no_devis) {
+      newErrors.no_devis = 'No devis est obligatoire';
+    }
+    if (!formData.libelle_du_virement) {
+      newErrors.libelle_du_virement = 'Libelle du virement est obligatoire';
+    }
+    if (!formData.nom_acteur) {
+      newErrors.nom_acteur = 'Nom acteur est obligatoire';
+    }
+    if (!formData.montant || isNaN(formData.montant) || formData.montant <= 0) {
+      newErrors.montant = 'Montant est obligatoire et doit être un nombre positif';
+    }
+    if (!formData.no_commande) {
+      newErrors.no_commande = 'No commande est obligatoire';
+    }
+    if (!formData.reglement_date) {
+      newErrors.reglement_date = 'Reglement date est obligatoire';
+    }
+    setErrors(newErrors);
     return newErrors;
   };
 
@@ -88,20 +111,31 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
             name="no_virement"
             value={formData.no_virement || ''}
             onChange={handleChange}
-            placeholder="No virement"
-            style={{ marginBottom: '5px', width: '300px' }}
+            placeholder="No virement*"
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.no_virement ? 'red' : '',
+            }}
             required
           />
+          {errors.no_virement && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_virement}</span>
+          )}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="no_devis"
               value={formData.no_devis || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.no_devis ? 'red' : '',
+              }}
             >
               <MenuItem value="" disabled>
-                -- Choisir le Devis --
+                -- Choisir le Devis* --
               </MenuItem>
               {activeDevis.length > 0 ? (
                 activeDevis.map(devis => (
@@ -114,41 +148,72 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
               )}
             </Select>
           </FormControl>
+          {errors.no_devis && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_devis}</span>
+          )}
           <MDInput
             name="nom_acteur"
             value={formData.nom_acteur || ''}
             onChange={handleChange}
-            placeholder="Nom Acteur"
-            style={{ marginBottom: '5px', width: '300px' }}
+            placeholder="Nom Acteur*"
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.nom_acteur ? 'red' : '',
+            }}
             required
           />
+          {errors.nom_acteur && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.nom_acteur}</span>
+          )}
           <MDInput
             name="libelle_du_virement"
             value={formData.libelle_du_virement || ''}
             onChange={handleChange}
-            placeholder="Libelle de virement"
-            style={{ marginBottom: '5px', width: '300px' }}
+            placeholder="Libelle de virement*"
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.libelle_du_virement ? 'red' : '',
+            }}
             required
           />
+          {errors.libelle_du_virement && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.libelle_du_virement}</span>
+          )}
           <MDInput
             name="montant"
             value={formData.montant || ''}
             onChange={handleChange}
-            placeholder="Montant (TTC)"
-            style={{ marginBottom: '5px', width: '300px' }}
+            placeholder="Montant (TTC)*"
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.montant ? 'red' : '',
+            }}
             required
           />
+          {errors.montant && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.montant}</span>
+          )}
           <MDInput
             name="no_commande"
             value={formData.no_commande || ''}
             onChange={handleChange}
-            placeholder="No commande"
-            style={{ marginBottom: '5px', width: '300px' }}
+            placeholder="No commande*"
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.no_commande ? 'red' : '',
+            }}
             required
           />
+          {errors.no_commande && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_commande}</span>
+          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
+              label="Data de paiement*"
               name="reglement_date"
               value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
               onChange={newValue => {
@@ -159,9 +224,16 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '100%' }}
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                borderColor: errors.reglement_date ? 'red' : '',
+              }}
             />
           </LocalizationProvider>
+          {errors.reglement_date && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.reglement_date}</span>
+          )}
         </div>
         <div className={styles.switchContainer}>
           <div className={styles.switchItem}>

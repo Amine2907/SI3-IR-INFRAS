@@ -6,7 +6,6 @@ import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import MDTypography from 'components/MDTypography';
 import { Switch, Select, MenuItem, FormControl, Icon, InputLabel } from '@mui/material';
-import { Label } from '@radix-ui/react-label';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
   const [formData, setFormData] = useState(preEtude || {});
@@ -87,8 +86,19 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
   }, [Sid, preEtude]);
   const validateForm = () => {
     const newErrors = {};
-    if (formData.type_rac === 'Complexe' && !formData.ZFA_ZFB) newErrors.ZFA_ZFB = true;
-    // if (!formData.nom) newErrors.nom = true;
+
+    if (!selectedProspect) {
+      newErrors.selectedProspect = 'Prospect selection est obligatoire';
+    }
+    if (formData.type_rac === 'Complexe') {
+      if (!formData.ZFA_ZFB) {
+        newErrors.ZFA_ZFB = 'ZFA/ZFB selection est obligatoire';
+      }
+      if (!formData.MM || isNaN(formData.MM) || formData.MM <= 0) {
+        newErrors.MM = 'Moyenne metres (MM) est obligatoire et doit être un nombre positif';
+      }
+    }
+    setErrors(newErrors);
     return newErrors;
   };
   const handleSubmit = () => {
@@ -132,7 +142,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
             }}
             required
           >
-            <InputLabel id="devis-select-label">Prospect</InputLabel>
+            <InputLabel id="devis-select-label">Prospect*</InputLabel>
             <Select
               name="activeProspect"
               value={activeProspects.find(p => p.nom === selectedProspect) ? selectedProspect : ''}
@@ -141,6 +151,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
               style={{
                 padding: '10px',
                 fontSize: '14px',
+                borderColor: errors.selectedProspect ? 'red' : '',
               }}
             >
               <MenuItem value="" disabled>
@@ -153,6 +164,9 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
+          {errors.selectedProspect && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.selectedProspect}</span>
+          )}
           <FormControl
             fullWidth
             style={{
@@ -162,7 +176,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
             }}
             required
           >
-            <InputLabel id="devis-select-label">ZFA / ZFB</InputLabel>
+            <InputLabel id="devis-select-label">ZFA / ZFB*</InputLabel>
             <Select
               name="ZFA_ZFB"
               value={formData.ZFA_ZFB || '-- Choisir ZFA/ZFB --'}
@@ -182,9 +196,12 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
               <MenuItem value="ZFB">ZFB</MenuItem>
             </Select>
           </FormControl>
+          {errors.ZFA_ZFB && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.ZFA_ZFB}</span>
+          )}
           <MDInput
             name="MM"
-            label="Moyenne en metres"
+            label="Moyenne en metres*"
             value={formData.MM || ''}
             onChange={handleChange}
             placeholder="Moyenne metres"
@@ -196,6 +213,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
             }}
             required
           />
+          {errors.MM && <span style={{ color: 'red', fontSize: '12px' }}>{errors.MM}</span>}
           <MDInput
             name="CRR"
             label="Création ou remplacement d'un réseau BT"

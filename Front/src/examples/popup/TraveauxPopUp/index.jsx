@@ -77,8 +77,12 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
   };
   const validateForm = () => {
     const newErrors = {};
-    // if (formData.type_rac === 'Complexe' && !formData.ZFA_ZFB) newErrors.ZFA_ZFB = true;
-    // if (!formData.nom) newErrors.nom = true;
+    if (!formData.Tid) {
+      newErrors.Tid = 'No Traveaux est obligatoire';
+    }
+    if (!formData.paie_id) {
+      newErrors.paie_id = 'Libelle du virement est obligatoire';
+    }
     return newErrors;
   };
   const handleSubmit = () => {
@@ -115,15 +119,20 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
         <div className={styles.formGrid}>
           <MDInput
             name="Tid"
-            label="No Traveaux"
+            label="No Traveaux*"
             value={formData.Tid || ''}
             onChange={handleChange}
             placeholder="No virement"
-            style={{ marginBottom: '5px', width: '300px' }}
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.Tid ? 'red' : '',
+            }}
             required
           />
+          {errors.Tid && <p className={styles.errorText}>{errors.Tid}</p>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
-            <InputLabel id="devis-select-label">Libelle virement</InputLabel>
+            <InputLabel id="devis-select-label">Libelle du virement*</InputLabel>
             <Select
               name="paie_id"
               value={formData.paie_id?.libelle_du_virement || ''}
@@ -138,10 +147,11 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem value="">No active lib available</MenuItem>
+                <MenuItem value="">Pas des libelles du virements actives</MenuItem>
               )}
             </Select>
           </FormControl>
+          {errors.paie_id && <p className={styles.errorText}>{errors.paie_id}</p>}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Levage Pylône (PREV)"

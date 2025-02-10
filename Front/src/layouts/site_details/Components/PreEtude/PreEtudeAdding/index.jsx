@@ -3,7 +3,7 @@ import styles from './styles.module.css';
 import PropTypes from 'prop-types';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
-import { Select, MenuItem, FormControl } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import SiteProspectService from 'services/site_details/Prospect/prospectService';
 
 const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
@@ -83,15 +83,35 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
 
     fetchActiveProspects();
   }, [Sid]);
-  const handleSubmit = () => {
+  const validateForm = () => {
     const newErrors = {};
-    if (!formData.type_rac) newErrors.type_rac = true;
-    if (formData.type_rac === 'Complexe' && !formData.ZFA_ZFB) newErrors.ZFA_ZFB = true;
 
+    if (!selectedProspect) {
+      newErrors.selectedProspect = 'Prospect selection est obligatoire';
+    }
+
+    if (!formData.type_rac) {
+      newErrors.type_rac = 'Type de raccordement est obligatoire';
+    }
+
+    if (formData.type_rac === 'Complexe') {
+      if (!formData.ZFA_ZFB) {
+        newErrors.ZFA_ZFB = 'ZFA/ZFB selection est obligatoire';
+      }
+      if (!formData.MM || isNaN(formData.MM) || formData.MM <= 0) {
+        newErrors.MM = 'Moyenne metres (MM) est obligatoire et doit être un nombre positif';
+      }
+    }
+    setErrors(newErrors);
+    return newErrors;
+  };
+
+  const handleSubmit = () => {
+    const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
       return;
     }
+
     const preEtudeData = {
       ADPDT: formData.ADPDT,
       CRR: formData.CRR,
@@ -118,7 +138,11 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
               value={selectedProspect}
               onChange={handleProspectChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.selectedProspect ? 'red' : '',
+              }}
             >
               <MenuItem value="" disabled>
                 -- Choisir le prospect --
@@ -130,7 +154,11 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
               ))}
             </Select>
           </FormControl>
+          {errors.selectedProspect && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.selectedProspect}</span>
+          )}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
+            <InputLabel id="devis-select-label">Type de raccordement</InputLabel>
             <Select
               name="type_rac"
               value={formData.type_rac}
@@ -144,13 +172,15 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir le type de raccordement --
+                -- Choisir le type de raccordement* --
               </MenuItem>
               <MenuItem value="Simple">Simple</MenuItem>
               <MenuItem value="Complexe">Complexe</MenuItem>
             </Select>
           </FormControl>
-
+          {errors.type_rac && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.type_rac}</span>
+          )}
           {formData.type_rac === 'Complexe' && (
             <>
               <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
@@ -167,20 +197,24 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
                   required
                 >
                   <MenuItem value="" disabled>
-                    -- Choisir ZFA/ZFB --
+                    -- Choisir ZFA/ZFB* --
                   </MenuItem>
                   <MenuItem value="ZFA">ZFA</MenuItem>
                   <MenuItem value="ZFB">ZFB</MenuItem>
                 </Select>
               </FormControl>
+              {errors.ZFA_ZFB && (
+                <span style={{ color: 'red', fontSize: '12px' }}>{errors.ZFA_ZFB}</span>
+              )}
               <MDInput
                 name="MM"
                 value={formData.MM || ''}
                 onChange={handleChange}
-                placeholder="Moyenne metres"
-                style={{ marginBottom: '5px', width: '300px' }}
+                placeholder="Moyenne metres*"
+                style={{ marginBottom: '5px', width: '300px', borderColor: errors.MM ? 'red' : '' }}
                 required
               />
+              {errors.MM && <span style={{ color: 'red', fontSize: '12px' }}>{errors.MM}</span>}
               <MDInput
                 name="CRR"
                 value={formData.CRR || ''}
@@ -213,13 +247,14 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
                 style={{ marginBottom: '5px', width: '300px' }}
                 required
               />
-              {/* <MDInput
+              <MDInput
                 name="cout"
                 value={formData.cout.toFixed(2)}
+                label="Cout"
                 readOnly
                 placeholder="Coût calculé"
                 style={{ marginBottom: '5px', width: '300px' }}
-              /> */}
+              />
             </>
           )}
         </div>

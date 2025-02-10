@@ -18,7 +18,6 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
   };
   const handleChange = event => {
     const { name, value } = event.target;
-    // console.log('Dropdown Change:', { name, value }); // Verify name and value
     setFormData(prevData => ({
       ...prevData,
       [name]: value,
@@ -36,7 +35,14 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
   }, [dp]);
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.numero_DP) newErrors.numero_DP = true;
+    if (!formData.numero_DP) {
+      newErrors.numero_DP = 'Numero DP est obligatoire !';
+    }
+    if (!formData.ANO_certificat_tacite) {
+      newErrors.ANO_certificat_tacite = 'ANO certificat tacite est obligatoire !';
+    }
+
+    setErrors(newErrors);
     return newErrors;
   };
   const handleSubmit = () => {
@@ -132,7 +138,7 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
           )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="ANO certificat tacite"
+              label="ANO certificat tacite*"
               name="ANO_certificat_tacite"
               value={formData.ANO_certificat_tacite ? dayjs(formData.ANO_certificat_tacite) : null}
               onChange={newValue => {
@@ -143,9 +149,16 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '270px' }}
+              style={{
+                marginBottom: '10px',
+                width: '270px',
+                borderColor: errors.numero_DP ? 'red' : '',
+              }}
             />
           </LocalizationProvider>
+          {errors.ANO_certificat_tacite && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.ANO_certificat_tacite}</span>
+          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Arrete opposition"

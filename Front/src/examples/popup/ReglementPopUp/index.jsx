@@ -61,15 +61,34 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
       [field]: { ...(formData[field] || {}), [subField]: value },
     });
   };
-  const handleSubmit = () => {
+  const validateForm = () => {
     const newErrors = {};
-    // Ensure EB and G2R have values
-    if (!formData.no_virement) newErrors.no_virement = true;
-    if (!formData.no_devis) newErrors.no_devis = true;
-    if (!formData.nom_acteur) newErrors.nom_acteur = true;
-    if (!formData.libelle_du_virement) newErrors.libelle_du_virement = true;
-    if (!formData.montant) newErrors.montant = true;
-    if (!formData.no_commande) newErrors.no_commande = true;
+    if (!formData.no_virement) {
+      newErrors.no_virement = 'No virement est obligatoire';
+    }
+    if (!formData.no_devis) {
+      newErrors.no_devis = 'No devis est obligatoire';
+    }
+    if (!formData.libelle_du_virement) {
+      newErrors.libelle_du_virement = 'Libelle du virement est obligatoire';
+    }
+    if (!formData.nom_acteur) {
+      newErrors.nom_acteur = 'Nom acteur est obligatoire';
+    }
+    if (!formData.montant || isNaN(formData.montant) || formData.montant <= 0) {
+      newErrors.montant = 'Montant est obligatoire et doit être un nombre positif';
+    }
+    if (!formData.no_commande) {
+      newErrors.no_commande = 'No commande est obligatoire';
+    }
+    if (!formData.reglement_date) {
+      newErrors.reglement_date = 'Reglement date est obligatoire';
+    }
+    setErrors(newErrors);
+    return newErrors;
+  };
+  const handleSubmit = () => {
+    const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -103,10 +122,10 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
         <div className={styles.formGrid}>
           <MDInput
             name="no_virement"
-            label="Numero Virement"
+            label="Numero Virement*"
             value={formData.no_virement || ''}
             onChange={handleChange}
-            placeholder="No virement"
+            placeholder="No virement*"
             style={{
               marginBottom: '1px',
               width: '320px',
@@ -116,7 +135,7 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
             error={errors.no_virement}
           />
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
-            <InputLabel id="devis-select-label">Numero devis</InputLabel>
+            <InputLabel id="devis-select-label">Numero devis*</InputLabel>
             <Select
               name="no_devis"
               value={formData.no_devis || ''}
@@ -149,7 +168,7 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
             value={formData.nom_acteur || ''}
             label="Nom acteur"
             onChange={handleChange}
-            placeholder="Nom Acteur"
+            placeholder="Nom Acteur*"
             style={{
               marginBottom: '1px',
               width: '320px',
@@ -160,7 +179,7 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
           />
           <MDInput
             name="libelle_du_virement"
-            label="Libelle du virement"
+            label="Libelle du virement*"
             value={formData.libelle_du_virement || ''}
             onChange={handleChange}
             placeholder="Libelle de virement"
@@ -174,7 +193,7 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
           />
           <MDInput
             name="montant"
-            label="Montant"
+            label="Montant(TTC)*"
             value={formData.montant || ''}
             onChange={handleChange}
             placeholder="Montant (TTC)"
@@ -188,7 +207,7 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
           />
           <MDInput
             name="no_commande"
-            label="Numero commande"
+            label="Numero commande*"
             value={formData.no_commande || ''}
             onChange={handleChange}
             placeholder="N commande"
@@ -202,7 +221,7 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Data de paiement"
+              label="Data de paiement*"
               name="reglement_date"
               value={formData.reglement_date ? dayjs(formData.reglement_date) : null}
               onChange={newValue => {
@@ -213,7 +232,12 @@ const PaieUModal = ({ Sid, paiement, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '100%' }}
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                borderColor: errors.reglement_date ? 'red' : '',
+              }}
+              error={errors.reglement_date}
             />
           </LocalizationProvider>
           <div>

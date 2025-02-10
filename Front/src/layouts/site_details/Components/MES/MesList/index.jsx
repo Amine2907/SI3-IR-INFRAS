@@ -146,7 +146,7 @@ function MiseEnServiceList() {
       <table>
         <thead>
           <TableRow>
-            <TableCell sx={cellStyle}>No Pdl</TableCell>
+            <TableCell sx={cellStyle}>No MES</TableCell>
             <TableCell sx={cellStyle}>Status consuel</TableCell>
             <TableCell sx={cellStyle}>Consuel remise</TableCell>
             <TableCell sx={cellStyle}>MES demande</TableCell>

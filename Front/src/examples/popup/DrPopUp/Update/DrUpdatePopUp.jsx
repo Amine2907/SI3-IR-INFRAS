@@ -112,8 +112,34 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
   }, []);
   const validateForm = () => {
     const newErrors = {};
-    // if (!formData.nom) newErrors.nom = true;
-    // if (!formData.latitude) newErrors.latitude = true;
+
+    if (!formData.NDRid) {
+      newErrors.NDRid = 'Num DR est obligatoire';
+    }
+    if (!formData.Pro_fk) {
+      newErrors.Pro_fk = 'Prospect est obligatoire';
+    }
+    if (!formData.date_dr) {
+      newErrors.date_dr = 'DR Date est obligatoire';
+    }
+
+    if (!formData.type_rac) {
+      newErrors.type_rac = 'Type de raccordement est obligatoire';
+    }
+
+    if (!formData.operators || formData.operators.length === 0) {
+      newErrors.operators = 'At least one operator est obligatoire';
+    }
+
+    if (!formData.gestionnaire_de_reseau.nom) {
+      newErrors.gestionnaire_de_reseau = 'Gestionnaire de reseau est obligatoire';
+    }
+
+    if (!formData.status_prop) {
+      newErrors.status_prop = 'Statut proposition est obligatoire';
+    }
+
+    setErrors(newErrors);
     return newErrors;
   };
   const handleSubmit = () => {
@@ -152,18 +178,18 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
           <div className={styles.formGrid}>
             <MDInput
               name="NDRid"
-              label="Numero de DR"
+              label="Numero de DR*"
               value={formData.NDRid || ''}
               onChange={handleChange}
               placeholder="NDRid*"
               style={{
                 width: '320px',
 
-                borderColor: errors.nom ? 'red' : '',
+                borderColor: errors.NDRid ? 'red' : '',
               }}
               required
             />
-
+            {errors.NDRid && <span style={{ color: 'red', fontSize: '12px' }}>{errors.NDRid}</span>}
             <FormControl fullWidth required style={{ width: '320px' }}>
               <InputLabel id="devis-select-label">Prospect</InputLabel>
               <Select
@@ -175,7 +201,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 style={{
                   padding: '12px',
                   fontSize: '14px',
-                  borderColor: errors.prenom ? 'red' : '',
+                  borderColor: errors.Pro_fk ? 'red' : '',
                 }}
                 required
               >
@@ -194,6 +220,9 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 )}
               </Select>
             </FormControl>
+            {errors.Pro_fk && (
+              <span style={{ color: 'red', fontSize: '12px' }}>{errors.Pro_fk}</span>
+            )}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDatePicker
                 label="KO DP "
@@ -212,7 +241,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
             </LocalizationProvider>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDatePicker
-                label="DR Date"
+                label="DR Date*"
                 name="DR Date"
                 value={formData.date_dr ? dayjs(formData.date_dr) : null}
                 onChange={newValue => {
@@ -223,9 +252,16 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                     },
                   });
                 }}
-                style={{ marginBottom: '0px', width: '100%' }}
+                style={{
+                  marginBottom: '0px',
+                  width: '100%',
+                  borderColor: errors.date_dr ? 'red' : '',
+                }}
               />
             </LocalizationProvider>
+            {errors.date_dr && (
+              <span style={{ color: 'red', fontSize: '12px' }}>{errors.date_dr}</span>
+            )}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDatePicker
                 label="Reception dossier complet"
@@ -252,7 +288,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 style={{
                   padding: '10px',
                   fontSize: '14px',
-                  borderColor: errors.prenom ? 'red' : '',
+                  borderColor: errors.type_rac ? 'red' : '',
                 }}
                 required
               >
@@ -264,8 +300,11 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 <MenuItem value="A Renseigner">A Renseigner</MenuItem>
               </Select>
             </FormControl>
+            {errors.type_rac && (
+              <span style={{ color: 'red', fontSize: '12px' }}>{errors.type_rac}</span>
+            )}
             <FormControl fullWidth style={{ width: '320px' }}>
-              <InputLabel id="operators-label">Operateurs</InputLabel>
+              <InputLabel id="operators-label">Operateurs*</InputLabel>
               <Select
                 labelId="operateurs-label"
                 name="Operateurs"
@@ -276,7 +315,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 style={{
                   padding: '10px',
                   fontSize: '14px',
-                  borderColor: errors.prenom ? 'red' : '',
+                  borderColor: errors.operators ? 'red' : '',
                 }}
               >
                 {operators.map(operateur => (
@@ -306,6 +345,9 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 ))}
               </Select>
             </FormControl>
+            {errors.operators && (
+              <span style={{ color: 'red', fontSize: '12px' }}>{errors.operators}</span>
+            )}
             <FormControl fullWidth style={{ width: '320px' }} required>
               <InputLabel id="devis-select-label">Status Proposition</InputLabel>
               <Select
@@ -326,6 +368,9 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 <MenuItem value="Reçu">Reçu</MenuItem>
               </Select>
             </FormControl>
+            {errors.status_prop && (
+              <span style={{ color: 'red', fontSize: '12px' }}>{errors.status_prop}</span>
+            )}
             <FormControl fullWidth required style={{ width: '320px' }}>
               <InputLabel id="devis-select-label">Gestionnaire de reseau</InputLabel>
               <Select
@@ -337,12 +382,12 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 style={{
                   padding: '10px',
                   fontSize: '14px',
-                  borderColor: errors.prenom ? 'red' : '',
+                  borderColor: errors.gestionnaire_de_reseau ? 'red' : '',
                 }}
                 required
               >
                 <MenuItem value="" disabled>
-                  -- Choisir un entite --
+                  -- Choisir un gestionnaire de reseau* --
                 </MenuItem>
                 {activeEntites.length > 0 ? (
                   activeEntites.map(entite => (
@@ -351,10 +396,15 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                     </MenuItem>
                   ))
                 ) : (
-                  <MenuItem value="">No active entites available</MenuItem>
+                  <MenuItem value="">Pas des gestionnaire de reseau actives</MenuItem>
                 )}
               </Select>
             </FormControl>
+            {errors.gestionnaire_de_reseau && (
+              <span style={{ color: 'red', fontSize: '12px' }}>
+                {errors.gestionnaire_de_reseau}
+              </span>
+            )}
             <div>
               <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
               <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>

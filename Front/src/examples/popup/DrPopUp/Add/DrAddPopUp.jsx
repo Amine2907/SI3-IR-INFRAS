@@ -106,27 +106,41 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
   }, []);
   const validateForm = () => {
     const newErrors = {};
-    // if (!formData.nom) newErrors.nom = true;
+
+    if (!formData.NDRid) {
+      newErrors.NDRid = 'Num DR est obligatoire';
+    }
+    if (!formData.Pro_fk) {
+      newErrors.Pro_fk = 'Prospect est obligatoire';
+    }
+    if (!formData.date_dr) {
+      newErrors.date_dr = 'DR Date est obligatoire';
+    }
+
+    if (!formData.type_rac) {
+      newErrors.type_rac = 'Type de raccordement est obligatoire';
+    }
+
+    if (!formData.operators || formData.operators.length === 0) {
+      newErrors.operators = 'At least one operator est obligatoire';
+    }
+
+    if (!formData.gestionnaire_de_reseau.nom) {
+      newErrors.gestionnaire_de_reseau = 'Gestionnaire de reseau est obligatoire';
+    }
+
+    if (!formData.status_prop) {
+      newErrors.status_prop = 'Statut proposition est obligatoire';
+    }
+
+    setErrors(newErrors);
     return newErrors;
   };
+
   const handleSubmit = () => {
     const newErrors = validateForm();
+    // Prevent submission if there are validation errors
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      const demracData = {
-        NDRid: formData.NDRid,
-        Ko_Dp: formData.Ko_Dp,
-        date_dr: formData.date_dr,
-        drdc: formData.drdc,
-        type_rac: formData.type_rac,
-        gestionnaire_de_reseau: formData.gestionnaire_de_reseau.nom,
-        status_prop: formData.status_prop,
-        no_devis: formData.no_devis.ND,
-        Pro_fk: formData.Pro_fk.nom,
-        is_active: isActive,
-      };
-      console.log('prospect data :', demracData);
-      onSave({ Sid, demracData });
       return;
     }
     const demracData = {
@@ -139,10 +153,14 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
       status_prop: formData.status_prop,
       no_devis: formData.no_devis.ND,
       Pro_fk: formData.Pro_fk.nom,
+      operators: formData.operators,
       is_active: isActive,
     };
+
+    console.log('Demrac data:', demracData);
     onSave({ Sid, demracData });
   };
+
   const handleToggleActive = () => {
     setIsActive(!isActive);
   };
@@ -172,10 +190,11 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               marginBottom: '5px',
               width: '320px',
               marginTop: '10px',
-              borderColor: errors.nom ? 'red' : '',
+              borderColor: errors.NDRid ? 'red' : '',
             }}
             required
           />
+          {errors.NDRid && <span style={{ color: 'red', fontSize: '12px' }}>{errors.NDRid}</span>}
           <FormControl
             fullWidth
             required
@@ -203,6 +222,9 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
                 <MenuItem value="">No active prospects available</MenuItem>
               )}
             </Select>
+            {errors.Pro_fk && (
+              <span style={{ color: 'red', fontSize: '12px' }}>{errors.Pro_fk}</span>
+            )}
           </FormControl>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
@@ -222,7 +244,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="DR Date"
+              label="DR Date*"
               name="DR Date"
               value={formData.date_dr ? dayjs(formData.date_dr) : null}
               onChange={newValue => {
@@ -233,9 +255,16 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '100%' }}
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                borderColor: errors.date_dr ? 'red' : '',
+              }}
             />
           </LocalizationProvider>
+          {errors.date_dr && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.date_dr}</span>
+          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Reception dossier complet"
@@ -270,15 +299,18 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir le type de racc --
+                -- Choisir le type de rac* --
               </MenuItem>
               <MenuItem value="Simple">Simple</MenuItem>
               <MenuItem value="Complexe">Complexe</MenuItem>
               <MenuItem value="A Renseigner">A Renseigner</MenuItem>
             </Select>
           </FormControl>
+          {errors.type_rac && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.type_rac}</span>
+          )}
           <FormControl style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
-            <InputLabel id="operators-label">Operateurs</InputLabel>
+            <InputLabel id="operators-label">Operateurs*</InputLabel>
             <Select
               labelId="operators-label"
               name="operators"
@@ -305,6 +337,9 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
+          {errors.operators && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.operators}</span>
+          )}
           <FormControl
             fullWidth
             required
@@ -324,7 +359,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir une entite --
+                -- Choisir un gestionnaire de reseau* --
               </MenuItem>
               {activeEntites.length > 0 ? (
                 activeEntites.map(entite => (
@@ -337,6 +372,9 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               )}
             </Select>
           </FormControl>
+          {errors.gestionnaire_de_reseau && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.gestionnaire_de_reseau}</span>
+          )}
           <FormControl
             fullWidth
             required
@@ -350,16 +388,20 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               style={{
                 padding: '10px',
                 fontSize: '14px',
+                borderColor: errors.status_prop ? 'red' : '',
               }}
               required
             >
               <MenuItem value="" disabled>
-                -- Choisir un statut --
+                -- Choisir un statut proposition* --
               </MenuItem>
               <MenuItem value="Devis en attente">Devis en attente</MenuItem>
               <MenuItem value="Reçu">Reçu</MenuItem>
             </Select>
           </FormControl>
+          {errors.status_prop && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.status_prop}</span>
+          )}
           <div>
             <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>

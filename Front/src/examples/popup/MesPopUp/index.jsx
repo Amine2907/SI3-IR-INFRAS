@@ -57,15 +57,23 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
   }, [Sid]);
   const validateForm = () => {
     const newErrors = {};
-    // if (formData.type_rac === 'Complexe' && !formData.ZFA_ZFB) newErrors.ZFA_ZFB = true;
-    // if (!formData.nom) newErrors.nom = true;
+    if (!formData.no_PDL) {
+      newErrors.no_PDL = 'Numero Mes est obligatoire';
+    }
+    if (!formData.traveaux_id) {
+      newErrors.traveaux_id = 'Numero traveaux est obligatoire';
+    }
+    if (!formData.status_consuel) {
+      newErrors.status_consuel = 'Status Consuel est obligatoire';
+    }
+    setErrors(newErrors);
     return newErrors;
   };
   const handleSubmit = () => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      console.log('demRac data :', mesData);
+      console.log('mes data :', mesData);
       onSave({
         Sid,
         ...formData,
@@ -94,21 +102,30 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
         <div className={styles.formGrid}>
           <MDInput
             name="no_PDL"
-            label="No PDL"
+            label="No MES*"
             value={formData.no_PDL || ''}
             onChange={handleChange}
             placeholder="No PDL"
-            style={{ marginBottom: '5px', width: '300px' }}
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.no_PDL ? 'red' : '',
+            }}
             required
           />
+          {errors.no_PDL && <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_PDL}</span>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
-            <InputLabel id="devis-select-label">Numero Traveaux</InputLabel>
+            <InputLabel id="devis-select-label">Numero Traveaux*</InputLabel>
             <Select
               name="traveaux_id"
               value={formData.traveaux_id || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.traveaux_id ? 'red' : '',
+              }}
             >
               <MenuItem value="" disabled>
                 -- Choisir traveaux --
@@ -120,18 +137,25 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem value="">No active traveaux available</MenuItem>
+                <MenuItem value="">pas des traveaux actives</MenuItem>
               )}
             </Select>
           </FormControl>
+          {errors.traveaux_id && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.traveaux_id}</span>
+          )}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
-            <InputLabel id="devis-select-label">Status Consuel</InputLabel>
+            <InputLabel id="devis-select-label">Status Consuel*</InputLabel>
             <Select
               name="status_consuel"
               value={formData.status_consuel || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.status_consuel ? 'red' : '',
+              }}
             >
               <MenuItem value="" disabled>
                 -- Choisir Status consuel --
@@ -140,6 +164,9 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
               <MenuItem value="ok">ok</MenuItem>
             </Select>
           </FormControl>
+          {errors.status_consuel && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.status_consuel}</span>
+          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Consuel remise"

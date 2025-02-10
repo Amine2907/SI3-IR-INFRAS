@@ -51,10 +51,18 @@ const MesAddingModal = ({ Sid, mes = {}, onSave }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    // Add form validation here
+    if (!formData.no_PDL) {
+      newErrors.no_PDL = 'Numero Mes est obligatoire';
+    }
+    if (!formData.traveaux_id) {
+      newErrors.traveaux_id = 'Numero traveaux est obligatoire';
+    }
+    if (!formData.status_consuel) {
+      newErrors.status_consuel = 'Status Consuel est obligatoire';
+    }
+    setErrors(newErrors);
     return newErrors;
   };
-
   const handleSubmit = () => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
@@ -83,20 +91,29 @@ const MesAddingModal = ({ Sid, mes = {}, onSave }) => {
             name="no_PDL"
             value={formData.no_PDL || ''}
             onChange={handleChange}
-            placeholder="No mes"
-            style={{ marginBottom: '5px', width: '300px' }}
+            placeholder="No mes*"
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.no_PDL ? 'red' : '',
+            }}
             required
           />
+          {errors.no_PDL && <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_PDL}</span>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="traveaux_id"
               value={formData.traveaux_id || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.traveaux_id ? 'red' : '',
+              }}
             >
               <MenuItem value="" disabled>
-                -- Choisir Traveaux --
+                -- Choisir Traveaux* --
               </MenuItem>
               {activeTrav.length > 0 ? (
                 activeTrav.map(trav => (
@@ -105,25 +122,35 @@ const MesAddingModal = ({ Sid, mes = {}, onSave }) => {
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem value="">No active traveaux available</MenuItem>
+                <MenuItem value="">Pas des traveaux actives</MenuItem>
               )}
             </Select>
           </FormControl>
+          {errors.traveaux_id && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.traveaux_id}</span>
+          )}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="status_consuel"
               value={formData.status_consuel || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.status_consuel ? 'red' : '',
+              }}
             >
               <MenuItem value="" disabled>
-                -- Choisir Status consuel --
+                -- Choisir Status consuel* --
               </MenuItem>
               <MenuItem value="En attente">En attente</MenuItem>
               <MenuItem value="ok">ok</MenuItem>
             </Select>
           </FormControl>
+          {errors.status_consuel && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.status_consuel}</span>
+          )}
           {/* Date pickers */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
