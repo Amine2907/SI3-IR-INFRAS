@@ -128,7 +128,6 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
             error={errors.no_fac}
             required
           />
-          {errors.no_fac && <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_fac}</span>}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Date facture*"

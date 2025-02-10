@@ -107,7 +107,6 @@ const DpUModal = ({ dp, onSave, onClose }) => {
               marginTop: '10px',
               borderColor: errors.numero_DP ? 'red' : '',
             }}
-            disabled
             error={errors.numero_DP}
             required
           />

@@ -199,9 +199,9 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 style={{
                   padding: '12px',
                   fontSize: '14px',
-                  borderColor: errors.Pro_fk ? 'red' : '',
+                  // borderColor: errors.Pro_fk ? 'red' : '',
                 }}
-                error={errors.Pro_fk}
+                // error={errors.Pro_fk}
                 required
               >
                 <InputLabel>Propsect</InputLabel>

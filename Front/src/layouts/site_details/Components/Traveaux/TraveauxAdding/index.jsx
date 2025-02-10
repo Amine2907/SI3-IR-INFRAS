@@ -56,7 +56,6 @@ const TravAddingModal = ({ Sid, traveaux = {}, onSave }) => {
     }
     return newErrors;
   };
-
   const handleSubmit = () => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {

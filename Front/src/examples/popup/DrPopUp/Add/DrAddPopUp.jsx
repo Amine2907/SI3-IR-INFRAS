@@ -12,7 +12,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import entityService from 'services/Entites/entityService';
-import { error } from 'bfj/src/events';
 const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     demrac || {
@@ -210,9 +209,9 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               style={{
                 padding: '12px',
                 fontSize: '14px',
-                borderColor: errors.Pro_fk ? 'red' : '',
+                // borderColor: errors.Pro_fk ? 'red' : '',
               }}
-              error={errors.Pro_fk}
+              // error={errors.Pro_fk}
               required
             >
               <MenuItem value="" disabled>
