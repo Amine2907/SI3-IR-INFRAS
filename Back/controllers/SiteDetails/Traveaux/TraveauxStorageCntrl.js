@@ -14,8 +14,12 @@ const uploadFileController = async (req, res) => {
     if (!travId || isNaN(travId)) {
       return res.status(400).json({ error: 'Invalid travId: It should be a valid number' });
     }
+    // Use the file name as the unique file name and sanitize it
+    const sanitizeFileName = (name) => {
+      return name.replace(/[^a-zA-Z0-9._-]/g, '_'); // Replace invalid characters with "_"
+    };
     // Use the file name as the unique file name
-    const uniqueFileName = file.originalname;
+    const uniqueFileName = sanitizeFileName(file.originalname);
     const travIdStr = String(travId);
     const SidStr =  String(Sid);
     const filePath = `travs-pdf/${SidStr}/${travIdStr}/${uniqueFileName}`;
