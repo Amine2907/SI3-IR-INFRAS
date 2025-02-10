@@ -73,12 +73,6 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      console.log('demRac data :', factureData);
-      onSave({
-        Sid,
-        ...formData,
-        is_active: isActive,
-      });
       return;
     }
     onSave({
@@ -108,6 +102,7 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
               onChange={handleChange}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.Dfk ? 'red' : '' }}
+              error={errors.Dfk}
             >
               <MenuItem value="" disabled>
                 -- Choisir devis --
@@ -123,7 +118,6 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
               )}
             </Select>
           </FormControl>
-          {errors.Dfk && <span style={{ color: 'red', fontSize: '12px' }}>{errors.Dfk}</span>}
           <MDInput
             name="no_fac"
             value={formData.no_fac || ''}
@@ -131,6 +125,7 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
             onChange={handleChange}
             placeholder="No Facture"
             style={{ marginBottom: '5px', width: '300px', borderColor: errors.no_fac ? 'red' : '' }}
+            error={errors.no_fac}
             required
           />
           {errors.no_fac && <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_fac}</span>}
@@ -152,11 +147,9 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
                 width: '100%',
                 borderColor: errors.facture_date ? 'red' : '',
               }}
+              error={errors.facture_date}
             />
           </LocalizationProvider>
-          {errors.facture_date && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.facture_date}</span>
-          )}
           <MDInput
             name="montant_ht"
             label="Montant HT"
@@ -182,6 +175,7 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
             onChange={handleChange}
             placeholder="Montant TTC"
             style={{ marginBottom: '5px', width: '300px' }}
+            error={errors.montant_ttc}
             required
           />
           <div>

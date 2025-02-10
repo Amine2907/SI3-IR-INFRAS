@@ -32,6 +32,7 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = () => {
     const newErrors = {};
     if (!formData.nom) newErrors.nom = true;
@@ -66,11 +67,10 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
                 width: '320px',
                 borderColor: errors.nom ? 'red' : '',
               }}
+              error={errors.nom}
               required
             />
-            {errors.nom && <span style={{ color: 'red', fontSize: '12px' }}>{errors.nom}</span>}
           </div>
-
           <div style={{ marginBottom: '3px' }}>
             <FormControl fullWidth style={{ marginTop: '0px', width: '320px' }} required>
               <InputLabel id="devis-select-label">Role</InputLabel>
@@ -84,6 +84,7 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
                   fontSize: '14px',
                   borderColor: errors.role ? 'red' : '',
                 }}
+                error={errors.role}
                 required
               >
                 <MenuItem value="Fournisseur">Fournisseur</MenuItem>
@@ -96,7 +97,6 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
                 <MenuItem value="Mairie">Mairie</MenuItem>
               </Select>
             </FormControl>
-            {errors.role && <span style={{ color: 'red', fontSize: '12px' }}>{errors.role}</span>}
           </div>
           <MDInput
             label="Adresse"

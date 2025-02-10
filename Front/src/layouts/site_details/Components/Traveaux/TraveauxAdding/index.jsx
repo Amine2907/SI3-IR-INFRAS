@@ -95,9 +95,9 @@ const TravAddingModal = ({ Sid, traveaux = {}, onSave }) => {
               width: '300px',
               borderColor: errors.Tid ? 'red' : '',
             }}
+            error={errors.Tid}
             required
           />
-          {errors.Tid && <span style={{ color: 'red', fontSize: '12px' }}>{errors.Tid}</span>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="paie_id"
@@ -109,6 +109,7 @@ const TravAddingModal = ({ Sid, traveaux = {}, onSave }) => {
                 fontSize: '14px',
                 borderColor: errors.paie_id ? 'red' : '',
               }}
+              error={errors.paie_id}
             >
               <MenuItem value="" disabled>
                 -- Choisir libelle Virement* --
@@ -124,9 +125,6 @@ const TravAddingModal = ({ Sid, traveaux = {}, onSave }) => {
               )}
             </Select>
           </FormControl>
-          {errors.paie_id && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.paie_id}</span>
-          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Levage Pylône (PREV)"

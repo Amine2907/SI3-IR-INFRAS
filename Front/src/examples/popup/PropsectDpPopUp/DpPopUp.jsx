@@ -49,23 +49,6 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      const dpData = {
-        ANO_certificat_tacite: formData.ANO_certificat_tacite,
-        arrete_opposition: formData.arrete_opposition,
-        derniere_verification: formData.derniere_verification,
-        etat_prerequis: formData.etat_prerequis,
-        MJS: formData.MJS,
-        numero_DP: formData.numero_DP,
-        plans: formData.plans,
-        production_DP_PC: formData.production_DP_PC,
-        recipisse_depot_DP: formData.recipisse_depot_DP,
-        status_go_traveauxP: formData.status_go_traveauxP,
-        status_go_traveauxR: formData.status_go_traveauxR,
-        is_active: isActive,
-        relance: isRelance,
-      };
-      console.log('Decl preal data :', dpData);
-      onSave({ Proid, dpData });
       return;
     }
     const dpData = {
@@ -131,11 +114,9 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
               marginTop: '10px',
               borderColor: errors.numero_DP ? 'red' : '',
             }}
+            error={errors.numero_DP}
             required
           />
-          {errors.numero_DP && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.numero_DP}</span>
-          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="ANO certificat tacite*"
@@ -152,13 +133,11 @@ const DpModal = ({ Proid, dp, onSave, onClose }) => {
               style={{
                 marginBottom: '10px',
                 width: '270px',
-                borderColor: errors.numero_DP ? 'red' : '',
+                borderColor: errors.ANO_certificat_tacite ? 'red' : '',
               }}
+              error={errors.ANO_certificat_tacite}
             />
           </LocalizationProvider>
-          {errors.ANO_certificat_tacite && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.ANO_certificat_tacite}</span>
-          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Arrete opposition"

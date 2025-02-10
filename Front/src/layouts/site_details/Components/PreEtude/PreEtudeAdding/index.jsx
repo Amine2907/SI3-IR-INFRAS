@@ -143,6 +143,7 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
                 fontSize: '14px',
                 borderColor: errors.selectedProspect ? 'red' : '',
               }}
+              error={errors.selectedProspect}
             >
               <MenuItem value="" disabled>
                 -- Choisir le prospect --
@@ -154,9 +155,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
               ))}
             </Select>
           </FormControl>
-          {errors.selectedProspect && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.selectedProspect}</span>
-          )}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
             <Select
               name="type_rac"
@@ -168,6 +166,7 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
                 fontSize: '14px',
                 borderColor: errors.type_rac ? 'red' : '',
               }}
+              error={errors.type_rac}
               required
             >
               <MenuItem value="" disabled>
@@ -177,9 +176,6 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
               <MenuItem value="Complexe">Complexe</MenuItem>
             </Select>
           </FormControl>
-          {errors.type_rac && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.type_rac}</span>
-          )}
           {formData.type_rac === 'Complexe' && (
             <>
               <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }}>
@@ -193,6 +189,7 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
                     fontSize: '14px',
                     borderColor: errors.ZFA_ZFB ? 'red' : '',
                   }}
+                  error={errors.ZFA_ZFB}
                   required
                 >
                   <MenuItem value="" disabled>
@@ -202,18 +199,15 @@ const PreEtudeAddingModal = ({ Sid, preEtude, onSave }) => {
                   <MenuItem value="ZFB">ZFB</MenuItem>
                 </Select>
               </FormControl>
-              {errors.ZFA_ZFB && (
-                <span style={{ color: 'red', fontSize: '12px' }}>{errors.ZFA_ZFB}</span>
-              )}
               <MDInput
                 name="MM"
                 value={formData.MM || ''}
                 onChange={handleChange}
                 placeholder="Moyenne metres*"
                 style={{ marginBottom: '5px', width: '300px', borderColor: errors.MM ? 'red' : '' }}
+                error={errors.MM}
                 required
               />
-              {errors.MM && <span style={{ color: 'red', fontSize: '12px' }}>{errors.MM}</span>}
               <MDInput
                 name="CRR"
                 value={formData.CRR || ''}

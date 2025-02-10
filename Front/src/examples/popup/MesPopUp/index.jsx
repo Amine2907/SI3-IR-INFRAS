@@ -73,12 +73,6 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      console.log('mes data :', mesData);
-      onSave({
-        Sid,
-        ...formData,
-        is_active: isActive,
-      });
       return;
     }
     onSave({
@@ -111,9 +105,9 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
               width: '300px',
               borderColor: errors.no_PDL ? 'red' : '',
             }}
+            error={errors.no_PDL}
             required
           />
-          {errors.no_PDL && <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_PDL}</span>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <InputLabel id="devis-select-label">Numero Traveaux*</InputLabel>
             <Select
@@ -126,6 +120,7 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.traveaux_id ? 'red' : '',
               }}
+              error={errors.traveaux_id}
             >
               <MenuItem value="" disabled>
                 -- Choisir traveaux --
@@ -141,9 +136,6 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
               )}
             </Select>
           </FormControl>
-          {errors.traveaux_id && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.traveaux_id}</span>
-          )}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <InputLabel id="devis-select-label">Status Consuel*</InputLabel>
             <Select
@@ -156,6 +148,7 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.status_consuel ? 'red' : '',
               }}
+              error={errors.status_consuel}
             >
               <MenuItem value="" disabled>
                 -- Choisir Status consuel --
@@ -164,9 +157,6 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
               <MenuItem value="ok">ok</MenuItem>
             </Select>
           </FormControl>
-          {errors.status_consuel && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.status_consuel}</span>
-          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Consuel remise"

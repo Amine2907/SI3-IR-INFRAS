@@ -13,7 +13,6 @@ import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MDInput from 'components/MDInput';
 import styles from '../style.module.css';
-
 // Department options for the multi-select
 const DEPARTMENTS = [
   'Étude Prix',
@@ -86,8 +85,8 @@ const CompanyModal = ({ company, onSave, onClose }) => {
             width: '320px',
             borderColor: errors.nom ? 'red' : '',
           }}
+          error={errors.nom}
         />
-        {errors.nom && <span style={{ color: 'red', fontSize: '12px' }}>{errors.nom}</span>}
         <MDInput
           name="site_web"
           label="Site web"
@@ -107,8 +106,8 @@ const CompanyModal = ({ company, onSave, onClose }) => {
             width: '320px',
             borderColor: errors.siret ? 'red' : '',
           }}
+          error={errors.siret}
         />
-        {errors.siret && <span style={{ color: 'red', fontSize: '12px' }}>{errors.siret}</span>}
         <FormControl style={{ marginBottom: '10px', width: '320px' }}>
           <InputLabel id="department-label">Sélectionnez les départements</InputLabel>
           <Select
@@ -144,7 +143,6 @@ const CompanyModal = ({ company, onSave, onClose }) => {
           <InputLabel>Active</InputLabel>
           <Switch checked={isActive} onChange={handleToggleActive} />
         </div>
-
         <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
           <MDButton
             onClick={handleSubmit}

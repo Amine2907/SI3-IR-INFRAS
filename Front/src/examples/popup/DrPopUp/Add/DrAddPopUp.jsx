@@ -12,6 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import entityService from 'services/Entites/entityService';
+import { error } from 'bfj/src/events';
 const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     demrac || {
@@ -192,9 +193,9 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               marginTop: '10px',
               borderColor: errors.NDRid ? 'red' : '',
             }}
+            error={errors.NDRid}
             required
           />
-          {errors.NDRid && <span style={{ color: 'red', fontSize: '12px' }}>{errors.NDRid}</span>}
           <FormControl
             fullWidth
             required
@@ -206,7 +207,12 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               value={formData.Pro_fk.nom || ''}
               displayEmpty
               onChange={e => handleDropdownChange('Pro_fk', 'nom', e.target.value)}
-              style={{ padding: '12px', fontSize: '14px', borderColor: errors.Pro_fk ? 'red' : '' }}
+              style={{
+                padding: '12px',
+                fontSize: '14px',
+                borderColor: errors.Pro_fk ? 'red' : '',
+              }}
+              error={errors.Pro_fk}
               required
             >
               <MenuItem value="" disabled>
@@ -222,9 +228,6 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
                 <MenuItem value="">No active prospects available</MenuItem>
               )}
             </Select>
-            {errors.Pro_fk && (
-              <span style={{ color: 'red', fontSize: '12px' }}>{errors.Pro_fk}</span>
-            )}
           </FormControl>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
@@ -260,11 +263,9 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
                 width: '100%',
                 borderColor: errors.date_dr ? 'red' : '',
               }}
+              error={errors.date_dr}
             />
           </LocalizationProvider>
-          {errors.date_dr && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.date_dr}</span>
-          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Reception dossier complet"
@@ -296,6 +297,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.type_rac ? 'red' : '',
               }}
+              error={errors.type_rac}
               required
             >
               <MenuItem value="" disabled>
@@ -306,9 +308,6 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               <MenuItem value="A Renseigner">A Renseigner</MenuItem>
             </Select>
           </FormControl>
-          {errors.type_rac && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.type_rac}</span>
-          )}
           <FormControl style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
             <InputLabel id="operators-label">Operateurs*</InputLabel>
             <Select
@@ -323,6 +322,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.operators ? 'red' : '',
               }}
+              error={errors.operators}
             >
               {operators.map(operateur => (
                 <MenuItem key={operateur} value={operateur}>
@@ -337,9 +337,6 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
-          {errors.operators && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.operators}</span>
-          )}
           <FormControl
             fullWidth
             required
@@ -356,6 +353,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.gestionnaire_de_reseau ? 'red' : '',
               }}
+              error={errors.gestionnaire_de_reseau}
               required
             >
               <MenuItem value="" disabled>
@@ -372,9 +370,6 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               )}
             </Select>
           </FormControl>
-          {errors.gestionnaire_de_reseau && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.gestionnaire_de_reseau}</span>
-          )}
           <FormControl
             fullWidth
             required
@@ -390,6 +385,7 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.status_prop ? 'red' : '',
               }}
+              error={errors.status_prop}
               required
             >
               <MenuItem value="" disabled>
@@ -399,9 +395,6 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               <MenuItem value="Reçu">Reçu</MenuItem>
             </Select>
           </FormControl>
-          {errors.status_prop && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.status_prop}</span>
-          )}
           <div>
             <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>

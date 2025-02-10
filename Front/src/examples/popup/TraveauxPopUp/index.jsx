@@ -89,12 +89,6 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      onSave({
-        Sid,
-        paie_id: formData.paie_id?.Pid || null,
-        ...formData,
-        is_active: isActive,
-      });
       return;
     }
     onSave({
@@ -128,6 +122,7 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
               width: '300px',
               borderColor: errors.Tid ? 'red' : '',
             }}
+            error={errors.Tid}
             required
           />
           {errors.Tid && <p className={styles.errorText}>{errors.Tid}</p>}
@@ -139,6 +134,7 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
               onChange={e => handleDropdownChange('paie_id', 'libelle_du_virement', e.target.value)}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px' }}
+              error={errors.paie_id}
             >
               {activeLib.length > 0 ? (
                 activeLib.map(lib => (
@@ -151,7 +147,6 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
               )}
             </Select>
           </FormControl>
-          {errors.paie_id && <p className={styles.errorText}>{errors.paie_id}</p>}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Levage Pylône (PREV)"
