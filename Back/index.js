@@ -46,7 +46,6 @@ app.use(express.urlencoded({ limit: "100mb", extended: true }));
 app.use(cors({
   origin: '*',
 }));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
