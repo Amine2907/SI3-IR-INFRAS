@@ -125,7 +125,6 @@ const TravUModal = ({ Sid, traveaux, onSave, onClose }) => {
             error={errors.Tid}
             required
           />
-          {errors.Tid && <p className={styles.errorText}>{errors.Tid}</p>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <InputLabel id="devis-select-label">Libelle du virement*</InputLabel>
             <Select

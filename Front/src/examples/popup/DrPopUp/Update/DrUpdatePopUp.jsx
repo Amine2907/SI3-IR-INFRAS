@@ -12,7 +12,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import entityService from 'services/Entites/entityService';
-import { error } from 'bfj/src/events';
 const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     demrac || {
@@ -131,11 +130,9 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
     if (!formData.operators || formData.operators.length === 0) {
       newErrors.operators = 'At least one operator est obligatoire';
     }
-
-    if (!formData.gestionnaire_de_reseau.nom) {
-      newErrors.gestionnaire_de_reseau = 'Gestionnaire de reseau est obligatoire';
-    }
-
+    // if (!formData.gestionnaire_de_reseau.nom) {
+    //   newErrors.gestionnaire_de_reseau = 'Gestionnaire de reseau est obligatoire';
+    // }
     if (!formData.status_prop) {
       newErrors.status_prop = 'Statut proposition est obligatoire';
     }
@@ -146,6 +143,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
   const handleSubmit = () => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
+      console.log('Validation errors:', newErrors);
       setErrors(newErrors);
       return;
     }
@@ -185,7 +183,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 width: '320px',
                 borderColor: errors.NDRid ? 'red' : '',
               }}
-              disabled
               error={errors.NDRid}
             />
             <FormControl fullWidth required style={{ width: '320px' }}>
@@ -199,15 +196,9 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 style={{
                   padding: '12px',
                   fontSize: '14px',
-                  borderColor: errors.Pro_fk ? 'red' : '',
                 }}
-                error={errors.Pro_fk}
-                required
               >
                 <InputLabel>Propsect</InputLabel>
-                <MenuItem value="" disabled>
-                  -- Choisir un prospect --
-                </MenuItem>
                 {activeProspects.length > 0 ? (
                   activeProspects.map(prospect => (
                     <MenuItem key={prospect.nom} value={prospect.Proid}>
@@ -371,10 +362,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 style={{
                   padding: '10px',
                   fontSize: '14px',
-                  borderColor: errors.gestionnaire_de_reseau ? 'red' : '',
                 }}
-                error={errors.gestionnaire_de_reseau}
-                required
               >
                 <MenuItem value="" disabled>
                   -- Choisir un gestionnaire de reseau* --

@@ -12,7 +12,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import entityService from 'services/Entites/entityService';
-import { error } from 'bfj/src/events';
 const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     demrac || {
@@ -210,9 +209,9 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               style={{
                 padding: '12px',
                 fontSize: '14px',
-                borderColor: errors.Pro_fk ? 'red' : '',
+                // borderColor: errors.Pro_fk ? 'red' : '',
               }}
-              error={errors.Pro_fk}
+              // error={errors.Pro_fk}
               required
             >
               <MenuItem value="" disabled>
@@ -308,11 +307,11 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               <MenuItem value="A Renseigner">A Renseigner</MenuItem>
             </Select>
           </FormControl>
-          <FormControl style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}>
+          <FormControl fullWidth style={{ width: '320px' }}>
             <InputLabel id="operators-label">Operateurs*</InputLabel>
             <Select
-              labelId="operators-label"
-              name="operators"
+              labelId="operateurs-label"
+              name="Operateurs"
               multiple
               value={formData.operators || []}
               onChange={handleoperatorsChange}
@@ -326,13 +325,27 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
             >
               {operators.map(operateur => (
                 <MenuItem key={operateur} value={operateur}>
-                  <input
-                    type="checkbox"
-                    checked={formData.operators && formData.operators.includes(operateur)}
-                    readOnly
-                    style={{ marginRight: '100px', cursor: 'pointer' }}
-                  />
-                  <MDTypography variant="body2">{operateur}</MDTypography>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      width: '100%',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      <input
+                        type="checkbox"
+                        checked={formData.Operateurs && formData.Operateurs.includes(operateur)}
+                        readOnly
+                        style={{
+                          marginRight: '10px',
+                          transform: 'scale(1.2)',
+                        }}
+                      />
+                      <MDTypography variant="body2">{operateur}</MDTypography>
+                    </span>
+                  </div>
                 </MenuItem>
               ))}
             </Select>
@@ -351,10 +364,10 @@ const DrAddModal = ({ Sid, demrac, onSave, onClose }) => {
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.gestionnaire_de_reseau ? 'red' : '',
+                // borderColor: errors.gestionnaire_de_reseau ? 'red' : '',
               }}
-              error={errors.gestionnaire_de_reseau}
-              required
+              // error={errors.gestionnaire_de_reseau}
+              // required
             >
               <MenuItem value="" disabled>
                 -- Choisir un gestionnaire de reseau* --
