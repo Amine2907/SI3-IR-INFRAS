@@ -130,13 +130,9 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
     if (!formData.operators || formData.operators.length === 0) {
       newErrors.operators = 'At least one operator est obligatoire';
     }
-    // if (!formData.gestionnaire_de_reseau.nom) {
-    //   newErrors.gestionnaire_de_reseau = 'Gestionnaire de reseau est obligatoire';
-    // }
     if (!formData.status_prop) {
       newErrors.status_prop = 'Statut proposition est obligatoire';
     }
-
     setErrors(newErrors);
     return newErrors;
   };
@@ -147,8 +143,18 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
       setErrors(newErrors);
       return;
     }
-    onSave({ ...formData, is_active: isActive });
+    const formattedData = {
+      ...formData,
+      gestionnaire_de_reseau: formData.gestionnaire_de_reseau.nom,
+      Pro_fk: formData.Pro_fk.nom,
+      no_devis: formData.no_devis.ND,
+      is_active: isActive,
+    };
+
+    console.log('Submitting formatted data:', formattedData);
+    onSave(formattedData);
   };
+
   const handleToggleActive = () => {
     if (demrac) {
       setIsActive(!isActive);
@@ -159,7 +165,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
     setFormData({ ...formData, operators: value });
   };
   const handleNestedVChange = (field, subField, value) => {
-    // Directly set the numeric ID instead of an object
     setFormData({
       ...formData,
       [field]: { ...formData[field], [subField]: value },
@@ -356,7 +361,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
               <Select
                 labelId="role-select-label"
                 name="gestionnaire_de_reseau"
-                value={formData.gestionnaire_de_reseau || ''}
+                value={formData.gestionnaire_de_reseau.nom || formData.gestionnaire_de_reseau || ''}
                 displayEmpty
                 onChange={e => handleNestedVChange('gestionnaire_de_reseau', 'nom', e.target.value)}
                 style={{
@@ -364,9 +369,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                   fontSize: '14px',
                 }}
               >
-                <MenuItem value="" disabled>
-                  -- Choisir un gestionnaire de reseau* --
-                </MenuItem>
                 {activeEntites.length > 0 ? (
                   activeEntites.map(entite => (
                     <MenuItem key={entite.nom} value={entite.Eid}>
