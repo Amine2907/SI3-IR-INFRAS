@@ -52,7 +52,6 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
 
   const handleSubmit = () => {
     const newErrors = validateForm();
-    // If there are errors, prevent submission
     if (Object.keys(newErrors).length > 0) {
       return;
     }
@@ -83,9 +82,9 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               marginTop: '10px',
               borderColor: errors.nom ? 'red' : '',
             }}
+            error={errors.nom}
             required
           />
-          {errors.nom && <p className={styles.errorText}>{errors.nom}</p>}
           <MDInput
             label="Section"
             name="section"
@@ -98,9 +97,9 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               marginTop: '10px',
               borderColor: errors.section ? 'red' : '',
             }}
+            error={errors.section}
             required
           />
-          {errors.section && <p className={styles.errorText}>{errors.section}</p>}
           <MDInput
             label="Parcelle"
             name="parcelle"
@@ -113,9 +112,9 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               marginTop: '10px',
               borderColor: errors.parcelle ? 'red' : '',
             }}
+            error={errors.parcelle}
             required
           />
-          {errors.parcelle && <p className={styles.errorText}>{errors.parcelle}</p>}
           <MDInput
             label="Longitude"
             name="longitude"
@@ -128,9 +127,9 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               marginTop: '10px',
               borderColor: errors.longitude ? 'red' : '',
             }}
+            error={errors.longitude}
             required
           />
-          {errors.longitude && <p className={styles.errorText}>{errors.longitude}</p>}
           <MDInput
             label="Latitude"
             name="latitude"
@@ -143,9 +142,9 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               marginTop: '10px',
               borderColor: errors.latitude ? 'red' : '',
             }}
+            error={errors.latitude}
             required
           />
-          {errors.latitude && <p className={styles.errorText}>{errors.latitude}</p>}
           <MDInput
             label="Cout Estime"
             name="cout_estime"
@@ -175,6 +174,7 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.status_validation_fk ? 'red' : '',
               }}
+              error={errors.status_validation_fk}
               required
             >
               <MenuItem value="" disabled>
@@ -187,9 +187,6 @@ const ProsUModal = ({ prospect, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
-          {errors.status_validation_fk && (
-            <p className={styles.errorText}>{errors.status_validation_fk}</p>
-          )}
           <FormControl
             fullWidth
             style={{ marginBottom: '5px', marginTop: '2px', width: '320px' }}

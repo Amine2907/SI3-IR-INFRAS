@@ -97,9 +97,9 @@ const MesAddingModal = ({ Sid, mes = {}, onSave }) => {
               width: '300px',
               borderColor: errors.no_PDL ? 'red' : '',
             }}
+            error={errors.no_PDL}
             required
           />
-          {errors.no_PDL && <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_PDL}</span>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="traveaux_id"
@@ -111,6 +111,7 @@ const MesAddingModal = ({ Sid, mes = {}, onSave }) => {
                 fontSize: '14px',
                 borderColor: errors.traveaux_id ? 'red' : '',
               }}
+              error={errors.traveaux_id}
             >
               <MenuItem value="" disabled>
                 -- Choisir Traveaux* --
@@ -126,9 +127,6 @@ const MesAddingModal = ({ Sid, mes = {}, onSave }) => {
               )}
             </Select>
           </FormControl>
-          {errors.traveaux_id && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.traveaux_id}</span>
-          )}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="status_consuel"
@@ -140,6 +138,7 @@ const MesAddingModal = ({ Sid, mes = {}, onSave }) => {
                 fontSize: '14px',
                 borderColor: errors.status_consuel ? 'red' : '',
               }}
+              error={errors.status_consuel}
             >
               <MenuItem value="" disabled>
                 -- Choisir Status consuel* --
@@ -148,9 +147,6 @@ const MesAddingModal = ({ Sid, mes = {}, onSave }) => {
               <MenuItem value="ok">ok</MenuItem>
             </Select>
           </FormControl>
-          {errors.status_consuel && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.status_consuel}</span>
-          )}
           {/* Date pickers */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker

@@ -106,7 +106,6 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      console.log('Validation errors:', newErrors);
       return;
     }
     console.log('Submitting form data:', {
@@ -153,6 +152,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.selectedProspect ? 'red' : '',
               }}
+              error={errors.selectedProspect}
             >
               <MenuItem value="" disabled>
                 -- Choisir le prospect --
@@ -164,9 +164,6 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
-          {errors.selectedProspect && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.selectedProspect}</span>
-          )}
           <FormControl
             fullWidth
             style={{
@@ -187,6 +184,7 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.ZFA_ZFB ? 'red' : '',
               }}
+              error={errors.ZFA_ZFB}
               required
             >
               <MenuItem value="" disabled>
@@ -196,9 +194,6 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
               <MenuItem value="ZFB">ZFB</MenuItem>
             </Select>
           </FormControl>
-          {errors.ZFA_ZFB && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.ZFA_ZFB}</span>
-          )}
           <MDInput
             name="MM"
             label="Moyenne en metres*"
@@ -211,9 +206,9 @@ const PreEtModal = ({ Sid, preEtude, onSave, onClose }) => {
               marginTop: '10px',
               borderColor: errors.MM ? 'red' : '',
             }}
+            error={errors.MM}
             required
           />
-          {errors.MM && <span style={{ color: 'red', fontSize: '12px' }}>{errors.MM}</span>}
           <MDInput
             name="CRR"
             label="Création ou remplacement d'un réseau BT"

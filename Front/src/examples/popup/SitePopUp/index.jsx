@@ -206,9 +206,9 @@ const SiteModal = ({ site, onSave, onClose }) => {
             style={{
               marginBottom: '1px',
               width: '320px',
-
               borderColor: errors.nom ? 'red' : '',
             }}
+            error={errors.nom}
             required
           />
           <FormControl
@@ -371,6 +371,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.programme_fk ? 'red' : '',
               }}
+              error={errors.programme_fk}
               required
             >
               <MenuItem value="4GFixe">4GFixe</MenuItem>
@@ -389,7 +390,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <MenuItem value="FM TT ">FM TT </MenuItem>
             </Select>
           </FormControl>
-          {errors.programme_fk && <p className={styles.errorText}>{errors.programme_fk}</p>}
           <FormControl
             fullWidth
             required
@@ -407,6 +407,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.Acteur_ENEDIS_id ? 'red' : '',
               }}
+              error={errors.Acteur_ENEDIS_id}
               required
             >
               <MenuItem value="" disabled>
@@ -423,7 +424,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               )}
             </Select>
           </FormControl>
-          {errors.Acteur_ENEDIS_id && <p className={styles.errorText}>{errors.Acteur_ENEDIS_id}</p>}
           <FormControl
             fullWidth
             style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
@@ -438,7 +438,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.prenom ? 'red' : '',
+                borderColor: errors.status_site_SFR ? 'red' : '',
               }}
               required
             >
@@ -463,7 +463,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <MenuItem value="En service">En service</MenuItem>
             </Select>
           </FormControl>
-
           <FormControl
             fullWidth
             style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
@@ -482,6 +481,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.status_site_fk ? 'red' : '',
               }}
+              error={errors.status_site_fk}
               required
             >
               <MenuItem value="Activé">Activé</MenuItem>
@@ -489,7 +489,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <MenuItem value="Terminé">Terminé</MenuItem>
             </Select>
           </FormControl>
-          {errors.status_site_fk && <p className={styles.errorText}>{errors.status_site_fk}</p>}
           <div>
             <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>

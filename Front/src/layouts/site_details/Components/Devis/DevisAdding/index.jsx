@@ -188,9 +188,9 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
             onChange={handleChange}
             placeholder="N de devis*"
             style={{ marginBottom: '5px', width: '300px', borderColor: errors.ND ? 'red' : '' }}
+            error={errors.ND}
             required
           />
-          {errors.ND && <p className={styles.errorText}>{errors.ND}</p>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="fournisseur"
@@ -202,6 +202,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
                 fontSize: '14px',
                 borderColor: errors.fournisseur ? 'red' : '',
               }}
+              error={errors.fournisseur}
             >
               <MenuItem value="" disabled>
                 -- Choisir le fournisseur* --
@@ -216,7 +217,6 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
                 <MenuItem value="">No active fournisseurs available</MenuItem>
               )}
             </Select>
-            {errors.fournisseur && <p className={styles.errorText}>{errors.fournisseur}</p>}
           </FormControl>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
@@ -227,8 +227,9 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.fournisseur ? 'red' : '',
+                borderColor: errors.no_dr ? 'red' : '',
               }}
+              error={errors.no_dr}
             >
               <MenuItem value="" disabled>
                 -- Choisir le DR* --
@@ -243,7 +244,6 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
                 <MenuItem value="">No active drs available</MenuItem>
               )}
             </Select>
-            {errors.no_dr && <p className={styles.errorText}>{errors.no_dr}</p>}
           </FormControl>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
@@ -256,6 +256,7 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
                 fontSize: '14px',
                 borderColor: errors.type_devis ? 'red' : '',
               }}
+              error={errors.type_devis}
               required
             >
               <MenuItem value="" disabled>
@@ -266,7 +267,6 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               <MenuItem value="Estimatif SYNDICAT">Estimatif SYNDICAT</MenuItem>
               <MenuItem value="Definitif SYNDICAT">Definitif SYNDICAT</MenuItem>
             </Select>
-            {errors.type_devis && <p className={styles.errorText}>{errors.type_devis}</p>}
           </FormControl>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
@@ -286,8 +286,8 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
                 width: '100%',
                 borderColor: errors.devis_date ? 'red' : '',
               }}
+              error={errors.devis_date}
             />
-            {errors.devis_date && <p className={styles.errorText}>{errors.devis_date}</p>}
           </LocalizationProvider>
           <MDInput
             name="montant"
@@ -299,9 +299,9 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               width: '300px',
               borderColor: errors.montant ? 'red' : '',
             }}
+            error={errors.montant}
             required
           />
-          {errors.montant && <p className={styles.errorText}>{errors.montant}</p>}
           <MDInput
             name="code_postal_lieu"
             value={formData.code_postal_lieu || ''}
@@ -336,8 +336,8 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
                 width: '100%',
                 borderColor: errors.expiration_date ? 'red' : '',
               }}
+              error={errors.expiration_date}
             />
-            {errors.expiration_date && <p className={styles.errorText}>{errors.expiration_date}</p>}
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
@@ -357,9 +357,9 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
                 width: '100%',
                 borderColor: errors.reception_date ? 'red' : '',
               }}
+              error={errors.reception_date}
             />
           </LocalizationProvider>
-          {errors.reception_date && <p className={styles.errorText}>{errors.reception_date}</p>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="etat_ralance"
@@ -430,9 +430,9 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               width: '300px',
               borderColor: errors.numero_DP ? 'red' : '',
             }}
+            error={errors.numero_DP}
             required
           />
-          {errors.numero_DP && <p className={styles.errorText}>{errors.numero_DP}</p>}
           <MDInput
             name="section"
             value={formData.section || ''}
@@ -443,9 +443,9 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               width: '300px',
               borderColor: errors.section ? 'red' : '',
             }}
+            error={errors.section}
             required
           />
-          {errors.section && <p className={styles.errorText}>{errors.section}</p>}
           <MDInput
             name="parcelle"
             value={formData.parcelle || ''}
@@ -456,9 +456,9 @@ const DevisAddingModal = ({ Sid, devis, onSave }) => {
               width: '300px',
               borderColor: errors.parcelle ? 'red' : '',
             }}
+            error={errors.parcelle}
             required
           />
-          {errors.parcelle && <p className={styles.errorText}>{errors.parcelle}</p>}
         </div>
       </div>
       <div className={styles.buttonContainer}>

@@ -40,7 +40,12 @@ const DpUModal = ({ dp, onSave, onClose }) => {
   }, [dp]);
   const validateForm = () => {
     const newErrors = {};
-    // if (!formData.nom) newErrors.nom = true;
+    if (!formData.numero_DP) {
+      newErrors.numero_DP = 'Numero DP est obligatoire !';
+    }
+    if (!formData.ANO_certificat_tacite) {
+      newErrors.ANO_certificat_tacite = 'ANO certificat tacite est obligatoire !';
+    }
     return newErrors;
   };
   const handleSubmit = () => {
@@ -48,14 +53,8 @@ const DpUModal = ({ dp, onSave, onClose }) => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      console.log('Validation errors:', newErrors);
       return;
     }
-    console.log('Submitting form data:', {
-      ...formData,
-      is_active: isActive,
-      relance: isRelance,
-    });
     // Trigger the onSave callback
     onSave({ ...formData, is_active: isActive, relance: isRelance });
   };
@@ -106,8 +105,10 @@ const DpUModal = ({ dp, onSave, onClose }) => {
               marginBottom: '5px',
               width: '300px',
               marginTop: '10px',
-              borderColor: errors.cout_estime ? 'red' : '',
+              borderColor: errors.numero_DP ? 'red' : '',
             }}
+            disabled
+            error={errors.numero_DP}
             required
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -124,6 +125,7 @@ const DpUModal = ({ dp, onSave, onClose }) => {
                 });
               }}
               style={{ marginBottom: '10px', width: '270px' }}
+              error={errors.ANO_certificat_tacite}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>

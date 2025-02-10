@@ -99,6 +99,7 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
               width: '320px',
               borderColor: errors.firstName ? 'red' : '',
             }}
+            error={errors.firstName}
             required
           />
           <MDInput
@@ -110,8 +111,9 @@ const ProfileModal = ({ userData, onSave, onClose }) => {
             style={{
               marginBottom: '10px',
               width: '320px',
-              borderColor: errors.firstname ? 'red' : '',
+              borderColor: errors.lastName ? 'red' : '',
             }}
+            error={errors.lastName}
             required
           />
           <FormControl fullWidth style={{ marginBottom: '10px', width: '320px' }} required>

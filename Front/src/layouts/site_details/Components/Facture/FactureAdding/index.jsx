@@ -91,6 +91,7 @@ const FactureAddingModal = ({ Sid, facture = {}, onSave }) => {
               onChange={handleChange}
               displayEmpty
               style={{ padding: '10px', fontSize: '14px', borderColor: errors.Dfk ? 'red' : '' }}
+              error={errors.Dfk}
             >
               <MenuItem value="" disabled>
                 -- Choisir Devis* --
@@ -106,16 +107,15 @@ const FactureAddingModal = ({ Sid, facture = {}, onSave }) => {
               )}
             </Select>
           </FormControl>
-          {errors.Dfk && <span style={{ color: 'red', fontSize: '12px' }}>{errors.Dfk}</span>}
           <MDInput
             name="no_fac"
             value={formData.no_fac || ''}
             onChange={handleChange}
             placeholder="No facture"
             style={{ marginBottom: '5px', width: '300px', borderColor: errors.no_fac ? 'red' : '' }}
+            error={errors.no_fac}
             required
           />
-          {errors.no_fac && <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_fac}</span>}
           {/* Date pickers */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
@@ -135,11 +135,9 @@ const FactureAddingModal = ({ Sid, facture = {}, onSave }) => {
                 width: '100%',
                 borderColor: errors.facture_date ? 'red' : '',
               }}
+              error={errors.facture_date}
             />
           </LocalizationProvider>
-          {errors.facture_date && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.facture_date}</span>
-          )}
           <MDInput
             name="montant_ht"
             value={formData.montant_ht || ''}

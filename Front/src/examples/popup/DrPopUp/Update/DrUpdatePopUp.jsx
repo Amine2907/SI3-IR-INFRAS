@@ -12,6 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
 import entityService from 'services/Entites/entityService';
+import { error } from 'bfj/src/events';
 const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     demrac || {
@@ -146,8 +147,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
     const newErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      console.log('demRac data :', demracData);
-      onSave({ Sid, ...formData, is_active: isActive });
       return;
     }
     onSave({ ...formData, is_active: isActive });
@@ -184,12 +183,11 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
               placeholder="NDRid*"
               style={{
                 width: '320px',
-
                 borderColor: errors.NDRid ? 'red' : '',
               }}
-              required
+              disabled
+              error={errors.NDRid}
             />
-            {errors.NDRid && <span style={{ color: 'red', fontSize: '12px' }}>{errors.NDRid}</span>}
             <FormControl fullWidth required style={{ width: '320px' }}>
               <InputLabel id="devis-select-label">Prospect</InputLabel>
               <Select
@@ -203,6 +201,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                   fontSize: '14px',
                   borderColor: errors.Pro_fk ? 'red' : '',
                 }}
+                error={errors.Pro_fk}
                 required
               >
                 <InputLabel>Propsect</InputLabel>
@@ -220,9 +219,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 )}
               </Select>
             </FormControl>
-            {errors.Pro_fk && (
-              <span style={{ color: 'red', fontSize: '12px' }}>{errors.Pro_fk}</span>
-            )}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDatePicker
                 label="KO DP "
@@ -256,12 +252,11 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                   marginBottom: '0px',
                   width: '100%',
                   borderColor: errors.date_dr ? 'red' : '',
+                  error: errors.date_dr,
                 }}
+                error={errors.date_dr}
               />
             </LocalizationProvider>
-            {errors.date_dr && (
-              <span style={{ color: 'red', fontSize: '12px' }}>{errors.date_dr}</span>
-            )}
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDatePicker
                 label="Reception dossier complet"
@@ -290,6 +285,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                   fontSize: '14px',
                   borderColor: errors.type_rac ? 'red' : '',
                 }}
+                error={errors.type_rac}
                 required
               >
                 <MenuItem value="" disabled>
@@ -300,9 +296,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 <MenuItem value="A Renseigner">A Renseigner</MenuItem>
               </Select>
             </FormControl>
-            {errors.type_rac && (
-              <span style={{ color: 'red', fontSize: '12px' }}>{errors.type_rac}</span>
-            )}
             <FormControl fullWidth style={{ width: '320px' }}>
               <InputLabel id="operators-label">Operateurs*</InputLabel>
               <Select
@@ -317,6 +310,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                   fontSize: '14px',
                   borderColor: errors.operators ? 'red' : '',
                 }}
+                error={errors.operators}
               >
                 {operators.map(operateur => (
                   <MenuItem key={operateur} value={operateur}>
@@ -345,9 +339,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 ))}
               </Select>
             </FormControl>
-            {errors.operators && (
-              <span style={{ color: 'red', fontSize: '12px' }}>{errors.operators}</span>
-            )}
             <FormControl fullWidth style={{ width: '320px' }} required>
               <InputLabel id="devis-select-label">Status Proposition</InputLabel>
               <Select
@@ -360,6 +351,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                   fontSize: '14px',
                   borderColor: errors.status_prop ? 'red' : '',
                 }}
+                error={errors.status_prop}
               >
                 <MenuItem value="" disabled>
                   -- Choisir un statut --
@@ -368,9 +360,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 <MenuItem value="Reçu">Reçu</MenuItem>
               </Select>
             </FormControl>
-            {errors.status_prop && (
-              <span style={{ color: 'red', fontSize: '12px' }}>{errors.status_prop}</span>
-            )}
             <FormControl fullWidth required style={{ width: '320px' }}>
               <InputLabel id="devis-select-label">Gestionnaire de reseau</InputLabel>
               <Select
@@ -384,6 +373,7 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                   fontSize: '14px',
                   borderColor: errors.gestionnaire_de_reseau ? 'red' : '',
                 }}
+                error={errors.gestionnaire_de_reseau}
                 required
               >
                 <MenuItem value="" disabled>
@@ -400,11 +390,6 @@ const DrUpdateModal = ({ Sid, demrac, onSave, onClose }) => {
                 )}
               </Select>
             </FormControl>
-            {errors.gestionnaire_de_reseau && (
-              <span style={{ color: 'red', fontSize: '12px' }}>
-                {errors.gestionnaire_de_reseau}
-              </span>
-            )}
             <div>
               <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
               <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>

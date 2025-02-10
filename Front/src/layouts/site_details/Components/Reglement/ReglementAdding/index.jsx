@@ -117,11 +117,9 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
               width: '300px',
               borderColor: errors.no_virement ? 'red' : '',
             }}
+            error={errors.no_virement}
             required
           />
-          {errors.no_virement && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_virement}</span>
-          )}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
             <Select
               name="no_devis"
@@ -133,6 +131,7 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
                 fontSize: '14px',
                 borderColor: errors.no_devis ? 'red' : '',
               }}
+              error={errors.no_devis}
             >
               <MenuItem value="" disabled>
                 -- Choisir le Devis* --
@@ -148,9 +147,6 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
               )}
             </Select>
           </FormControl>
-          {errors.no_devis && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_devis}</span>
-          )}
           <MDInput
             name="nom_acteur"
             value={formData.nom_acteur || ''}
@@ -161,11 +157,9 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
               width: '300px',
               borderColor: errors.nom_acteur ? 'red' : '',
             }}
+            error={errors.nom_acteur}
             required
           />
-          {errors.nom_acteur && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.nom_acteur}</span>
-          )}
           <MDInput
             name="libelle_du_virement"
             value={formData.libelle_du_virement || ''}
@@ -176,11 +170,9 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
               width: '300px',
               borderColor: errors.libelle_du_virement ? 'red' : '',
             }}
+            error={errors.libelle_du_virement}
             required
           />
-          {errors.libelle_du_virement && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.libelle_du_virement}</span>
-          )}
           <MDInput
             name="montant"
             value={formData.montant || ''}
@@ -191,11 +183,9 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
               width: '300px',
               borderColor: errors.montant ? 'red' : '',
             }}
+            error={errors.montant}
             required
           />
-          {errors.montant && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.montant}</span>
-          )}
           <MDInput
             name="no_commande"
             value={formData.no_commande || ''}
@@ -206,11 +196,9 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
               width: '300px',
               borderColor: errors.no_commande ? 'red' : '',
             }}
+            error={errors.no_commande}
             required
           />
-          {errors.no_commande && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_commande}</span>
-          )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Data de paiement*"
@@ -229,11 +217,9 @@ const ReglAddingModal = ({ Sid, paiement = {}, onSave }) => {
                 width: '100%',
                 borderColor: errors.reglement_date ? 'red' : '',
               }}
+              error={errors.reglement_date}
             />
           </LocalizationProvider>
-          {errors.reglement_date && (
-            <span style={{ color: 'red', fontSize: '12px' }}>{errors.reglement_date}</span>
-          )}
         </div>
         <div className={styles.switchContainer}>
           <div className={styles.switchItem}>
