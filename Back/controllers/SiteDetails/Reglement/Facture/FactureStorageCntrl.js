@@ -14,8 +14,12 @@ const uploadFileController = async (req, res) => {
     if (!Sid) {
       return res.status(400).json({ error: 'Invalid Sid' });
     }
-    // Ensure factureId is a string and handle special characters in the file name
-    const uniqueFileName = encodeURIComponent(file.originalname);
+    // Use the file name as the unique file name and sanitize it
+    const sanitizeFileName = (name) => {
+      return name.replace(/[^a-zA-Z0-9._-]/g, '_'); // Replace invalid characters with "_"
+    };
+    // Use the file name as the unique file name
+    const uniqueFileName = sanitizeFileName(file.originalname);
     const factureIdStr = String(factureId);
     const sidStr = String(Sid);
     const filePath = `facture-pdf/${sidStr}/${factureIdStr}/${uniqueFileName}`;
