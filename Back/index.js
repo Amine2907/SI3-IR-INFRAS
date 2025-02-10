@@ -4,6 +4,8 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import compression from "compression";
 import http from 'http';
+// Reporting Global Job 
+import './cron-job.js';
 // Routes
 import authRoutes from './routes/Auth/auth.js';
 import dashboardRoutes from './routes/Dashboard/dashboard.js';
