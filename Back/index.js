@@ -2,6 +2,8 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+// Reporting Global Job 
+import './cron-job.js';
 // Routes
 import authRoutes from './routes/Auth/auth.js';
 import dashboardRoutes from './routes/Dashboard/dashboard.js';

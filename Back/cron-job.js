@@ -42,3 +42,4 @@ import ReportingGlobalModel from './models/ReportingGlobal/reportingModel.js';
       console.error('Error during scheduled task:', error.message);
     }
   });
+  console.log('Cron job for reporting is scheduled.');
