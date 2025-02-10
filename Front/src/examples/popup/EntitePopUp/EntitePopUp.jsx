@@ -57,7 +57,7 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
           <div style={{ marginBottom: '3px' }}>
             <MDInput
               name="nom"
-              label="Nom"
+              label="Nom*"
               value={formData.nom || ''}
               onChange={handleChange}
               placeholder="Nom*"
@@ -68,6 +68,7 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
               }}
               required
             />
+            {errors.nom && <span style={{ color: 'red', fontSize: '12px' }}>{errors.nom}</span>}
           </div>
 
           <div style={{ marginBottom: '3px' }}>
@@ -98,6 +99,7 @@ const EntiteModal = ({ entite, onSave, onClose }) => {
                 <MenuItem value="Mairie">Mairie</MenuItem>
               </Select>
             </FormControl>
+            {errors.role && <span style={{ color: 'red', fontSize: '12px' }}>{errors.role}</span>}
           </div>
           <MDInput
             label="Adresse"

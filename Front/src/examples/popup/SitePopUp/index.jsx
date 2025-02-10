@@ -84,19 +84,48 @@ const SiteModal = ({ site, onSave, onClose }) => {
     };
     fetchActiveCompanies();
   }, []);
-  const handleSubmit = () => {
+  const validateForm = () => {
     const newErrors = {};
 
-    // Ensure EB and G2R have values
-    if (!formData.EB) newErrors.EB = true;
-    if (!formData.G2R) newErrors.G2R = true;
+    if (!formData.EB) {
+      newErrors.EB = 'EB is required';
+    }
 
+    if (!formData.G2R) {
+      newErrors.G2R = 'G2R is required';
+    }
+
+    if (!formData.nom) {
+      newErrors.nom = 'Nom is required';
+    }
+
+    if (!formData.programme_fk || !formData.programme_fk.PR_desc) {
+      newErrors.programme_fk = 'Programme is required';
+    }
+
+    if (!formData.Operateurs || formData.Operateurs.length === 0) {
+      newErrors.Operateurs = 'At least one Operateur is required';
+    }
+
+    if (!formData.Acteur_ENEDIS_id || !formData.Acteur_ENEDIS_id.nom) {
+      newErrors.Acteur_ENEDIS_id = 'Acteur ENEDIS is required';
+    }
+
+    if (!formData.status_site_fk || !formData.status_site_fk.SS_desc) {
+      newErrors.status_site_fk = 'Status site is required';
+    }
+
+    setErrors(newErrors);
+    return newErrors;
+  };
+
+  const handleSubmit = () => {
+    const newErrors = validateForm();
     console.log('Validation errors:', newErrors);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-
     console.log('Form data submitted:', formData);
     onSave({
       ...formData,
@@ -182,7 +211,6 @@ const SiteModal = ({ site, onSave, onClose }) => {
             }}
             required
           />
-
           <FormControl
             fullWidth
             style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
@@ -327,13 +355,12 @@ const SiteModal = ({ site, onSave, onClose }) => {
               ))}
             </Select>
           </FormControl>
-
           <FormControl
             fullWidth
             style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
             required
           >
-            <InputLabel id="devis-select-label">Programme</InputLabel>
+            <InputLabel id="devis-select-label">Programme*</InputLabel>
             <Select
               name="programme_fk"
               value={PROGRAMMES[formData.programme_fk] || formData.programme_fk.PR_desc || ''}
@@ -342,7 +369,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.prenom ? 'red' : '',
+                borderColor: errors.programme_fk ? 'red' : '',
               }}
               required
             >
@@ -362,13 +389,13 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <MenuItem value="FM TT ">FM TT </MenuItem>
             </Select>
           </FormControl>
-
+          {errors.programme_fk && <p className={styles.errorText}>{errors.programme_fk}</p>}
           <FormControl
             fullWidth
             required
             style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
           >
-            <InputLabel id="devis-select-label">Acteur ENEDIS</InputLabel>
+            <InputLabel id="devis-select-label">Acteur ENEDIS*</InputLabel>
             <Select
               labelId="role-select-label"
               name="Acteur_ENEDIS_id"
@@ -378,7 +405,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.prenom ? 'red' : '',
+                borderColor: errors.Acteur_ENEDIS_id ? 'red' : '',
               }}
               required
             >
@@ -392,11 +419,11 @@ const SiteModal = ({ site, onSave, onClose }) => {
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem value="">No active companies available</MenuItem>
+                <MenuItem value="">Pas des acteur enedis actives</MenuItem>
               )}
             </Select>
           </FormControl>
-
+          {errors.Acteur_ENEDIS_id && <p className={styles.errorText}>{errors.Acteur_ENEDIS_id}</p>}
           <FormControl
             fullWidth
             style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
@@ -442,7 +469,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
             style={{ marginBottom: '1px', marginTop: '0px', width: '320px' }}
             required
           >
-            <InputLabel id="devis-select-label">Status Site</InputLabel>
+            <InputLabel id="devis-select-label">Status Site*</InputLabel>
             <Select
               name="status_site_fk"
               value={
@@ -453,7 +480,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
               style={{
                 padding: '10px',
                 fontSize: '14px',
-                borderColor: errors.prenom ? 'red' : '',
+                borderColor: errors.status_site_fk ? 'red' : '',
               }}
               required
             >
@@ -462,6 +489,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
               <MenuItem value="Terminé">Terminé</MenuItem>
             </Select>
           </FormControl>
+          {errors.status_site_fk && <p className={styles.errorText}>{errors.status_site_fk}</p>}
           <div>
             <InputLabel>{isActive ? 'Active' : 'Inactive'}</InputLabel>
             <Switch type="checkbox" checked={isActive} onChange={handleToggleActive}>

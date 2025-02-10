@@ -42,7 +42,6 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
     if (devis) {
       // Find the fournisseur name based on the stored ID
       const fournisseurNom = activeFournisseurs.find(f => f.Eid === devis.fournisseur)?.nom || '';
-
       setFormData({
         ...devis,
         fournisseur: { Eid: devis.fournisseur || '', nom: fournisseurNom },
@@ -112,7 +111,24 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
     fetchActiveDemrac();
   }, [Sid, devis]);
   const validateForm = () => {
+    const requiredFields = [
+      'ND',
+      'no_dr',
+      'fournisseur',
+      'type_devis',
+      'devis_date',
+      'montant',
+      'expiration_date',
+      'reception_date',
+    ];
     const newErrors = {};
+    requiredFields.forEach(field => {
+      if (!formData[field] || (field === 'fournisseur' && !formData.fournisseur.nom)) {
+        newErrors[field] = 'This field est obligatoire';
+      }
+    });
+
+    setErrors(newErrors);
     return newErrors;
   };
   const handleSubmit = () => {
@@ -123,7 +139,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
       onSave({
         Sid,
         ...formData,
-        fournisseur: formData.fournisseur?.Eid || null, // Store only the ID
+        fournisseur: formData.fournisseur?.Eid || null,
         is_active: isActive,
         conformite: isConforme,
         valide_par_SFR: isValide,
@@ -132,7 +148,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
     }
     onSave({
       ...formData,
-      fournisseur: formData.fournisseur?.Eid || null, // Store only the ID
+      fournisseur: formData.fournisseur?.Eid || null,
       is_active: isActive,
       conformite: isConforme,
       valide_par_SFR: isValide,
@@ -168,21 +184,30 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
         <div className={styles.formGrid}>
           <MDInput
             name="ND"
-            label="Numero Devis"
+            label="Numero Devis*"
             value={formData.ND || ''}
             onChange={handleChange}
             placeholder="N de devis"
-            style={{ marginBottom: '5px', width: '300px' }}
+            style={{
+              marginBottom: '5px',
+              width: '300px',
+              borderColor: errors.ND ? 'red' : '',
+            }}
             required
           />
+          {errors.ND && <p className={styles.errorText}>{errors.ND}</p>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
-            <InputLabel id="devis-select-label">Fournisseur</InputLabel>
+            <InputLabel id="devis-select-label">Fournisseur*</InputLabel>
             <Select
               name="fournisseur"
               value={formData.fournisseur?.nom || ''}
               onChange={e => handleDropdownChange('fournisseur', 'nom', e.target.value)}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.fournisseur ? 'red' : '',
+              }}
             >
               {activeFournisseurs.length > 0 ? (
                 activeFournisseurs.map(fournisseur => (
@@ -191,18 +216,23 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem value="">No active fournisseurs available</MenuItem>
+                <MenuItem value="">¨Pas des fournisseurs actives</MenuItem>
               )}
             </Select>
           </FormControl>
+          {errors.fournisseur && <p className={styles.errorText}>{errors.fournisseur}</p>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
-            <InputLabel id="devis-select-label">Numero DR</InputLabel>
+            <InputLabel id="devis-select-label">Numero DR*</InputLabel>
             <Select
               name="no_dr"
               value={formData.no_dr || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{
+                padding: '10px',
+                fontSize: '14px',
+                borderColor: errors.no_dr ? 'red' : '',
+              }}
             >
               <MenuItem value="" disabled>
                 -- Choisir le DR --
@@ -214,12 +244,13 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem value="">No active dem rac available</MenuItem>
+                <MenuItem value="">Pas des demandes de raccordements actives</MenuItem>
               )}
             </Select>
           </FormControl>
+          {errors.no_dr && <p className={styles.errorText}>{errors.no_dr}</p>}
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
-            <InputLabel id="devis-select-label">Type devis</InputLabel>
+            <InputLabel id="devis-select-label">Type devis*</InputLabel>
             <Select
               name="type_devis"
               value={formData.type_devis}
@@ -241,6 +272,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
               <MenuItem value="Definitif SYNDICAT">Definitif SYNDICAT</MenuItem>
             </Select>
           </FormControl>
+          {errors.type_devis && <p className={styles.errorText}>{errors.type_devis}</p>}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Date de devis "
@@ -254,16 +286,21 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '100%' }}
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                borderColor: errors.type_devis ? 'red' : '',
+              }}
             />
           </LocalizationProvider>
+          {errors.devis_date && <p className={styles.errorText}>{errors.devis_date}</p>}
           <div style={{ position: 'relative', width: '300px' }}>
             <MDInput
               name="montant"
               label="Montant"
               value={formData.montant}
               onChange={handleChange}
-              placeholder="Montant (TTC) "
+              placeholder="Montant (TTC)*"
               style={{
                 marginBottom: '5px',
                 width: '100%',
@@ -282,10 +319,11 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
             >
               euro
             </Icon>
+            {errors.montant && <p className={styles.errorText}>{errors.montant}</p>}
           </div>
           <MDInput
             name="code_postal_lieu"
-            label="Code postal lieu"
+            label="Code postal"
             value={formData.code_postal_lieu || ''}
             onChange={handleChange}
             placeholder="CP du lieu de Raccordement"
@@ -303,7 +341,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Date d'expiration"
+              label="Date d'expiration*"
               name="expiration_date"
               value={formData.expiration_date ? dayjs(formData.expiration_date) : null}
               onChange={newValue => {
@@ -319,7 +357,7 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Date de reception"
+              label="Date de reception*"
               name="reception_date"
               value={formData.reception_date ? dayjs(formData.reception_date) : null}
               onChange={newValue => {
@@ -334,7 +372,6 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
             />
           </LocalizationProvider>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
-            <InputLabel id="devis-select-label">Etat realance</InputLabel>
             <Select
               name="etat_ralance"
               value={formData.etat_ralance || ''}

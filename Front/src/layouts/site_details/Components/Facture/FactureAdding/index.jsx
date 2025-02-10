@@ -48,7 +48,16 @@ const FactureAddingModal = ({ Sid, facture = {}, onSave }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    // Add form validation here
+    if (!formData.no_fac) {
+      newErrors.no_fac = 'Numero Facture est obligatoire';
+    }
+    if (!formData.Dfk) {
+      newErrors.Dfk = 'Numero Devis est obligatoire';
+    }
+    if (!formData.facture_date) {
+      newErrors.facture_date = 'Date de facture est obligatoire';
+    }
+    setErrors(newErrors);
     return newErrors;
   };
 
@@ -81,10 +90,10 @@ const FactureAddingModal = ({ Sid, facture = {}, onSave }) => {
               value={formData.Dfk || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{ padding: '10px', fontSize: '14px', borderColor: errors.Dfk ? 'red' : '' }}
             >
               <MenuItem value="" disabled>
-                -- Choisir Devis --
+                -- Choisir Devis* --
               </MenuItem>
               {activeDevis.length > 0 ? (
                 activeDevis.map(devis => (
@@ -97,14 +106,16 @@ const FactureAddingModal = ({ Sid, facture = {}, onSave }) => {
               )}
             </Select>
           </FormControl>
+          {errors.Dfk && <span style={{ color: 'red', fontSize: '12px' }}>{errors.Dfk}</span>}
           <MDInput
             name="no_fac"
             value={formData.no_fac || ''}
             onChange={handleChange}
             placeholder="No facture"
-            style={{ marginBottom: '5px', width: '300px' }}
+            style={{ marginBottom: '5px', width: '300px', borderColor: errors.no_fac ? 'red' : '' }}
             required
           />
+          {errors.no_fac && <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_fac}</span>}
           {/* Date pickers */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
@@ -119,8 +130,16 @@ const FactureAddingModal = ({ Sid, facture = {}, onSave }) => {
                   },
                 });
               }}
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                borderColor: errors.facture_date ? 'red' : '',
+              }}
             />
           </LocalizationProvider>
+          {errors.facture_date && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.facture_date}</span>
+          )}
           <MDInput
             name="montant_ht"
             value={formData.montant_ht || ''}

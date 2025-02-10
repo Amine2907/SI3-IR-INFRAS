@@ -57,8 +57,16 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
   }, [Sid]);
   const validateForm = () => {
     const newErrors = {};
-    // if (formData.type_rac === 'Complexe' && !formData.ZFA_ZFB) newErrors.ZFA_ZFB = true;
-    // if (!formData.nom) newErrors.nom = true;
+    if (!formData.no_fac) {
+      newErrors.no_fac = 'Numero Facture est obligatoire';
+    }
+    if (!formData.Dfk) {
+      newErrors.Dfk = 'Numero Devis est obligatoire';
+    }
+    if (!formData.facture_date) {
+      newErrors.facture_date = 'Date de facture est obligatoire';
+    }
+    setErrors(newErrors);
     return newErrors;
   };
   const handleSubmit = () => {
@@ -93,13 +101,13 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
         </MDTypography>
         <div className={styles.formGrid}>
           <FormControl fullWidth style={{ marginBottom: '10px', width: '300px' }}>
-            <InputLabel id="devis-select-label">Numero devis</InputLabel>
+            <InputLabel id="devis-select-label">Numero devis*</InputLabel>
             <Select
               name="Dfk"
               value={formData.Dfk || ''}
               onChange={handleChange}
               displayEmpty
-              style={{ padding: '10px', fontSize: '14px' }}
+              style={{ padding: '10px', fontSize: '14px', borderColor: errors.Dfk ? 'red' : '' }}
             >
               <MenuItem value="" disabled>
                 -- Choisir devis --
@@ -111,22 +119,24 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem value="">No active devis available</MenuItem>
+                <MenuItem value="">Pas de devis actives</MenuItem>
               )}
             </Select>
           </FormControl>
+          {errors.Dfk && <span style={{ color: 'red', fontSize: '12px' }}>{errors.Dfk}</span>}
           <MDInput
             name="no_fac"
             value={formData.no_fac || ''}
-            label="Numero Fcature"
+            label="Numero Fcature*"
             onChange={handleChange}
             placeholder="No Facture"
-            style={{ marginBottom: '5px', width: '300px' }}
+            style={{ marginBottom: '5px', width: '300px', borderColor: errors.no_fac ? 'red' : '' }}
             required
           />
+          {errors.no_fac && <span style={{ color: 'red', fontSize: '12px' }}>{errors.no_fac}</span>}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Consuel remise"
+              label="Date facture*"
               name="facture_date"
               value={formData.facture_date ? dayjs(formData.facture_date) : null}
               onChange={newValue => {
@@ -137,9 +147,16 @@ const FactureUModal = ({ Sid, facture, onSave, onClose }) => {
                   },
                 });
               }}
-              style={{ marginBottom: '10px', width: '100%' }}
+              style={{
+                marginBottom: '10px',
+                width: '100%',
+                borderColor: errors.facture_date ? 'red' : '',
+              }}
             />
           </LocalizationProvider>
+          {errors.facture_date && (
+            <span style={{ color: 'red', fontSize: '12px' }}>{errors.facture_date}</span>
+          )}
           <MDInput
             name="montant_ht"
             label="Montant HT"

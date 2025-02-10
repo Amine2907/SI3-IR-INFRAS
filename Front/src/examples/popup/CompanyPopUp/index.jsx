@@ -75,7 +75,7 @@ const CompanyModal = ({ company, onSave, onClose }) => {
           {company ? 'Modifier Entreprise' : 'Ajouter Entreprise'}
         </MDTypography>
         <MDInput
-          label="Nom d'Entreprise"
+          label="Nom d'Entreprise*"
           name="nom"
           value={formData.nom}
           onChange={handleChange}
@@ -98,7 +98,7 @@ const CompanyModal = ({ company, onSave, onClose }) => {
         />
         <MDInput
           name="siret"
-          label="SIRET"
+          label="SIRET*"
           value={formData.siret}
           onChange={handleChange}
           placeholder="Siret*"
