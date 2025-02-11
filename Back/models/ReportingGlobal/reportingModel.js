@@ -56,7 +56,7 @@ const getReportingData = async () => {
                         date_dr,
                         type_rac,
                         gestionnaire_de_reseau,
-                        SPRid_FK,
+                        status_prop,
                         fin_trav_prev,
                         commentaires
                     ),
@@ -134,7 +134,6 @@ const getReportingData = async () => {
 
         const programData = await fetchRelatedData("Programme", "PR_desc", "PRid", item.Site?.programme_fk)
         const entiteData = await fetchRelatedData("Entite", "nom", "Eid", item.Site?.DR?.[0]?.gestionnaire_de_reseau)
-        const sprData = await fetchRelatedData("SPR", "SPR_desc", "SPRid", item.Site?.DR?.[0]?.SPRid_FK)
         const statusValData = await fetchRelatedData("Status-validation", "SV_desc", "SVid", item.status_validation_fk)
         const frnsEntite = await fetchRelatedData("Entite", "nom", "Eid", item.Site?.Devis?.[0]?.fournisseur)
         const drFilesExist = await checkFilesExistWithoutId("demrac", item.Site?.EB)
@@ -168,7 +167,7 @@ const getReportingData = async () => {
           "0023.Date DR": formatDate(item.Site?.DR?.[0]?.date_dr || ""),
           "0024.DR_Type Raccordement": item.Site?.DR?.[0]?.type_rac || "",
           "0025.DR_Gestionnaire reseau": entiteData?.nom || "",
-          "0026.DR_Status Proposition": sprData?.SPR_desc || "",
+          "0026.DR_Status Proposition": item.Site?.DR?.[0]?.status_prop || "",
           "0027.DR PJ": drFilesExist ? "Oui" : "Non",
           "0028.DR_Commentaires": item.Site?.DR?.[0]?.commentaires || "",
           "0029.Numero Devis": item.Site?.Devis?.[0]?.ND || "",
