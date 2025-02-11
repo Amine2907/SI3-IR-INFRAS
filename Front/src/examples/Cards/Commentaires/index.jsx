@@ -73,7 +73,14 @@ const CommentSection = ({ entityName, Sid }) => {
 
           setUserMapping(emailToUserMap);
         }
-        setComments(fetchedComments);
+        // Sort comments by date (newest first)
+        const sortedComments = fetchedComments.sort((a, b) => {
+          const dateA = new Date(a.match(/\(Added on: (.*?)\)/)?.[1] || 0);
+          const dateB = new Date(b.match(/\(Added on: (.*?)\)/)?.[1] || 0);
+          return dateB - dateA; // Newest first
+        });
+
+        setComments(sortedComments);
       } catch (error) {
         console.error('Error fetching comments or user data:', error);
         setComments([]);
