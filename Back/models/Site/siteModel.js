@@ -195,12 +195,13 @@ const getAllSites = async() => {
     }
 };
 // Get all active sites
-const getAllActivesites = async() => {
+const getAllActivesites = async(limit = 100, offset = 0) => {
     try {
         const {data,error} = await supabase
         .from('Site')
         .select('*')
-        .eq('is_active',true);
+        .neq('is_active', false)
+        .range(offset, offset + limit - 1);
 
         if(error){
             throw error;
@@ -210,12 +211,13 @@ const getAllActivesites = async() => {
         return {success:false , error:error.messsage};
     }
 };
-const getAllInactivesites = async() => {
+const getAllInactivesites = async(limit = 100, offset = 0) => {
     try {
         const {data,error} = await supabase
         .from('Site')
         .select('*')
-        .eq('is_active',false);
+        .neq('is_active', true)
+        .range(offset, offset + limit - 1);
 
         if(error){
             throw error;
