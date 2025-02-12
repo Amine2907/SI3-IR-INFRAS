@@ -2,14 +2,12 @@ import cron from 'node-cron';
 import moment from 'moment';
 import { supabase } from './config/supabaseClient.js';
 import ReportingGlobalModel from './models/ReportingGlobal/reportingModel.js';
-// cron.schedule('30 14 * * *', async () => {
+// cron.schedule('* * * * *', async () => {
 // Scheduling job: Monday - Friday at 19:30
 cron.schedule('30 19 * * 1-5', async () => {
   console.log('Running scheduled task: Generating reporting data');
-  
   // Start measuring total execution time
   const totalStart = process.hrtime();
-
   try {
     // Step 1: Fetch reporting data
     console.log('Step 1: Fetching reporting data...');
@@ -58,7 +56,6 @@ cron.schedule('30 19 * * 1-5', async () => {
   } catch (error) {
     console.error('❌ Error during scheduled task:', error.message);
   }
-
   // Log total execution time
   const totalEnd = process.hrtime(totalStart);
   console.log(`Total execution time: ${totalEnd[0]}s ${totalEnd[1] / 1e6}ms`);
