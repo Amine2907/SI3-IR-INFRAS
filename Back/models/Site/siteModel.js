@@ -65,7 +65,6 @@ const createSite = async (data) => {
                 throw new Error(`No company found with name: ${companyName}`);
             }
         }
-<<<<<<< HEAD
         // Check and map priorite_fk, programme_fk, and status_site_fk to their corresponding IDs
         if (data.priorite_fk) {
             const prioriteId = priorityMapping[data.priorite_fk];
@@ -92,12 +91,6 @@ const createSite = async (data) => {
         const { data: result, error } = await supabase
             .from('Site')
             .insert([data]);
-=======
-
-        // ✅ Bulk Insert into Database
-        const { data: result, error } = await supabase.from("Site").insert(transformedSites, { returning: "minimal" });
-
->>>>>>> eab0122b4883dc86c5f45845df83c6c968c1d5f9
         if (error) {
             throw error;
         }
