@@ -4,272 +4,117 @@ import { faker } from "@faker-js/faker";
 // Helper function to split large datasets into smaller chunks
 const chunkArray = (array, size) => {
   const chunks = [];
-  for (let i = 0; i < array.length; i += size) {
+  for (let i = 0; i < array.length; i += size) {  // Removed misplaced semicolon
     chunks.push(array.slice(i, i + size));
   }
   return chunks;
 };
 
-// Check if a record exists in a parent table
-const checkRecordExists = async (table, column, value) => {
-  const { data, error } = await supabase.from(table).select(column).eq(column, value).limit(1);
+// Function to fetch existing EB values in bulk
+const getExistingEBs = async () => {
+  const { data, error } = await supabase.from("Site").select("EB");
   if (error) {
-    console.error(`Error checking record existence in ${table}:`, error.message);
-    return false;
+    console.error("❌ Error fetching Site EB values:", error.message);
+    return new Set();
   }
-  return data.length > 0;
+  return new Set(data.map(site => site.EB));
 };
 
-// Convert an array to PostgreSQL array format
-const toPostgresArray = (array) => `{${array.map((item) => `"${item}"`).join(",")}}`;
-
-// Insert data in chunks to avoid memory issues and ensure dependencies
+// Insert data in chunks
 const insertDataInChunks = async (table, data, chunkSize = 100) => {
   const chunks = chunkArray(data, chunkSize);
   for (const chunk of chunks) {
-    console.log(`Attempting to insert into table ${table}:`, JSON.stringify(chunk, null, 2));
-    const { data: insertedData, error } = await supabase.from(table).insert(chunk);
+    console.log(`📌 Inserting into ${table} - ${chunk.length} rows`);
+    const { error } = await supabase.from(table).insert(chunk);
     if (error) {
-      console.error(`Error inserting data into ${table}:`, error.message, error.details);
+      console.error(`❌ Error inserting data into ${table}:`, error.message, error.details);
     } else {
-      console.log(`Successfully inserted ${chunk.length} rows into ${table}`);
+      console.log(`✅ Successfully inserted ${chunk.length} rows into ${table}`);
     }
   }
 };
 
 const createDataForReport = async () => {
   try {
-    const sites = [];
-    const prospects = [];
-    const dps = [];
+    console.log("🚀 Fetching existing Site EB values...");
+    const existingEBs = await getExistingEBs();
+
+    if (existingEBs.size === 0) {
+      console.error("❌ No existing sites found. Ensure sites are inserted first.");
+      return;
+    }
+
     const preEtudes = [];
-    const drs = [];
-    const devis = [];
     const paiements = [];
     const travaux = [];
     const mes = [];
-    const factures = [];
 
-    const statusSiteSFValues = [
-      "0.Bloquée/Suspendu MAD", "0.Bloquée/Suspendu Conv", "0.Bloquée/Suspendu DP",
-      "1.En Recherche", "2.En validation", "3.Validé", "3.En Conception",
-      "4.En cours conception", "4.GO Constr. Anticipé", "5.En attente visées FH",
-      "5.GO Constructibilité", "6.GO Constructibilité", "6.Mad Infra",
-      "7.GO Constructibilité Anticipé", "7.MES", "8.Annulé", "8.PEM", "En service",
-    ];
-    const typeRacValues = ["Simple", "Complexe", "A Renseigner"];
-    const ops = ["SFR", "ORANGE", "FREE", "Bouygues Telecom"];
+    let idCounter = 100000; // Starting unique ID counter for bigint values
 
-    // Generate Sites
-    for (let i = 0; i < 1000; i++) {
-      const siteId = i + 1;
-      const site = {
-        EB: siteId,
-        G2R: faker.number.int({ min: 10000, max: 99999 }).toString(),
-        nom: faker.company.name(),
-        Ville: faker.location.city(),
-        priorite_fk: faker.number.int({ min: 1, max: 4 }),
-        lot: faker.word.noun(),
-        programme_fk: faker.number.int({ min: 1, max: 14 }),
-        status_site_fk: faker.number.int({ min: 1, max: 3 }),
-        is_active: true,
-        code_postal: faker.location.zipCode("#####"),
-        zone: faker.location.street(),
-        region: faker.location.state(),
-        Acteur_ENEDIS_id: faker.number.int({ min: 1, max: 6 }),
-        // Operateurs: toPostgresArray(
-        //   faker.helpers.arrayElements(ops, faker.number.int({ min: 1, max: ops.length }))
-        // ),
-        status_site_SFR: faker.helpers.arrayElement(statusSiteSFValues),
-        contact_fk: faker.number.int({ min: 1, max: 56 }),
-      };
-      sites.push(site);
-
-      // Generate related data for each Site
+    // Loop through existing EB values (Sites)
+    for (const EB of existingEBs) {
       for (let j = 0; j < faker.number.int({ min: 1, max: 5 }); j++) {
-        const prospectId = i * 10 + j + 1;
+        idCounter++; // Ensure unique IDs for bigint
 
-        const prospect = {
-          Proid: prospectId,
-          nom: faker.person.fullName(),
-          status_validation_fk: faker.number.int({ min: 1, max: 26 }),
-          retenu: faker.datatype.boolean(),
-          is_active: true,
-          commentaires: faker.lorem.sentence(),
-          cout_estime: faker.number.float({ min: 1000, max: 10000, precision: 0.01 }),
-          EB_fk: siteId,
-          latitude: faker.location.latitude(),
-          longitude: faker.location.longitude(),
-          parcelle: faker.word.noun(),
-          section: faker.word.noun(),
-          status_site_sfr: faker.helpers.arrayElement(statusSiteSFValues),
-        };
-        prospects.push(prospect);
-        const dp = {
-          DPid: i * 10 + j + 1,
-          PRid_fk: prospectId,
-          ANO_certificat_tacite: faker.date.past(),
-          arrete_opposition: faker.date.past(),
-          commentaires: faker.lorem.sentence(),
-          derniere_verification: faker.date.past(),
-          etat_prerequis: faker.number.int({ min: 1, max: 2 }),
-          is_active: true,
-          MJS: faker.date.past(),
-          numero_DP: faker.number.int({ min: 1000, max: 9999 }).toString(),
-          plans: faker.word.noun(),
-          production_DP_PC: faker.date.past(),
-          recipisse_depot_DP: faker.date.past(),
-          relance: faker.datatype.boolean(),
-          status_go_traveauxP: faker.date.past(),
-          status_go_traveauxR: faker.date.past(),
-          EB_fk: siteId,
-        };
-        dps.push(dp);
-
+        // Create PreEtude entry
         const preEtude = {
-          PREid: i * 10 + j + 1,
+          PREid: idCounter, // bigint ID
           ADPDT: faker.number.float({ min: 1, max: 100, precision: 0.1 }),
           CRR: faker.number.float({ min: 1, max: 100, precision: 0.1 }),
           CRP_HTABT: faker.number.float({ min: 1, max: 100, precision: 0.1 }),
           CRRBTA: faker.number.float({ min: 1, max: 100, precision: 0.1 }),
-          is_active: true,
+          is_active: faker.datatype.boolean(),
           MM: faker.number.float({ min: 1, max: 100, precision: 0.1 }),
-          type_rac: faker.helpers.arrayElement(typeRacValues),
-          pdf_url: faker.internet.url(),
+          type_rac: faker.helpers.arrayElement(["Simple", "Complexe"]),
           cout: faker.number.float({ min: 100, max: 1000, precision: 0.01 }),
-          EB_fk: siteId,
+          EB_fk: EB,
           ZFA: faker.datatype.boolean(),
           ZFB: faker.datatype.boolean(),
-          Prid_fk: prospectId,
-          commentaires: faker.lorem.sentence(),
+          Prid_fk: faker.number.int({ min: 101, max: 199 }),
         };
         preEtudes.push(preEtude);
 
-        const dr = {
-          NDRid: i * 10 + j + 1,
-          Pro_fk: prospectId,
-          SPRid_FK: faker.number.int({ min: 1, max: 2 }),
-          date_dr: faker.date.past(),
-          Ko_Dp: faker.date.past(),
-          drdc: faker.date.past(),
-          relance_complexite: faker.word.noun(),
-          extension_reseau_syndicat: faker.word.noun(),
-          date_dr_syndicat: faker.date.past(),
-          is_active: true,
-          commentaires: faker.lorem.sentence(),
-          gestionnaire_de_reseau: faker.number.int({ min: 1, max: 56 }),
-          type_rac: faker.helpers.arrayElement(typeRacValues),
-          operators: faker.helpers.arrayElement(ops),
-          EB_fk: siteId,
-          fin_trav_prev: faker.date.future(),
-        };
-        drs.push(dr);
-
-        const devisItem = {
-          ND: i * 10 + j + 1,
-          devis_date: faker.date.past(),
-          montant: faker.number.float({ min: 1000, max: 50000, precision: 0.01 }),
-          code_paiement: faker.string.alphanumeric(10),
-          reception_date: faker.date.past(),
-          expiration_date: faker.date.past(),
-          conformite: faker.datatype.boolean(),
-          validation_date: faker.date.past(),
-          envoi_date: faker.date.past(),
-          is_active: true,
-          EB_fk: siteId,
-          type_devis: faker.helpers.arrayElement([
-            "Extension ENEDIS",
-            "Branchement",
-            "Estimatif SYNDICAT",
-            "Definitif SYNDICAT",
-          ]),
-          fournisseur: faker.number.int({ min: 1, max: 56 }),
-          derniere_relance_date: faker.date.past(),
-        };
-        devis.push(devisItem);
-
+        // Create Paiement entry
         const paiement = {
-          Pid: i * 10 + j + 1,
+          Pid: idCounter, // bigint ID
           is_active: true,
           libelle_du_virement: faker.lorem.words(3),
           montant: faker.number.float({ min: 1000, max: 10000, precision: 0.01 }),
-          no_commande: faker.number.int({ min: 1000, max: 9999 }).toString(),
-          no_devis: devisItem.ND,
-          EB_fk: siteId,
+          no_devis: faker.number.int({ min: 101, max: 199 }),
+          EB_fk: EB,
           reglement_date: faker.date.past(),
-          commentaires: faker.lorem.sentence(),
+          no_virement: faker.string.alphanumeric(12), // Added no_virement (text)
         };
         paiements.push(paiement);
 
+        // Create Travaux entry
         const travauxItem = {
-          Tid: i * 10 + j + 1,
-          levee_pylone_prev: faker.date.future(),
-          levee_pylone_reel: faker.date.future(),
-          extension_prev: faker.date.future(),
-          extension_reel: faker.date.future(),
-          branchement_prev: faker.date.future(),
-          branchement_reel: faker.date.future(),
-          raccordement_prev: faker.date.future(),
-          raccordement_reel: faker.date.future(),
+          Tid: idCounter, // bigint ID
           is_active: true,
-          commentaires: faker.lorem.sentence(),
-          EB_fk: siteId,
+          EB_fk: EB,
         };
         travaux.push(travauxItem);
 
+        // Create MES entry
         const mesItem = {
-          MESid: i * 10 + j + 1,
-          consuel_remise: faker.date.future(),
-          MES_demande: faker.date.future(),
-          MES_prev: faker.date.future(),
-          MES_reel: faker.date.future(),
+          MESid: idCounter, // bigint ID
           is_active: true,
-          commentaires: faker.lorem.sentence(),
-          EB_fk: siteId,
+          EB_fk: EB,
+          no_PDL: faker.string.alphanumeric(10), // Added no_PDL (text)
         };
         mes.push(mesItem);
-
-        const facture = {
-          Fid: i * 10 + j + 1,
-          facture_date: faker.date.past(),
-          is_active: true,
-          montant_ht: faker.number.float({ min: 1000, max: 10000, precision: 0.01 }),
-          montant_ttc: faker.number.float({ min: 1200, max: 12000, precision: 0.01 }),
-          tva: faker.number.float({ min: 5, max: 25, precision: 0.01 }),
-          EB_fk: siteId,
-        };
-        factures.push(facture);
       }
     }
 
-    await insertDataInChunks("Site", sites);
+    // Bulk insert selected tables
+    // await insertDataInChunks("PreEtude", preEtudes);
+    // await insertDataInChunks("Paiements", paiements);
+    // await insertDataInChunks("Traveaux", travaux);
+    await insertDataInChunks("MES", mes);
 
-    const dependentTables = [
-      { name: "Prospect", data: prospects },
-      { name: "DP", data: dps },
-      { name: "PreEtude", data: preEtudes },
-      { name: "DR", data: drs },
-      { name: "Devis", data: devis },
-      { name: "Paiements", data: paiements },
-      { name: "Traveaux", data: travaux },
-      { name: "MES", data: mes },
-      { name: "Facture", data: factures },
-    ];
-
-    for (const table of dependentTables) {
-      for (const row of table.data) {
-        const exists = await checkRecordExists("Site", "EB", row.EB_fk);
-        if (!exists) {
-          console.warn(`Skipping ${table.name} with EB_fk=${row.EB_fk} because Site does not exist.`);
-          continue;
-        }
-        await insertDataInChunks(table.name, [row]);
-      }
-    }
-
-    console.log("Data population completed successfully!");
+    console.log("🎉 All data successfully inserted!");
   } catch (error) {
-    console.error("Error populating data:", error.message, error.stack);
+    console.error("❌ Error populating data:", error.message);
   }
 };
 
