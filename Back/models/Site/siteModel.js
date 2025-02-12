@@ -160,7 +160,7 @@ const createSite = async (sites) => {
         }
 
         // ✅ Bulk Insert into Database
-        const { data: result, error } = await supabase.from("Site").insert(transformedSites);
+        const { data: result, error } = await supabase.from("Site").insert(transformedSites, { returning: "minimal" });
 
         if (error) {
             throw error;
