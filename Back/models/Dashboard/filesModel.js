@@ -631,7 +631,8 @@ const getConsuelEnAttente = async () => {
                 Traveaux:MES_traveaux_id_fkey (branchement_reel)  -- Explicitly specify the correct join
             `)
             .eq('is_active', true)
-            .not('Traveaux.branchement_reel', 'is', null);
+            // .not('Traveaux.branchement_reel', 'is', null)
+            .eq("status_consuel", "En attente");
             console.log("Supabase Response (Raw Data):", data);
             console.log("Supabase Response (Error):", error);
         if (error) {

@@ -229,7 +229,7 @@ const countConsuelEnAttente = async () => {
                 Traveaux:MES_traveaux_id_fkey (branchement_reel)
             `)
             .eq('is_active', true)
-            .not('Traveaux.branchement_reel', 'is', null);
+            .eq("status_consuel", "En attente");
         
         if (error) throw error;
         
