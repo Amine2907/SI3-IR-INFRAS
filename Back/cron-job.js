@@ -60,5 +60,4 @@ cron.schedule('30 19 * * 1-5', async () => {
   const totalEnd = process.hrtime(totalStart);
   console.log(`Total execution time: ${totalEnd[0]}s ${totalEnd[1] / 1e6}ms`);
 });
-
 console.log(' Cron job for reporting is scheduled.');
