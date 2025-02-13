@@ -55,7 +55,7 @@ const getDrDataWithSite = async () => {
             }
         }));
 
-        console.log("Final DR Data Processed:", drDataWithMappedValues);
+        // console.log("Final DR Data Processed:", drDataWithMappedValues);
         return { success: true, data: drDataWithMappedValues };
     } catch (error) {
         console.error("Error in getDrDataWithSite:", error);
@@ -643,7 +643,7 @@ const getConsuelEnAttente = async () => {
             'MES reel': item.MES_reel || "",
             'Status consuel': item.status_consuel || "",
         }));
-        console.log("Data successfully formatted for getConsuelEnAttente:", formattedData);
+        // console.log("Data successfully formatted for getConsuelEnAttente:", formattedData);
         return { success: true, data: formattedData };
     } catch (error) {
         console.error("Error in getConsuelEnAttente:", error);

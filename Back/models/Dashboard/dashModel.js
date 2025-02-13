@@ -210,8 +210,6 @@ const countDemandeMESRealisee = async () => {
 // 14. Consuel en Attente
 const countConsuelEnAttente = async () => {
     try {
-
-        
         // Fetch MES records using the same logic as data retrieval
         const { data, error } = await supabase
             .from('MES')
@@ -232,13 +230,8 @@ const countConsuelEnAttente = async () => {
             .eq("status_consuel", "En attente");
         
         if (error) throw error;
-        
-        console.log("Supabase Response (Raw Data):", data);
-        
         // Count the number of records returned
         const count = data.length;
-        
-        console.log("Count fetched successfully:", count);
         return { success: true, data: count };
     } catch (error) {
         console.error("Error in countConsuelEnAttente:", error);

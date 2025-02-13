@@ -365,95 +365,168 @@ const desactivateSite = async(id) => {
     }
 };
 // Search sites 
+// const SearchSite = async (filters) => {
+//     console.log("Received filters:", filters);
+//     try {
+//         // Query active company names and IDs from Acteur_ENEDIS table
+//         const { data: acteurData, error: acteurError } = await supabase
+//             .from('Entreprise')
+//             .select('ENTid, nom');
+//         if (acteurError) throw acteurError;
+
+//         // Create a mapping from ID to company name
+//         const idToNameMap = acteurData.reduce((acc, { ENTid, nom }) => {
+//             acc[nom] = ENTid;
+//             return acc;
+//         }, {});
+//         // Initialize the query with the table 'Site'
+//         let query = supabase.from('Site').select('*');
+
+//         // Filter by EB
+//         if (filters.EB) {
+//             query = query.ilike('EB', `%${filters.EB}%`);
+//         }
+//         // Filter by G2R
+//         if (filters.G2R) {
+//             query = query.ilike('G2R', filters.G2R);
+//         }
+//         // Filter by nom (name of the site)
+//         if (filters.nom) {
+//             query = query.ilike('nom', `%${filters.nom}%`);
+//         }
+//         // Filter by code_postal
+//         if (filters.code_postal) {
+//             query = query.eq('code_postal', filters.code_postal);
+//         }
+//         // Filter by Ville (City)
+//         if (filters.Ville) {
+//             query = query.ilike('Ville', `%${filters.Ville}%`);
+//         }
+//         // Filter by region
+//         if (filters.region) {
+//             query = query.ilike('region', `%${filters.region}%`);
+//         }
+//         // Filter by Operateurs
+//         if (filters.Operateurs) {
+//             query = query
+//                 .filter('Operateurs', 'cs', `{${filters.Operateurs}}`);
+//         }
+//         // Convert the 'programme_fk' description to its numeric ID if provided
+//         if (filters.programme_fk) {
+//             const programId = programMapping[filters.programme_fk];
+//             if (programId) {
+//                 query = query.eq('programme_fk', programId);  // Using numeric ID in the query
+//             }
+//         }
+//         // Convert 'Acteur_ENEDIS_id' to company name if it is a numeric ID
+//         if (filters.Acteur_ENEDIS_id) {
+//             const acteurName = Object.keys(idToNameMap).find(name => idToNameMap[name] == filters.Acteur_ENEDIS_id);
+//             if (acteurName) {
+//                 // Filter the query by the company name
+//                 query = query.eq('Acteur_ENEDIS_id', idToNameMap[acteurName]);
+//             } else {
+//                 return { success: false, error: "No active company found with this ID." };  // If no matching name
+//             }
+//         }
+//         // Convert the 'status_site_fk' description to its numeric ID if provided
+//         if (filters.status_site_fk) {
+//             const statusId = siteStatusMapping[filters.status_site_fk];
+//             if (statusId) {
+//                 query = query.eq('status_site_fk', statusId);  // Using numeric ID in the query
+//             }
+//         }
+//         // Convert the 'priorite_fk' description to its numeric ID if provided
+//         if (filters.priorite_fk) {
+//             const priorityId = priorityMapping[filters.priorite_fk];
+//             if (priorityId) {
+//                 query = query.eq('priorite_fk', priorityId);  // Using numeric ID in the query
+//             }
+//         }
+//         // Filter by status_site_SFR
+//         if (filters.status_site_SFR) {
+//             query = query.ilike('status_site_SFR', `%${filters.status_site_SFR}%`);
+//         }
+//         // Execute the query and handle the result
+//         const { data, error } = await query;
+//         if (error) {
+//             throw error;
+//         }
+//         return { success: true, data };
+
+//     } catch (error) {
+//         return { success: false, error: error.message };
+//     }
+// };
 const SearchSite = async (filters) => {
     console.log("Received filters:", filters);
+
     try {
-        // Query active company names and IDs from Acteur_ENEDIS table
-        const { data: acteurData, error: acteurError } = await supabase
-            .from('Entreprise')
-            .select('ENTid, nom');
-        if (acteurError) throw acteurError;
+        let query = supabase
+            .from('Site')
+            .select('EB, G2R, nom, code_postal, Ville, region, Operateurs, programme_fk, Acteur_ENEDIS_id, status_site_fk, priorite_fk, status_site_SFR'); // Fetch only required columns
 
-        // Create a mapping from ID to company name
-        const idToNameMap = acteurData.reduce((acc, { ENTid, nom }) => {
-            acc[nom] = ENTid;
-            return acc;
-        }, {});
-        // Initialize the query with the table 'Site'
-        let query = supabase.from('Site').select('*');
+        // Apply filters dynamically
+        const filterConditions = [];
 
-        // Filter by EB
-        if (filters.EB) {
-            query = query.ilike('EB', `%${filters.EB}%`);
+        if (filters.EB) filterConditions.push(query.ilike('EB', `%${filters.EB}%`));
+        if (filters.G2R) filterConditions.push(query.ilike('G2R', filters.G2R));
+        if (filters.nom) filterConditions.push(query.ilike('nom', `%${filters.nom}%`));
+        if (filters.code_postal) filterConditions.push(query.eq('code_postal', filters.code_postal));
+        if (filters.Ville) filterConditions.push(query.ilike('Ville', `%${filters.Ville}%`));
+        if (filters.region) filterConditions.push(query.ilike('region', `%${filters.region}%`));
+        if (filters.Operateurs) filterConditions.push(query.filter('Operateurs', 'cs', `{${filters.Operateurs}}`));
+        if (filters.status_site_SFR) filterConditions.push(query.ilike('status_site_SFR', `%${filters.status_site_SFR}%`));
+
+        // Convert `programme_fk` description to numeric ID
+        if (filters.programme_fk && programMapping[filters.programme_fk]) {
+            filterConditions.push(query.eq('programme_fk', programMapping[filters.programme_fk]));
         }
-        // Filter by G2R
-        if (filters.G2R) {
-            query = query.ilike('G2R', filters.G2R);
+
+        // Convert `status_site_fk` description to numeric ID
+        if (filters.status_site_fk && siteStatusMapping[filters.status_site_fk]) {
+            filterConditions.push(query.eq('status_site_fk', siteStatusMapping[filters.status_site_fk]));
         }
-        // Filter by nom (name of the site)
-        if (filters.nom) {
-            query = query.ilike('nom', `%${filters.nom}%`);
+
+        // Convert `priorite_fk` description to numeric ID
+        if (filters.priorite_fk && priorityMapping[filters.priorite_fk]) {
+            filterConditions.push(query.eq('priorite_fk', priorityMapping[filters.priorite_fk]));
         }
-        // Filter by code_postal
-        if (filters.code_postal) {
-            query = query.eq('code_postal', filters.code_postal);
-        }
-        // Filter by Ville (City)
-        if (filters.Ville) {
-            query = query.ilike('Ville', `%${filters.Ville}%`);
-        }
-        // Filter by region
-        if (filters.region) {
-            query = query.ilike('region', `%${filters.region}%`);
-        }
-        // Filter by Operateurs
-        if (filters.Operateurs) {
-            query = query
-                .filter('Operateurs', 'cs', `{${filters.Operateurs}}`);
-        }
-        // Convert the 'programme_fk' description to its numeric ID if provided
-        if (filters.programme_fk) {
-            const programId = programMapping[filters.programme_fk];
-            if (programId) {
-                query = query.eq('programme_fk', programId);  // Using numeric ID in the query
-            }
-        }
-        // Convert 'Acteur_ENEDIS_id' to company name if it is a numeric ID
+
+        // Convert `Acteur_ENEDIS_id` description to numeric ID
         if (filters.Acteur_ENEDIS_id) {
+            // Fetch company names only if the filter is applied
+            const { data: acteurData, error: acteurError } = await supabase
+                .from('Entreprise')
+                .select('ENTid, nom');
+
+            if (acteurError) throw acteurError;
+
+            // Create a mapping from company name to ID
+            const idToNameMap = acteurData.reduce((acc, { ENTid, nom }) => {
+                acc[nom] = ENTid;
+                return acc;
+            }, {});
+
             const acteurName = Object.keys(idToNameMap).find(name => idToNameMap[name] == filters.Acteur_ENEDIS_id);
+
             if (acteurName) {
-                // Filter the query by the company name
-                query = query.eq('Acteur_ENEDIS_id', idToNameMap[acteurName]);
+                filterConditions.push(query.eq('Acteur_ENEDIS_id', idToNameMap[acteurName]));
             } else {
-                return { success: false, error: "No active company found with this ID." };  // If no matching name
+                return { success: false, error: "No active company found with this ID." };
             }
         }
-        // Convert the 'status_site_fk' description to its numeric ID if provided
-        if (filters.status_site_fk) {
-            const statusId = siteStatusMapping[filters.status_site_fk];
-            if (statusId) {
-                query = query.eq('status_site_fk', statusId);  // Using numeric ID in the query
-            }
-        }
-        // Convert the 'priorite_fk' description to its numeric ID if provided
-        if (filters.priorite_fk) {
-            const priorityId = priorityMapping[filters.priorite_fk];
-            if (priorityId) {
-                query = query.eq('priorite_fk', priorityId);  // Using numeric ID in the query
-            }
-        }
-        // Filter by status_site_SFR
-        if (filters.status_site_SFR) {
-            query = query.ilike('status_site_SFR', `%${filters.status_site_SFR}%`);
-        }
-        // Execute the query and handle the result
+
+        // Apply filters dynamically
+        filterConditions.forEach(condition => condition);
+
+        // Execute the query
         const { data, error } = await query;
-        if (error) {
-            throw error;
-        }
+        if (error) throw error;
+
         return { success: true, data };
 
     } catch (error) {
+        console.error("Error in SearchSite:", error);
         return { success: false, error: error.message };
     }
 };
