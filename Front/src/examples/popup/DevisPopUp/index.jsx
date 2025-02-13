@@ -226,9 +226,6 @@ const DevisUModal = ({ Sid, devis, onSave, onClose }) => {
               }}
               error={errors.no_dr}
             >
-              <MenuItem value="" disabled>
-                -- Choisir le DR --
-              </MenuItem>
               {activeDemracs.length > 0 ? (
                 activeDemracs.map(demrac => (
                   <MenuItem key={demrac.id} value={demrac.NDRid}>

@@ -122,9 +122,6 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
               }}
               error={errors.traveaux_id}
             >
-              <MenuItem value="" disabled>
-                -- Choisir traveaux --
-              </MenuItem>
               {activeTrav.length > 0 ? (
                 activeTrav.map(trav => (
                   <MenuItem key={trav.id} value={trav.Tid}>
@@ -150,9 +147,6 @@ const MesUModal = ({ Sid, mes, onSave, onClose }) => {
               }}
               error={errors.status_consuel}
             >
-              <MenuItem value="" disabled>
-                -- Choisir Status consuel --
-              </MenuItem>
               <MenuItem value="En attente">En attente</MenuItem>
               <MenuItem value="ok">ok</MenuItem>
             </Select>
