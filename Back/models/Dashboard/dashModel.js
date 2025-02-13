@@ -210,7 +210,7 @@ const countDemandeMESRealisee = async () => {
 // 14. Consuel en Attente
 const countConsuelEnAttente = async () => {
     try {
-        console.log("Counting Consuel En Attente...");
+
         
         // Fetch MES records using the same logic as data retrieval
         const { data, error } = await supabase

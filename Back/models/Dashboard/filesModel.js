@@ -369,7 +369,6 @@ const getReglementEnAttenteWithSite = async () => {
 // get Planification Extension 
 const getPlanificationExtension = async () => {
     try {
-        console.log("Fetching Planification Extension...");
         // Fetch DR data and Site-related fields
         const { data, error } = await supabase
             .from('Traveaux')
@@ -387,8 +386,8 @@ const getPlanificationExtension = async () => {
             .not('extension_prev', 'is', null)
             .is('extension_reel', null);
         // Log the raw Supabase response
-        console.log("Supabase Response (Raw Data):", data);
-        console.log("Supabase Response (Error):", error);
+        
+        
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -410,7 +409,6 @@ const getPlanificationExtension = async () => {
 // get Extension Ok 
 const getExtensionOk = async () => {
     try {
-        console.log("Fetching Ok Extension...");
         // Fetch DR data and Site-related fields
         const { data, error } = await supabase
             .from('Traveaux')
@@ -426,8 +424,8 @@ const getExtensionOk = async () => {
             `)
             .eq('is_active', true)
             .not('extension_reel', 'is', null);
-            console.log("Supabase Response (Raw Data):", data);
-            console.log("Supabase Response (Error):", error);
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -449,7 +447,6 @@ const getExtensionOk = async () => {
 // get Planification branchement 
 const getPlanificationBranchement  = async () => {
     try {
-        console.log("Fetching Planification Branchement...");
         // Fetch DR data and Site-related fields
         const { data, error } = await supabase
             .from('Traveaux')
@@ -466,8 +463,8 @@ const getPlanificationBranchement  = async () => {
             .eq('is_active', true)
             .not('branchement_prev', 'is', null)
             .is('branchement_reel', null);
-            console.log("Supabase Response (Raw Data):", data);
-            console.log("Supabase Response (Error):", error);
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -489,7 +486,6 @@ const getPlanificationBranchement  = async () => {
 // get Branchement OK
 const getBranchementOk  = async () => {
     try {
-        console.log("Fetching Branchement OK...");
         // Fetch DR data and Site-related fields
         const { data, error } = await supabase
             .from('Traveaux')
@@ -505,8 +501,8 @@ const getBranchementOk  = async () => {
             `)
             .eq('is_active', true)
             .not('branchement_reel', 'is', null);
-            console.log("Supabase Response (Raw Data):", data);
-            console.log("Supabase Response (Error):", error);
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -528,7 +524,6 @@ const getBranchementOk  = async () => {
 // get Consuel recu 
 const getConsuelRecu  = async () => {
     try {
-        console.log("Fetching Consuel Recu...");
         // Fetch DR data and Site-related fields
         const { data, error } = await supabase
             .from('MES')
@@ -546,8 +541,8 @@ const getConsuelRecu  = async () => {
             `)
             .eq('is_active', true)
             .eq('status_consuel', 'ok');
-            console.log("Supabase Response (Raw Data):", data);
-            console.log("Supabase Response (Error):", error);
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -571,7 +566,6 @@ const getConsuelRecu  = async () => {
 // Get Demande de MES realisee
 const getDemMesRealisee  = async () => {
     try {
-        console.log("Fetching MES Realisee...");
         // Fetch DR data and Site-related fields
         const { data, error } = await supabase
             .from('MES')
@@ -589,8 +583,8 @@ const getDemMesRealisee  = async () => {
             `)
             .eq('is_active', true)
             .not('MES_reel', 'is', null);
-            console.log("Supabase Response (Raw Data):", data);
-            console.log("Supabase Response (Error):", error);
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -614,7 +608,6 @@ const getDemMesRealisee  = async () => {
 // get consuel en attente 
 const getConsuelEnAttente = async () => {
     try {
-        console.log("Fetching Consuel Attente...");
         const { data, error } = await supabase
             .from('MES')
             .select(`
@@ -633,8 +626,8 @@ const getConsuelEnAttente = async () => {
             .eq('is_active', true)
             // .not('Traveaux.branchement_reel', 'is', null)
             .eq("status_consuel", "En attente");
-            console.log("Supabase Response (Raw Data):", data);
-            console.log("Supabase Response (Error):", error);
+            
+            
         if (error) {
             console.error("Supabase Error: Fetching MES Data Failed", error);
             throw error;
@@ -660,7 +653,7 @@ const getConsuelEnAttente = async () => {
 // get demande MES en attente 
 const getDemMesEnAttante  = async () => {
     try {
-        console.log("Fetching Mes en  Attente...");
+        
         // Fetch DR data and Site-related fields
         const { data, error } = await supabase
             .from('MES')
@@ -679,8 +672,8 @@ const getDemMesEnAttante  = async () => {
             .eq('is_active', true)
             .eq('status_consuel', 'ok')
             .is('MES_reel', null);
-            console.log("Supabase Response (Raw Data):", data);
-            console.log("Supabase Response (Error):", error);
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
