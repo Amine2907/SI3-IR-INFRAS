@@ -55,7 +55,7 @@ const getDrDataWithSite = async () => {
             }
         }));
 
-        console.log("Final DR Data Processed:", drDataWithMappedValues);
+        // console.log("Final DR Data Processed:", drDataWithMappedValues);
         return { success: true, data: drDataWithMappedValues };
     } catch (error) {
         console.error("Error in getDrDataWithSite:", error);
@@ -385,7 +385,9 @@ const getPlanificationExtension = async () => {
             .eq('is_active', true)
             .not('extension_prev', 'is', null)
             .is('extension_reel', null);
-
+        // Log the raw Supabase response
+        
+        
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -422,7 +424,8 @@ const getExtensionOk = async () => {
             `)
             .eq('is_active', true)
             .not('extension_reel', 'is', null);
-
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -460,7 +463,8 @@ const getPlanificationBranchement  = async () => {
             .eq('is_active', true)
             .not('branchement_prev', 'is', null)
             .is('branchement_reel', null);
-
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -497,7 +501,8 @@ const getBranchementOk  = async () => {
             `)
             .eq('is_active', true)
             .not('branchement_reel', 'is', null);
-
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -536,7 +541,8 @@ const getConsuelRecu  = async () => {
             `)
             .eq('is_active', true)
             .eq('status_consuel', 'ok');
-
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -577,7 +583,8 @@ const getDemMesRealisee  = async () => {
             `)
             .eq('is_active', true)
             .not('MES_reel', 'is', null);
-
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {
@@ -617,8 +624,10 @@ const getConsuelEnAttente = async () => {
                 Traveaux:MES_traveaux_id_fkey (branchement_reel)  -- Explicitly specify the correct join
             `)
             .eq('is_active', true)
-            .not('Traveaux.branchement_reel', 'is', null);
-
+            // .not('Traveaux.branchement_reel', 'is', null)
+            .eq("status_consuel", "En attente");
+            
+            
         if (error) {
             console.error("Supabase Error: Fetching MES Data Failed", error);
             throw error;
@@ -634,7 +643,7 @@ const getConsuelEnAttente = async () => {
             'MES reel': item.MES_reel || "",
             'Status consuel': item.status_consuel || "",
         }));
-        console.log("Data successfully formatted for getConsuelEnAttente:", formattedData);
+        // console.log("Data successfully formatted for getConsuelEnAttente:", formattedData);
         return { success: true, data: formattedData };
     } catch (error) {
         console.error("Error in getConsuelEnAttente:", error);
@@ -644,6 +653,7 @@ const getConsuelEnAttente = async () => {
 // get demande MES en attente 
 const getDemMesEnAttante  = async () => {
     try {
+        
         // Fetch DR data and Site-related fields
         const { data, error } = await supabase
             .from('MES')
@@ -662,7 +672,8 @@ const getDemMesEnAttante  = async () => {
             .eq('is_active', true)
             .eq('status_consuel', 'ok')
             .is('MES_reel', null);
-
+            
+            
         if (error) throw error;
         // Map the gestionnaire_de_reseau to the Entite table (Eid to nom)
         const reglementOkWithMappedValues = await Promise.all(data.map(async (item) => {

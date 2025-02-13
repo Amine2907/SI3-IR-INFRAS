@@ -207,39 +207,38 @@ const countDemandeMESRealisee = async () => {
         return { success: false, error: error.message };
     }
 };
-
 // 14. Consuel en Attente
 const countConsuelEnAttente = async () => {
     try {
-        // First, get the ids of valid Traveaux
-        const { data: validTraveauxIds, error: traveauxError } = await supabase
-            .from('Traveaux')
-            .select('Tid')
-            .eq('is_active', true)
-            .not('branchement_reel', 'is', null);
-        if (traveauxError) throw traveauxError;
-        // If no valid Traveaux found, return 0
-        if (!validTraveauxIds || validTraveauxIds.length === 0) {
-            return { success: true, data: 0 };
-        }
-        // Extract Tid values from the result
-        const validTids = validTraveauxIds.map(t => t.Tid);
-        console.log('Valid Traveaux IDs:', validTids);
-        // Now, count MES records
-        const { count, error: mesError } = await supabase
+        // Fetch MES records using the same logic as data retrieval
+        const { data, error } = await supabase
             .from('MES')
-            .select('*', { count: 'exact' })
+            .select(`
+                traveaux_id,
+                no_PDL,
+                MES_prev,
+                MES_reel,
+                status_consuel,
+                Site:EB_fk (
+                    EB,
+                    G2R,
+                    nom
+                ),
+                Traveaux:MES_traveaux_id_fkey (branchement_reel)
+            `)
             .eq('is_active', true)
-            .eq('status_consuel', 'En attente')
-            .in('traveaux_id', validTids);
-
-        if (mesError) throw mesError;
-
-        return { success: true, data: count || 0 };
+            .eq("status_consuel", "En attente");
+        
+        if (error) throw error;
+        // Count the number of records returned
+        const count = data.length;
+        return { success: true, data: count };
     } catch (error) {
+        console.error("Error in countConsuelEnAttente:", error);
         return { success: false, error: error.message };
     }
 };
+
 // 15. Demande de MES en Attente
 const countDemandeMESEnAttente = async () => {
     try {
