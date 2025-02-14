@@ -39,54 +39,6 @@ const fetchDpData = async (req, res) => {
       return res.status(500).json({ success: false, message: error.message });
   }
 };
-//Create site controlller 
-// const createsite = async (req, res) => {
-//     try {
-//       // Extract and map the fields if they contain descriptions instead of IDs
-//       let data = { ...req.body };
-//       console.log("Mapping process started");
-//       // Map `priorite_fk` if it's an object with `SP_desc`
-//       if (data.priorite_fk && typeof data.priorite_fk === 'object' && data.priorite_fk.SP_desc) {
-//         const prioriteId = priorityMapping[data.priorite_fk.SP_desc];
-//         console.log("Mapped priority:", data.priorite_fk.SP_desc, "->", prioriteId);
-//         if (!prioriteId) {
-//           throw new Error(`Invalid priority description: ${data.priorite_fk.SP_desc}`);
-//         }
-//         data.priorite_fk = data.priorite_fk.SP_desc; // Map back to description
-//       }
-//       // Map `programme_fk` if it's an object with `PR_desc`
-//       if (data.programme_fk && typeof data.programme_fk === 'object' && data.programme_fk.PR_desc) {
-//         const programId = programMapping[data.programme_fk.PR_desc];
-//         console.log("Mapped program:", data.programme_fk.PR_desc, "->", programId);
-//         if (!programId) {
-//           throw new Error(`Invalid program description: ${data.programme_fk.PR_desc}`);
-//         }
-//         data.programme_fk = data.programme_fk.PR_desc; // Map back to description
-//       }
-//       // Map `status_site_fk` if it's an object with `SS_desc`
-//       if (data.status_site_fk && typeof data.status_site_fk === 'object' && data.status_site_fk.SS_desc) {
-//         const statusId = siteStatusMapping[data.status_site_fk.SS_desc];
-//         console.log("Mapped status:", data.status_site_fk.SS_desc, "->", statusId);
-//         if (!statusId) {
-//           throw new Error(`Invalid status description: ${data.status_site_fk.SS_desc}`);
-//         }
-//         data.status_site_fk = data.status_site_fk.SS_desc; // Map back to description
-//       }
-//       console.log("Transformed data ready for insertion:", data);
-//       // Proceed to create the site with transformed data
-//       const newsite = { ...data, is_active: true };
-//       const result = await siteModel.createSite(newsite);
-//       if (!result.success) {
-//         console.error("Error in model operation:", result.error);
-//         return res.status(400).json({ error: result.error });
-//       }
-//       console.log("Site created successfully:", result.result);
-//       return res.status(200).json(result.result);
-//     } catch (error) {
-//       console.error("Error during site creation:", error.message);
-//       return res.status(400).json({ error: error.message });
-//     }
-//   };
 const createsite = async (req, res) => {
   try {
       let sites = req.body;
@@ -116,8 +68,6 @@ const createsite = async (req, res) => {
       });
 
       console.log("✅ Transformed data ready for insertion:", transformedData.length, "records");
-
-      // ✅ BULK INSERT into Database
       const result = await siteModel.createSite(transformedData); 
 
       if (!result.success) {
@@ -302,3 +252,51 @@ const siteController = {
     fetchDpData,
 }
 export default siteController ; 
+//Create site controlller 
+// const createsite = async (req, res) => {
+//     try {
+//       // Extract and map the fields if they contain descriptions instead of IDs
+//       let data = { ...req.body };
+//       console.log("Mapping process started");
+//       // Map `priorite_fk` if it's an object with `SP_desc`
+//       if (data.priorite_fk && typeof data.priorite_fk === 'object' && data.priorite_fk.SP_desc) {
+//         const prioriteId = priorityMapping[data.priorite_fk.SP_desc];
+//         console.log("Mapped priority:", data.priorite_fk.SP_desc, "->", prioriteId);
+//         if (!prioriteId) {
+//           throw new Error(`Invalid priority description: ${data.priorite_fk.SP_desc}`);
+//         }
+//         data.priorite_fk = data.priorite_fk.SP_desc; // Map back to description
+//       }
+//       // Map `programme_fk` if it's an object with `PR_desc`
+//       if (data.programme_fk && typeof data.programme_fk === 'object' && data.programme_fk.PR_desc) {
+//         const programId = programMapping[data.programme_fk.PR_desc];
+//         console.log("Mapped program:", data.programme_fk.PR_desc, "->", programId);
+//         if (!programId) {
+//           throw new Error(`Invalid program description: ${data.programme_fk.PR_desc}`);
+//         }
+//         data.programme_fk = data.programme_fk.PR_desc; // Map back to description
+//       }
+//       // Map `status_site_fk` if it's an object with `SS_desc`
+//       if (data.status_site_fk && typeof data.status_site_fk === 'object' && data.status_site_fk.SS_desc) {
+//         const statusId = siteStatusMapping[data.status_site_fk.SS_desc];
+//         console.log("Mapped status:", data.status_site_fk.SS_desc, "->", statusId);
+//         if (!statusId) {
+//           throw new Error(`Invalid status description: ${data.status_site_fk.SS_desc}`);
+//         }
+//         data.status_site_fk = data.status_site_fk.SS_desc; // Map back to description
+//       }
+//       console.log("Transformed data ready for insertion:", data);
+//       // Proceed to create the site with transformed data
+//       const newsite = { ...data, is_active: true };
+//       const result = await siteModel.createSite(newsite);
+//       if (!result.success) {
+//         console.error("Error in model operation:", result.error);
+//         return res.status(400).json({ error: result.error });
+//       }
+//       console.log("Site created successfully:", result.result);
+//       return res.status(200).json(result.result);
+//     } catch (error) {
+//       console.error("Error during site creation:", error.message);
+//       return res.status(400).json({ error: error.message });
+//     }
+//   };
