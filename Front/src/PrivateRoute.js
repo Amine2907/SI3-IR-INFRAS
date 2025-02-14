@@ -8,12 +8,21 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-// Protected Route Component
-const ProtectedRoute = ({ children, isAuthenticated }) => {
+import { useAuth } from 'context/Auth/AuthContext';
+import LoadingSpinner from 'examples/Items/CircularSpinner';
+
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   return isAuthenticated ? children : <Navigate to="/auth" />;
 };
+
 ProtectedRoute.propTypes = {
   children: PropTypes.node.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired,
 };
+
 export default ProtectedRoute;

@@ -36,6 +36,7 @@ import SiteDetails from 'layouts/site_details';
 import SiteInfoCard from 'examples/Cards/SiteInfoCard';
 import Sites from 'layouts/sites';
 import ReportingGlobal from 'layouts/reporting_global';
+import LoadingSpinner from 'examples/Items/CircularSpinner';
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const { darkMode } = controller;
@@ -54,7 +55,7 @@ export default function App() {
 }
 function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
   // Receive darkMode as a prop
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
@@ -86,22 +87,24 @@ function InnerApp({ controller, dispatch, pathname, theme, darkMode }) {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
   useEffect(() => {
-    const publicPaths = ['/auth/confirm-sign-up', '/auth/confirm-reset-password'];
-    if (!isAuthenticated && !publicPaths.includes(pathname)) {
-      navigate('/auth', { replace: true });
-    }
-    const handlePopState = () => {
+    if (!loading) {
+      const publicPaths = ['/auth/confirm-sign-up', '/auth/confirm-reset-password'];
       if (!isAuthenticated && !publicPaths.includes(pathname)) {
-        navigate('/dashboard', { replace: true });
+        navigate('/auth', { replace: true });
       }
-    };
-    window.history.pushState(null, null, window.location.href);
-    window.addEventListener('popstate', handlePopState);
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, [isAuthenticated, pathname, navigate]);
-
+      const handlePopState = () => {
+        if (!isAuthenticated && !publicPaths.includes(pathname)) {
+          navigate('/dashboard', { replace: true });
+        }
+      };
+      window.history.pushState(null, null, window.location.href);
+      window.addEventListener('popstate', handlePopState);
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
+  }, [isAuthenticated, pathname, navigate, loading]);
+  if (loading) return <LoadingSpinner />;
   const getRoutes = allRoutes =>
     allRoutes.map(route => {
       if (route.collapse) {
