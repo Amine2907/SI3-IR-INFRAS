@@ -48,6 +48,6 @@ Ensure you have / Assurez-vous d'avoir :
 
 1. **Clone the repository / Cloner le dépôt**:
    ```sh
-   git clone https://github.com/Amine0320/SI3-IR-INFRAS.git
+   git clone https://github.com/Amine2907/SI3-IR-INFRAS.git
    cd SI3-IR-INFRAS
    ```
