@@ -75,13 +75,25 @@ const listReports = async (req, res) => {
             .map((file) => ({
                 name: file.name,
                 url: `${process.env.SUPABASE_URL}/storage/v1/object/public/reports/${file.name}`,
-            }));
+                timestamp: extractTimestamp(file.name)
+            }))
+            .sort((a, b) => b.timestamp - a.timestamp);
 
         res.status(200).json({ success: true, reports });
     } catch (error) {
         console.error('Erreur lors de la liste des rapports :', error.message);
         res.status(500).json({ success: false, message: 'Erreur lors de la liste des rapports', error: error.message });
     }
+};
+// Function to extract timestamp from filename
+const extractTimestamp = (filename) => {
+    const match = filename.match(/(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2})/);
+    if (!match) return 0; // Return 0 if no timestamp is found (prevents sorting issues)
+    
+    const datePart = match[1]; // YYYY-MM-DD
+    const timePart = match[2].replace(/-/g, ':'); // HH:MM (Convert to proper time format)
+    
+    return new Date(`${datePart}T${timePart}:00Z`).getTime(); // Convert to timestamp
 };
 
 const getSignedUrl = async (req, res) => {
