@@ -88,31 +88,34 @@ const SiteModal = ({ site, onSave, onClose }) => {
     const newErrors = {};
 
     if (!formData.EB) {
-      newErrors.EB = 'EB is required';
+      newErrors.EB = 'EB est obligatoire';
     }
 
     if (!formData.G2R) {
-      newErrors.G2R = 'G2R is required';
+      newErrors.G2R = 'G2R est obligatoire';
+    }
+    if (!formData.priorite_fk) {
+      newErrors.priorite_fk = 'G2R est obligatoire';
     }
 
     if (!formData.nom) {
-      newErrors.nom = 'Nom is required';
+      newErrors.nom = 'Nom est obligatoire';
     }
 
     if (!formData.programme_fk || !formData.programme_fk.PR_desc) {
-      newErrors.programme_fk = 'Programme is required';
+      newErrors.programme_fk = 'Programme est obligatoire';
     }
 
     if (!formData.Operateurs || formData.Operateurs.length === 0) {
-      newErrors.Operateurs = 'At least one Operateur is required';
+      newErrors.Operateurs = 'At least one Operateur est obligatoire';
     }
 
     if (!formData.Acteur_ENEDIS_id || !formData.Acteur_ENEDIS_id.nom) {
-      newErrors.Acteur_ENEDIS_id = 'Acteur ENEDIS is required';
+      newErrors.Acteur_ENEDIS_id = 'Acteur ENEDIS est obligatoire';
     }
 
     if (!formData.status_site_fk || !formData.status_site_fk.SS_desc) {
-      newErrors.status_site_fk = 'Status site is required';
+      newErrors.status_site_fk = 'Status site est obligatoire';
     }
 
     setErrors(newErrors);
@@ -227,6 +230,7 @@ const SiteModal = ({ site, onSave, onClose }) => {
                 fontSize: '14px',
                 borderColor: errors.prenom ? 'red' : '',
               }}
+              error={errors.priorite_fk?.SP_desc}
               required
             >
               <MenuItem value="P00">P00</MenuItem>
