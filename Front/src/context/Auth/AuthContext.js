@@ -13,32 +13,40 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Start with loading as true
 
   useEffect(() => {
+    const checkUser = async () => {
+      setLoading(true); // Ensure loading is set at the beginning
+
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          // Get user data from localStorage (if stored)
+          const userData = JSON.parse(localStorage.getItem('user'));
+          console.log('User data from localStorage:', userData);
+
+          if (userData) {
+            setIsAuthenticated(true);
+            setUser(userData);
+          } else {
+            setIsAuthenticated(false);
+          }
+        } catch (error) {
+          console.error('Failed to parse user data', error);
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+      }
+
+      setLoading(false); // Set loading to false after checking
+    };
+
     checkUser();
   }, []);
-
-  const checkUser = async () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        // You can fetch the user data based on the token here, if needed
-        const userData = JSON.parse(localStorage.getItem('user'));
-        console.log('User data from localStorage:', userData);
-        setIsAuthenticated(true);
-        setUser(userData);
-      } catch (error) {
-        console.error('Failed to parse user data', error);
-        // Handle parsing error (maybe reset authentication)
-      }
-    } else {
-      // Token is missing, maybe handle unauthenticated state
-      setIsAuthenticated(false);
-      setUser(null);
-    }
-    setLoading(false);
-  };
 
   const login = (userData, token) => {
     console.log('Logging in with user data:', userData);
@@ -55,15 +63,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
   };
 
-  const value = {
-    isAuthenticated,
-    user,
-    login,
-    logout,
-    loading,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 AuthProvider.propTypes = {
@@ -72,7 +76,7 @@ AuthProvider.propTypes = {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

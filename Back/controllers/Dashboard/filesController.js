@@ -1,12 +1,13 @@
 import DashFiles from '../../models/Dashboard/filesModel.js';
 import fs from 'fs';
 import path from 'path';
-// Controller to generate and download Excel file
+
+// Contrôleur pour générer et télécharger un fichier Excel
 export const downloadExcel = async (req, res) => {
     try {
       const { type } = req.params;
       let data;
-      // Fetch the data based on the type
+      // Récupérer les données en fonction du type
         if (type === 'drProduit') {
             data = await DashFiles.getDrDataWithSite();
         } else if (type === 'devisRecu') {
@@ -21,42 +22,43 @@ export const downloadExcel = async (req, res) => {
             data = await DashFiles.getReglementOkWithSite();
         } else if (type === 'reglementAttente') {
             data = await DashFiles.getReglementEnAttenteWithSite();
-        }else if (type === 'planificationExtension') {
+        } else if (type === 'planificationExtension') {
             data = await DashFiles.getPlanificationExtension();
-        }else if (type === 'extensionOk') {
+        } else if (type === 'extensionOk') {
             data = await DashFiles.getExtensionOk();
         } else if (type === 'planificationBranchement') {
             data = await DashFiles.getPlanificationBranchement();
-        }else if (type === 'branchementOk') {
+        } else if (type === 'branchementOk') {
             data = await DashFiles.getBranchementOk();
-        }else if (type === 'consuelRecu') {
+        } else if (type === 'consuelRecu') {
             data = await DashFiles.getConsuelRecu();
-        }else if (type === 'demandeMesRealisee') {
+        } else if (type === 'demandeMesRealisee') {
             data = await DashFiles.getDemMesRealisee();
-        }else if (type === 'consuelEnAttente') {
+        } else if (type === 'consuelEnAttente') {
             data = await DashFiles.getConsuelEnAttente();
-        }else if (type === 'demandeMesEnAttente') {
+        } else if (type === 'demandeMesEnAttente') {
             data = await DashFiles.getDemMesEnAttante();
-        }else {
-        return res.status(400).json({ message: 'Invalid type' });
-      } 
-      // If fetching the data fails
+        } else {
+            return res.status(400).json({ message: 'Type invalide' });
+        } 
+      
+      // Si la récupération des données échoue
       if (!data.success) {
-        return res.status(500).json({ message: 'Error fetching data for the type' });
+        return res.status(500).json({ message: 'Erreur lors de la récupération des données pour ce type' });
       }
   
-      // Generate the Excel file
+      // Générer le fichier Excel
       const fileBuffer = DashFiles.generateExcelFile(data.data);
   
-      // Set headers for file download
+      // Définir les en-têtes pour le téléchargement du fichier
       res.setHeader('Content-Disposition', `attachment; filename=${type}_data.xlsx`);
       res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
   
-      // Send the file buffer as response
+      // Envoyer le fichier en réponse
       res.send(fileBuffer);
     } catch (error) {
-      console.error('Error generating the Excel file:', error);
-      res.status(500).json({ message: 'Error generating the Excel file', error: error.message });
+      console.error('Erreur lors de la génération du fichier Excel :', error);
+      res.status(500).json({ message: 'Erreur lors de la génération du fichier Excel', error: error.message });
     }
   };
 

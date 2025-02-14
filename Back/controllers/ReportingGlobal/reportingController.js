@@ -3,51 +3,46 @@ import path from 'path';
 import moment from 'moment';
 import ReportingGlobalModel from '../../models/ReportingGlobal/reportingModel.js';
 import { supabase } from '../../config/supabaseClient.js';
-// Controller to generate and download Excel file
- const downloadExcel = async (req, res) => {
+
+// Contrôleur pour générer et télécharger un fichier Excel
+const downloadExcel = async (req, res) => {
     try {
-      const { type } = req.params; // Get the dynamic type from the URL
+      const { type } = req.params;
       let data;
-      // Fetch the data based on the type
       if (type === 'reportingNormal') {
         data = await ReportingGlobalModel.getReportingData();
       } else {
-        return res.status(400).json({ message: 'Invalid type' });
+        return res.status(400).json({ message: 'Type invalide' });
       } 
-      // If fetching the data fails
+      
       if (!data.success) {
-        return res.status(500).json({ message: 'Error fetching data for the type' });
+        return res.status(500).json({ message: 'Erreur lors de la récupération des données pour ce type' });
       }
   
-      // Generate the Excel file
       const fileBuffer = ReportingGlobalModel.generateExcelFile(data.data);
-      // Set headers for file download
       res.setHeader('Content-Disposition', `attachment; filename=${type}_data.xlsx`);
       res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
   
-      // Send the file buffer as response
       res.send(fileBuffer);
     } catch (error) {
-      console.error('Error generating the Excel file:', error);
-      res.status(500).json({ message: 'Error generating the Excel file', error: error.message });
+      console.error('Erreur lors de la génération du fichier Excel :', error);
+      res.status(500).json({ message: 'Erreur lors de la génération du fichier Excel', error: error.message });
     }
-  };
-   const generateReportManually = async (req, res) => {
+};
+
+const generateReportManually = async (req, res) => {
     try {
-        // Fetch reporting data
         const data = await ReportingGlobalModel.getReportingData();
 
         if (!data.success) {
-            console.error('Error fetching reporting data:', data.error);
-            return res.status(500).json({ success: false, message: 'Error fetching reporting data' });
+            console.error('Erreur lors de la récupération des données de reporting :', data.error);
+            return res.status(500).json({ success: false, message: 'Erreur lors de la récupération des données de reporting' });
         }
-        // Generate Excel file
+        
         const fileBuffer = ReportingGlobalModel.generateExcelFile(data.data);
-        // Generate a unique filename with timestamp
         const timestamp = moment().format('YYYY-MM-DD_HH-mm');
         const fileName = `reporting_data_${timestamp}.xlsx`;
 
-        // Upload the file to the Supabase bucket
         const { error: uploadError } = await supabase.storage
             .from('reports')
             .upload(fileName, fileBuffer, {
@@ -55,97 +50,97 @@ import { supabase } from '../../config/supabaseClient.js';
             });
 
         if (uploadError) {
-            console.error('Error uploading file to Supabase storage:', uploadError);
-            return res.status(500).json({ success: false, message: 'Error uploading file' });
+            console.error('Erreur lors du téléversement du fichier sur Supabase :', uploadError);
+            return res.status(500).json({ success: false, message: 'Erreur lors du téléversement du fichier' });
         }
 
-        res.status(200).json({ success: true, message: 'Report generated successfully', fileName });
+        res.status(200).json({ success: true, message: 'Rapport généré avec succès', fileName });
     } catch (error) {
-        console.error('Error generating report manually:', error.message);
-        res.status(500).json({ success: false, message: 'Error generating report manually', error: error.message });
+        console.error('Erreur lors de la génération du rapport manuel :', error.message);
+        res.status(500).json({ success: false, message: 'Erreur lors de la génération du rapport manuel', error: error.message });
     }
 };
+
 const listReports = async (req, res) => {
     try {
-        // Fetch files from the bucket
         const { data, error } = await supabase.storage.from('reports').list('');
 
         if (error) {
-            console.error('Error fetching files from Supabase storage:', error);
-            return res.status(500).json({ success: false, message: 'Error fetching reports' });
+            console.error('Erreur lors de la récupération des fichiers de Supabase :', error);
+            return res.status(500).json({ success: false, message: 'Erreur lors de la récupération des rapports' });
         }
-        // Filter out .emptyFolderPlaceholder and map the files to include public URLs
+
         const reports = data
             .filter((file) => file.name !== '.emptyFolderPlaceholder')
             .map((file) => ({
                 name: file.name,
                 url: `${process.env.SUPABASE_URL}/storage/v1/object/public/reports/${file.name}`,
-            }));
+                timestamp: extractTimestamp(file.name)
+            }))
+            .sort((a, b) => b.timestamp - a.timestamp);
 
         res.status(200).json({ success: true, reports });
     } catch (error) {
-        console.error('Error listing reports:', error.message);
-        res.status(500).json({ success: false, message: 'Error listing reports', error: error.message });
+        console.error('Erreur lors de la liste des rapports :', error.message);
+        res.status(500).json({ success: false, message: 'Erreur lors de la liste des rapports', error: error.message });
     }
 };
-// Generate a signed URL for private buckets (optional)
- const getSignedUrl = async (req, res) => {
+// Function to extract timestamp from filename
+const extractTimestamp = (filename) => {
+    const match = filename.match(/(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2})/);
+    if (!match) return 0; // Return 0 if no timestamp is found (prevents sorting issues)
+    
+    const datePart = match[1]; // YYYY-MM-DD
+    const timePart = match[2].replace(/-/g, ':'); // HH:MM (Convert to proper time format)
+    
+    return new Date(`${datePart}T${timePart}:00Z`).getTime(); // Convert to timestamp
+};
+
+const getSignedUrl = async (req, res) => {
     try {
         const { filename } = req.params;
-
-        // Generate a signed URL for the file
         const { signedURL, error } = await supabase.storage
             .from('reports')
             .createSignedUrl(filename, 60 * 60);
 
         if (error) {
-            console.error('Error generating signed URL:', error);
-            return res.status(500).json({ success: false, message: 'Error generating signed URL' });
+            console.error("Erreur lors de la génération de l'URL signée :", error);
+            return res.status(500).json({ success: false, message: "Erreur lors de la génération de l'URL signée" });
         }
 
         res.status(200).json({ success: true, url: signedURL });
     } catch (error) {
-        console.error('Error generating signed URL:', error.message);
-        res.status(500).json({ success: false, message: 'Error generating signed URL', error: error.message });
+        console.error("Erreur lors de la génération de l'URL signée :", error.message);
+        res.status(500).json({ success: false, message: "Erreur lors de la génération de l'URL signée", error: error.message });
     }
 };
+
 const downloadFileController = async (req, res) => {
     try {
         const { filePath } = req.query;
         if (!filePath) {
-            return res.status(400).json({ error: "File path is required" });
+            return res.status(400).json({ error: "Le chemin du fichier est requis" });
         }
 
-        console.log("Received file path:", filePath);
+        console.log("Chemin du fichier reçu :", filePath);
 
-        // Get the file from Supabase
         const fileBlob = await ReportingGlobalModel.downloadExcel(filePath);
 
         if (!fileBlob) {
-            return res.status(404).json({ error: "File not found" });
+            return res.status(404).json({ error: "Fichier non trouvé" });
         }
 
-        console.log("File blob type:", typeof fileBlob);
-        console.log("File blob size:", fileBlob.size || 'unknown');
+        res.setHeader("Content-Disposition", `attachment; filename="${filePath.split('/').pop()}"`);
+        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
-        // Correctly handle the file buffer and set headers
-        res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="${filePath.split('/').pop()}"`
-        );
-        res.setHeader(
-            "Content-Type",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        );
-
-        // Send the buffer to the client
         const fileBuffer = await fileBlob.arrayBuffer();
         res.status(200).send(Buffer.from(fileBuffer));
     } catch (error) {
-        console.error("Error in downloadFileController:", error);
-        res.status(500).json({ error: "Internal server error" });
+        console.error("Erreur dans downloadFileController :", error);
+        res.status(500).json({ error: "Erreur interne du serveur" });
     }
 };
+
 const ReportingController = {
     downloadExcel,
     listReports,

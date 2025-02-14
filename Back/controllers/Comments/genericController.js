@@ -1,47 +1,51 @@
 // controllers/commentController.js
 import commentModel from '../../models/Comments/genericModel.js';
 import { supabase } from '../../config/supabaseClient.js';
-// Add a comment to an entity
+
+// Ajouter un commentaire à une entité
 const addComment = async (req, res) => {
-  const { entityName,  comment , Sid } = req.body;
+  const { entityName, comment, Sid } = req.body;
   if (!entityName || !comment || !Sid) {
-    return res.status(400).json({ error: 'Missing required fields' });
+    return res.status(400).json({ error: "Champs obligatoires manquants" });
   }
   try {
-    // Fetch the authenticated user's data
+    // Récupérer les données de l'utilisateur authentifié
     const { data: { user }, error: userError } = await supabase.auth.getUser();
-    // Handle error if user is not authenticated or doesn't exist
+    // Gérer l'erreur si l'utilisateur n'est pas authentifié ou n'existe pas
     if (userError || !user) {
-      return res.status(401).json({ error: 'User not authenticated' });
+      return res.status(401).json({ error: "Utilisateur non authentifié" });
     }
-    // Add the comment to the database (in the `commentaires` column of the entity)
-    const result = await commentModel.addComment(entityName, comment , Sid);
+    // Ajouter le commentaire dans la base de données (dans la colonne `commentaires` de l'entité)
+    const result = await commentModel.addComment(entityName, comment, Sid);
     if (!result) {
-      console.log('Failed to add comment');
-      return res.status(500).json({ error: 'Failed to add comment' });
+      console.log("Échec de l'ajout du commentaire");
+      return res.status(500).json({ error: "Échec de l'ajout du commentaire" });
     }
-    res.status(200).json({ message: 'Comment added successfully', result });
+    res.status(200).json({ message: "Commentaire ajouté avec succès", result });
   } catch (error) {
-    console.error('Error adding comment:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Erreur lors de l'ajout du commentaire :", error);
+    res.status(500).json({ error: "Erreur interne du serveur" });
   }
 };
-// Get comments for an entity
+
+// Récupérer les commentaires d'une entité
 const getComments = async (req, res) => {
   const { entityName, Sid } = req.query;
   if (!entityName || !Sid) {
-    return res.status(400).json({ error: 'Missing required parameters' });
+    return res.status(400).json({ error: "Paramètres requis manquants" });
   }
   try {
     const comments = await commentModel.getComments(entityName, Sid);
     res.status(200).json(comments);
   } catch (error) {
-    console.error('Error fetching comments:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Erreur lors de la récupération des commentaires :", error);
+    res.status(500).json({ error: "Erreur interne du serveur" });
   }
 };
+
 const commentController = {
   addComment,
   getComments,
-}
-export default commentController
+};
+
+export default commentController;
