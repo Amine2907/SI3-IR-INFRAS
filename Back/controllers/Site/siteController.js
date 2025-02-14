@@ -39,10 +39,7 @@ const fetchDpData = async (req, res) => {
       return res.status(500).json({ success: false, message: error.message });
   }
 };
-<<<<<<< HEAD
 //Create site controlller 
-=======
->>>>>>> 62527675a02c9086666fc7a98021c545f0f40bee
 const createsite = async (req, res) => {
     try {
       // Extract and map the fields if they contain descriptions instead of IDs
@@ -57,7 +54,6 @@ const createsite = async (req, res) => {
         }
         data.priorite_fk = data.priorite_fk.SP_desc; // Map back to description
       }
-<<<<<<< HEAD
       // Map `programme_fk` if it's an object with `PR_desc`
       if (data.programme_fk && typeof data.programme_fk === 'object' && data.programme_fk.PR_desc) {
         const programId = programMapping[data.programme_fk.PR_desc];
@@ -80,31 +76,6 @@ const createsite = async (req, res) => {
       // Proceed to create the site with transformed data
       const newsite = { ...data, is_active: true };
       const result = await siteModel.createSite(newsite);
-=======
-
-      console.log("🛠 Processing batch insert...");
-
-      // Transform each site in the array
-      const transformedData = sites.map(site => {
-          let transformedSite = { ...site };
-
-          if (typeof site.priorite_fk === 'object' && site.priorite_fk.SP_desc) {
-              transformedSite.priorite_fk = site.priorite_fk.SP_desc; 
-          }
-          if (typeof site.programme_fk === 'object' && site.programme_fk.PR_desc) {
-              transformedSite.programme_fk = site.programme_fk.PR_desc;
-          }
-          if (typeof site.status_site_fk === 'object' && site.status_site_fk.SS_desc) {
-              transformedSite.status_site_fk = site.status_site_fk.SS_desc;
-          }
-
-          return { ...transformedSite, is_active: true };
-      });
-
-      console.log("✅ Transformed data ready for insertion:", transformedData.length, "records");
-      const result = await siteModel.createSite(transformedData); 
-
->>>>>>> 62527675a02c9086666fc7a98021c545f0f40bee
       if (!result.success) {
         console.error("Error in model operation:", result.error);
         return res.status(400).json({ error: result.error });
